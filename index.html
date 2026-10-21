@@ -5,71 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мой Уход за Кожей</title>
     <style>
+        /* CSS-переменные для динамических тем */
         :root {
             --bg-main: #FAF4F0;
             --surface: #FFFFFF;
             --text-primary: #3D2C2E;
             --text-secondary: #8A7375;
-            --accent-rose: #E8C5C8;
-            --accent-rose-dark: #7A4A58;
-            --accent-soft-pink: #FFF0F2;
+            --accent-main: #7A4A58;
+            --accent-light: #FFF0F2;
             --border-color: #F0E2DF;
-            --shadow-soft: 0 8px 30px rgba(122, 74, 88, 0.05);
+            --shadow-soft: 0 10px 30px rgba(122, 74, 88, 0.08);
             --radius-main: 22px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        /* ТЕМЫ ОФОРМЛЕНИЯ */
+        body[data-theme="sage"] {
+            --bg-main: #F4F6F4;
+            --surface: #FFFFFF;
+            --text-primary: #2C3A2E;
+            --text-secondary: #607062;
+            --accent-main: #3A4D39;
+            --accent-light: #ECEFEA;
+            --border-color: #E0E5E0;
+            --shadow-soft: 0 10px 30px rgba(58, 77, 57, 0.08);
+        }
+
+        body[data-theme="berry"] {
+            --bg-main: #FAF0F2;
+            --surface: #FFFFFF;
+            --text-primary: #3B1C24;
+            --text-secondary: #7A4D58;
+            --accent-main: #6B2337;
+            --accent-light: #F7E6EB;
+            --border-color: #EED5DC;
+            --shadow-soft: 0 10px 30px rgba(107, 35, 55, 0.08);
+        }
+
+        body[data-theme="midnight"] {
+            --bg-main: #1A1F2C;
+            --surface: #242A3B;
+            --text-primary: #F0F3F9;
+            --text-secondary: #9DA8C2;
+            --accent-main: #D4A373;
+            --accent-light: #2D354A;
+            --border-color: #323B52;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; transition: background 0.25s, color 0.25s, border-color 0.25s; }
         body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
 
         header { text-align: center; margin-bottom: 20px; }
-        .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #C48B96; margin-bottom: 4px; }
-        h1 { font-size: 24px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-rose-dark); }
+        .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-main); margin-bottom: 4px; opacity: 0.8; }
+        h1 { font-size: 24px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-main); }
         .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
 
+        /* Переключатель тем */
+        .theme-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .theme-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s; }
+        .theme-dot:hover { transform: scale(1.15); }
+
         .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-soft); }
-        .card-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #C48B96; margin-bottom: 14px; }
+        .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-main); margin-bottom: 14px; opacity: 0.9; }
 
         .tod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-        .tod-chip { padding: 14px; border: 1px solid var(--border-color); border-radius: 16px; text-align: center; cursor: pointer; background: var(--bg-main); font-size: 14px; font-weight: 500; transition: all 0.2s; }
-        .tod-chip.active { background: var(--accent-soft-pink); border-color: var(--accent-rose); color: var(--accent-rose-dark); }
+        .tod-chip { padding: 14px; border: 1px solid var(--border-color); border-radius: 16px; text-align: center; cursor: pointer; background: var(--bg-main); font-size: 14px; font-weight: 500; }
+        .tod-chip.active { background: var(--accent-light); border-color: var(--accent-main); color: var(--accent-main); }
 
-        .time-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-main); cursor: pointer; margin-bottom: 8px; font-size: 14px; transition: all 0.2s; }
-        .time-option.active { border-color: var(--accent-rose); background: var(--accent-soft-pink); color: var(--accent-rose-dark); font-weight: 500; }
+        .time-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-main); cursor: pointer; margin-bottom: 8px; font-size: 14px; }
+        .time-option.active { border-color: var(--accent-main); background: var(--accent-light); color: var(--accent-main); font-weight: 500; }
 
         .zones-grid { display: flex; gap: 8px; margin-bottom: 16px; }
         .zone-chip { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 13px; cursor: pointer; background: var(--bg-main); }
-        .zone-chip.active { background: var(--accent-rose-dark); color: #FFF; border-color: var(--accent-rose-dark); }
+        .zone-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
-        .proc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; font-size: 13px; background: var(--bg-main); }
-        .proc-item input { accent-color: var(--accent-rose-dark); width: 18px; height: 18px; }
+        .proc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 8px; font-size: 13px; background: var(--bg-main); }
+        .proc-item input { accent-color: var(--accent-main); width: 18px; height: 18px; }
 
-        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); }
+        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); color: var(--text-primary); }
 
-        .btn-primary { width: 100%; background: var(--accent-rose-dark); color: #FFF; border: none; padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
-        .btn-primary:active { opacity: 0.9; }
-        .btn-secondary { width: 100%; background: transparent; color: var(--accent-rose-dark); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 8px; }
+        .btn-primary { width: 100%; background: var(--accent-main); color: #FFF; border: none; padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 8px; }
         
-        .btn-idea-inline { background: var(--accent-soft-pink); color: var(--accent-rose-dark); border: 1px solid var(--accent-rose); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; margin-top: 8px; display: inline-block; }
+        .btn-idea-inline { background: var(--accent-light); color: var(--accent-main); border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; margin-top: 8px; display: inline-block; }
 
-        .inline-tip-box { background: var(--accent-soft-pink); border-left: 3px solid var(--accent-rose); padding: 12px; border-radius: 0 12px 12px 0; margin-top: 10px; font-size: 12px; color: var(--accent-rose-dark); display: none; line-height: 1.5; }
+        .inline-tip-box { background: var(--accent-light); border-left: 3px solid var(--accent-main); padding: 12px 14px; border-radius: 0 12px 12px 0; margin-top: 10px; font-size: 12px; color: var(--text-primary); display: none; line-height: 1.5; }
 
-        .timeline-step { border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; margin-bottom: 12px; background: var(--surface); opacity: 0.6; transition: all 0.3s ease; }
-        .timeline-step.active { opacity: 1; border-color: var(--accent-rose); box-shadow: var(--shadow-soft); }
-        .timeline-step.completed { opacity: 0.6; background: var(--accent-soft-pink); border-color: transparent; }
+        .timeline-step { border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; margin-bottom: 12px; background: var(--surface); opacity: 0.5; }
+        .timeline-step.active { opacity: 1; border-color: var(--accent-main); box-shadow: var(--shadow-soft); }
+        .timeline-step.completed { opacity: 0.6; background: var(--accent-light); border-color: transparent; }
         
         .step-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
         .step-title { font-size: 16px; font-weight: 500; color: var(--text-primary); }
 
-        .care-next-card { background: var(--accent-soft-pink); border: 1px dashed var(--accent-rose); padding: 20px; border-radius: 20px; text-align: center; margin-top: 16px; display: none; }
+        .care-next-card { background: var(--accent-light); border: 1px dashed var(--accent-main); padding: 20px; border-radius: 20px; text-align: center; margin-top: 16px; display: none; }
 
-        .db-toggle-btn { background: var(--accent-soft-pink); border: 1px solid var(--accent-rose); color: var(--accent-rose-dark); padding: 10px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; width: 100%; margin: 10px 0; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+        .db-toggle-btn { background: var(--accent-light); border: 1px solid var(--border-color); color: var(--accent-main); padding: 12px 14px; border-radius: 14px; font-size: 12px; font-weight: 600; cursor: pointer; width: 100%; margin: 10px 0; text-align: left; display: flex; justify-content: space-between; }
         .db-list { display: none; margin-top: 8px; max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; padding: 8px; background: var(--bg-main); }
-        .db-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; font-size: 12px; border-bottom: 1px dashed var(--border-color); }
+        .db-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; font-size: 12px; border-bottom: 1px dashed var(--border-color); }
         .db-item:last-child { border-bottom: none; }
-        .del-btn { color: #C48B96; cursor: pointer; font-weight: bold; margin-left: 8px; }
+        .del-btn { color: var(--accent-main); cursor: pointer; font-weight: bold; }
     </style>
 </head>
-<body>
+<body data-theme="blush">
 
     <header>
         <div class="logo-tag">Your Beauty Corner</div>
@@ -77,11 +115,19 @@
         <div class="subtitle">Легко, эстетично и с заботой о себе</div>
     </header>
 
-    <!-- ЭКРАН 0: ДОБАВЛЕНИЕ СРЕДСТВ И ВЬЮВЕР БАЗЫ -->
+    <!-- ПЕРЕКЛЮЧАТЕЛЬ ЦВЕТОВЫХ СХЕМ -->
+    <div class="theme-bar">
+        <div class="theme-dot" style="background: #E8C5C8;" onclick="setTheme('blush')" title="Blush & Nude"></div>
+        <div class="theme-dot" style="background: #8FA89B;" onclick="setTheme('sage')" title="Sage & Spa"></div>
+        <div class="theme-dot" style="background: #8C4054;" onclick="setTheme('berry')" title="Berry & Velvet"></div>
+        <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')" title="Midnight Calm"></div>
+    </div>
+
+    <!-- ЭКРАН 0: БАЗА СРЕДСТВ -->
     <div class="card" id="screenOnboarding">
         <div class="card-title">✨ Ваши средства и процедуры</div>
 
-        <input type="text" id="initTitle" class="input-field" placeholder="Название средств (например: Тоник с Aha / Ретинол)">
+        <input type="text" id="initTitle" class="input-field" placeholder="Название (например: Тоник AHA / Ретинол)">
         <select id="initZone" class="input-field">
             <option value="Лицо">Зона: Лицо</option>
             <option value="Волосы">Зона: Волосы</option>
@@ -96,7 +142,6 @@
         
         <button class="btn-secondary" onclick="addCustomToDB()">+ Добавить средства в базу</button>
 
-        <!-- КЛИКАБЕЛЬНАЯ КНОПКА БАЗЫ -->
         <button class="db-toggle-btn" onclick="toggleDBView()">
             <span id="dbBtnText">В вашей базе средств: 0</span>
             <span>▼</span>
@@ -131,9 +176,9 @@
         <button class="btn-secondary" onclick="showManualSelect()">✏️ Выбрать из списка вручную</button>
     </div>
 
-    <!-- ЭКРАН РУЧНОГО ВЫБОРА СРЕДСТВ -->
+    <!-- ЭКРАН РУЧНОГО ВЫБОРА (СТРОГО ПО ВЫБРАННЫМ ЗОНАМ) -->
     <div class="card" id="screenManual" style="display: none;">
-        <div class="card-title">Выберите средства из вашей базы</div>
+        <div class="card-title" id="manualTitle">Выберите средства из вашей базы</div>
         <div id="manualList"></div>
         <button class="btn-primary" onclick="startManual()">Запустить уход ➔</button>
         <button class="btn-secondary" onclick="backToSetup()">← Назад к настройкам</button>
@@ -147,59 +192,58 @@
         <button class="btn-secondary" id="btnChange" onclick="backToSetup()">← Настроить заново</button>
 
         <div class="care-next-card" id="careNextCard">
-            <div style="font-size: 16px; font-weight: 500; color: var(--accent-rose-dark); margin-bottom: 6px;" id="nextCareTitle">Уход завершен! ✨</div>
+            <div style="font-size: 16px; font-weight: 500; color: var(--accent-main); margin-bottom: 6px;" id="nextCareTitle">Уход завершен! ✨</div>
             <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;" id="nextCareSub">Ждем вас вечером для расслабляющих процедур</div>
             <button class="btn-primary" id="nextCareBtn" onclick="switchToNextTOD()">Перейти к вечернему уходу 🌙</button>
         </div>
     </div>
 
     <script>
-        // РАСШИРЕННАЯ ДЕФОЛТНАЯ БАЗА (18-50 лет)
         const defaultDatabase = [
             // ЛИЦО
-            { title: "Мусс / Гель для умывания", zone: "Лицо", timeSlot: 5, pause: 0, idea: "" },
-            { title: "Увлажняющий тоник / Эссенция", zone: "Лицо", timeSlot: 5, pause: 1, idea: "🌸 Нанесите мягкими похлопывающими движениями подушечек пальцев." },
-            { title: "SPF-Крем (Защита от фотостарения)", zone: "Лицо", timeSlot: 5, pause: 0, idea: "" },
-            { title: "Сыворотка с Витамином С", zone: "Лицо", timeSlot: 20, pause: 3, idea: "💅 Времени как раз хватит, чтобы увлажнить кутикулу маслом." },
-            { title: "Retiderm / Ретинол", zone: "Лицо", timeSlot: 40, pause: 15, idea: "🧘‍♀️ Практика «4-7-8»: Вдох носом на 4 сек, задержка дыхания на 7 сек, длинный выдох ртом на 8 сек. Снимает дневной стресс." },
-            { title: "Восстанавливающий крем NMF с церамидами", zone: "Лицо", timeSlot: 20, pause: 0, idea: "" },
-            { title: "Кислотный пилинг / Скатка", zone: "Лицо", timeSlot: 40, pause: 10, idea: "☕ Заварите травяной чай и сделайте пару глубоких осознанных вдохов без телефона." },
-            { title: "Тканевая / Глиняная маска", zone: "Лицо", timeSlot: 40, pause: 15, idea: "🦶 Сделайте легкий самомассаж стоп с увлажняющим кремом — это отлично расслабляет." },
-            { title: "Массаж скребком Гуаша / Роллером", zone: "Лицо", timeSlot: 20, pause: 0, idea: "" },
+            { title: "Мусс / Гель для умывания", zone: "Лицо", timeSlot: 5, pause: 0 },
+            { title: "Увлажняющий тоник / Эссенция", zone: "Лицо", timeSlot: 5, pause: 0 },
+            { title: "SPF-Крем (Защита от фотостарения)", zone: "Лицо", timeSlot: 5, pause: 0 },
+            { title: "Сыворотка с Витамином С", zone: "Лицо", timeSlot: 20, pause: 3 },
+            { title: "Retiderm / Ретинол", zone: "Лицо", timeSlot: 40, pause: 15 },
+            { title: "Восстанавливающий крем NMF", zone: "Лицо", timeSlot: 20, pause: 0 },
+            { title: "Кислотный пилинг / Скатка", zone: "Лицо", timeSlot: 40, pause: 10 },
+            { title: "Тканевая / Глиняная маска", zone: "Лицо", timeSlot: 40, pause: 15 },
 
             // ВОЛОСЫ
-            { title: "Бессульфатный шампунь", zone: "Волосы", timeSlot: 20, pause: 0, idea: "" },
-            { title: "Экспресс-кондиционер", zone: "Волосы", timeSlot: 20, pause: 2, idea: "💆‍♀️ Пройдитесь пальцами по шее и плечам, снимая зажимы." },
-            { title: "Глубокая питательная маска для волос", zone: "Волосы", timeSlot: 40, pause: 10, idea: "✨ Включите любимый расслабляющий трек или аудио-медитацию." },
-            { title: "Несмываемый флюид / Масло на кончики", zone: "Волосы", timeSlot: 5, pause: 0, idea: "" },
-            { title: "Пилинг для кожи головы", zone: "Волосы", timeSlot: 40, pause: 5, idea: "🌸 Сделайте круговой массаж висков завитками пальцев." },
+            { title: "Бессульфатный шампунь", zone: "Волосы", timeSlot: 20, pause: 0 },
+            { title: "Экспресс-кондиционер", zone: "Волосы", timeSlot: 20, pause: 2 },
+            { title: "Глубокая питательная маска для волос", zone: "Волосы", timeSlot: 40, pause: 12 },
+            { title: "Несмываемый флюид на кончики", zone: "Волосы", timeSlot: 5, pause: 0 },
 
             // ТЕЛО
-            { title: "Быстрый увлажняющий лосьон", zone: "Тело", timeSlot: 5, pause: 0, idea: "" },
-            { title: "Массаж сухой щеткой (до душа)", zone: "Тело", timeSlot: 20, pause: 0, idea: "" },
-            { title: "Солевой / Кофейный скраб", zone: "Тело", timeSlot: 40, pause: 3, idea: "💧 Выпейте стакан чистой теплой воды для лимфодренажного эффекта." },
-            { title: "Питательный баттер / Обертывание", zone: "Тело", timeSlot: 40, pause: 15, idea: "📖 Отдохните с закрытыми глазами или почитайте 2 страницы книги." },
-            { title: "Крем для рук и стоп на ночь", zone: "Тело", timeSlot: 5, pause: 0, idea: "" }
+            { title: "Быстрый увлажняющий лосьон", zone: "Тело", timeSlot: 5, pause: 0 },
+            { title: "Массаж сухой щеткой", zone: "Тело", timeSlot: 20, pause: 0 },
+            { title: "Солевой / Кофейный скраб", zone: "Тело", timeSlot: 40, pause: 0 },
+            { title: "Питательный баттер / Обертывание", zone: "Тело", timeSlot: 40, pause: 15 }
         ];
 
         let database = JSON.parse(localStorage.getItem('girl_skincare_db')) || defaultDatabase;
-
         let selectedTOD = 'morning';
         let selectedTime = 5;
         let selectedZones = { 'Лицо': true, 'Волосы': true, 'Тело': true };
         let currentRoutine = [];
         let activeIdx = 0;
 
-        // Генерация совета под любую паузу
-        function getSmartIdea(pauseMin) {
-            if (pauseMin <= 3) {
-                return "💅 Быстрая забота: нанесите масло на кутикулу или расправьте плечи.";
-            } else if (pauseMin <= 8) {
-                return "☕ Небольшая пауза: сделайте глоток воды, потяните шею и расслабьте челюсть.";
-            } else if (pauseMin <= 15) {
-                return "🧘‍♀️ Дыхательная практика 4-7-8: Вдох (4 сек) ➔ Задержка (7 сек) ➔ Выдох (8 сек). Выпейте чашку травяного чая.";
+        // Тема оформления
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('girl_skincare_theme', theme);
+        }
+        const savedTheme = localStorage.getItem('girl_skincare_theme') || 'blush';
+        setTheme(savedTheme);
+
+        // Идеи ДЛЯ ПАУЗ ТОЛЬКО ОТ 10 МИНУТ
+        function getLongPauseTip(pauseMin) {
+            if (pauseMin >= 15) {
+                return "🧘‍♀️ Дыхательная практика «4-7-8»: Вдох носом (4 сек) ➔ Задержка (7 сек) ➔ Длинный выдох ртом (8 сек). Отлично снимает накопившийся стресс.";
             } else {
-                return "✨ Время релакса: прилягте с закрытыми глазами, включите приятную музыку или сделайте легкий массаж стоп.";
+                return "☕ Время релакса: выпейте чашку травяного чая, сделайте пару глубоких вдохов или нанесите масло на кутикулу.";
             }
         }
 
@@ -211,7 +255,7 @@
 
             if (!t) return alert("Введите название средства!");
 
-            database.push({ title: t, zone: z, timeSlot: slot, pause: p, idea: p > 0 ? getSmartIdea(p) : "" });
+            database.push({ title: t, zone: z, timeSlot: slot, pause: p });
             localStorage.setItem('girl_skincare_db', JSON.stringify(database));
             
             document.getElementById('initTitle').value = '';
@@ -273,19 +317,29 @@
             startRoutine();
         }
 
+        // РУЧНОЙ ВЫБОР СТРОГО ПО ВЫБРАННЫМ ЗОНАМ
         function showManualSelect() {
             let list = document.getElementById('manualList');
             list.innerHTML = '';
-            let filtered = database.filter(d => selectedZones[d.zone]);
+            
+            // Фильтруем строго по зонам, включенным на этапе 3
+            let filteredByZone = database.filter(d => selectedZones[d.zone]);
 
-            filtered.forEach((d, i) => {
-                list.innerHTML += `
-                    <label class="proc-item">
-                        <span><b>[${d.zone}]</b> ${d.title}</span>
-                        <input type="checkbox" value="${i}" class="manual-chk" checked>
-                    </label>
-                `;
-            });
+            let activeZoneNames = Object.keys(selectedZones).filter(k => selectedZones[k]).join(", ");
+            document.getElementById('manualTitle').innerText = `Средства для зон: ${activeZoneNames || "Не выбрано"}`;
+
+            if (filteredByZone.length === 0) {
+                list.innerHTML = `<div style="font-size:13px; text-align:center; color:var(--text-secondary); padding:10px;">Нет средств для выбранных зон. Добавьте их на стартовом экране.</div>`;
+            } else {
+                filteredByZone.forEach((d, i) => {
+                    list.innerHTML += `
+                        <label class="proc-item">
+                            <span><b>[${d.zone}]</b> ${d.title}</span>
+                            <input type="checkbox" value="${i}" class="manual-chk" checked>
+                        </label>
+                    `;
+                });
+            }
 
             document.getElementById('screenSetup').style.display = 'none';
             document.getElementById('screenManual').style.display = 'block';
@@ -293,8 +347,10 @@
 
         function startManual() {
             let chks = document.querySelectorAll('.manual-chk:checked');
-            let filtered = database.filter(d => selectedZones[d.zone]);
-            currentRoutine = Array.from(chks).map(c => filtered[c.value]);
+            let filteredByZone = database.filter(d => selectedZones[d.zone]);
+            currentRoutine = Array.from(chks).map(c => filteredByZone[c.value]);
+
+            if (currentRoutine.length === 0) return alert("Выберите хотя бы одно средство!");
 
             document.getElementById('screenManual').style.display = 'none';
             startRoutine();
@@ -324,7 +380,7 @@
                 let isComp = idx < activeIdx;
                 let isAct = idx === activeIdx;
 
-                let autoTip = step.idea || getSmartIdea(step.pause);
+                let hasLongPause = step.pause >= 10;
 
                 c.innerHTML += `
                     <div class="timeline-step ${isComp ? 'completed' : ''} ${isAct ? 'active' : ''}">
@@ -336,9 +392,11 @@
 
                         ${step.pause > 0 && isAct ? `
                             <div style="margin-top: 8px;">
-                                <span style="font-size: 12px; color: var(--accent-rose-dark); font-weight: 600;">⏱️ Пауза: ${step.pause} мин</span>
-                                <div class="btn-idea-inline" onclick="toggleTip(${idx})">✨ Чем заняться в паузе?</div>
-                                <div class="inline-tip-box" id="tip_${idx}">${autoTip}</div>
+                                <span style="font-size: 12px; color: var(--accent-main); font-weight: 600;">⏱️ Выдержка: ${step.pause} мин</span>
+                                ${hasLongPause ? `
+                                    <div class="btn-idea-inline" onclick="toggleTip(${idx})">✨ Чем заняться в паузе?</div>
+                                    <div class="inline-tip-box" id="tip_${idx}">${getLongPauseTip(step.pause)}</div>
+                                ` : ''}
                             </div>
                         ` : ''}
 
@@ -352,7 +410,7 @@
 
         function toggleTip(idx) {
             let tip = document.getElementById('tip_' + idx);
-            tip.style.display = tip.style.display === 'block' ? 'none' : 'block';
+            if (tip) tip.style.display = tip.style.display === 'block' ? 'none' : 'block';
         }
 
         function nextStep(idx) {
