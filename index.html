@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой SPA & Skincare Ассистент</title>
+    <style>
+        :root {
+            --bg: #FAF7F2;
+            --card-bg: #FFFFFF;
+            --accent: #7D9D9C;
+            --accent-light: #E8F1F1;
+            --text-main: #2C3639;
+            --text-muted: #687980;
+            --border: #E8D5C4;
+            --gold: #E0A96D;
+            --gold-bg: #FFFDF9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 16px 12px; max-width: 600px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 22px; color: var(--text-main); font-weight: 700; }
+        .subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+        .section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .section-title { font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+        /* Выбор времени/ресурса */
+        .resource-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+        .resource-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+        .resource-btn.active { background: var(--accent-light); border-color: var(--accent); }
+        .resource-btn .time { font-size: 16px; font-weight: bold; color: var(--text-main); display: block; }
+        .resource-btn .desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; display: block; }
+
+        /* Выбор зон */
+        .zones-picker { display: flex; gap: 8px; margin-bottom: 16px; }
+        .zone-chip { flex: 1; text-align: center; padding: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; font-size: 12px; cursor: pointer; user-select: none; }
+        .zone-chip.selected { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .btn-primary { width: 100%; background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .btn-primary:active { opacity: 0.9; }
+
+        /* Плеер ритуала */
+        .player-card { display: none; background: var(--card-bg); border: 2px solid var(--accent); border-radius: 20px; padding: 20px; text-align: center; margin-top: 10px; }
+        .step-counter { font-size: 12px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; }
+        .step-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+        .step-zone { display: inline-block; background: var(--bg); padding: 4px 10px; border-radius: 10px; font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+        
+        /* Бейдж выдержки/паузы */
+        .pause-badge { background: var(--gold-bg); border: 1px solid var(--gold); color: #D98A2B; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; margin: 12px 0; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .pause-tip { font-size: 12px; color: var(--text-muted); font-style: italic; margin-bottom: 16px; }
+
+        .player-nav { display: flex; gap: 10px; margin-top: 16px; }
+        .btn-secondary { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; color: var(--text-main); }
+
+        /* Конструктор своей процедуры */
+        .add-form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .input-field { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+        .select-field { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; background: white; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Мой SPA-Ассистент</h1>
+        <div class="subtitle">Уход без сложных таблиц и лишней работы</div>
+    </header>
+
+    <!-- ЭКРАН 1: НАСТРОЙКА НА СЕГОДНЯ -->
+    <div class="section-card" id="configSection">
+        <div class="section-title">1. Сколько сил на уход сегодня?</div>
+        <div class="resource-picker">
+            <div class="resource-btn active" data-time="3" onclick="selectTime(3, this)">
+                <span class="time">3 мин</span>
+                <span class="desc">Без сил</span>
+            </div>
+            <div class="resource-btn" data-time="10" onclick="selectTime(10, this)">
+                <span class="time">10 мин</span>
+                <span class="desc">База</span>
+            </div>
+            <div class="resource-btn" data-time="25" onclick="selectTime(25, this)">
+                <span class="time">25+ мин</span>
+                <span class="desc">SPA-вечер</span>
+            </div>
+        </div>
+
+        <div class="section-title">2. Выберите зоны ухода</div>
+        <div class="zones-picker">
+            <div class="zone-chip selected" onclick="toggleZone(this, 'face')">👤 Лицо</div>
+            <div class="zone-chip selected" onclick="toggleZone(this, 'hair')">💆‍♀️ Волосы</div>
+            <div class="zone-chip selected" onclick="toggleZone(this, 'body')">✨ Тело</div>
+        </div>
+
+        <button class="btn-primary" onclick="generateRoutine()">Сформировать ритуал ✨</button>
+    </div>
+
+    <!-- ЭКРАН 2: ПЛЕЕР РИТУАЛА -->
+    <div class="player-card" id="playerCard">
+        <div class="step-counter" id="stepCounter">Шаг 1 из 3</div>
+        <div id="stepZone" class="step-zone">Лицо</div>
+        <div class="step-title" id="stepTitle">Очищающий мусс</div>
+        
+        <div id="pauseContainer"></div>
+
+        <div class="player-nav">
+            <button class="btn-secondary" onclick="prevStep()">Назад</button>
+            <button class="btn-primary" style="flex:2" onclick="nextStep()" id="nextBtn">Готово (Далее) ➔</button>
+        </div>
+    </div>
+
+    <!-- ЭКРАН 3: ДОБАВИТЬ СВОЮ ПРОЦЕДУРУ -->
+    <div class="section-card" style="margin-top: 24px;">
+        <div class="section-title">➕ Добавить свое средство в библиотеку</div>
+        <div class="add-form">
+            <input type="text" id="customTitle" class="input-field" placeholder="Название (например: Маска K18 / Ретинол)">
+            <select id="customZone" class="select-field">
+                <option value="face">Зона: Лицо</option>
+                <option value="hair">Зона: Волосы</option>
+                <option value="body">Зона: Тело</option>
+            </select>
+            <select id="customTimeSlot" class="select-field">
+                <option value="3">Слот: 3 мин (Без сил)</option>
+                <option value="10">Слот: 10 мин (База)</option>
+                <option value="25">Слот: 25+ мин (SPA)</option>
+            </select>
+            <input type="number" id="customPause" class="input-field" placeholder="Пауза/выдержка после применения (мин), 0 если нет">
+            <button class="btn-secondary" onclick="addCustomProcedure()">Сохранить средство</button>
+        </div>
+    </div>
+
+    <script>
+        // БАЗОВАЯ БИБЛИОТЕКА ПРОЦЕДУР (Шаблоны)
+        let procedures = [
+            // 3 мин - База
+            { title: "Мусс для умывания", zone: "face", timeSlot: 3, pause: 0, tip: "" },
+            { title: "Увлажняющий NMF-крем", zone: "face", timeSlot: 3, pause: 0, tip: "" },
+            { title: "Легкий лосьон для тела", zone: "body", timeSlot: 3, pause: 0, tip: "" },
+            
+            // 10 мин - Базовый регулярный уход
+            { title: "Мягкий пилинг-тоник", zone: "face", timeSlot: 10, pause: 3, tip: "Дайте тонику 3 минуты впитаться перед сывороткой" },
+            { title: "Восстанавливающая сыворотка", zone: "face", timeSlot: 10, pause: 0, tip: "" },
+            { title: "Экспресс-мальзам для волос", zone: "hair", timeSlot: 10, pause: 2, tip: "Пока выдерживается бальзам — нанесите крем на руки" },
+
+            // 25+ мин - SPA вечер
+            { title: "Массаж сухой щеткой перед душем", zone: "body", timeSlot: 25, pause: 0, tip: "Движения снизу вверх по направлению лимфы" },
+            { title: "Питательная глубокая маска для волос", zone: "hair", timeSlot: 25, pause: 15, tip: "⏱️ Пауза 15 мин: нанесите маску на лицо или отдохните" },
+            { title: "Retiderm 0.25 (Ретинол) на сухую кожу", zone: "face", timeSlot: 25, pause: 20, tip: "⏱️ Обязательная пауза 20 мин перед запечатывающим кремом!" },
+            { title: "Запечатывающий крем с церамидами", zone: "face", timeSlot: 25, pause: 0, tip: "Финал ритуала" }
+        ];
+
+        let selectedTime = 3;
+        let selectedZones = ['face', 'hair', 'body'];
+        let currentRoutine = [];
+        let currentStepIndex = 0;
+
+        function selectTime(time, el) {
+            selectedTime = time;
+            document.querySelectorAll('.resource-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function toggleZone(el, zone) {
+            if (selectedZones.includes(zone)) {
+                if (selectedZones.length === 1) return; // Нельзя убрать все зоны
+                selectedZones = selectedZones.filter(z => z !== zone);
+                el.classList.remove('selected');
+            } else {
+                selectedZones.push(zone);
+                el.classList.add('selected');
+            }
+        }
+
+        function generateRoutine() {
+            // Фильтруем процедуры по времени и выбранным зонам
+            currentRoutine = procedures.filter(p => p.timeSlot <= selectedTime && selectedZones.includes(p.zone));
+
+            if (currentRoutine.length === 0) {
+                alert("Нет подходящих процедур. Попробуйте выбрать другие зоны.");
+                return;
+            }
+
+            currentStepIndex = 0;
+            document.getElementById('configSection').style.display = 'none';
+            document.getElementById('playerCard').style.display = 'block';
+            renderStep();
+        }
+
+        function renderStep() {
+            let step = currentRoutine[currentStepIndex];
+            document.getElementById('stepCounter').innerText = `Шаг ${currentStepIndex + 1} из ${currentRoutine.length}`;
+            
+            let zoneNames = { face: "👤 Лицо", hair: "💆‍♀️ Волосы", body: "✨ Тело" };
+            document.getElementById('stepZone').innerText = zoneNames[step.zone] || step.zone;
+            document.getElementById('stepTitle').innerText = step.title;
+
+            let pauseContainer = document.getElementById('pauseContainer');
+            pauseContainer.innerHTML = '';
+
+            if (step.pause > 0) {
+                pauseContainer.innerHTML = `
+                    <div class="pause-badge">⏱️ Выдержка: ${step.pause} минут</div>
+                    ${step.tip ? `<div class="pause-tip">${step.tip}</div>` : ''}
+                `;
+            } else if (step.tip) {
+                pauseContainer.innerHTML = `<div class="pause-tip">${step.tip}</div>`;
+            }
+
+            let nextBtn = document.getElementById('nextBtn');
+            if (currentStepIndex === currentRoutine.length - 1) {
+                nextBtn.innerText = "Завершить ритуал 🎉";
+            } else {
+                nextBtn.innerText = "Готово (Далее) ➔";
+            }
+        }
+
+        function nextStep() {
+            if (currentStepIndex < currentRoutine.length - 1) {
+                currentStepIndex++;
+                renderStep();
+            } else {
+                alert("Отличная работа! Ваш уход на сегодня завершен ✨");
+                document.getElementById('playerCard').style.display = 'none';
+                document.getElementById('configSection').style.display = 'block';
+            }
+        }
+
+        function prevStep() {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                renderStep();
+            } else {
+                document.getElementById('playerCard').style.display = 'none';
+                document.getElementById('configSection').style.display = 'block';
+            }
+        }
+
+        function addCustomProcedure() {
+            let title = document.getElementById('customTitle').value;
+            let zone = document.getElementById('customZone').value;
+            let timeSlot = parseInt(document.getElementById('customTimeSlot').value);
+            let pause = parseInt(document.getElementById('customPause').value) || 0;
+
+            if (!title) {
+                alert("Введите название средства!");
+                return;
+            }
+
+            procedures.push({
+                title: title,
+                zone: zone,
+                timeSlot: timeSlot,
+                pause: pause,
+                tip: pause > 0 ? `⏱️ Рекомендуемая пауза: ${pause} мин` : ""
+            });
+
+            alert(`Средство "${title}" успешно добавлено в ваш конструктор!`);
+            document.getElementById('customTitle').value = '';
+            document.getElementById('customPause').value = '';
+        }
+    </script>
+</body>
+</html>
