@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой Уход за Кожей</title>
+    <title>Мой Уход</title>
     <style>
         :root {
             --bg-main: #FAF4F0;
@@ -17,122 +17,100 @@
             --radius-main: 22px;
             --sos-color: #D96B6B;
             --sos-bg: #FDF2F2;
+            --warning-bg: #FFF8E7;
+            --warning-text: #A67C00;
         }
 
-        body[data-theme="sage"] {
-            --bg-main: #F4F6F4;
-            --surface: #FFFFFF;
-            --text-primary: #2C3A2E;
-            --text-secondary: #607062;
-            --accent-main: #3A4D39;
-            --accent-light: #ECEFEA;
-            --border-color: #E0E5E0;
-            --shadow-soft: 0 10px 30px rgba(58, 77, 57, 0.08);
-        }
+        body[data-theme="sage"] { --bg-main: #F4F6F4; --text-primary: #2C3A2E; --text-secondary: #607062; --accent-main: #3A4D39; --accent-light: #ECEFEA; --border-color: #E0E5E0; }
+        body[data-theme="berry"] { --bg-main: #FAF0F2; --text-primary: #3B1C24; --text-secondary: #7A4D58; --accent-main: #6B2337; --accent-light: #F7E6EB; --border-color: #EED5DC; }
+        body[data-theme="midnight"] { --bg-main: #1A1F2C; --surface: #242A3B; --text-primary: #F0F3F9; --text-secondary: #9DA8C2; --accent-main: #D4A373; --accent-light: #2D354A; --border-color: #323B52; }
 
-        body[data-theme="berry"] {
-            --bg-main: #FAF0F2;
-            --surface: #FFFFFF;
-            --text-primary: #3B1C24;
-            --text-secondary: #7A4D58;
-            --accent-main: #6B2337;
-            --accent-light: #F7E6EB;
-            --border-color: #EED5DC;
-            --shadow-soft: 0 10px 30px rgba(107, 35, 55, 0.08);
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; transition: all 0.2s ease; }
+        body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; overflow-x: hidden; position: relative; }
 
-        body[data-theme="midnight"] {
-            --bg-main: #1A1F2C;
-            --surface: #242A3B;
-            --text-primary: #F0F3F9;
-            --text-secondary: #9DA8C2;
-            --accent-main: #D4A373;
-            --accent-light: #2D354A;
-            --border-color: #323B52;
-            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; transition: all 0.2s ease; }
-        body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; -webkit-font-smoothing: antialiased; overflow-x: hidden; position: relative; }
-
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-main); opacity: 0.8; }
-        .settings-icon { font-size: 13px; cursor: pointer; opacity: 0.8; font-weight: 500; background: var(--surface); padding: 6px 12px; border-radius: 12px; border: 1px solid var(--border-color); }
-
-        header { text-align: center; margin-bottom: 16px; }
-        h1 { font-size: 26px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-main); }
-        .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
+        /* Шапка */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .logo-tag { font-size: 14px; font-weight: 700; font-family: Georgia, serif; color: var(--accent-main); }
+        .btn-icon { background: var(--surface); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 12px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--text-primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .top-actions { display: flex; gap: 8px; }
 
         /* Трекер */
-        .hearts-tracker { background: var(--surface); border: 1px solid var(--border-color); border-radius: 18px; padding: 12px 16px; margin-bottom: 16px; text-align: center; box-shadow: var(--shadow-soft); }
-        .hearts-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 8px; }
+        .hearts-tracker { background: var(--surface); border: 1px solid var(--border-color); border-radius: 18px; padding: 16px; margin-bottom: 16px; text-align: center; box-shadow: var(--shadow-soft); display: none; }
+        .hearts-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 10px; }
         .hearts-row { display: flex; justify-content: space-between; align-items: center; }
-        .heart-slot { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+        .heart-slot { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
         .heart-svg { width: 22px; height: 22px; fill: none; stroke: var(--border-color); stroke-width: 2; transition: all 0.3s; }
-        .heart-slot.filled .heart-svg { fill: var(--accent-main); stroke: var(--accent-main); transform: scale(1.1); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+        .heart-slot.filled .heart-svg { fill: var(--accent-main); stroke: var(--accent-main); transform: scale(1.15); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
 
-        .theme-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 18px; }
-        .theme-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
-
-        .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-soft); }
-        .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-main); margin-bottom: 12px; opacity: 0.9; }
-
-        .btn-sos { background: var(--sos-bg); border: 1px solid var(--sos-color); color: var(--sos-color); padding: 12px; border-radius: 16px; text-align: center; font-weight: 600; font-size: 12px; cursor: pointer; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
-        .season-box { margin-bottom: 16px; }
-        .season-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 6px; }
-        .season-switcher { display: flex; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 14px; padding: 3px; }
-        .season-opt { flex: 1; text-align: center; padding: 8px; border-radius: 11px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--text-secondary); }
-        .season-opt.active { background: var(--accent-main); color: #FFF; font-weight: 600; }
-
-        .toggle-chip { background: var(--bg-main); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; text-align: center; font-size: 13px; font-weight: 500; cursor: pointer; user-select: none; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .toggle-chip.active { background: var(--accent-light); border-color: var(--accent-main); color: var(--accent-main); }
-
-        .tod-selector { display: flex; gap: 10px; margin-bottom: 16px; }
-        .tod-btn { flex: 1; background: var(--bg-main); border: 1px solid var(--border-color); padding: 14px; border-radius: 16px; text-align: center; font-weight: 600; font-size: 13px; cursor: pointer; color: var(--text-primary); }
-        .tod-btn.active { background: var(--accent-light); border-color: var(--accent-main); color: var(--accent-main); }
-
-        .time-pill-grid { display: flex; gap: 8px; margin-bottom: 16px; }
-        .time-pill { flex: 1; text-align: center; padding: 10px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 12px; cursor: pointer; background: var(--bg-main); color: var(--text-primary); }
-        .time-pill.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
-
-        .cycling-row { display: flex; gap: 6px; margin-top: 8px; margin-bottom: 16px; }
-        .cycle-chip { flex: 1; text-align: center; padding: 10px 4px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 12px; cursor: pointer; background: var(--bg-main); color: var(--text-secondary); }
-        .cycle-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); font-weight: 600; }
+        /* Кнопки Утро/Вечер */
+        .big-btn { width: 100%; background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 28px 20px; text-align: left; cursor: pointer; margin-bottom: 16px; box-shadow: var(--shadow-soft); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .big-btn:active { transform: scale(0.98); }
+        .big-btn-icon { font-size: 32px; margin-bottom: 12px; }
+        .big-btn-title { font-size: 22px; font-weight: 600; font-family: Georgia, serif; color: var(--accent-main); margin-bottom: 4px; }
+        .big-btn-sub { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+        .edit-cycle { background: var(--accent-light); padding: 4px 8px; border-radius: 8px; font-size: 11px; color: var(--accent-main); cursor: pointer; border: 1px solid var(--accent-main); }
 
         /* Шпаргалка */
-        .cheat-sheet-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-soft); margin-top: 10px; }
-        .cheat-header { text-align: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px dashed var(--border-color); }
-        .cheat-title { font-size: 20px; font-family: Georgia, serif; color: var(--accent-main); }
-        .cheat-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
-
-        .sheet-list { display: flex; flex-direction: column; gap: 14px; }
-        .sheet-item { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-main); padding: 12px; border-radius: 16px; border: 1px solid var(--border-color); position: relative; }
-        .sheet-num { width: 26px; height: 26px; border-radius: 50%; background: var(--accent-light); color: var(--accent-main); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .sheet-content { flex: 1; }
-        .sheet-step-title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-        .sheet-zone-tag { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-        .step-del-btn { color: var(--text-secondary); opacity: 0.5; font-size: 14px; cursor: pointer; padding: 2px 6px; }
-        .step-del-btn:hover { opacity: 1; color: var(--sos-color); }
+        .cheat-sheet-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 20px; box-shadow: var(--shadow-soft); display: none; }
+        .sheet-header { text-align: center; margin-bottom: 16px; }
+        .sheet-title { font-size: 22px; font-family: Georgia, serif; color: var(--accent-main); }
         
-        .pause-box-inline { background: var(--accent-light); border-left: 3px solid var(--accent-main); padding: 8px 10px; border-radius: 0 10px 10px 0; margin-top: 6px; font-size: 11px; color: var(--text-primary); line-height: 1.4; }
+        .controls-row { display: flex; gap: 8px; margin-bottom: 16px; background: var(--bg-main); padding: 4px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .ctrl-pill { flex: 1; text-align: center; padding: 10px; font-size: 12px; font-weight: 500; cursor: pointer; border-radius: 12px; color: var(--text-secondary); }
+        .ctrl-pill.active { background: var(--surface); color: var(--accent-main); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 
-        .btn-primary { width: 100%; background: var(--accent-main); color: #FFF; border: none; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 10px; }
+        .hair-toggle { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); padding: 12px; border-radius: 16px; text-align: center; font-size: 13px; cursor: pointer; margin-bottom: 16px; color: var(--text-secondary); }
+        .hair-toggle.active { background: var(--accent-light); color: var(--accent-main); border-color: var(--accent-main); font-weight: 500; }
 
-        /* Экран Похвалы */
-        .finish-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 28px 20px; text-align: center; box-shadow: var(--shadow-soft); margin-top: 10px; }
+        .warning-banner { background: var(--warning-bg); border-left: 3px solid var(--warning-text); color: var(--warning-text); padding: 10px 12px; border-radius: 0 12px 12px 0; font-size: 12px; margin-bottom: 16px; display: none; }
+
+        .sheet-list { display: flex; flex-direction: column; gap: 12px; }
+        .sheet-item { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-main); padding: 14px; border-radius: 18px; border: 1px solid var(--border-color); }
+        .sheet-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-light); color: var(--accent-main); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .sheet-content { flex: 1; }
+        .sheet-step-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+        .sheet-zone-tag { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .step-del-btn { color: var(--text-secondary); opacity: 0.5; font-size: 14px; cursor: pointer; padding: 4px; }
+        
+        .pause-box-inline { background: var(--accent-light); border-left: 3px solid var(--accent-main); padding: 8px 10px; border-radius: 0 10px 10px 0; margin-top: 8px; font-size: 11px; color: var(--text-primary); line-height: 1.4; }
+
+        /* Быстрые действия (Карусель) */
+        .quick-actions-wrap { margin-top: 16px; border-top: 1px dashed var(--border-color); padding-top: 16px; }
+        .quick-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 8px; }
+        .quick-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .quick-scroll::-webkit-scrollbar { display: none; }
+        .quick-chip { background: var(--bg-main); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 14px; font-size: 12px; white-space: nowrap; cursor: pointer; color: var(--text-primary); flex-shrink: 0; }
+        .quick-chip:active { background: var(--accent-light); }
+
+        .btn-primary { width: 100%; background: var(--accent-main); color: #FFF; border: none; padding: 18px; border-radius: 18px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(122, 74, 88, 0.2); }
+        .btn-secondary { width: 100%; background: transparent; color: var(--text-secondary); border: none; padding: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 4px; }
+
+        /* Финиш */
+        .finish-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 32px 20px; text-align: center; box-shadow: var(--shadow-soft); display: none; }
         .finish-heart-anim { width: 64px; height: 64px; margin: 0 auto 16px auto; animation: pulseHeart 1.2s infinite alternate ease-in-out; }
-        @keyframes pulseHeart { 0% { transform: scale(1); } 100% { transform: scale(1.18); } }
-        .finish-title { font-size: 22px; font-family: Georgia, serif; color: var(--accent-main); margin-bottom: 8px; }
-        .finish-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; }
+        @keyframes pulseHeart { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+        .finish-title { font-size: 24px; font-family: Georgia, serif; color: var(--accent-main); margin-bottom: 8px; }
+        .finish-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 24px; }
 
-        .db-item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 6px; font-size: 12px; }
+        /* Модалки */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: flex-end; padding: 16px; }
+        .modal-content { background: var(--surface); border-radius: 24px; padding: 24px; width: 100%; max-height: 85vh; overflow-y: auto; margin-bottom: 20px; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); }
+        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 14px; margin-bottom: 12px; outline: none; background: var(--bg-main); color: var(--text-primary); }
+        
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border-color); }
+        .setting-label { font-size: 14px; color: var(--text-primary); font-weight: 500; }
+        .setting-desc { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+        
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); border-radius: 24px; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: .4s; }
+        input:checked + .slider { background-color: var(--accent-main); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
+        .db-item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-main); border-radius: 14px; margin-bottom: 8px; font-size: 13px; }
         #confettiCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--surface); border-radius: 22px; padding: 22px; max-width: 420px; width: 100%; max-height: 80vh; overflow-y: auto; }
-        .input-field { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); color: var(--text-primary); }
     </style>
 </head>
 <body data-theme="blush">
@@ -141,423 +119,402 @@
 
     <div class="top-bar">
         <div class="logo-tag">Care & Beauty</div>
-        <div class="settings-icon" onclick="openSettings()">📦 Косметичка</div>
+        <div class="top-actions">
+            <div class="btn-icon" style="color: var(--sos-color); border-color: #F8D7D7; background: var(--sos-bg);" onclick="generateSOS()">🚑 SOS</div>
+            <div class="btn-icon" onclick="openSettings()">⚙️ База & Настройки</div>
+        </div>
     </div>
 
-    <header>
-        <h1>Шпаргалка Ухода</h1>
-        <div class="subtitle">Персональная программа под ваш день</div>
-    </header>
-
-    <div class="hearts-tracker">
+    <!-- ТРЕКЕР (Скрыт по умолчанию, включается в настройках) -->
+    <div class="hearts-tracker" id="trackerUI">
         <div class="hearts-title">Люби себя каждый день 💖</div>
         <div class="hearts-row" id="heartsRow"></div>
     </div>
 
-    <div class="theme-bar">
-        <div class="theme-dot" style="background: #E8C5C8;" onclick="setTheme('blush')"></div>
-        <div class="theme-dot" style="background: #8FA89B;" onclick="setTheme('sage')"></div>
-        <div class="theme-dot" style="background: #8C4054;" onclick="setTheme('berry')"></div>
-        <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')"></div>
-    </div>
+    <!-- ГЛАВНЫЙ ЭКРАН (Максимально чистый) -->
+    <div id="screenHome">
+        <button class="big-btn" onclick="openRoutine('morning')">
+            <div class="big-btn-icon">☀️</div>
+            <div class="big-btn-title">Утренний уход</div>
+            <div class="big-btn-sub">Защита и увлажнение на весь день</div>
+        </button>
 
-    <div class="card" id="screenHome">
-        
-        <div class="card-title">1. Время суток</div>
-        <div class="tod-selector">
-            <div class="tod-btn active" id="todMorning" onclick="selectTOD('morning')">☀️ Утро</div>
-            <div class="tod-btn" id="todEvening" onclick="selectTOD('evening')">🌙 Вечер</div>
-        </div>
-
-        <div class="season-box">
-            <div class="season-label">2. Сезон ухода:</div>
-            <div class="season-switcher">
-                <div class="season-opt active" id="seasonSummer" onclick="setSeason('summer')">☀️ Лето (Легкий)</div>
-                <div class="season-opt" id="seasonWinter" onclick="setSeason('winter')">❄️ Зима (Плотный)</div>
+        <button class="big-btn" onclick="openRoutine('evening')">
+            <div class="big-btn-icon">🌙</div>
+            <div class="big-btn-title">Вечерний уход</div>
+            <div class="big-btn-sub" style="justify-content: space-between; width: 100%;">
+                <span id="eveningSubText">Восстановление</span>
+                <span class="edit-cycle" onclick="event.stopPropagation(); openCycleModal()">✎ Изменить</span>
             </div>
-        </div>
+        </button>
 
-        <div class="card-title">3. Опции ухода</div>
-        <div class="toggle-chip" id="btnHair" onclick="toggleHair()">
-            <span>💆‍♀️</span>
-            <span>+ Добавить уход за волосами</span>
-        </div>
-
-        <div class="card-title">4. Сколько есть времени?</div>
-        <div class="time-pill-grid">
-            <div class="time-pill active" onclick="selectTime(5, this)">5 минут</div>
-            <div class="time-pill" onclick="selectTime(20, this)">20 минут</div>
-            <div class="time-pill" onclick="selectTime(40, this)">40+ мин (SPA)</div>
-        </div>
-
-        <div class="card-title" id="cycleTitle" style="margin-top: 10px; display:none;">
-            Режим вечера (Skin Cycling) 
-            <span id="cycleAutoHint" style="font-weight:400; font-size:10px; color:var(--text-secondary); text-transform:none; margin-left:4px;">(авто-учет)</span>
-        </div>
-        <div class="cycling-row" id="cycleRow" style="display:none;">
-            <div class="cycle-chip" id="chipAcid" onclick="setCycle('acid', true)">🧪 Кислоты</div>
-            <div class="cycle-chip" id="chipRetinol" onclick="setCycle('retinol', true)">✨ Ретинол</div>
-            <div class="cycle-chip active" id="chipRest" onclick="setCycle('rest', true)">🌿 Отдых</div>
-        </div>
-
-        <button class="btn-primary" onclick="buildCustomSheet()">✨ Показать схему</button>
-
-        <div class="btn-sos" onclick="generateSOS()">
-            <span>🔥</span>
-            <span>SOS: Кожа горит / Перебор с активами</span>
+        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+            <div class="theme-dot" style="background: #E8C5C8;" onclick="setTheme('blush')"></div>
+            <div class="theme-dot" style="background: #8FA89B;" onclick="setTheme('sage')"></div>
+            <div class="theme-dot" style="background: #8C4054;" onclick="setTheme('berry')"></div>
+            <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')"></div>
         </div>
     </div>
 
-    <!-- КАРТОЧКА-ШПАРГАЛКА -->
-    <div class="cheat-sheet-card" id="screenSheet" style="display: none;">
-        <div class="cheat-header">
-            <div class="cheat-title" id="sheetTitle">Утренний Уход</div>
-            <div class="cheat-subtitle" id="sheetSub">3 шага</div>
+    <!-- ШПАРГАЛКА УХОДА -->
+    <div class="cheat-sheet-card" id="screenSheet">
+        <div class="sheet-header">
+            <div class="sheet-title" id="sheetTitle">Утренний уход</div>
+        </div>
+
+        <div class="warning-banner" id="warningBanner">
+            ⚠️ Вчера был активный уход. Не забудьте нанести качественный SPF!
+        </div>
+
+        <!-- Переключатели времени внутри шпаргалки -->
+        <div class="controls-row">
+            <div class="ctrl-pill" id="tabTime5" onclick="setSheetTime(5)">5 мин (База)</div>
+            <div class="ctrl-pill" id="tabTime20" onclick="setSheetTime(20)">20 мин</div>
+            <div class="ctrl-pill" id="tabTime40" onclick="setSheetTime(40)">SPA (Маски)</div>
+        </div>
+        
+        <div class="hair-toggle" id="btnSheetHair" onclick="toggleSheetHair()">
+            💆‍♀️ Добавить уход за волосами
         </div>
 
         <div class="sheet-list" id="sheetList"></div>
 
-        <div style="margin-top: 12px; display: flex; gap: 6px;">
-            <input type="text" id="quickStepInput" class="input-field" placeholder="+ Добавить шаг (напр. Патчи)" style="margin-bottom:0;">
-            <button class="btn-secondary" style="width: auto; margin-top:0; padding: 10px 14px;" onclick="addQuickStep()">Добавить</button>
+        <div class="quick-actions-wrap">
+            <div class="quick-title">+ Добавить быстрый шаг</div>
+            <div class="quick-scroll">
+                <div class="quick-chip" onclick="addQuick('Патчи под глаза 👁️', 6)">Патчи 👁️</div>
+                <div class="quick-chip" onclick="addQuick('Тканевая маска 🎭', 6)">Тканевая маска 🎭</div>
+                <div class="quick-chip" onclick="addQuick('Точечный гель от высыпаний 🔴', 4)">От высыпаний 🔴</div>
+                <div class="quick-chip" onclick="addQuick('Массаж скребком Гуаша 💆‍♀️', 6)">Гуаша 💆‍♀️</div>
+                <div class="quick-chip" onclick="addQuick('Бальзам для губ 💋', 6)">Бальзам 💋</div>
+            </div>
         </div>
 
-        <button class="btn-primary" onclick="completeRoutine()">✨ Всё сделано!</button>
-        <button class="btn-secondary" onclick="backToHome()">← Назад к настройкам</button>
+        <button class="btn-primary" onclick="completeRoutine()">✨ Всё сделано</button>
+        <button class="btn-secondary" onclick="closeSheet()">Отмена</button>
     </div>
 
-    <!-- ЭКРАН ПОХВАЛЫ -->
-    <div class="finish-card" id="screenFinish" style="display: none;">
-        <div class="finish-heart-anim">
+    <!-- ЭКРАН ЗАВЕРШЕНИЯ -->
+    <div class="finish-card" id="screenFinish">
+        <div class="finish-heart-anim" id="finishIcon">
             <svg viewBox="0 0 24 24" style="width: 100%; height: 100%; fill: var(--accent-main);">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
         </div>
-        <div class="finish-title" id="finishTitle">Забота о себе завершена!</div>
-        <div class="finish-text" id="finishText">Ты сделала ещё один шаг к сиянию и здоровью. В твою копилку добавлено сердечко любви к себе! 💖</div>
-        <button class="btn-primary" id="finishBtnNext" onclick="backToHome()">Отлично ✨</button>
+        <div class="finish-title" id="finishTitle">Отлично!</div>
+        <div class="finish-text" id="finishText">Всё готово.</div>
+        <button class="btn-primary" onclick="closeSheet()">Вернуться на главную</button>
     </div>
 
-    <!-- МОДАЛКА КОСМЕТИЧКИ -->
+    <!-- МОДАЛКА НАСТРОЕК -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
-            <div class="card-title">📦 Ваша Косметичка (База)</div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Просмотрите и отредактируйте имеющиеся средства:</div>
+            <div style="font-size: 18px; font-family: Georgia, serif; color: var(--accent-main); margin-bottom: 16px;">Настройки</div>
             
-            <div id="dbListContainer" style="max-height: 180px; overflow-y: auto; margin-bottom: 14px;"></div>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Трекер «Любовь к себе»</div>
+                    <div class="setting-desc">Сердечки на главном экране и конфетти в конце недели</div>
+                </div>
+                <label class="switch"><input type="checkbox" id="tgHearts" onchange="toggleSetting('hearts')"><span class="slider"></span></label>
+            </div>
 
-            <div class="card-title" style="margin-bottom: 6px;">+ Добавить новое средство</div>
-            <input type="text" id="addTitle" class="input-field" placeholder="Название средства">
-            <select id="addZone" class="input-field">
-                <option value="Лицо">Зона: Лицо</option>
-                <option value="Волосы">Зона: Волосы</option>
-                <option value="Тело">Зона: Тело</option>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Духовные практики</div>
+                    <div class="setting-desc">Советы по дыханию и расслаблению во время долгих пауз</div>
+                </div>
+                <label class="switch"><input type="checkbox" id="tgTips" onchange="toggleSetting('tips')"><span class="slider"></span></label>
+            </div>
+
+            <div class="setting-row" style="border-bottom:none; padding-bottom: 8px;">
+                <div>
+                    <div class="setting-label">Сезон ухода</div>
+                    <div class="setting-desc">Меняет SPF и плотность кремов</div>
+                </div>
+                <select class="input-field" style="width: auto; margin: 0;" id="selSeason" onchange="changeSeason()">
+                    <option value="summer">☀️ Лето (Легкий)</option>
+                    <option value="winter">❄️ Зима (Плотный)</option>
+                </select>
+            </div>
+
+            <div style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0;">Ваша Косметичка</div>
+            <div id="dbListContainer" style="max-height: 200px; overflow-y: auto; margin-bottom: 16px; padding-right: 4px;"></div>
+
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">+ Добавить средство</div>
+            <input type="text" id="addTitle" class="input-field" placeholder="Название (напр. Сыворотка с вит С)">
+            <select id="addStep" class="input-field">
+                <option value="1">Этап 1: Очищение / Демакияж</option>
+                <option value="2">Этап 2: Тоник / Мист</option>
+                <option value="3">Этап 3: Активы (Сыворотка/Кислоты)</option>
+                <option value="4">Этап 4: Крем / Увлажнение</option>
+                <option value="5">Этап 5: SPF защита</option>
+                <option value="6">Дополнительно (Маски, Волосы)</option>
             </select>
-            <input type="number" id="addPause" class="input-field" placeholder="Пауза выдержки в мин (0 если нет)">
+            <input type="number" id="addPause" class="input-field" placeholder="Пауза выдержки в мин (если есть)">
             
-            <button class="btn-primary" style="margin-top: 6px;" onclick="addCustomToDB()">Сохранить средство</button>
-            <button class="btn-secondary" onclick="closeSettings()">Закрыть</button>
+            <button class="btn-primary" style="padding: 14px; font-size: 14px; margin-top: 4px;" onclick="addCustomToDB()">Сохранить средство</button>
+            <button class="btn-secondary" onclick="document.getElementById('settingsModal').style.display='none'">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ВЫБОРА ЦИКЛА -->
+    <div class="modal-overlay" id="cycleModal">
+        <div class="modal-content" style="max-width: 300px;">
+            <div style="font-size: 16px; font-weight: 600; margin-bottom: 16px; text-align: center;">Этап на сегодня:</div>
+            <button class="btn-secondary" style="border: 1px solid var(--border-color); color: var(--text-primary); margin-bottom: 8px;" onclick="manualSetCycle('acid')">🧪 Кислоты / Пилинг</button>
+            <button class="btn-secondary" style="border: 1px solid var(--border-color); color: var(--text-primary); margin-bottom: 8px;" onclick="manualSetCycle('retinol')">✨ Ретинол</button>
+            <button class="btn-secondary" style="border: 1px solid var(--border-color); color: var(--text-primary); margin-bottom: 8px;" onclick="manualSetCycle('rest')">🌿 Отдых (Только база)</button>
+            <button class="btn-secondary" style="margin-top: 12px; border: none;" onclick="document.getElementById('cycleModal').style.display='none'">Отмена</button>
         </div>
     </div>
 
     <script>
+        // БАЗА СРЕДСТВ: stepLevel от 1 до 6 определяет порядок нанесения (Слоинг)
         const defaultDB = [
-            { id: 1, title: "Мусс / Гель для умывания", zone: "Лицо", tod: "both", type: "clean", pause: 0 },
-            { id: 2, title: "Увлажняющий тоник NMF", zone: "Лицо", tod: "both", type: "base", pause: 0 },
-            { id: 3, title: "Флюид SPF 50 (Лето)", zone: "Лицо", season: "summer", tod: "morning", type: "spf", pause: 0 },
-            { id: 4, title: "Плотный питательный SPF-крем (Зима)", zone: "Лицо", season: "winter", tod: "morning", type: "spf", pause: 0 },
-            { id: 5, title: "Сыворотка с AHA/BHA кислотами", zone: "Лицо", tod: "evening", type: "acid", pause: 10, tip: "☕ Заварите травяной чай и сделайте пару глубоких вдохов без телефона." },
-            { id: 6, title: "Retiderm / Ретинол 0.25", zone: "Лицо", tod: "evening", type: "retinol", pause: 15, tip: "🧘‍♀️ Практика «4-7-8»: Вдох носом (4 сек) ➔ Задержка (7 сек) ➔ Выдох (8 сек). Снимает дневной стресс." },
-            { id: 7, title: "Восстанавливающий крем с церамидами", zone: "Лицо", tod: "evening", type: "rest", pause: 0 },
-            { id: 8, title: "SOS-Бальзам с Пантенолом", zone: "Лицо", tod: "both", type: "sos", pause: 0 },
-            { id: 9, title: "Шампунь + Глубокая маска для волос", zone: "Волосы", tod: "both", type: "hair", pause: 5, tip: "💆‍♀️ Сделайте мягкий круговой массаж кожи головы подушечками пальцев." }
+            { id: 1, title: "Мусс / Гель для умывания", stepLevel: 1, type: "base", pause: 0 },
+            { id: 2, title: "Увлажняющий тоник NMF", stepLevel: 2, type: "tonic", pause: 0 },
+            { id: 3, title: "Сыворотка с AHA/BHA", stepLevel: 3, type: "acid", pause: 10, tip: "Сделайте пару глубоких вдохов без телефона." },
+            { id: 4, title: "Ретинол 0.25", stepLevel: 3, type: "retinol", pause: 15, tip: "Вдох (4 сек) ➔ Задержка (7 сек) ➔ Выдох (8 сек)." },
+            { id: 5, title: "Восстанавливающий крем", stepLevel: 4, type: "base", pause: 0 },
+            { id: 6, title: "Флюид SPF 50", stepLevel: 5, type: "spf", season: "summer", pause: 0 },
+            { id: 7, title: "Плотный SPF-крем", stepLevel: 5, type: "spf", season: "winter", pause: 0 },
+            { id: 8, title: "SOS-Бальзам с Пантенолом", stepLevel: 4, type: "sos", pause: 0 },
+            { id: 9, title: "Уход за волосами (Спрей/Масло)", stepLevel: 6, type: "hair", pause: 0 }
         ];
 
-        let database = JSON.parse(localStorage.getItem('sheet_skincare_db_v6')) || defaultDB;
-        let selectedTOD = localStorage.getItem('last_active_tod') || 'morning';
-        let isSummer = true;
-        let needHair = false;
-        let selectedTime = 5;
+        let database = JSON.parse(localStorage.getItem('sheet_skincare_db_v7')) || defaultDB;
+        
+        // НАСТРОЙКИ
+        let prefs = JSON.parse(localStorage.getItem('sheet_prefs_v7')) || { hearts: false, tips: false, season: 'summer' };
+        let activeCycle = localStorage.getItem('sheet_cycle_v7') || 'rest';
+        let yesterdayWasActive = localStorage.getItem('sheet_yesterday_active') === 'true';
+        let completedCount = parseInt(localStorage.getItem('hearts_completed_count') || "0");
+        
+        // Состояние текущей сессии
+        let currentTOD = 'morning';
+        let currentTimeTab = 5;
+        let currentHair = false;
         let activeSheetItems = [];
 
-        let completedCount = parseInt(localStorage.getItem('hearts_completed_count') || "0");
-        let lastDateStr = localStorage.getItem('last_completed_date') || "";
-        let cycleDay = parseInt(localStorage.getItem('skin_cycle_day') || "1");
+        // Инициализация при загрузке
+        window.onload = () => {
+            setTheme(localStorage.getItem('sheet_skincare_theme') || 'blush');
+            document.getElementById('tgHearts').checked = prefs.hearts;
+            document.getElementById('tgTips').checked = prefs.tips;
+            document.getElementById('selSeason').value = prefs.season;
+            updateCycleUI();
+            updateTrackerUI();
+        };
 
-        let todayStr = new Date().toISOString().slice(0, 10);
-        if (lastDateStr && lastDateStr !== todayStr) {
-            let lastDate = new Date(lastDateStr);
-            let todayDate = new Date(todayStr);
-            let diffDays = Math.round((todayDate - lastDate) / (1000 * 60 * 60 * 24));
-
-            if (diffDays === 1) cycleDay = cycleDay >= 4 ? 1 : cycleDay + 1;
-            else if (diffDays > 2) cycleDay = 3;
-            localStorage.setItem('skin_cycle_day', cycleDay.toString());
+        function toggleSetting(key) {
+            prefs[key] = !prefs[key];
+            localStorage.setItem('sheet_prefs_v7', JSON.stringify(prefs));
+            if (key === 'hearts') updateTrackerUI();
         }
 
-        let activeCycle = cycleDay === 1 ? 'acid' : cycleDay === 2 ? 'retinol' : 'rest';
+        function changeSeason() {
+            prefs.season = document.getElementById('selSeason').value;
+            localStorage.setItem('sheet_prefs_v7', JSON.stringify(prefs));
+        }
 
-        function renderHeartsUI() {
+        function updateTrackerUI() {
+            const tracker = document.getElementById('trackerUI');
+            if (!prefs.hearts) {
+                tracker.style.display = 'none';
+                return;
+            }
+            tracker.style.display = 'block';
             let container = document.getElementById('heartsRow');
             container.innerHTML = '';
             for (let i = 1; i <= 7; i++) {
-                let isFilled = i <= completedCount;
                 container.innerHTML += `
-                    <div class="heart-slot ${isFilled ? 'filled' : ''}">
-                        <svg class="heart-svg" viewBox="0 0 24 24">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                    </div>
-                `;
+                    <div class="heart-slot ${i <= completedCount ? 'filled' : ''}">
+                        <svg class="heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>`;
             }
         }
-        renderHeartsUI();
 
-        function setTheme(t) {
-            document.body.setAttribute('data-theme', t);
-            localStorage.setItem('sheet_skincare_theme', t);
-        }
-        setTheme(localStorage.getItem('sheet_skincare_theme') || 'blush');
-
-        function selectTOD(tod) {
-            selectedTOD = tod;
-            localStorage.setItem('last_active_tod', tod);
-            document.getElementById('todMorning').classList.toggle('active', tod === 'morning');
-            document.getElementById('todEvening').classList.toggle('active', tod === 'evening');
-            
-            let isEv = tod === 'evening';
-            document.getElementById('cycleTitle').style.display = isEv ? 'block' : 'none';
-            document.getElementById('cycleRow').style.display = isEv ? 'flex' : 'none';
-        }
-        selectTOD(selectedTOD);
-
-        function setSeason(season) {
-            isSummer = season === 'summer';
-            document.getElementById('seasonSummer').classList.toggle('active', isSummer);
-            document.getElementById('seasonWinter').classList.toggle('active', !isSummer);
+        function updateCycleUI() {
+            let label = activeCycle === 'acid' ? "🧪 Кислоты" : activeCycle === 'retinol' ? "✨ Ретинол" : "🌿 Отдых (База)";
+            document.getElementById('eveningSubText').innerText = `Сегодня: ${label}`;
+            localStorage.setItem('sheet_cycle_v7', activeCycle);
         }
 
-        function toggleHair() {
-            needHair = !needHair;
-            document.getElementById('btnHair').classList.toggle('active', needHair);
-        }
-
-        function selectTime(time, el) {
-            selectedTime = time;
-            document.querySelectorAll('.time-pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        function setCycle(mode, isManual = false) {
+        function openCycleModal() { document.getElementById('cycleModal').style.display = 'flex'; }
+        function manualSetCycle(mode) {
             activeCycle = mode;
-            document.querySelectorAll('.cycle-chip').forEach(c => c.classList.remove('active'));
-            if (mode === 'acid') document.getElementById('chipAcid').classList.add('active');
-            else if (mode === 'retinol') document.getElementById('chipRetinol').classList.add('active');
-            else document.getElementById('chipRest').classList.add('active');
-
-            if (isManual) document.getElementById('cycleAutoHint').innerText = "(выбрано вручную)";
+            updateCycleUI();
+            document.getElementById('cycleModal').style.display = 'none';
         }
-        setCycle(activeCycle);
 
-        function buildCustomSheet() {
-            activeSheetItems = [];
-            let title = selectedTOD === 'morning' ? "☀️ Утренний Уход" : `🌙 Вечерний Уход (${activeCycle === 'acid' ? 'Кислоты' : activeCycle === 'retinol' ? 'Ретинол' : 'Отдых'})`;
-
-            if (selectedTOD === 'morning') {
-                activeSheetItems.push(database.find(d => d.id === 1));
-                activeSheetItems.push(database.find(d => d.id === 2));
-                let spf = database.find(d => d.type === 'spf' && (isSummer ? d.season === 'summer' : d.season === 'winter'));
-                if (spf) activeSheetItems.push(spf);
-            } else {
-                activeSheetItems.push(database.find(d => d.id === 1));
-                if (activeCycle === 'acid') {
-                    let acid = database.find(d => d.type === 'acid');
-                    if (acid) activeSheetItems.push(acid);
-                } else if (activeCycle === 'retinol') {
-                    let ret = database.find(d => d.type === 'retinol');
-                    if (ret) activeSheetItems.push(ret);
-                }
-                activeSheetItems.push(database.find(d => d.id === 7));
-            }
-
-            if (needHair) {
-                let hair = database.find(d => d.type === 'hair');
-                if (hair) activeSheetItems.push(hair);
-            }
-
-            activeSheetItems = activeSheetItems.filter(Boolean);
-            renderSheetUI(title, `${activeSheetItems.length} шага • Подобрано под вас`);
+        // Логика построения Шпаргалки (Умные фильтры)
+        function openRoutine(tod) {
+            currentTOD = tod;
+            currentTimeTab = tod === 'morning' ? 5 : 20; // Паттерн: Утром обычно 5 мин, вечером 20
+            currentHair = false;
+            buildSheet();
         }
+
+        function setSheetTime(mins) { currentTimeTab = mins; buildSheet(); }
+        function toggleSheetHair() { currentHair = !currentHair; buildSheet(); }
 
         function generateSOS() {
-            activeSheetItems = [database.find(d => d.id === 1), database.find(d => d.id === 8)].filter(Boolean);
-            renderSheetUI("🆘 SOS: Восстановление Кожи", "Только заживление без активов");
+            currentTOD = 'sos';
+            activeSheetItems = database.filter(d => (d.stepLevel === 1 && d.type === 'base') || d.type === 'sos');
+            renderSheet();
         }
 
-        function renderSheetUI(title, sub) {
+        function buildSheet() {
+            activeSheetItems = [];
+            
+            // Фильтры по времени (5 мин: только 1, 4, 5. / 20 мин: 1,2,3(без пауз),4,5 / SPA: всё)
+            database.forEach(item => {
+                // Если волосы не выбраны - пропускаем
+                if (item.type === 'hair' && !currentHair) return;
+                
+                // Фильтр сезонов для SPF
+                if (item.type === 'spf' && item.season !== prefs.season) return;
+                
+                // Фильтр времени суток
+                if (currentTOD === 'morning' && (item.type === 'acid' || item.type === 'retinol')) return;
+                if (currentTOD === 'evening' && item.type === 'spf') return;
+                
+                // Учет Skin Cycling для вечера
+                if (currentTOD === 'evening') {
+                    if (item.type === 'acid' && activeCycle !== 'acid') return;
+                    if (item.type === 'retinol' && activeCycle !== 'retinol') return;
+                }
+
+                // Фильтр ресурса времени (5, 20, SPA)
+                if (currentTimeTab === 5) {
+                    if (item.stepLevel === 2 || item.stepLevel === 3 || item.pause > 0) return; // Нет тоникам и активам
+                } else if (currentTimeTab === 20) {
+                    if (item.pause >= 15) return; // Убираем долгие выдержки
+                }
+
+                activeSheetItems.push({...item});
+            });
+
+            // Слоинг: Сортировка по порядку нанесения (от жидкого к плотному)
+            activeSheetItems.sort((a, b) => a.stepLevel - b.stepLevel);
+            renderSheet();
+        }
+
+        function renderSheet() {
+            document.getElementById('screenHome').style.display = 'none';
+            document.getElementById('screenFinish').style.display = 'none';
+            document.getElementById('screenSheet').style.display = 'block';
+
+            let title = currentTOD === 'morning' ? "☀️ Утренний уход" : currentTOD === 'evening' ? "🌙 Вечерний уход" : "🆘 SOS Восстановление";
+            document.getElementById('sheetTitle').innerText = title;
+
+            // Обновление UI переключателей
+            document.querySelectorAll('.ctrl-pill').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tabTime${currentTimeTab}`).classList.add('active');
+            document.getElementById('btnSheetHair').classList.toggle('active', currentHair);
+
+            // Предупреждение о SPF
+            document.getElementById('warningBanner').style.display = (currentTOD === 'morning' && yesterdayWasActive) ? 'block' : 'none';
+
             let listContainer = document.getElementById('sheetList');
             listContainer.innerHTML = '';
 
             activeSheetItems.forEach((item, idx) => {
+                let pauseHTML = '';
+                if (item.pause > 0) {
+                    pauseHTML = `<div class="pause-box-inline"><b>⏱️ Выдержка: ${item.pause} мин</b>`;
+                    if (prefs.tips && item.tip) pauseHTML += `<br>${item.tip}`;
+                    pauseHTML += `</div>`;
+                }
+
                 listContainer.innerHTML += `
                     <div class="sheet-item">
                         <div class="sheet-num">${idx + 1}</div>
                         <div class="sheet-content">
                             <div class="sheet-step-title">${item.title}</div>
-                            <div class="sheet-zone-tag">${item.zone}</div>
-                            ${item.pause > 0 ? `
-                                <div class="pause-box-inline">
-                                    <b>⏱️ Выдержка: ${item.pause} минут</b><br>
-                                    ${item.tip || 'Посвятите эти минуты себе.'}
-                                </div>
-                            ` : ''}
+                            ${pauseHTML}
                         </div>
-                        <div class="step-del-btn" onclick="removeStep(${idx})" title="Удалить шаг">✕</div>
+                        <div class="step-del-btn" onclick="removeStep(${idx})">✕</div>
                     </div>
                 `;
             });
-
-            document.getElementById('sheetTitle').innerText = title;
-            document.getElementById('sheetSub').innerText = sub;
-            document.getElementById('screenHome').style.display = 'none';
-            document.getElementById('screenSheet').style.display = 'block';
         }
 
         function removeStep(idx) {
             activeSheetItems.splice(idx, 1);
-            renderSheetUI(document.getElementById('sheetTitle').innerText, `${activeSheetItems.length} шага`);
+            renderSheet();
         }
 
-        function addQuickStep() {
-            let val = document.getElementById('quickStepInput').value;
-            if (!val) return;
-            activeSheetItems.push({ title: val, zone: "Дополнительно", pause: 0 });
-            document.getElementById('quickStepInput').value = '';
-            renderSheetUI(document.getElementById('sheetTitle').innerText, `${activeSheetItems.length} шага`);
+        function addQuick(title, stepLvl) {
+            activeSheetItems.push({ title: title, stepLevel: stepLvl, pause: 0 });
+            activeSheetItems.sort((a, b) => a.stepLevel - b.stepLevel);
+            renderSheet();
         }
 
-        // АВТОМАТИЧЕСКОЕ ПЕРЕКЛЮЧЕНИЕ ВРЕМЕНИ СУТОК ПОСЛЕ ВЫПОЛНЕНИЯ
         function completeRoutine() {
-            completedCount++;
-            localStorage.setItem('hearts_completed_count', completedCount.toString());
-            localStorage.setItem('last_completed_date', todayStr);
-
             document.getElementById('screenSheet').style.display = 'none';
             document.getElementById('screenFinish').style.display = 'block';
 
             let fTitle = document.getElementById('finishTitle');
             let fText = document.getElementById('finishText');
-            let fBtn = document.getElementById('finishBtnNext');
+            let icon = document.getElementById('finishIcon');
 
-            if (selectedTOD === 'morning') {
-                fTitle.innerText = "Прекрасного дня! ☀️";
-                fText.innerText = "Кожа сияет и защищена. Ждем тебя вечером для расслабляющего ухода!";
-                fBtn.innerText = "Перейти к вечернему уходу 🌙";
-                // Авто-переключение на Вечер
-                selectTOD('evening');
-            } else {
-                fTitle.innerText = "Приятного вечера! 🌙";
-                fText.innerText = "Забота о себе завершена. Отдыхай, набирайся сил и сладко спи!";
-                fBtn.innerText = "Запланировать уход на утро ☀️";
+            if (!prefs.hearts) {
+                icon.innerHTML = `<div style="font-size:48px; line-height:64px;">✨</div>`;
+            }
+
+            if (currentTOD === 'morning') {
+                fTitle.innerText = "Прекрасного дня!";
+                fText.innerText = "Кожа защищена. Ждем вечером.";
+            } else if (currentTOD === 'evening') {
+                fTitle.innerText = "Приятного вечера!";
+                fText.innerText = "Забота завершена. Сладких снов.";
                 
-                // Авто-переключение на Утро и следующий день Skin Cycling
-                selectTOD('morning');
-                cycleDay = cycleDay >= 4 ? 1 : cycleDay + 1;
-                localStorage.setItem('skin_cycle_day', cycleDay.toString());
-                activeCycle = cycleDay === 1 ? 'acid' : cycleDay === 2 ? 'retinol' : 'rest';
-                setCycle(activeCycle);
+                // Фиксируем использование актива для утреннего предупреждения
+                yesterdayWasActive = (activeCycle === 'acid' || activeCycle === 'retinol');
+                localStorage.setItem('sheet_yesterday_active', yesterdayWasActive.toString());
+
+                // Авто-сдвиг цикла
+                if (activeCycle === 'acid') activeCycle = 'retinol';
+                else if (activeCycle === 'retinol') activeCycle = 'rest';
+                else activeCycle = 'acid'; // В реальной жизни тут 2 дня отдыха, упрощаем для прототипа
+                updateCycleUI();
             }
 
-            renderHeartsUI();
-
-            if (completedCount >= 7) {
-                triggerHeartConfetti();
-                fTitle.innerText = "7 дней любви к себе! 💖";
-                fText.innerText = "Целая неделя заботы и внимания к своей коже! Ты невероятная умница!";
-                completedCount = 0;
-                localStorage.setItem('hearts_completed_count', "0");
+            if (prefs.hearts) {
+                completedCount++;
+                localStorage.setItem('hearts_completed_count', completedCount.toString());
+                if (completedCount >= 7) {
+                    triggerHeartConfetti();
+                    fTitle.innerText = "7 дней любви к себе!";
+                    completedCount = 0;
+                    localStorage.setItem('hearts_completed_count', "0");
+                }
+                updateTrackerUI();
             }
         }
 
-        function triggerHeartConfetti() {
-            const canvas = document.getElementById('confettiCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            let particles = [];
-            let colors = ['#E8C5C8', '#7A4A58', '#D4A373', '#6B2337', '#FFF0F2'];
-
-            for (let i = 0; i < 40; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    size: Math.random() * 14 + 10,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    speedY: Math.random() * 3 + 2,
-                    speedX: Math.random() * 2 - 1,
-                    rot: Math.random() * 360,
-                    rotSpeed: Math.random() * 4 - 2
-                });
-            }
-
-            function drawHeart(x, y, size, color, rot) {
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.rotate((rot * Math.PI) / 180);
-                ctx.beginPath();
-                ctx.fillStyle = color;
-                let topCurveHeight = size * 0.3;
-                ctx.moveTo(0, topCurveHeight);
-                ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
-                ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, size, 0, size);
-                ctx.bezierCurveTo(0, size, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
-                ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
-                ctx.closePath();
-                ctx.fill();
-                ctx.restore();
-            }
-
-            let frame = 0;
-            function render() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.y += p.speedY;
-                    p.x += p.speedX;
-                    p.rot += p.rotSpeed;
-                    drawHeart(p.x, p.y, p.size, p.color, p.rot);
-                });
-                frame++;
-                if (frame < 180) requestAnimationFrame(render);
-                else ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
-            render();
-        }
-
-        function backToHome() {
+        function closeSheet() {
             document.getElementById('screenSheet').style.display = 'none';
             document.getElementById('screenFinish').style.display = 'none';
             document.getElementById('screenHome').style.display = 'block';
-            renderHeartsUI();
         }
 
+        // КОСМЕТИЧКА (НАСТРОЙКИ)
         function openSettings() {
-            renderDBListModal();
+            renderDBList();
             document.getElementById('settingsModal').style.display = 'flex';
         }
 
-        function closeSettings() {
-            document.getElementById('settingsModal').style.display = 'none';
-        }
-
-        function renderDBListModal() {
+        function renderDBList() {
             let container = document.getElementById('dbListContainer');
             container.innerHTML = '';
             database.forEach((item, idx) => {
                 container.innerHTML += `
                     <div class="db-item-row">
-                        <span><b>[${item.zone}]</b> ${item.title}</span>
-                        <span style="color:var(--sos-color); cursor:pointer; font-weight:bold;" onclick="deleteDBItem(${idx})">✕</span>
+                        <div><b>Этап ${item.stepLevel}:</b> ${item.title}</div>
+                        <span style="color:var(--sos-color); cursor:pointer; padding: 4px;" onclick="deleteDBItem(${idx})">✕</span>
                     </div>
                 `;
             });
@@ -565,31 +522,63 @@
 
         function deleteDBItem(idx) {
             database.splice(idx, 1);
-            localStorage.setItem('sheet_skincare_db_v6', JSON.stringify(database));
-            renderDBListModal();
+            localStorage.setItem('sheet_skincare_db_v7', JSON.stringify(database));
+            renderDBList();
         }
 
         function addCustomToDB() {
             let t = document.getElementById('addTitle').value;
-            let z = document.getElementById('addZone').value;
+            let step = parseInt(document.getElementById('addStep').value);
             let p = parseInt(document.getElementById('addPause').value) || 0;
 
-            if (!t) return alert("Введите название средства!");
+            if (!t) return alert("Введите название!");
 
             database.push({
                 id: Date.now(),
                 title: t,
-                zone: z,
-                tod: 'both',
+                stepLevel: step,
                 type: 'custom',
                 pause: p,
-                tip: p >= 10 ? "🧘‍♀️ Посвятите время выдержки отдыху или глубокому дыханию." : ""
+                tip: p >= 10 ? "Время расслабиться." : ""
             });
 
-            localStorage.setItem('sheet_skincare_db_v6', JSON.stringify(database));
+            localStorage.setItem('sheet_skincare_db_v7', JSON.stringify(database));
             document.getElementById('addTitle').value = '';
             document.getElementById('addPause').value = '';
-            renderDBListModal();
+            renderDBList();
+        }
+
+        function setTheme(t) {
+            document.body.setAttribute('data-theme', t);
+            localStorage.setItem('sheet_skincare_theme', t);
+        }
+
+        // КОНФЕТТИ
+        function triggerHeartConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+            for (let i = 0; i < 40; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 14 + 10, color: ['#E8C5C8', '#7A4A58', '#D4A373'][Math.floor(Math.random() * 3)],
+                    speedY: Math.random() * 3 + 2, speedX: Math.random() * 2 - 1, rot: Math.random() * 360, rotSpeed: Math.random() * 4 - 2
+                });
+            }
+            function drawH(x, y, s, c, r) {
+                ctx.save(); ctx.translate(x, y); ctx.rotate(r * Math.PI / 180); ctx.beginPath(); ctx.fillStyle = c;
+                ctx.moveTo(0, s*.3); ctx.bezierCurveTo(0,0, -s/2,0, -s/2,s*.3); ctx.bezierCurveTo(-s/2,(s+s*.3)/2, 0,s, 0,s);
+                ctx.bezierCurveTo(0,s, s/2,(s+s*.3)/2, s/2,s*.3); ctx.bezierCurveTo(s/2,0, 0,0, 0,s*.3); ctx.fill(); ctx.restore();
+            }
+            let frame = 0;
+            function render() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.y += p.speedY; p.x += p.speedX; p.rot += p.rotSpeed; drawH(p.x, p.y, p.size, p.color, p.rot); });
+                if (frame++ < 180) requestAnimationFrame(render); else ctx.clearRect(0,0,canvas.width,canvas.height);
+            }
+            render();
         }
     </script>
 </body>
