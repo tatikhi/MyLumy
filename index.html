@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мой Уход за Кожей</title>
     <style>
-        /* CSS-переменные для динамических тем */
         :root {
             --bg-main: #FAF4F0;
             --surface: #FFFFFF;
@@ -18,7 +17,6 @@
             --radius-main: 22px;
         }
 
-        /* ТЕМЫ ОФОРМЛЕНИЯ */
         body[data-theme="sage"] {
             --bg-main: #F4F6F4;
             --surface: #FFFFFF;
@@ -52,398 +50,255 @@
             --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; transition: background 0.25s, color 0.25s, border-color 0.25s; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; transition: all 0.2s ease; }
         body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
 
-        header { text-align: center; margin-bottom: 20px; }
-        .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-main); margin-bottom: 4px; opacity: 0.8; }
-        h1 { font-size: 24px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-main); }
+        /* Верхняя панель */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-main); opacity: 0.8; }
+        .settings-icon { font-size: 18px; cursor: pointer; opacity: 0.7; }
+
+        header { text-align: center; margin-bottom: 24px; }
+        h1 { font-size: 26px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-main); }
         .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
 
-        /* Переключатель тем */
+        /* Темы */
         .theme-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
-        .theme-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.2s; }
-        .theme-dot:hover { transform: scale(1.15); }
+        .theme-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
 
         .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-soft); }
         .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-main); margin-bottom: 14px; opacity: 0.9; }
 
-        .tod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-        .tod-chip { padding: 14px; border: 1px solid var(--border-color); border-radius: 16px; text-align: center; cursor: pointer; background: var(--bg-main); font-size: 14px; font-weight: 500; }
-        .tod-chip.active { background: var(--accent-light); border-color: var(--accent-main); color: var(--accent-main); }
+        /* Кнопки в один клик */
+        .quick-start-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        .btn-quick { background: var(--accent-light); border: 1px solid var(--border-color); padding: 18px 14px; border-radius: 18px; text-align: center; cursor: pointer; color: var(--accent-main); font-weight: 600; font-size: 14px; }
+        .btn-quick:active { transform: scale(0.98); }
+        .btn-quick .sub { font-size: 11px; font-weight: 400; color: var(--text-secondary); margin-top: 4px; display: block; }
 
-        .time-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-main); cursor: pointer; margin-bottom: 8px; font-size: 14px; }
-        .time-option.active { border-color: var(--accent-main); background: var(--accent-light); color: var(--accent-main); font-weight: 500; }
+        /* Выбор времени (Селектор) */
+        .time-pill-grid { display: flex; gap: 8px; margin-bottom: 16px; }
+        .time-pill { flex: 1; text-align: center; padding: 10px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 12px; cursor: pointer; background: var(--bg-main); color: var(--text-primary); }
+        .time-pill.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
-        .zones-grid { display: flex; gap: 8px; margin-bottom: 16px; }
-        .zone-chip { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 13px; cursor: pointer; background: var(--bg-main); }
-        .zone-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
+        /* Карточка-Шпаргалка (Cheat Sheet) */
+        .cheat-sheet-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-soft); margin-top: 10px; }
+        .cheat-header { text-align: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px dashed var(--border-color); }
+        .cheat-title { font-size: 20px; font-family: Georgia, serif; color: var(--accent-main); }
+        .cheat-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 
-        .proc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 8px; font-size: 13px; background: var(--bg-main); }
-        .proc-item input { accent-color: var(--accent-main); width: 18px; height: 18px; }
-
-        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); color: var(--text-primary); }
-
-        .btn-primary { width: 100%; background: var(--accent-main); color: #FFF; border: none; padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 8px; }
+        /* Список шагов на полочку */
+        .sheet-list { display: flex; flex-direction: column; gap: 16px; }
+        .sheet-item { display: flex; gap: 14px; align-items: flex-start; }
+        .sheet-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); color: var(--accent-main); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .sheet-content { flex: 1; }
+        .sheet-step-title { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+        .sheet-zone { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
         
-        .btn-idea-inline { background: var(--accent-light); color: var(--accent-main); border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; margin-top: 8px; display: inline-block; }
+        .pause-box-inline { background: var(--accent-light); border-left: 3px solid var(--accent-main); padding: 10px 12px; border-radius: 0 10px 10px 0; margin-top: 8px; font-size: 12px; color: var(--text-primary); line-height: 1.4; }
 
-        .inline-tip-box { background: var(--accent-light); border-left: 3px solid var(--accent-main); padding: 12px 14px; border-radius: 0 12px 12px 0; margin-top: 10px; font-size: 12px; color: var(--text-primary); display: none; line-height: 1.5; }
-
-        .timeline-step { border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; margin-bottom: 12px; background: var(--surface); opacity: 0.5; }
-        .timeline-step.active { opacity: 1; border-color: var(--accent-main); box-shadow: var(--shadow-soft); }
-        .timeline-step.completed { opacity: 0.6; background: var(--accent-light); border-color: transparent; }
+        .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 16px; }
         
-        .step-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
-        .step-title { font-size: 16px; font-weight: 500; color: var(--text-primary); }
-
-        .care-next-card { background: var(--accent-light); border: 1px dashed var(--accent-main); padding: 20px; border-radius: 20px; text-align: center; margin-top: 16px; display: none; }
-
-        .db-toggle-btn { background: var(--accent-light); border: 1px solid var(--border-color); color: var(--accent-main); padding: 12px 14px; border-radius: 14px; font-size: 12px; font-weight: 600; cursor: pointer; width: 100%; margin: 10px 0; text-align: left; display: flex; justify-content: space-between; }
-        .db-list { display: none; margin-top: 8px; max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; padding: 8px; background: var(--bg-main); }
-        .db-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; font-size: 12px; border-bottom: 1px dashed var(--border-color); }
-        .db-item:last-child { border-bottom: none; }
-        .del-btn { color: var(--accent-main); cursor: pointer; font-weight: bold; }
+        /* Модалка настроек базы */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--surface); border-radius: 22px; padding: 22px; max-width: 420px; width: 100%; max-height: 80vh; overflow-y: auto; }
+        .input-field { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); color: var(--text-primary); }
     </style>
 </head>
 <body data-theme="blush">
 
+    <div class="top-bar">
+        <div class="logo-tag">Care & Beauty</div>
+        <div class="settings-icon" onclick="openSettings()" title="Настройка своей базы">⚙️ Настройки</div>
+    </div>
+
     <header>
-        <div class="logo-tag">Your Beauty Corner</div>
-        <h1>Мой Уход за Кожей</h1>
-        <div class="subtitle">Легко, эстетично и с заботой о себе</div>
+        <h1>Шпаргалка Ухода</h1>
+        <div class="subtitle">Поставь телефон на полочку и просто следуй списку</div>
     </header>
 
-    <!-- ПЕРЕКЛЮЧАТЕЛЬ ЦВЕТОВЫХ СХЕМ -->
+    <!-- Переключатель тем -->
     <div class="theme-bar">
-        <div class="theme-dot" style="background: #E8C5C8;" onclick="setTheme('blush')" title="Blush & Nude"></div>
-        <div class="theme-dot" style="background: #8FA89B;" onclick="setTheme('sage')" title="Sage & Spa"></div>
-        <div class="theme-dot" style="background: #8C4054;" onclick="setTheme('berry')" title="Berry & Velvet"></div>
-        <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')" title="Midnight Calm"></div>
+        <div class="theme-dot" style="background: #E8C5C8;" onclick="setTheme('blush')"></div>
+        <div class="theme-dot" style="background: #8FA89B;" onclick="setTheme('sage')"></div>
+        <div class="theme-dot" style="background: #8C4054;" onclick="setTheme('berry')"></div>
+        <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')"></div>
     </div>
 
-    <!-- ЭКРАН 0: БАЗА СРЕДСТВ -->
-    <div class="card" id="screenOnboarding">
-        <div class="card-title">✨ Ваши средства и процедуры</div>
-
-        <input type="text" id="initTitle" class="input-field" placeholder="Название (например: Тоник AHA / Ретинол)">
-        <select id="initZone" class="input-field">
-            <option value="Лицо">Зона: Лицо</option>
-            <option value="Волосы">Зона: Волосы</option>
-            <option value="Тело">Зона: Тело</option>
-        </select>
-        <select id="initTime" class="input-field">
-            <option value="5">Категория: 5 минут</option>
-            <option value="20" selected>Категория: 20 минут</option>
-            <option value="40">Категория: 40+ минут (SPA)</option>
-        </select>
-        <input type="number" id="initPause" class="input-field" placeholder="Пауза в минутах (0 если нет)">
+    <!-- ЭКРАН 1: БЫСТРЫЙ ВЫБОР -->
+    <div class="card" id="screenHome">
+        <div class="card-title">Быстрый запуск в один клик</div>
         
-        <button class="btn-secondary" onclick="addCustomToDB()">+ Добавить средства в базу</button>
-
-        <button class="db-toggle-btn" onclick="toggleDBView()">
-            <span id="dbBtnText">В вашей базе средств: 0</span>
-            <span>▼</span>
-        </button>
-        <div class="db-list" id="dbList"></div>
-
-        <button class="btn-primary" style="margin-top: 14px;" onclick="finishOnboarding()">Перейти к выбору ухода ➔</button>
-    </div>
-
-    <!-- ЭКРАН 1: НАСТРОЙКА УХОДА НА СЕГОДНЯ -->
-    <div class="card" id="screenSetup" style="display: none;">
-        <div class="card-title">1. Время суток</div>
-        <div class="tod-grid">
-            <div class="tod-chip active" id="todMorning" onclick="setTOD('morning')">☀️ Утро</div>
-            <div class="tod-chip" id="todEvening" onclick="setTOD('evening')">🌙 Вечер</div>
+        <div class="quick-start-grid">
+            <div class="btn-quick" onclick="generatePreset('morning')">
+                ☀️ Утро
+                <span class="sub">3 быстрых шага</span>
+            </div>
+            <div class="btn-quick" onclick="generatePreset('evening')">
+                🌙 Вечер
+                <span class="sub">Базовый уход</span>
+            </div>
         </div>
 
-        <div class="card-title">2. Сколько есть времени?</div>
-        <div class="time-option active" onclick="selectTime(5, this)">5 минут</div>
-        <div class="time-option" onclick="selectTime(20, this)">20 минут</div>
-        <div class="time-option" onclick="selectTime(40, this)">40+ минут</div>
+        <div class="card-title" style="margin-top: 8px;">Или сколько минут есть?</div>
+        <div class="time-pill-grid">
+            <div class="time-pill active" onclick="selectTime(5, this)">5 минут</div>
+            <div class="time-pill" onclick="selectTime(20, this)">20 минут</div>
+            <div class="time-pill" onclick="selectTime(40, this)">40+ мин (SPA)</div>
+        </div>
+    </div>
 
-        <div class="card-title" style="margin-top: 16px;">3. Зоны ухода</div>
-        <div class="zones-grid">
-            <div class="zone-chip active" id="zFace" onclick="toggleZone('Лицо')">Лицо</div>
-            <div class="zone-chip active" id="zHair" onclick="toggleZone('Волосы')">Волосы</div>
-            <div class="zone-chip active" id="zBody" onclick="toggleZone('Тело')">Тело</div>
+    <!-- ЭКРАН 2: КАРТОЧКА-ШПАРГАЛКА (Без кликов "Выполнено") -->
+    <div class="cheat-sheet-card" id="screenSheet" style="display: none;">
+        <div class="cheat-header">
+            <div class="cheat-title" id="sheetTitle">Ваш Вечерний Уход</div>
+            <div class="cheat-subtitle" id="sheetSub">3 шага • Время: ~5 минут</div>
         </div>
 
-        <div class="card-title" style="margin-top: 16px;">4. Способ составления</div>
-        <button class="btn-primary" onclick="generateAuto()">⚡ Собрать автоматически</button>
-        <button class="btn-secondary" onclick="showManualSelect()">✏️ Выбрать из списка вручную</button>
+        <div class="sheet-list" id="sheetList"></div>
+
+        <button class="btn-secondary" onclick="backToHome()">← Изменить / Выбрать другой</button>
     </div>
 
-    <!-- ЭКРАН РУЧНОГО ВЫБОРА (СТРОГО ПО ВЫБРАННЫМ ЗОНАМ) -->
-    <div class="card" id="screenManual" style="display: none;">
-        <div class="card-title" id="manualTitle">Выберите средства из вашей базы</div>
-        <div id="manualList"></div>
-        <button class="btn-primary" onclick="startManual()">Запустить уход ➔</button>
-        <button class="btn-secondary" onclick="backToSetup()">← Назад к настройкам</button>
-    </div>
-
-    <!-- ЭКРАН ВЫПОЛНЕНИЯ УХОДА -->
-    <div id="screenTimeline" style="display: none;">
-        <div class="card-title">Выполнение ухода</div>
-        <div id="timelineContainer"></div>
-
-        <button class="btn-secondary" id="btnChange" onclick="backToSetup()">← Настроить заново</button>
-
-        <div class="care-next-card" id="careNextCard">
-            <div style="font-size: 16px; font-weight: 500; color: var(--accent-main); margin-bottom: 6px;" id="nextCareTitle">Уход завершен! ✨</div>
-            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;" id="nextCareSub">Ждем вас вечером для расслабляющих процедур</div>
-            <button class="btn-primary" id="nextCareBtn" onclick="switchToNextTOD()">Перейти к вечернему уходу 🌙</button>
+    <!-- МОДАЛКА НАСТРОЙКИ БАЗЫ (Запрятана в шестеренку) -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
+            <div class="card-title">⚙️ Моя база средств</div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Вы можете добавить свое средство или изменить пресеты</div>
+            
+            <input type="text" id="addTitle" class="input-field" placeholder="Название средства">
+            <select id="addZone" class="input-field">
+                <option value="Лицо">Зона: Лицо</option>
+                <option value="Волосы">Зона: Волосы</option>
+                <option value="Тело">Зона: Тело</option>
+            </select>
+            <select id="addTime" class="input-field">
+                <option value="5">5 минут</option>
+                <option value="20" selected>20 минут</option>
+                <option value="40">40+ минут</option>
+            </select>
+            <input type="number" id="addPause" class="input-field" placeholder="Пауза в мин (0 если нет)">
+            
+            <button class="btn-quick" style="width: 100%; margin-top: 6px;" onclick="addCustomToDB()">+ Добавить средства</button>
+            <button class="btn-secondary" onclick="closeSettings()">Закрыть</button>
         </div>
     </div>
 
     <script>
-        const defaultDatabase = [
-            // ЛИЦО
-            { title: "Мусс / Гель для умывания", zone: "Лицо", timeSlot: 5, pause: 0 },
-            { title: "Увлажняющий тоник / Эссенция", zone: "Лицо", timeSlot: 5, pause: 0 },
-            { title: "SPF-Крем (Защита от фотостарения)", zone: "Лицо", timeSlot: 5, pause: 0 },
-            { title: "Сыворотка с Витамином С", zone: "Лицо", timeSlot: 20, pause: 3 },
-            { title: "Retiderm / Ретинол", zone: "Лицо", timeSlot: 40, pause: 15 },
-            { title: "Восстанавливающий крем NMF", zone: "Лицо", timeSlot: 20, pause: 0 },
-            { title: "Кислотный пилинг / Скатка", zone: "Лицо", timeSlot: 40, pause: 10 },
-            { title: "Тканевая / Глиняная маска", zone: "Лицо", timeSlot: 40, pause: 15 },
-
-            // ВОЛОСЫ
-            { title: "Бессульфатный шампунь", zone: "Волосы", timeSlot: 20, pause: 0 },
-            { title: "Экспресс-кондиционер", zone: "Волосы", timeSlot: 20, pause: 2 },
-            { title: "Глубокая питательная маска для волос", zone: "Волосы", timeSlot: 40, pause: 12 },
-            { title: "Несмываемый флюид на кончики", zone: "Волосы", timeSlot: 5, pause: 0 },
-
-            // ТЕЛО
-            { title: "Быстрый увлажняющий лосьон", zone: "Тело", timeSlot: 5, pause: 0 },
-            { title: "Массаж сухой щеткой", zone: "Тело", timeSlot: 20, pause: 0 },
-            { title: "Солевой / Кофейный скраб", zone: "Тело", timeSlot: 40, pause: 0 },
-            { title: "Питательный баттер / Обертывание", zone: "Тело", timeSlot: 40, pause: 15 }
+        // Пресеты по умолчанию (Готовая база)
+        const defaultDB = [
+            { id: 1, title: "Мусс / Гель для умывания", zone: "Лицо", timeSlot: 5, tod: "both", pause: 0 },
+            { id: 2, title: "Увлажняющий тоник NMF", zone: "Лицо", timeSlot: 5, tod: "both", pause: 0 },
+            { id: 3, title: "SPF-Крем (Защита от солнца)", zone: "Лицо", timeSlot: 5, tod: "morning", pause: 0 },
+            { id: 4, title: "Сыворотка с Витамином С", zone: "Лицо", timeSlot: 20, tod: "morning", pause: 0 },
+            { id: 5, title: "Retiderm / Ретинол 0.25", zone: "Лицо", timeSlot: 40, tod: "evening", pause: 15, tip: "🧘‍♀️ Пока актив впитывается — сделайте пару глубоких вдохов или выпейте чашку травяного чая." },
+            { id: 6, title: "Восстанавливающий крем с церамидами", zone: "Лицо", timeSlot: 20, tod: "evening", pause: 0 },
+            { id: 7, title: "Несмываемый флюид для волос", zone: "Волосы", timeSlot: 5, tod: "both", pause: 0 },
+            { id: 8, title: "Массаж сухой щеткой перед душем", zone: "Тело", timeSlot: 40, tod: "evening", pause: 0 },
+            { id: 9, title: "Питательное молочко для тела", zone: "Тело", timeSlot: 20, tod: "evening", pause: 0 }
         ];
 
-        let database = JSON.parse(localStorage.getItem('girl_skincare_db')) || defaultDatabase;
-        let selectedTOD = 'morning';
+        let database = JSON.parse(localStorage.getItem('sheet_skincare_db')) || defaultDB;
         let selectedTime = 5;
-        let selectedZones = { 'Лицо': true, 'Волосы': true, 'Тело': true };
-        let currentRoutine = [];
-        let activeIdx = 0;
 
-        // Тема оформления
-        function setTheme(theme) {
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('girl_skincare_theme', theme);
+        function setTheme(t) {
+            document.body.setAttribute('data-theme', t);
+            localStorage.setItem('sheet_skincare_theme', t);
         }
-        const savedTheme = localStorage.getItem('girl_skincare_theme') || 'blush';
-        setTheme(savedTheme);
-
-        // Идеи ДЛЯ ПАУЗ ТОЛЬКО ОТ 10 МИНУТ
-        function getLongPauseTip(pauseMin) {
-            if (pauseMin >= 15) {
-                return "🧘‍♀️ Дыхательная практика «4-7-8»: Вдох носом (4 сек) ➔ Задержка (7 сек) ➔ Длинный выдох ртом (8 сек). Отлично снимает накопившийся стресс.";
-            } else {
-                return "☕ Время релакса: выпейте чашку травяного чая, сделайте пару глубоких вдохов или нанесите масло на кутикулу.";
-            }
-        }
-
-        function addCustomToDB() {
-            let t = document.getElementById('initTitle').value;
-            let z = document.getElementById('initZone').value;
-            let slot = parseInt(document.getElementById('initTime').value);
-            let p = parseInt(document.getElementById('initPause').value) || 0;
-
-            if (!t) return alert("Введите название средства!");
-
-            database.push({ title: t, zone: z, timeSlot: slot, pause: p });
-            localStorage.setItem('girl_skincare_db', JSON.stringify(database));
-            
-            document.getElementById('initTitle').value = '';
-            document.getElementById('initPause').value = '';
-            renderDBList();
-        }
-
-        function toggleDBView() {
-            let list = document.getElementById('dbList');
-            list.style.display = list.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function deleteDBItem(idx) {
-            database.splice(idx, 1);
-            localStorage.setItem('girl_skincare_db', JSON.stringify(database));
-            renderDBList();
-        }
-
-        function renderDBList() {
-            document.getElementById('dbBtnText').innerText = `В вашей базе средств: ${database.length}`;
-            let list = document.getElementById('dbList');
-            list.innerHTML = '';
-            database.forEach((item, idx) => {
-                list.innerHTML += `
-                    <div class="db-item">
-                        <span><b>[${item.zone}]</b> ${item.title} ${item.pause > 0 ? `(${item.pause} мин)` : ''}</span>
-                        <span class="del-btn" onclick="deleteDBItem(${idx})">✕</span>
-                    </div>
-                `;
-            });
-        }
-        renderDBList();
-
-        function finishOnboarding() {
-            document.getElementById('screenOnboarding').style.display = 'none';
-            document.getElementById('screenSetup').style.display = 'block';
-        }
-
-        function setTOD(tod) {
-            selectedTOD = tod;
-            document.getElementById('todMorning').classList.toggle('active', tod === 'morning');
-            document.getElementById('todEvening').classList.toggle('active', tod === 'evening');
-        }
+        setTheme(localStorage.getItem('sheet_skincare_theme') || 'blush');
 
         function selectTime(time, el) {
             selectedTime = time;
-            document.querySelectorAll('#screenSetup .time-option').forEach(o => o.classList.remove('active'));
+            document.querySelectorAll('.time-pill').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
+            renderSheet('custom');
         }
 
-        function toggleZone(z) {
-            selectedZones[z] = !selectedZones[z];
-            document.getElementById('z' + (z === 'Лицо' ? 'Face' : z === 'Волосы' ? 'Hair' : 'Body')).classList.toggle('active', selectedZones[z]);
+        function generatePreset(tod) {
+            renderSheet(tod);
         }
 
-        function generateAuto() {
-            currentRoutine = database.filter(d => d.timeSlot <= selectedTime && selectedZones[d.zone]);
-            if (currentRoutine.length === 0) return alert("Под эти критерии ничего не найдено в вашей базе.");
-            startRoutine();
-        }
+        // ГЕНЕРАЦИЯ ОДНОЙ КАРТОЧКИ-ШПАРГАЛКИ
+        function renderSheet(type) {
+            let filtered = [];
+            let titleText = "";
+            let subText = "";
 
-        // РУЧНОЙ ВЫБОР СТРОГО ПО ВЫБРАННЫМ ЗОНАМ
-        function showManualSelect() {
-            let list = document.getElementById('manualList');
-            list.innerHTML = '';
-            
-            // Фильтруем строго по зонам, включенным на этапе 3
-            let filteredByZone = database.filter(d => selectedZones[d.zone]);
-
-            let activeZoneNames = Object.keys(selectedZones).filter(k => selectedZones[k]).join(", ");
-            document.getElementById('manualTitle').innerText = `Средства для зон: ${activeZoneNames || "Не выбрано"}`;
-
-            if (filteredByZone.length === 0) {
-                list.innerHTML = `<div style="font-size:13px; text-align:center; color:var(--text-secondary); padding:10px;">Нет средств для выбранных зон. Добавьте их на стартовом экране.</div>`;
+            if (type === 'morning') {
+                filtered = database.filter(d => d.tod === 'morning' || d.tod === 'both').slice(0, 3);
+                titleText = "☀️ Утренний Уход";
+                subText = `${filtered.length} шага • Время: ~3-5 минут`;
+            } else if (type === 'evening') {
+                filtered = database.filter(d => (d.tod === 'evening' || d.tod === 'both') && d.timeSlot <= 20).slice(0, 4);
+                titleText = "🌙 Вечерний Уход";
+                subText = `${filtered.length} шага • Время: ~10 минут`;
             } else {
-                filteredByZone.forEach((d, i) => {
-                    list.innerHTML += `
-                        <label class="proc-item">
-                            <span><b>[${d.zone}]</b> ${d.title}</span>
-                            <input type="checkbox" value="${i}" class="manual-chk" checked>
-                        </label>
-                    `;
-                });
+                filtered = database.filter(d => d.timeSlot <= selectedTime);
+                titleText = `✨ Ритуал на ${selectedTime} минут`;
+                subText = `${filtered.length} шагов • Выбранное время`;
             }
 
-            document.getElementById('screenSetup').style.display = 'none';
-            document.getElementById('screenManual').style.display = 'block';
-        }
+            let listContainer = document.getElementById('sheetList');
+            listContainer.innerHTML = '';
 
-        function startManual() {
-            let chks = document.querySelectorAll('.manual-chk:checked');
-            let filteredByZone = database.filter(d => selectedZones[d.zone]);
-            currentRoutine = Array.from(chks).map(c => filteredByZone[c.value]);
-
-            if (currentRoutine.length === 0) return alert("Выберите хотя бы одно средство!");
-
-            document.getElementById('screenManual').style.display = 'none';
-            startRoutine();
-        }
-
-        function backToSetup() {
-            document.getElementById('screenManual').style.display = 'none';
-            document.getElementById('screenTimeline').style.display = 'none';
-            document.getElementById('screenSetup').style.display = 'block';
-        }
-
-        function startRoutine() {
-            activeIdx = 0;
-            document.getElementById('careNextCard').style.display = 'none';
-            document.getElementById('btnChange').style.display = 'block';
-            document.getElementById('screenSetup').style.display = 'none';
-            document.getElementById('screenTimeline').style.display = 'block';
-            renderTimeline();
-        }
-
-        function renderTimeline() {
-            let c = document.getElementById('timelineContainer');
-            c.innerHTML = '';
-
-            currentRoutine.forEach((step, idx) => {
-                if (idx > activeIdx) return;
-                let isComp = idx < activeIdx;
-                let isAct = idx === activeIdx;
-
-                let hasLongPause = step.pause >= 10;
-
-                c.innerHTML += `
-                    <div class="timeline-step ${isComp ? 'completed' : ''} ${isAct ? 'active' : ''}">
-                        <div class="step-header">
-                            <span>${step.zone}</span>
-                            <span>${isComp ? '✓ Выполнено' : `Шаг ${idx + 1}`}</span>
+            filtered.forEach((item, idx) => {
+                listContainer.innerHTML += `
+                    <div class="sheet-item">
+                        <div class="sheet-num">${idx + 1}</div>
+                        <div class="sheet-content">
+                            <div class="sheet-step-title">${item.title}</div>
+                            <div class="sheet-zone">${item.zone}</div>
+                            ${item.pause > 0 ? `
+                                <div class="pause-box-inline">
+                                    <b>⏱️ Выдержка: ${item.pause} минут</b><br>
+                                    ${item.tip || 'Посвятите эти минуты себе и отдохните.'}
+                                </div>
+                            ` : ''}
                         </div>
-                        <div class="step-title">${step.title}</div>
-
-                        ${step.pause > 0 && isAct ? `
-                            <div style="margin-top: 8px;">
-                                <span style="font-size: 12px; color: var(--accent-main); font-weight: 600;">⏱️ Выдержка: ${step.pause} мин</span>
-                                ${hasLongPause ? `
-                                    <div class="btn-idea-inline" onclick="toggleTip(${idx})">✨ Чем заняться в паузе?</div>
-                                    <div class="inline-tip-box" id="tip_${idx}">${getLongPauseTip(step.pause)}</div>
-                                ` : ''}
-                            </div>
-                        ` : ''}
-
-                        ${isAct ? `
-                            <button class="btn-primary" onclick="nextStep(${idx})">Выполнено ➔</button>
-                        ` : ''}
                     </div>
                 `;
             });
+
+            document.getElementById('sheetTitle').innerText = titleText;
+            document.getElementById('sheetSub').innerText = subText;
+            document.getElementById('screenHome').style.display = 'none';
+            document.getElementById('screenSheet').style.display = 'block';
         }
 
-        function toggleTip(idx) {
-            let tip = document.getElementById('tip_' + idx);
-            if (tip) tip.style.display = tip.style.display === 'block' ? 'none' : 'block';
+        function backToHome() {
+            document.getElementById('screenSheet').style.display = 'none';
+            document.getElementById('screenHome').style.display = 'block';
         }
 
-        function nextStep(idx) {
-            if (activeIdx < currentRoutine.length - 1) {
-                activeIdx++;
-                renderTimeline();
-            } else {
-                showCareFinish();
-            }
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
         }
 
-        function showCareFinish() {
-            document.getElementById('btnChange').style.display = 'none';
-            let card = document.getElementById('careNextCard');
-            let title = document.getElementById('nextCareTitle');
-            let sub = document.getElementById('nextCareSub');
-            let btn = document.getElementById('nextCareBtn');
-
-            if (selectedTOD === 'morning') {
-                title.innerText = "Утренний уход завершен! ✨";
-                sub.innerText = "Прекрасного дня! Ждем вас вечером для расслабляющих процедур.";
-                btn.innerText = "Перейти к вечернему уходу 🌙";
-            } else {
-                title.innerText = "Вечерний уход завершен! 🌙";
-                sub.innerText = "Прекрасного отдыха и сладких снов! До встречи завтра.";
-                btn.innerText = "Запланировать уход на утро ☀️";
-            }
-            card.style.display = 'block';
+        function closeSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
         }
 
-        function switchToNextTOD() {
-            setTOD(selectedTOD === 'morning' ? 'evening' : 'morning');
-            backToSetup();
+        function addCustomToDB() {
+            let t = document.getElementById('addTitle').value;
+            let z = document.getElementById('addZone').value;
+            let slot = parseInt(document.getElementById('addTime').value);
+            let p = parseInt(document.getElementById('addPause').value) || 0;
+
+            if (!t) return alert("Введите название средств!");
+
+            database.push({
+                id: Date.now(),
+                title: t,
+                zone: z,
+                timeSlot: slot,
+                tod: 'both',
+                pause: p,
+                tip: p >= 10 ? "🧘‍♀️ Посвятите время выдержки отдыху или дыханию." : ""
+            });
+
+            localStorage.setItem('sheet_skincare_db', JSON.stringify(database));
+            alert("Средство добавлено в базу!");
+            document.getElementById('addTitle').value = '';
+            closeSettings();
         }
     </script>
 </body>
