@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritual & Care — Smart Assistant</title>
+    <title>Ritual & Care — Smart Personal Assistant</title>
     <style>
         :root {
             --bg-main: #FDFBF7;
@@ -22,7 +22,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-primary); padding: 24px 16px; max-width: 520px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
 
-        header { text-align: center; margin-bottom: 24px; }
+        header { text-align: center; margin-bottom: 20px; }
         .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-sand); margin-bottom: 6px; }
         h1 { font-size: 24px; font-weight: 400; font-family: serif; color: var(--text-primary); }
         .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
@@ -34,10 +34,10 @@
         .q-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; cursor: pointer; font-size: 13px; }
         .q-option.selected { border-color: var(--accent-sage); background: var(--accent-sage-light); font-weight: 500; }
 
-        /* Переключатель-свитч для связок */
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
-        .toggle-label { font-size: 13px; color: var(--text-primary); }
-        .toggle-sub { font-size: 11px; color: var(--text-secondary); }
+        /* Выбор фокуса (Чекбоксы) */
+        .focus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .focus-chip { padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 12px; text-align: center; cursor: pointer; background: var(--bg-main); }
+        .focus-chip.selected { background: var(--accent-sage); color: #FFF; border-color: var(--accent-sage); }
 
         .time-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 14px; background: var(--bg-main); cursor: pointer; margin-bottom: 10px; }
         .time-option.active { border-color: var(--accent-sage); background: var(--accent-sage-light); }
@@ -45,7 +45,9 @@
         .btn-primary { width: 100%; background: var(--accent-sage); color: #FFF; border: none; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; }
         .btn-secondary { width: 100%; background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; font-size: 13px; cursor: pointer; margin-top: 8px; }
         .btn-skip { background: transparent; color: #A0A0A0; border: none; font-size: 12px; cursor: pointer; text-decoration: underline; margin-top: 8px; }
+        .btn-idea { background: var(--accent-sand-light); border: 1px solid var(--accent-sand); color: #8C5E3C; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; margin-top: 8px; display: inline-block; }
 
+        /* Лента шагов */
         .timeline-step { border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; margin-bottom: 12px; background: var(--surface); opacity: 0.5; transition: all 0.3s ease; }
         .timeline-step.active { opacity: 1; border-color: var(--accent-sage); box-shadow: 0 4px 12px rgba(58, 77, 57, 0.08); }
         .timeline-step.completed { opacity: 0.7; background: var(--accent-sage-light); border-color: transparent; }
@@ -53,62 +55,47 @@
         .step-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
         .step-title { font-size: 16px; font-weight: 500; }
         
-        .pause-box { background: #FAF5EF; border-left: 3px solid var(--accent-sand); padding: 12px; border-radius: 0 10px 10px 0; margin-top: 10px; }
-        .pause-title { font-size: 12px; font-weight: 600; color: #8C5E3C; }
-        .pause-idea { font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: 2px; }
+        /* Всплывающее окно (Modal Pop-up) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--surface); border-radius: 20px; padding: 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: popIn 0.25s ease-out; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-title { font-size: 16px; font-weight: 600; color: #8C5E3C; margin-bottom: 8px; }
+        .modal-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 18px; }
 
-        .alert-box { background: var(--accent-sand-light); border: 1px solid var(--accent-sand); padding: 10px 14px; border-radius: 12px; font-size: 12px; color: #8C5E3C; margin-bottom: 14px; }
+        .input-field { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-bottom: 8px; outline: none; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo-tag">Ritual & Care</div>
-        <h1>Умный Ассистент Ухода</h1>
-        <div class="subtitle">Индивидуальный алгоритм под ваш ритм</div>
+        <h1>Персональный Ассистент</h1>
+        <div class="subtitle">Адаптивный уход без рамок</div>
     </header>
 
-    <!-- 1. РАСШИРЕННЫЙ ОПРОСНИК ПОД ЦА -->
+    <!-- 1. РАСШИРЕННЫЙ ОПРОСНИК -->
     <div class="card" id="screenOnboarding">
-        <div class="card-title">Персональная настройка</div>
+        <div class="card-title">Настройка профиля ухода</div>
 
-        <div class="q-title">1. Как часто моете голову?</div>
+        <div class="q-title">1. На чём делаем главный упор в уходе?</div>
+        <div class="focus-grid">
+            <div class="focus-chip selected" onclick="toggleFocus(this, 'moisture')">💦 Увлажнение</div>
+            <div class="focus-chip" onclick="toggleFocus(this, 'retinol')">🧪 Активы / Ретинол</div>
+            <div class="focus-chip" onclick="toggleFocus(this, 'hair')">💆‍♀️ Волосы</div>
+            <div class="focus-chip" onclick="toggleFocus(this, 'body')">✨ Уход за телом</div>
+        </div>
+
+        <div class="q-title">2. Как часто моете голову?</div>
         <div class="q-option selected" onclick="setOption('washFreq', 1, this)">Каждый день</div>
         <div class="q-option" onclick="setOption('washFreq', 2, this)">Через день</div>
         <div class="q-option" onclick="setOption('washFreq', 3, this)">Раз в 3 дня</div>
 
-        <div class="q-title">2. Тип кожи лица</div>
-        <div class="q-option selected" onclick="setOption('skinType', 'normal', this)">Нормальная / Комбинированная</div>
-        <div class="q-option" onclick="setOption('skinType', 'dry', this)">Сухая / Чувствительная</div>
-        <div class="q-option" onclick="setOption('skinType', 'oily', this)">Склонная к жирности / высыпаниям</div>
-
-        <div class="q-title">3. Персональные правила связок:</div>
-        <div class="toggle-row">
-            <div>
-                <div class="toggle-label">Маска для лица только после пилинга</div>
-                <div class="toggle-sub">Не предлагать маску в обычные дни</div>
-            </div>
-            <input type="checkbox" id="linkPeelingMask" checked style="accent-color: var(--accent-sage);">
-        </div>
-        <div class="toggle-row">
-            <div>
-                <div class="toggle-label">Маска для волос только при мытье</div>
-                <div class="toggle-sub">Привязывать уход к дням мытья</div>
-            </div>
-            <input type="checkbox" id="linkHairMask" checked style="accent-color: var(--accent-sage);">
-        </div>
-
         <button class="btn-primary" onclick="finishOnboarding()">Сохранить настройки ➔</button>
     </div>
 
-    <!-- 2. ВЫБОР РЕСУРСА НА СЕГОДНЯ -->
+    <!-- 2. ВЫБОР РЕСУРСА НА СЕГОДНЯ + ДОБАВЛЕНИЕ СВОЕЙ ПРОЦЕДУРЫ -->
     <div class="card" id="screenTime" style="display: none;">
-        <div class="card-title">Сколько времени есть сегодня?</div>
-        
-        <!-- Симуляция оповещения о переносе с прошлого дня -->
-        <div class="alert-box" id="missedAlert" style="display: none;">
-            ⚠️ <b>Перенос с вчерашнего дня:</b> Вчера было пропущено мытье головы. Процедура перенесена на сегодня.
-        </div>
+        <div class="card-title">Сколько времени у вас сегодня?</div>
 
         <div class="time-option" onclick="selectTime(5, this)">
             <div>
@@ -119,35 +106,55 @@
         <div class="time-option active" onclick="selectTime(20, this)">
             <div>
                 <div style="font-size: 15px; font-weight: 500;">20 минут (База)</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Стандартная ежедневная рутина</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Стандартный ежедневный уход</div>
             </div>
         </div>
         <div class="time-option" onclick="selectTime(40, this)">
             <div>
                 <div style="font-size: 15px; font-weight: 500;">40+ минут (SPA Вечер)</div>
-                <div style="font-size: 12px; color: var(--text-secondary);">Глубокие процедуры и релакс</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Глубокий уход, маски и релакс</div>
             </div>
         </div>
+
+        <!-- Конструктор кастомных процедур -->
+        <div style="border-top: 1px dashed var(--border-color); padding-top: 14px; margin-top: 14px;">
+            <div class="card-title" style="margin-bottom: 8px;">➕ Добавить свою процедуру в каталог</div>
+            <input type="text" id="customTitle" class="input-field" placeholder="Название (например: Сыворотка / Пилинг)">
+            <input type="number" id="customPause" class="input-field" placeholder="Пауза в минутах (0 если нет)">
+            <button class="btn-secondary" style="margin-top:0" onclick="addCustomProc()">Сохранить процедуру</button>
+        </div>
+
         <button class="btn-primary" onclick="generateSmartRoutine()">Сформировать план ✨</button>
     </div>
 
-    <!-- 3. ЛЕНТА ВЫПОЛНЕНИЯ (Сверху вниз без перелистывания) -->
+    <!-- 3. ЛЕНТА ВЫПОЛНЕНИЯ (С кнопкой возврата назад) -->
     <div id="screenTimeline" style="display: none;">
-        <div class="card-title" style="margin-bottom: 12px;">Выполнение ритуала</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="card-title" style="margin:0">Выполнение ритуала</div>
+            <button class="btn-skip" style="margin:0" onclick="resetToTime()">← Изменить время</button>
+        </div>
         <div id="timelineContainer"></div>
     </div>
 
-    <script>
-        // Данные профиля
-        let userConfig = {
-            washFreq: 2,
-            skinType: 'normal',
-            missedWashYesterday: true // Симуляция: вчера пропустили мытье
-        };
+    <!-- 4. ВСБЛЫВАЮЩЕЕ ОКНО С ИДЕЕЙ ДЛЯ ПАУЗЫ (MODAL) -->
+    <div class="modal-overlay" id="ideaModal">
+        <div class="modal-content">
+            <div class="modal-title">✨ Идея для паузы</div>
+            <div class="modal-text" id="modalText">Пока маска выдерживается, налейте себе травяной чай или зажгите аромсвечу.</div>
+            <button class="btn-primary" style="margin-top:0" onclick="closeModal()">Понятно</button>
+        </div>
+    </div>
 
+    <script>
+        let userConfig = { washFreq: 1, focus: ['moisture'] };
+        let customUserProcedures = []; // Хранение пользовательских средств
         let selectedTime = 20;
         let currentRoutine = [];
         let activeStepIdx = 0;
+
+        function toggleFocus(el, val) {
+            el.classList.toggle('selected');
+        }
 
         function setOption(key, val, el) {
             userConfig[key] = val;
@@ -158,11 +165,6 @@
         function finishOnboarding() {
             document.getElementById('screenOnboarding').style.display = 'none';
             document.getElementById('screenTime').style.display = 'block';
-
-            // Если был пропуск — показываем плашку переноса
-            if (userConfig.missedWashYesterday) {
-                document.getElementById('missedAlert').style.display = 'block';
-            }
         }
 
         function selectTime(time, el) {
@@ -171,53 +173,36 @@
             el.classList.add('active');
         }
 
+        function addCustomProc() {
+            let title = document.getElementById('customTitle').value;
+            let pause = parseInt(document.getElementById('customPause').value) || 0;
+            if (!title) return alert("Введите название процедуры!");
+
+            customUserProcedures.push({ zone: "Мой Уход", title: title, pause: pause, idea: "Персональная процедура" });
+            alert(`Процедура "${title}" добавлена!`);
+            document.getElementById('customTitle').value = '';
+            document.getElementById('customPause').value = '';
+        }
+
         function generateSmartRoutine() {
             currentRoutine = [];
-            let linkPeelingMask = document.getElementById('linkPeelingMask').checked;
-            let linkHairMask = document.getElementById('linkHairMask').checked;
 
-            // 1. Уход за лицом
+            // Базовые шаги под выбранное время
             currentRoutine.push({ zone: "Лицо", title: "Очищающий мусс", pause: 0, idea: "" });
 
-            let hasPeelingToday = (selectedTime >= 40); // Пилинг ставится только если есть 40+ мин
-
-            if (hasPeelingToday) {
+            if (selectedTime >= 20) {
                 currentRoutine.push({ 
                     zone: "Лицо", 
-                    title: "Кислотный пилинг", 
-                    pause: 10, 
-                    idea: "💡 Сделайте 2 минуты глубокой дыхательной гимнастики для снятия стресса." 
-                });
-            }
-
-            // Маска для лица добавляется ТОЛЬКО если:
-            // а) Включена связка и СЕГОДНЯ есть пилинг
-            // б) Или если связка выключена (пользователь разрешил маску без пилинга)
-            if ((linkPeelingMask && hasPeelingToday) || (!linkPeelingMask && selectedTime >= 20)) {
-                currentRoutine.push({ 
-                    zone: "Лицо", 
-                    title: "Восстанавливающая маска", 
+                    title: "Активная сыворотка / Ретинол", 
                     pause: 15, 
-                    idea: "💡 Налейте себе травяной чай или нанесите увлажняющее масло на кутикулу." 
+                    idea: "💡 Почитайте главу книги, сделайте дыхательную гимнастику или нанесите масло на кутикулу." 
                 });
             }
 
-            currentRoutine.push({ zone: "Лицо", title: "Запечатывающий крем NMF", pause: 0, idea: "" });
+            // Подмешиваем кастомные процедуры пользователя
+            customUserProcedures.forEach(p => currentRoutine.push(p));
 
-            // 2. Уход за волосами (С учетом переноса пропущенного дня)
-            let needWash = userConfig.missedWashYesterday || (selectedTime >= 20);
-            if (needWash) {
-                currentRoutine.push({ zone: "Волосы", title: "Мытье головы (Перенос / График)", pause: 0, idea: "" });
-                
-                if (linkHairMask && selectedTime >= 20) {
-                    currentRoutine.push({ 
-                        zone: "Волосы", 
-                        title: "Маска для волос", 
-                        pause: 5, 
-                        idea: "💡 Пока работает маска для волос — сделаем легкий массаж шеи." 
-                    });
-                }
-            }
+            currentRoutine.push({ zone: "Лицо", title: "Запечатывающий увлажняющий крем NMF", pause: 0, idea: "" });
 
             startTimelinePlayer();
         }
@@ -227,6 +212,11 @@
             document.getElementById('screenTime').style.display = 'none';
             document.getElementById('screenTimeline').style.display = 'block';
             renderTimeline();
+        }
+
+        function resetToTime() {
+            document.getElementById('screenTimeline').style.display = 'none';
+            document.getElementById('screenTime').style.display = 'block';
         }
 
         function renderTimeline() {
@@ -248,9 +238,9 @@
                         <div class="step-title">${step.title}</div>
 
                         ${step.pause > 0 && isActive ? `
-                            <div class="pause-box">
-                                <div class="pause-title">⏱️ Выдержка: ${step.pause} минут</div>
-                                <div class="pause-idea">${step.idea}</div>
+                            <div style="margin-top:8px;">
+                                <span style="font-size:12px; color:#8C5E3C; font-weight:600;">⏱️ Пауза: ${step.pause} мин</span>
+                                <div class="btn-idea" onclick="openModal('${step.idea}')">✨ Чем заняться в паузе?</div>
                             </div>
                         ` : ''}
 
@@ -266,13 +256,22 @@
             });
         }
 
+        function openModal(text) {
+            document.getElementById('modalText').innerText = text || "Отдохните и посвятите эти минуты себе.";
+            document.getElementById('ideaModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('ideaModal').style.display = 'none';
+        }
+
         function completeStep(idx) {
             if (activeStepIdx < currentRoutine.length - 1) {
                 activeStepIdx++;
                 renderTimeline();
             } else {
                 alert("Ритуал завершен! Прекрасного вечера ✨");
-                location.reload();
+                resetToTime();
             }
         }
 
