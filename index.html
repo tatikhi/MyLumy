@@ -53,15 +53,23 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; transition: all 0.2s ease; }
-        body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; -webkit-font-smoothing: antialiased; overflow-x: hidden; position: relative; }
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-main); opacity: 0.8; }
         .settings-icon { font-size: 13px; cursor: pointer; opacity: 0.8; font-weight: 500; }
 
-        header { text-align: center; margin-bottom: 20px; }
+        header { text-align: center; margin-bottom: 16px; }
         h1 { font-size: 26px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-main); }
         .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
+
+        /* Трекер сердечек любви к себе */
+        .hearts-tracker { background: var(--surface); border: 1px solid var(--border-color); border-radius: 18px; padding: 12px 16px; margin-bottom: 16px; text-align: center; box-shadow: var(--shadow-soft); }
+        .hearts-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 8px; }
+        .hearts-row { display: flex; justify-content: space-between; align-items: center; }
+        .heart-slot { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+        .heart-svg { width: 22px; height: 22px; fill: none; stroke: var(--border-color); stroke-width: 2; transition: all 0.3s; }
+        .heart-slot.filled .heart-svg { fill: var(--accent-main); stroke: var(--accent-main); transform: scale(1.1); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
 
         .theme-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 18px; }
         .theme-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
@@ -69,32 +77,26 @@
         .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-soft); }
         .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-main); margin-bottom: 12px; opacity: 0.9; }
 
-        /* SOS Кнопка */
         .btn-sos { background: var(--sos-bg); border: 1px solid var(--sos-color); color: var(--sos-color); padding: 14px; border-radius: 16px; text-align: center; font-weight: 600; font-size: 13px; cursor: pointer; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-sos:active { transform: scale(0.98); }
 
-        /* Наглядный тумблер сезона */
         .season-box { margin-bottom: 16px; }
         .season-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 6px; }
         .season-switcher { display: flex; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 14px; padding: 3px; }
         .season-opt { flex: 1; text-align: center; padding: 8px; border-radius: 11px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--text-secondary); }
         .season-opt.active { background: var(--accent-main); color: #FFF; font-weight: 600; }
 
-        /* Переключатель Уход за волосами */
         .toggle-chip { background: var(--bg-main); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; text-align: center; font-size: 13px; font-weight: 500; cursor: pointer; user-select: none; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .toggle-chip.active { background: var(--accent-light); border-color: var(--accent-main); color: var(--accent-main); }
 
-        /* Быстрый запуск */
         .quick-start-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
         .btn-quick { background: var(--accent-light); border: 1px solid var(--border-color); padding: 16px 12px; border-radius: 18px; text-align: center; cursor: pointer; color: var(--accent-main); font-weight: 600; font-size: 14px; }
         .btn-quick .sub { font-size: 11px; font-weight: 400; color: var(--text-secondary); margin-top: 4px; display: block; }
 
-        /* Выбор времени (Селектор) */
         .time-pill-grid { display: flex; gap: 8px; margin-bottom: 16px; }
         .time-pill { flex: 1; text-align: center; padding: 10px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 12px; cursor: pointer; background: var(--bg-main); color: var(--text-primary); }
         .time-pill.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
-        /* Skin Cycling (Чередование) */
         .cycling-row { display: flex; gap: 6px; margin-top: 8px; }
         .cycle-chip { flex: 1; text-align: center; padding: 10px 4px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 12px; cursor: pointer; background: var(--bg-main); color: var(--text-secondary); }
         .cycle-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); font-weight: 600; }
@@ -114,15 +116,27 @@
         
         .pause-box-inline { background: var(--accent-light); border-left: 3px solid var(--accent-main); padding: 10px 12px; border-radius: 0 10px 10px 0; margin-top: 8px; font-size: 12px; color: var(--text-primary); line-height: 1.4; }
 
-        .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 16px; }
+        .btn-primary { width: 100%; background: var(--accent-main); color: #FFF; border: none; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 10px; }
+
+        /* Экран Похвалы (Finish Screen) */
+        .finish-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 28px 20px; text-align: center; box-shadow: var(--shadow-soft); margin-top: 10px; }
+        .finish-heart-anim { width: 64px; height: 64px; margin: 0 auto 16px auto; animation: pulseHeart 1.2s infinite alternate ease-in-out; }
+        @keyframes pulseHeart { 0% { transform: scale(1); } 100% { transform: scale(1.18); } }
+        .finish-title { font-size: 22px; font-family: Georgia, serif; color: var(--accent-main); margin-bottom: 8px; }
+        .finish-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; }
+
+        /* Конфетти контейнер */
+        #confettiCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
         
-        /* Модалка настроек */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--surface); border-radius: 22px; padding: 22px; max-width: 420px; width: 100%; max-height: 80vh; overflow-y: auto; }
         .input-field { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); color: var(--text-primary); }
     </style>
 </head>
 <body data-theme="blush">
+
+    <canvas id="confettiCanvas"></canvas>
 
     <div class="top-bar">
         <div class="logo-tag">Care & Beauty</div>
@@ -134,6 +148,12 @@
         <div class="subtitle">Персональная программа под ваш день</div>
     </header>
 
+    <!-- Недельная шкала сердечек любви к себе -->
+    <div class="hearts-tracker">
+        <div class="hearts-title">Любовь к себе за неделю 💖</div>
+        <div class="hearts-row" id="heartsRow"></div>
+    </div>
+
     <div class="theme-bar">
         <div class="theme-dot" style="background: #E8C5C8;" onclick="setTheme('blush')"></div>
         <div class="theme-dot" style="background: #8FA89B;" onclick="setTheme('sage')"></div>
@@ -142,14 +162,11 @@
     </div>
 
     <div class="card" id="screenHome">
-        
-        <!-- 🆘 SOS КНОПКА -->
         <div class="btn-sos" onclick="generateSOS()">
             <span>🔥</span>
             <span>SOS: Кожа горит / Перебор с активами</span>
         </div>
 
-        <!-- ПОНЯТНЫЙ ТУМБЛЕР СЕЗОНА -->
         <div class="season-box">
             <div class="season-label">Сезон ухода:</div>
             <div class="season-switcher">
@@ -158,13 +175,11 @@
             </div>
         </div>
 
-        <!-- ТУМБЛЕР "УХОД ЗА ВОЛОСАМИ" -->
         <div class="toggle-chip" id="btnHair" onclick="toggleHair()">
             <span>💆‍♀️</span>
             <span>+ Добавить уход за волосами</span>
         </div>
 
-        <!-- БЫСТРЫЙ ВЫБОР УТРО / ВЕЧЕР -->
         <div class="card-title">Быстрый запуск</div>
         <div class="quick-start-grid">
             <div class="btn-quick" onclick="generatePreset('morning')">
@@ -177,7 +192,6 @@
             </div>
         </div>
 
-        <!-- ВЫБОР ДОСТУПНОГО ВРЕМЕНИ -->
         <div class="card-title">Сколько минут есть?</div>
         <div class="time-pill-grid">
             <div class="time-pill active" onclick="selectTime(5, this)">5 минут</div>
@@ -185,7 +199,6 @@
             <div class="time-pill" onclick="selectTime(40, this)">40+ мин (SPA)</div>
         </div>
 
-        <!-- SKIN CYCLING (ЧЕРЕДОВАНИЕ ВЕЧЕРА) -->
         <div class="card-title" style="margin-top: 10px;">
             Режим вечера (Skin Cycling) 
             <span id="cycleAutoHint" style="font-weight:400; font-size:10px; color:var(--text-secondary); text-transform:none; margin-left:4px;">(авто-учет)</span>
@@ -197,7 +210,7 @@
         </div>
     </div>
 
-    <!-- КАРТОЧКА-ШПАРГАЛКА НА ПОЛОЧКУ -->
+    <!-- КАРТОЧКА-ШПАРГАЛКА С КНОПКОЙ ЗАВЕРШЕНИЯ -->
     <div class="cheat-sheet-card" id="screenSheet" style="display: none;">
         <div class="cheat-header">
             <div class="cheat-title" id="sheetTitle">Утренний Уход</div>
@@ -206,10 +219,22 @@
 
         <div class="sheet-list" id="sheetList"></div>
 
-        <button class="btn-secondary" onclick="backToHome()">← Изменить режим / Выбрать другой</button>
+        <button class="btn-primary" onclick="completeRoutine()">✨ Всё сделано!</button>
+        <button class="btn-secondary" onclick="backToHome()">← Назад к выбору</button>
     </div>
 
-    <!-- МОДАЛКА НАСТРОЕК БАЗЫ -->
+    <!-- ЭКРАН ПОХВАЛЫ И НАГРАДЫ СЕРДЕЧКОМ -->
+    <div class="finish-card" id="screenFinish" style="display: none;">
+        <div class="finish-heart-anim">
+            <svg viewBox="0 0 24 24" style="width: 100%; height: 100%; fill: var(--accent-main);">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+        <div class="finish-title" id="finishTitle">Забота о себе завершена!</div>
+        <div class="finish-text" id="finishText">Ты сделала ещё один шаг к сиянию и здоровью. В твою копилку добавлено сердечко любви к себе! 💖</div>
+        <button class="btn-primary" id="finishBtnNext" onclick="backToHome()">Отлично ✨</button>
+    </div>
+
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
             <div class="card-title">⚙️ Настройка своего средства</div>
@@ -241,14 +266,49 @@
             { id: 9, title: "Шампунь + Глубокая маска для волос", zone: "Волосы", tod: "both", type: "hair", pause: 5, tip: "💆‍♀️ Сделайте мягкий круговой массаж кожи головы подушечками пальцев." }
         ];
 
-        let database = JSON.parse(localStorage.getItem('sheet_skincare_db_v3')) || defaultDB;
+        let database = JSON.parse(localStorage.getItem('sheet_skincare_db_v4')) || defaultDB;
         let isSummer = true;
         let needHair = false;
         let selectedTime = 5;
+        let currentTODRun = 'morning';
 
-        // АВТОМАТИЧЕСКИЙ SKIN CYCLING ПО ДНЯМ КАНАЛА/КАЛЕНДАРЯ
+        // ДАННЫЕ СЕРДЕЧЕК И КАЛЕНДАРЯ В LOCALSTORAGE
+        let completedCount = parseInt(localStorage.getItem('hearts_completed_count') || "0");
+        let lastDateStr = localStorage.getItem('last_completed_date') || "";
         let cycleDay = parseInt(localStorage.getItem('skin_cycle_day') || "1");
+
+        // Расчет Skin Cycling на основании даты
+        let todayStr = new Date().toISOString().slice(0, 10);
+        if (lastDateStr && lastDateStr !== todayStr) {
+            let lastDate = new Date(lastDateStr);
+            let todayDate = new Date(todayStr);
+            let diffDays = Math.round((todayDate - lastDate) / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+                cycleDay = cycleDay >= 4 ? 1 : cycleDay + 1;
+            } else if (diffDays > 2) {
+                cycleDay = 3; // Перерыв > 2 дней ➔ Безопасный режим Отдыха
+            }
+            localStorage.setItem('skin_cycle_day', cycleDay.toString());
+        }
+
         let activeCycle = cycleDay === 1 ? 'acid' : cycleDay === 2 ? 'retinol' : 'rest';
+
+        function renderHeartsUI() {
+            let container = document.getElementById('heartsRow');
+            container.innerHTML = '';
+            for (let i = 1; i <= 7; i++) {
+                let isFilled = i <= completedCount;
+                container.innerHTML += `
+                    <div class="heart-slot ${isFilled ? 'filled' : ''}">
+                        <svg class="heart-svg" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </div>
+                `;
+            }
+        }
+        renderHeartsUI();
 
         function updateCycleChipsUI() {
             document.querySelectorAll('.cycle-chip').forEach(c => c.classList.remove('active'));
@@ -272,8 +332,7 @@
 
         function toggleHair() {
             needHair = !needHair;
-            let btn = document.getElementById('btnHair');
-            btn.classList.toggle('active', needHair);
+            document.getElementById('btnHair').classList.toggle('active', needHair);
         }
 
         function selectTime(time, el) {
@@ -291,29 +350,25 @@
             }
         }
 
-        // 🆘 SOS РЕЖИМ
         function generateSOS() {
-            let list = [
-                database.find(d => d.id === 1), // Мусс
-                database.find(d => d.id === 8)  // SOS Пантенол
-            ];
-            renderSheetUI("🆘 SOS: Восстановление Кожи", "Снятие раздражения • Только базовое заживление без активов", list.filter(Boolean));
+            let list = [database.find(d => d.id === 1), database.find(d => d.id === 8)];
+            renderSheetUI("🆘 SOS: Восстановление Кожи", "Только заживление без активов", list.filter(Boolean));
         }
 
-        // ГЕНЕРАЦИЯ ПО КНОПКАМ УТРО / ВЕЧЕР
         function generatePreset(tod) {
+            currentTODRun = tod;
             let list = [];
             let title = "";
 
             if (tod === 'morning') {
                 title = "☀️ Утренний Уход";
-                list.push(database.find(d => d.id === 1)); // Очищение
-                list.push(database.find(d => d.id === 2)); // Тоник
+                list.push(database.find(d => d.id === 1));
+                list.push(database.find(d => d.id === 2));
                 let spf = database.find(d => d.type === 'spf' && (isSummer ? d.season === 'summer' : d.season === 'winter'));
                 if (spf) list.push(spf);
             } else {
                 title = `🌙 Вечерний Уход (${activeCycle === 'acid' ? 'Кислоты' : activeCycle === 'retinol' ? 'Ретинол' : 'Отдых'})`;
-                list.push(database.find(d => d.id === 1)); // Очищение
+                list.push(database.find(d => d.id === 1));
 
                 if (activeCycle === 'acid') {
                     let acid = database.find(d => d.type === 'acid');
@@ -323,11 +378,7 @@
                     if (ret) list.push(ret);
                 }
 
-                list.push(database.find(d => d.id === 7)); // Восстанавливающий крем
-                
-                // Авто-сдвиг цикла на следующий день
-                cycleDay = cycleDay >= 4 ? 1 : cycleDay + 1;
-                localStorage.setItem('skin_cycle_day', cycleDay.toString());
+                list.push(database.find(d => d.id === 7));
             }
 
             if (needHair) {
@@ -338,7 +389,6 @@
             renderSheetUI(title, `${list.length} шага • Уход готов`, list.filter(Boolean));
         }
 
-        // ГЕНЕРАЦИЯ ПО ТАЙМЕРУ ВРЕМЕНИ
         function generateByTime() {
             let list = database.filter(d => d.timeSlot <= selectedTime || d.type === 'clean' || d.type === 'base');
             if (needHair) {
@@ -376,9 +426,106 @@
             document.getElementById('screenSheet').style.display = 'block';
         }
 
+        // КЛИК "ВСЁ СДЕЛАНО" И НАЧИСЛЕНИЕ СЕРДЕЧКА
+        function completeRoutine() {
+            completedCount++;
+            localStorage.setItem('hearts_completed_count', completedCount.toString());
+            localStorage.setItem('last_completed_date', todayStr);
+
+            document.getElementById('screenSheet').style.display = 'none';
+            document.getElementById('screenFinish').style.display = 'block';
+
+            let fTitle = document.getElementById('finishTitle');
+            let fText = document.getElementById('finishText');
+            let fBtn = document.getElementById('finishBtnNext');
+
+            if (currentTODRun === 'morning') {
+                fTitle.innerText = "Прекрасного дня! ☀️";
+                fText.innerText = "Кожа сияет и защищена. Ты сделала отличный вклад в свой день!";
+                fBtn.innerText = "Ждем тебя вечером 🌙";
+            } else {
+                fTitle.innerText = "Приятного вечера! 🌙";
+                fText.innerText = "Забота о себе завершена. Отдыхай, набирайся сил и сладко спи!";
+                fBtn.innerText = "До встречи завтра ☀️";
+            }
+
+            renderHeartsUI();
+
+            // ЕСЛИ СОБРАНО 7 СЕРДЕЧЕК - ЗАПУСКЕМ КОНФЕТТИ
+            if (completedCount >= 7) {
+                triggerHeartConfetti();
+                fTitle.innerText = "7 дней любви к себе! 💖";
+                fText.innerText = "Целая неделя заботы и внимания к своей коже! Ты невероятная умница!";
+                completedCount = 0; // Сброс для новой недели
+                localStorage.setItem('hearts_completed_count', "0");
+            }
+        }
+
+        // АНИМАЦИЯ КОНФЕТТИ ИЗ СЕРДЕЧЕК (CANVAS)
+        function triggerHeartConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            let colors = ['#E8C5C8', '#7A4A58', '#D4A373', '#6B2337', '#FFF0F2'];
+
+            for (let i = 0; i < 40; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 14 + 10,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedY: Math.random() * 3 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    rot: Math.random() * 360,
+                    rotSpeed: Math.random() * 4 - 2
+                });
+            }
+
+            function drawHeart(x, y, size, color, rot) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate((rot * Math.PI) / 180);
+                ctx.beginPath();
+                ctx.fillStyle = color;
+                let topCurveHeight = size * 0.3;
+                ctx.moveTo(0, topCurveHeight);
+                ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
+                ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, size, 0, size);
+                ctx.bezierCurveTo(0, size, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
+                ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
+            let animId;
+            let frame = 0;
+            function render() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rot += p.rotSpeed;
+                    drawHeart(p.x, p.y, p.size, p.color, p.rot);
+                });
+                frame++;
+                if (frame < 180) {
+                    animId = requestAnimationFrame(render);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            render();
+        }
+
         function backToHome() {
             document.getElementById('screenSheet').style.display = 'none';
+            document.getElementById('screenFinish').style.display = 'none';
             document.getElementById('screenHome').style.display = 'block';
+            renderHeartsUI();
         }
 
         function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
@@ -401,7 +548,7 @@
                 tip: p >= 10 ? "🧘‍♀️ Посвятите время выдержки отдыху или глубокому дыханию." : ""
             });
 
-            localStorage.setItem('sheet_skincare_db_v3', JSON.stringify(database));
+            localStorage.setItem('sheet_skincare_db_v4', JSON.stringify(database));
             alert("Средство сохранено в вашу базу!");
             closeSettings();
         }
