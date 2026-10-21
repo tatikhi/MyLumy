@@ -6,414 +6,326 @@
     <title>Мой Уход за Кожей</title>
     <style>
         :root {
-            --bg-main: #FDFBF7;
+            --bg-main: #FAF4F0;
             --surface: #FFFFFF;
-            --text-primary: #1C2421;
-            --text-secondary: #606C5D;
-            --accent-sage: #3A4D39;
-            --accent-sage-light: #ECEFEA;
-            --accent-sand: #D4A373;
-            --accent-sand-light: #FAEDCD;
-            --border-color: #E8E5DF;
-            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --radius-main: 18px;
+            --text-primary: #3D2C2E;
+            --text-secondary: #8A7375;
+            --accent-rose: #E8C5C8;
+            --accent-rose-dark: #7A4A58;
+            --accent-soft-pink: #FFF0F2;
+            --border-color: #F0E2DF;
+            --shadow-soft: 0 8px 30px rgba(122, 74, 88, 0.05);
+            --radius-main: 22px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-primary); padding: 24px 16px; max-width: 520px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
 
         header { text-align: center; margin-bottom: 20px; }
-        .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-sand); margin-bottom: 6px; }
-        h1 { font-size: 24px; font-weight: 400; font-family: serif; color: var(--text-primary); }
+        .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #C48B96; margin-bottom: 4px; }
+        h1 { font-size: 24px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-rose-dark); }
         .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
 
-        .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 20px; margin-bottom: 18px; box-shadow: var(--shadow-subtle); }
-        .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 14px; }
+        .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-soft); }
+        .card-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #C48B96; margin-bottom: 14px; }
 
-        .q-title { font-size: 13px; font-weight: 600; margin: 12px 0 6px 0; color: var(--text-primary); }
-        .q-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; cursor: pointer; font-size: 13px; }
-        .q-option.selected { border-color: var(--accent-sage); background: var(--accent-sage-light); font-weight: 500; }
+        /* Выбор времени суток (Утро / Вечер) */
+        .tod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .tod-chip { padding: 14px; border: 1px solid var(--border-color); border-radius: 16px; text-align: center; cursor: pointer; background: var(--bg-main); font-size: 14px; font-weight: 500; transition: all 0.2s; }
+        .tod-chip.active { background: var(--accent-soft-pink); border-color: var(--accent-rose); color: var(--accent-rose-dark); }
 
-        /* Выбор времени и зон */
+        /* Выбор времени */
+        .time-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-main); cursor: pointer; margin-bottom: 8px; font-size: 14px; transition: all 0.2s; }
+        .time-option.active { border-color: var(--accent-rose); background: var(--accent-soft-pink); color: var(--accent-rose-dark); font-weight: 500; }
+
+        /* Выбор зон */
         .zones-grid { display: flex; gap: 8px; margin-bottom: 16px; }
-        .zone-chip { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 13px; cursor: pointer; background: var(--bg-main); }
-        .zone-chip.active { background: var(--accent-sage); color: #FFF; border-color: var(--accent-sage); }
+        .zone-chip { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 13px; cursor: pointer; background: var(--bg-main); }
+        .zone-chip.active { background: var(--accent-rose-dark); color: #FFF; border-color: var(--accent-rose-dark); }
 
-        .time-option { display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border-color); border-radius: 14px; background: var(--bg-main); cursor: pointer; margin-bottom: 10px; }
-        .time-option.active { border-color: var(--accent-sage); background: var(--accent-sage-light); }
+        .proc-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; font-size: 13px; background: var(--bg-main); }
+        .proc-item input { accent-color: var(--accent-rose-dark); width: 18px; height: 18px; }
 
-        /* Список выборки процедур */
-        .proc-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 6px; font-size: 13px; }
-        .proc-item input { accent-color: var(--accent-sage); width: 18px; height: 18px; cursor: pointer; }
+        .input-field { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); }
 
-        /* Формы и Поля */
-        .input-field { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); }
-        .select-field { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); }
+        .btn-primary { width: 100%; background: var(--accent-rose-dark); color: #FFF; border: none; padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
+        .btn-primary:active { opacity: 0.9; }
+        .btn-secondary { width: 100%; background: transparent; color: var(--accent-rose-dark); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 8px; }
+        
+        .btn-idea-inline { background: var(--accent-soft-pink); color: var(--accent-rose-dark); border: 1px solid var(--accent-rose); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; margin-top: 8px; display: inline-block; }
 
-        .btn-primary { width: 100%; background: var(--accent-sage); color: #FFF; border: none; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; }
-        .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 8px; }
-        .btn-skip { background: transparent; color: #A0A0A0; border: none; font-size: 12px; cursor: pointer; text-decoration: underline; margin-top: 8px; }
-        .btn-idea { background: var(--accent-sand-light); border: 1px solid var(--accent-sand); color: #8C5E3C; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; margin-top: 8px; display: inline-block; }
+        /* Внутренняя аккуратная плашка подсказки */
+        .inline-tip-box { background: var(--accent-soft-pink); border-left: 3px solid var(--accent-rose); padding: 12px; border-radius: 0 12px 12px 0; margin-top: 10px; font-size: 12px; color: var(--accent-rose-dark); display: none; line-height: 1.4; }
 
         /* Лента ритуала */
-        .timeline-step { border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; margin-bottom: 12px; background: var(--surface); opacity: 0.5; transition: all 0.3s ease; }
-        .timeline-step.active { opacity: 1; border-color: var(--accent-sage); box-shadow: 0 4px 12px rgba(58, 77, 57, 0.08); }
-        .timeline-step.completed { opacity: 0.7; background: var(--accent-sage-light); border-color: transparent; }
+        .timeline-step { border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; margin-bottom: 12px; background: var(--surface); opacity: 0.6; transition: all 0.3s ease; }
+        .timeline-step.active { opacity: 1; border-color: var(--accent-rose); box-shadow: var(--shadow-soft); }
+        .timeline-step.completed { opacity: 0.6; background: var(--accent-soft-pink); border-color: transparent; }
         
         .step-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
-        .step-title { font-size: 16px; font-weight: 500; }
-        
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--surface); border-radius: 20px; padding: 24px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-        .modal-title { font-size: 16px; font-weight: 600; color: #8C5E3C; margin-bottom: 8px; }
-        .modal-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 18px; }
+        .step-title { font-size: 16px; font-weight: 500; color: var(--text-primary); }
 
-        .finish-card { background: var(--accent-sage-light); border: 1px solid var(--accent-sage); padding: 18px; border-radius: 16px; text-align: center; margin-top: 16px; display: none; }
-        .finish-title { font-size: 15px; font-weight: 600; color: var(--accent-sage); margin-bottom: 4px; }
-        .finish-sub { font-size: 13px; color: var(--text-secondary); }
+        .care-next-card { background: var(--accent-soft-pink); border: 1px dashed var(--accent-rose); padding: 20px; border-radius: 20px; text-align: center; margin-top: 16px; display: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-tag">Care & Beauty</div>
-        <h1>Персональный Уход</h1>
-        <div class="subtitle">Индивидуальный конструктор программы</div>
+        <div class="logo-tag">Your Beauty Corner</div>
+        <h1>Мой Уход за Кожей</h1>
+        <div class="subtitle">Легко, эстетично и с заботой о себе</div>
     </header>
 
-    <!-- ШАГ 1: ВЫБОР ВРЕМЕНИ -->
-    <div class="card" id="step1Time">
-        <div class="card-title">1. Сколько времени у вас сегодня?</div>
-        <div class="time-option" onclick="selectTime(5, this)">
-            <div style="font-size: 15px; font-weight: 500;">5 минут</div>
+    <!-- ЭКРАН 0: ПЕРВЫЙ ЗАПУСК - СОЗДАНИЕ СВОЕЙ БАЗЫ -->
+    <div class="card" id="screenOnboarding">
+        <div class="card-title">✨ Добро пожаловать! Заполним вашу косметичку</div>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            Добавьте баночки, которые у вас есть. Вы сможете дополнять базу в любой момент.
         </div>
-        <div class="time-option active" onclick="selectTime(20, this)">
-            <div style="font-size: 15px; font-weight: 500;">20 минут</div>
-        </div>
-        <div class="time-option" onclick="selectTime(40, this)">
-            <div style="font-size: 15px; font-weight: 500;">40+ минут</div>
-        </div>
-        <button class="btn-primary" onclick="goToStep2()">Далее к выбору зон ➔</button>
-    </div>
 
-    <!-- ШАГ 2: ВЫБОР КАТЕГОРИЙ ЗОН -->
-    <div class="card" id="step2Zones" style="display: none;">
-        <div class="card-title">2. Выберите зоны ухода</div>
-        <div class="zones-grid">
-            <div class="zone-chip active" id="zFace" onclick="toggleZone('Face')">Лицо</div>
-            <div class="zone-chip active" id="zHair" onclick="toggleZone('Hair')">Волосы</div>
-            <div class="zone-chip active" id="zBody" onclick="toggleZone('Body')">Тело</div>
-        </div>
-        <button class="btn-primary" onclick="goToStep3()">Далее к процедурам ➔</button>
-        <button class="btn-secondary" onclick="backToStep1()">← Назад к выбору времени</button>
-    </div>
-
-    <!-- ШАГ 3: ВЫБОР И ДОБАВЛЕНИЕ ПРОЦЕДУР ВРУЧНУЮ + СВЯЗКИ -->
-    <div class="card" id="step3Procedures" style="display: none;">
-        <div class="card-title">3. Процедуры и автоматизация</div>
-
-        <button class="btn-primary" style="margin-top:0; margin-bottom:16px;" onclick="generateAutoRoutine()">⚡ Сгенерировать автоматически</button>
+        <input type="text" id="initTitle" class="input-field" placeholder="Название средств (например: Мусс / Ретинол)">
+        <select id="initZone" class="input-field">
+            <option value="Лицо">Зона: Лицо</option>
+            <option value="Волосы">Зона: Волосы</option>
+            <option value="Тело">Зона: Тело</option>
+        </select>
+        <select id="initTime" class="input-field">
+            <option value="5">Категория: 5 минут</option>
+            <option value="20" selected>Категория: 20 минут</option>
+            <option value="40">Категория: 40+ минут (SPA)</option>
+        </select>
+        <input type="number" id="initPause" class="input-field" placeholder="Пауза в минутах (0 если нет)">
         
-        <div style="text-align:center; font-size:12px; color:var(--text-secondary); margin-bottom:14px;">или выберите вручную:</div>
+        <button class="btn-secondary" onclick="addCustomToDB()">+ Добавить средства в базу</button>
 
-        <div id="manualProceduresList"></div>
+        <div id="initDBPreview" style="margin: 12px 0; font-size: 11px; color: var(--text-secondary);"></div>
 
-        <!-- Конструктор кастомного средства -->
-        <div style="border-top: 1px dashed var(--border-color); padding-top: 14px; margin-top: 14px;">
-            <div class="q-title">➕ Добавить свое средство в каталог</div>
-            <input type="text" id="customTitle" class="input-field" placeholder="Название (например: Retiderm 0.25)">
-            <select id="customZone" class="select-field">
-                <option value="Face">Зона: Лицо</option>
-                <option value="Hair">Зона: Волосы</option>
-                <option value="Body">Зона: Тело</option>
-            </select>
-            <select id="customTimeSlot" class="select-field">
-                <option value="5">Категория: 5 минут</option>
-                <option value="20" selected>Категория: 20 минут</option>
-                <option value="40">Категория: 40+ минут (SPA)</option>
-            </select>
-            <input type="number" id="customPause" class="input-field" placeholder="Пауза/выдержка в минутах (0 если нет)">
-            <button class="btn-secondary" onclick="saveCustomProcedure()">Сохранить средство навсегда</button>
-        </div>
-
-        <!-- Конструктор персональных связок -->
-        <div style="border-top: 1px dashed var(--border-color); padding-top: 14px; margin-top: 14px;">
-            <div class="q-title">🔗 Настройка правил и связок</div>
-            <div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">Создайте правило: "Если делаем [А] ➔ добавить [Б]"</div>
-            <select id="ruleCondition" class="select-field"></select>
-            <div style="text-align:center; font-size:11px; margin-bottom:6px;">то автоматически добавить:</div>
-            <select id="ruleTarget" class="select-field"></select>
-            <button class="btn-secondary" onclick="addCustomRule()">Сохранить связку</button>
-            <div id="rulesList" style="margin-top:8px; font-size:11px; color:var(--accent-sage);"></div>
-        </div>
-
-        <button class="btn-primary" style="margin-top:16px;" onclick="startSelectedManualRoutine()">Запустить выбранную схему ➔</button>
-        <button class="btn-secondary" onclick="backToStep2()">← Назад к зонам</button>
+        <button class="btn-primary" onclick="finishOnboarding()">Перейти к выбору ухода ➔</button>
     </div>
 
-    <!-- ВЫПОЛНЕНИЕ СХЕМЫ -->
+    <!-- ЭКРАН 1: НАСТРОЙКА УХОДА НА СЕГОДНЯ -->
+    <div class="card" id="screenSetup" style="display: none;">
+        <div class="card-title">1. Время суток</div>
+        <div class="tod-grid">
+            <div class="tod-chip active" id="todMorning" onclick="setTOD('morning')">☀️ Утро</div>
+            <div class="tod-chip" id="todEvening" onclick="setTOD('evening')">🌙 Вечер</div>
+        </div>
+
+        <div class="card-title">2. Сколько есть времени?</div>
+        <div class="time-option active" onclick="selectTime(5, this)">5 минут</div>
+        <div class="time-option" onclick="selectTime(20, this)">20 минут</div>
+        <div class="time-option" onclick="selectTime(40, this)">40+ минут</div>
+
+        <div class="card-title" style="margin-top: 16px;">3. Зоны ухода</div>
+        <div class="zones-grid">
+            <div class="zone-chip active" id="zFace" onclick="toggleZone('Лицо')">Лицо</div>
+            <div class="zone-chip active" id="zHair" onclick="toggleZone('Волосы')">Волосы</div>
+            <div class="zone-chip active" id="zBody" onclick="toggleZone('Тело')">Тело</div>
+        </div>
+
+        <div class="card-title" style="margin-top: 16px;">4. Способ составления</div>
+        <button class="btn-primary" onclick="generateAuto()">⚡ Собрать автоматически</button>
+        <button class="btn-secondary" onclick="showManualSelect()">✏️ Выбрать из баночек вручную</button>
+    </div>
+
+    <!-- ЭКРАН РУЧНОГО ВЫБОРА БАНОЧЕК -->
+    <div class="card" id="screenManual" style="display: none;">
+        <div class="card-title">Выберите средства из вашей базы</div>
+        <div id="manualList"></div>
+        <button class="btn-primary" onclick="startManual()">Запустить уход ➔</button>
+        <button class="btn-secondary" onclick="backToSetup()">← Назад к настройкам</button>
+    </div>
+
+    <!-- ЭКРАН ВЫПОЛНЕНИЯ УХОДА -->
     <div id="screenTimeline" style="display: none;">
         <div class="card-title">Выполнение ухода</div>
         <div id="timelineContainer"></div>
 
-        <button class="btn-secondary" id="btnChangeParams" onclick="resetToStep1()">Изменить параметры</button>
+        <button class="btn-secondary" id="btnChange" onclick="backToSetup()">← Настроить заново</button>
 
-        <div class="finish-card" id="finishCard">
-            <div class="finish-title">Ваш уход на сегодня завершен</div>
-            <div class="finish-sub">Прекрасного вечера и сияния ✨</div>
-            <button class="btn-primary" style="margin-top: 12px;" onclick="resetToStep1()">Создать новую схему</button>
-        </div>
-    </div>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="ideaModal">
-        <div class="modal-content">
-            <div class="modal-title">✨ Идея для паузы</div>
-            <div class="modal-text" id="modalText">Пока средство выдерживается, налейте себе травяной чай или зажгите свечу.</div>
-            <button class="btn-primary" style="margin-top:0" onclick="closeModal()">Понятно</button>
+        <!-- Заботливый блок перехода -->
+        <div class="care-next-card" id="careNextCard">
+            <div style="font-size: 16px; font-weight: 500; color: var(--accent-rose-dark); margin-bottom: 6px;" id="nextCareTitle">Уход завершен! ✨</div>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;" id="nextCareSub">Ждем вас вечером для расслабляющих процедур</div>
+            <button class="btn-primary" id="nextCareBtn" onclick="switchToNextTOD()">Перейти к вечернему уходу 🌙</button>
         </div>
     </div>
 
     <script>
-        // БАЗА ДАННЫХ ПРОЦЕДУР (Изначальная + Сохраняемая в localStorage)
-        let defaultProcedures = [
-            { id: "p1", zone: "Face", timeSlot: 5, title: "Мягкое очищение муссом", pause: 0, idea: "" },
-            { id: "p2", zone: "Face", timeSlot: 20, title: "Увлажняющий эссенция-тоник", pause: 2, idea: "Дайте тонику 2 минуты впитаться для глубинного увлажнения." },
-            { id: "p3", zone: "Face", timeSlot: 20, title: "Активная сыворотка / Ретинол", pause: 15, idea: "💡 Почитайте главу книги или нанесите масло на кутикулу." },
-            { id: "p4", zone: "Face", timeSlot: 20, title: "Запечатывающий крем NMF", pause: 0, idea: "" },
-            { id: "p5", zone: "Hair", timeSlot: 20, title: "Шампунь + Бальзам для волос", pause: 3, idea: "Сделайте лёгкий массаж плечевой зоны." },
-            { id: "p6", zone: "Hair", timeSlot: 5, title: "Несмываемый спрей для волос", pause: 0, idea: "" },
-            { id: "p7", zone: "Body", timeSlot: 5, title: "Увлажняющее молочко для тела", pause: 0, idea: "" },
-            { id: "p8", zone: "Body", timeSlot: 40, title: "Массаж сухой щеткой перед душем", pause: 0, idea: "" }
+        let database = JSON.parse(localStorage.getItem('girl_skincare_db')) || [
+            { title: "Мусс для умывания", zone: "Лицо", timeSlot: 5, pause: 0, idea: "" },
+            { title: "NMF-Крем", zone: "Лицо", timeSlot: 5, pause: 0, idea: "" },
+            { title: "Активная сыворотка / Ретинол", zone: "Лицо", timeSlot: 20, pause: 15, idea: "Почитайте главу любимой книги или нанесите масло на кутикулу." },
+            { title: "Несмываемый спрей", zone: "Волосы", timeSlot: 5, pause: 0, idea: "" }
         ];
 
-        let database = JSON.parse(localStorage.getItem('my_skincare_db')) || defaultProcedures;
-        let customRules = JSON.parse(localStorage.getItem('my_skincare_rules')) || [];
-
-        let selectedTime = 20;
-        let selectedZones = { Face: true, Hair: true, Body: true };
+        let selectedTOD = 'morning';
+        let selectedTime = 5;
+        let selectedZones = { 'Лицо': true, 'Волосы': true, 'Тело': true };
         let currentRoutine = [];
-        let activeStepIdx = 0;
+        let activeIdx = 0;
+
+        function addCustomToDB() {
+            let t = document.getElementById('initTitle').value;
+            let z = document.getElementById('initZone').value;
+            let slot = parseInt(document.getElementById('initTime').value);
+            let p = parseInt(document.getElementById('initPause').value) || 0;
+
+            if (!t) return alert("Введите название средств!");
+
+            database.push({ title: t, zone: z, timeSlot: slot, pause: p, idea: p > 0 ? "Время выдержки средства для лучшего эффекта." : "" });
+            localStorage.setItem('girl_skincare_db', JSON.stringify(database));
+            
+            document.getElementById('initTitle').value = '';
+            document.getElementById('initPause').value = '';
+            renderDBPreview();
+        }
+
+        function renderDBPreview() {
+            let div = document.getElementById('initDBPreview');
+            div.innerHTML = "В вашей базе: " + database.map(d => d.title).join(", ");
+        }
+        renderDBPreview();
+
+        function finishOnboarding() {
+            document.getElementById('screenOnboarding').style.display = 'none';
+            document.getElementById('screenSetup').style.display = 'block';
+        }
+
+        function setTOD(tod) {
+            selectedTOD = tod;
+            document.getElementById('todMorning').classList.toggle('active', tod === 'morning');
+            document.getElementById('todEvening').classList.toggle('active', tod === 'evening');
+        }
 
         function selectTime(time, el) {
             selectedTime = time;
-            document.querySelectorAll('.time-option').forEach(o => o.classList.remove('active'));
+            document.querySelectorAll('#screenSetup .time-option').forEach(o => o.classList.remove('active'));
             el.classList.add('active');
         }
 
-        function toggleZone(zone) {
-            selectedZones[zone] = !selectedZones[zone];
-            document.getElementById('z' + zone).classList.toggle('active', selectedZones[zone]);
+        function toggleZone(z) {
+            selectedZones[z] = !selectedZones[z];
+            document.getElementById('z' + (z === 'Лицо' ? 'Face' : z === 'Волосы' ? 'Hair' : 'Body')).classList.toggle('active', selectedZones[z]);
         }
 
-        function goToStep2() {
-            document.getElementById('step1Time').style.display = 'none';
-            document.getElementById('step2Zones').style.display = 'block';
+        function generateAuto() {
+            currentRoutine = database.filter(d => d.timeSlot <= selectedTime && selectedZones[d.zone]);
+            if (currentRoutine.length === 0) return alert("Под эти критерии ничего не найдено в вашей базе.");
+            startRoutine();
         }
 
-        function backToStep1() {
-            document.getElementById('step2Zones').style.display = 'none';
-            document.getElementById('step1Time').style.display = 'block';
-        }
+        function showManualSelect() {
+            let list = document.getElementById('manualList');
+            list.innerHTML = '';
+            let filtered = database.filter(d => selectedZones[d.zone]);
 
-        function goToStep3() {
-            document.getElementById('step2Zones').style.display = 'none';
-            document.getElementById('step3Procedures').style.display = 'block';
-            renderManualProceduresList();
-            populateRuleSelects();
-        }
-
-        function backToStep2() {
-            document.getElementById('step3Procedures').style.display = 'none';
-            document.getElementById('step2Zones').style.display = 'block';
-        }
-
-        // ОТОБРАЖЕНИЕ СПИСКА ПРОЦЕДУР ПО ФИЛЬТРАМ ВРЕМЕНИ И ЗОН
-        function renderManualProceduresList() {
-            let container = document.getElementById('manualProceduresList');
-            container.innerHTML = '';
-
-            let filtered = database.filter(p => p.timeSlot <= selectedTime && selectedZones[p.zone]);
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div style="font-size:12px; color:var(--text-secondary); text-align:center;">Нет процедур под выбранные фильтры. Добавьте свою ниже!</div>`;
-                return;
-            }
-
-            filtered.forEach(p => {
-                container.innerHTML += `
+            filtered.forEach((d, i) => {
+                list.innerHTML += `
                     <label class="proc-item">
-                        <span><b>[${p.zone}]</b> ${p.title} ${p.pause > 0 ? `(⏱️ ${p.pause} мин)` : ''}</span>
-                        <input type="checkbox" value="${p.id}" class="manual-proc-checkbox" checked>
+                        <span><b>[${d.zone}]</b> ${d.title}</span>
+                        <input type="checkbox" value="${i}" class="manual-chk" checked>
                     </label>
                 `;
             });
+
+            document.getElementById('screenSetup').style.display = 'none';
+            document.getElementById('screenManual').style.display = 'block';
         }
 
-        // СОХРАНЕНИЕ СВОЕЙ ПРОЦЕДУРЫ НАВСЕГДА В LOCALSTORAGE
-        function saveCustomProcedure() {
-            let title = document.getElementById('customTitle').value;
-            let zone = document.getElementById('customZone').value;
-            let timeSlot = parseInt(document.getElementById('customTimeSlot').value);
-            let pause = parseInt(document.getElementById('customPause').value) || 0;
+        function startManual() {
+            let chks = document.querySelectorAll('.manual-chk:checked');
+            let filtered = database.filter(d => selectedZones[d.zone]);
+            currentRoutine = Array.from(chks).map(c => filtered[c.value]);
 
-            if (!title) return alert("Введите название средства!");
-
-            let newProc = {
-                id: "custom_" + Date.now(),
-                zone: zone,
-                timeSlot: timeSlot,
-                title: title,
-                pause: pause,
-                idea: pause > 0 ? "⏱️ Пауза для впитывания средства." : ""
-            };
-
-            database.push(newProc);
-            localStorage.setItem('my_skincare_db', JSON.stringify(database));
-
-            alert(`Средство "${title}" сохранено в ваш личный каталог!`);
-            document.getElementById('customTitle').value = '';
-            document.getElementById('customPause').value = '';
-            renderManualProceduresList();
-            populateRuleSelects();
+            document.getElementById('screenManual').style.display = 'none';
+            startRoutine();
         }
 
-        // КАСТОМНЫЕ СВЯЗКИ ПОЛЬЗОВАТЕЛЯ
-        function populateRuleSelects() {
-            let cond = document.getElementById('ruleCondition');
-            let target = document.getElementById('ruleTarget');
-            cond.innerHTML = ''; target.innerHTML = '';
-
-            database.forEach(p => {
-                cond.innerHTML += `<option value="${p.id}">${p.title}</option>`;
-                target.innerHTML += `<option value="${p.id}">${p.title}</option>`;
-            });
-            renderRulesText();
+        function backToSetup() {
+            document.getElementById('screenManual').style.display = 'none';
+            document.getElementById('screenTimeline').style.display = 'none';
+            document.getElementById('screenSetup').style.display = 'block';
         }
 
-        function addCustomRule() {
-            let condId = document.getElementById('ruleCondition').value;
-            let targetId = document.getElementById('ruleTarget').value;
-
-            if (condId === targetId) return alert("Выберите разные процедуры!");
-
-            customRules.push({ condId, targetId });
-            localStorage.setItem('my_skincare_rules', JSON.stringify(customRules));
-            renderRulesText();
-        }
-
-        function renderRulesText() {
-            let div = document.getElementById('rulesList');
-            div.innerHTML = 'Сохраненные связки:<br>';
-            customRules.forEach(r => {
-                let p1 = database.find(x => x.id === r.condId);
-                let p2 = database.find(x => x.id === r.targetId);
-                if (p1 && p2) div.innerHTML += `• Если ${p1.title} ➔ Добавить ${p2.title}<br>`;
-            });
-        }
-
-        // АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ С УЧЕТОМ СВЯЗОК И СОХРАНЕННЫХ СРЕДСТВ
-        function generateAutoRoutine() {
-            let available = database.filter(p => p.timeSlot <= selectedTime && selectedZones[p.zone]);
-            currentRoutine = [...available];
-
-            // Проверяем правила связок
-            customRules.forEach(rule => {
-                let hasCondition = currentRoutine.some(p => p.id === rule.condId);
-                let hasTarget = currentRoutine.some(p => p.id === rule.targetId);
-                if (hasCondition && !hasTarget) {
-                    let targetProc = database.find(p => p.id === rule.targetId);
-                    if (targetProc) currentRoutine.push(targetProc);
-                }
-            });
-
-            startTimelinePlayer();
-        }
-
-        // ЗАПУСК ВРУЧНУЮ ОТМЕЧЕННЫХ ПРОЦЕДУР
-        function startSelectedManualRoutine() {
-            let checkboxes = document.querySelectorAll('.manual-proc-checkbox:checked');
-            let selectedIds = Array.from(checkboxes).map(c => c.value);
-
-            currentRoutine = database.filter(p => selectedIds.includes(p.id));
-
-            if (currentRoutine.length === 0) return alert("Выберите хотя бы одну процедуру!");
-            startTimelinePlayer();
-        }
-
-        function startTimelinePlayer() {
-            activeStepIdx = 0;
-            document.getElementById('finishCard').style.display = 'none';
-            document.getElementById('btnChangeParams').style.display = 'block';
-            document.getElementById('step3Procedures').style.display = 'none';
+        function startRoutine() {
+            activeIdx = 0;
+            document.getElementById('careNextCard').style.display = 'none';
+            document.getElementById('btnChange').style.display = 'block';
+            document.getElementById('screenSetup').style.display = 'none';
             document.getElementById('screenTimeline').style.display = 'block';
             renderTimeline();
         }
 
-        function resetToStep1() {
-            document.getElementById('screenTimeline').style.display = 'none';
-            document.getElementById('step1Time').style.display = 'block';
-        }
-
         function renderTimeline() {
-            let container = document.getElementById('timelineContainer');
-            container.innerHTML = '';
+            let c = document.getElementById('timelineContainer');
+            c.innerHTML = '';
 
             currentRoutine.forEach((step, idx) => {
-                if (idx > activeStepIdx) return;
+                if (idx > activeIdx) return;
+                let isComp = idx < activeIdx;
+                let isAct = idx === activeIdx;
 
-                let isCompleted = idx < activeStepIdx;
-                let isActive = idx === activeStepIdx;
-
-                let stepHtml = `
-                    <div class="timeline-step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}">
+                c.innerHTML += `
+                    <div class="timeline-step ${isComp ? 'completed' : ''} ${isAct ? 'active' : ''}">
                         <div class="step-header">
                             <span>${step.zone}</span>
-                            <span>${isCompleted ? '✓ Выполнено' : `Шаг ${idx + 1}`}</span>
+                            <span>${isComp ? '✓ Выполнено' : `Шаг ${idx + 1}`}</span>
                         </div>
                         <div class="step-title">${step.title}</div>
 
-                        ${step.pause > 0 && isActive ? `
-                            <div style="margin-top:8px;">
-                                <span style="font-size:12px; color:#8C5E3C; font-weight:600;">⏱️ Выдержка: ${step.pause} мин</span>
-                                <div class="btn-idea" onclick="openModal('${step.idea}')">✨ Чем заняться в паузе?</div>
+                        ${step.pause > 0 && isAct ? `
+                            <div style="margin-top: 8px;">
+                                <span style="font-size: 12px; color: var(--accent-rose-dark); font-weight: 600;">⏱️ Пауза: ${step.pause} мин</span>
+                                <div class="btn-idea-inline" onclick="toggleTip(${idx})">✨ Чем заняться в паузе?</div>
+                                <div class="inline-tip-box" id="tip_${idx}">${step.idea || 'Посвятите эти минуты себе и отдохните.'}</div>
                             </div>
                         ` : ''}
 
-                        ${isActive ? `
-                            <button class="btn-primary" onclick="completeStep(${idx})">Выполнено ➔</button>
-                            <div style="text-align:center;">
-                                <button class="btn-skip" onclick="skipStep(${idx})">Пропустить действие</button>
-                            </div>
+                        ${isAct ? `
+                            <button class="btn-primary" onclick="nextStep(${idx})">Выполнено ➔</button>
                         ` : ''}
                     </div>
                 `;
-                container.innerHTML += stepHtml;
             });
         }
 
-        function openModal(text) {
-            document.getElementById('modalText').innerText = text || "Отдохните и посвятите эти минуты себе.";
-            document.getElementById('ideaModal').style.display = 'flex';
+        function toggleTip(idx) {
+            let tip = document.getElementById('tip_' + idx);
+            tip.style.display = tip.style.display === 'block' ? 'none' : 'block';
         }
 
-        function closeModal() {
-            document.getElementById('ideaModal').style.display = 'none';
-        }
-
-        function completeStep(idx) {
-            if (activeStepIdx < currentRoutine.length - 1) {
-                activeStepIdx++;
+        function nextStep(idx) {
+            if (activeIdx < currentRoutine.length - 1) {
+                activeIdx++;
                 renderTimeline();
             } else {
-                document.getElementById('btnChangeParams').style.display = 'none';
-                document.getElementById('finishCard').style.display = 'block';
+                showCareFinish();
             }
         }
 
-        function skipStep(idx) {
-            completeStep(idx);
+        function showCareFinish() {
+            document.getElementById('btnChange').style.display = 'none';
+            let card = document.getElementById('careNextCard');
+            let title = document.getElementById('nextCareTitle');
+            let sub = document.getElementById('nextCareSub');
+            let btn = document.getElementById('nextCareBtn');
+
+            if (selectedTOD === 'morning') {
+                title.innerText = "Утренний уход завершен! ✨";
+                sub.innerText = "Прекрасного дня! Ждем вас вечером для расслабляющих процедур.";
+                btn.innerText = "Перейти к вечернему уходу 🌙";
+            } else {
+                title.innerText = "Вечерний уход завершен! 🌙";
+                sub.innerText = "Прекрасного отдыха и сладких снов! До встречи завтра.";
+                btn.innerText = "Запланировать уход на утро ☀️";
+            }
+            card.style.display = 'block';
+        }
+
+        function switchToNextTOD() {
+            setTOD(selectedTOD === 'morning' ? 'evening' : 'morning');
+            backToSetup();
         }
     </script>
 </body>
