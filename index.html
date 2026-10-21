@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой SPA & Skincare Ритуал</title>
+    <title>Ritual & Care — Smart Assistant</title>
     <style>
         :root {
             --bg-main: #FDFBF7;
@@ -22,152 +22,148 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-primary); padding: 24px 16px; max-width: 520px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
 
-        header { text-align: center; margin-bottom: 28px; }
+        header { text-align: center; margin-bottom: 24px; }
         .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-sand); margin-bottom: 6px; }
-        h1 { font-size: 24px; font-weight: 400; font-family: serif; color: var(--text-primary); letter-spacing: -0.5px; }
-        .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 6px; font-weight: 300; }
+        h1 { font-size: 24px; font-weight: 400; font-family: serif; color: var(--text-primary); }
+        .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
 
         .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 20px; margin-bottom: 18px; box-shadow: var(--shadow-subtle); }
         .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 14px; }
 
-        /* Выбор времени */
-        .time-selector { display: flex; flex-direction: column; gap: 10px; }
-        .time-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 14px; background: var(--bg-main); cursor: pointer; transition: all 0.2s ease; }
+        .q-title { font-size: 13px; font-weight: 600; margin: 14px 0 8px 0; color: var(--text-primary); }
+        .q-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 8px; cursor: pointer; font-size: 13px; }
+        .q-option.selected { border-color: var(--accent-sage); background: var(--accent-sage-light); font-weight: 500; }
+
+        /* Переключатель-свитч для связок */
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
+        .toggle-label { font-size: 13px; color: var(--text-primary); }
+        .toggle-sub { font-size: 11px; color: var(--text-secondary); }
+
+        .time-option { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 14px; background: var(--bg-main); cursor: pointer; margin-bottom: 10px; }
         .time-option.active { border-color: var(--accent-sage); background: var(--accent-sage-light); }
-        .time-option-left { display: flex; align-items: center; gap: 12px; }
-        .time-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-color); }
-        .time-option.active .time-dot { background: var(--accent-sage); }
-        .time-title { font-size: 15px; font-weight: 500; }
-        .time-desc { font-size: 12px; color: var(--text-secondary); }
 
-        /* Кнопки действия */
-        .btn-primary { width: 100%; background: var(--accent-sage); color: #FFF; border: none; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 500; letter-spacing: 0.5px; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
-        .btn-primary:active { opacity: 0.9; }
-        .btn-secondary { width: 100%; background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 8px; }
+        .btn-primary { width: 100%; background: var(--accent-sage); color: #FFF; border: none; padding: 16px; border-radius: 14px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 10px; }
+        .btn-secondary { width: 100%; background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; font-size: 13px; cursor: pointer; margin-top: 8px; }
+        .btn-skip { background: transparent; color: #A0A0A0; border: none; font-size: 12px; cursor: pointer; text-decoration: underline; margin-top: 8px; }
 
-        /* Экран схемы предпросмотра */
-        .scheme-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--border-color); }
-        .scheme-item:last-child { border-bottom: none; }
-        .scheme-icon { font-size: 18px; width: 28px; text-align: center; }
-        .scheme-details { flex: 1; }
-        .scheme-name-input { font-size: 14px; font-weight: 500; border: none; border-bottom: 1px solid transparent; background: transparent; width: 100%; color: var(--text-primary); outline: none; }
-        .scheme-name-input:focus { border-bottom-color: var(--accent-sand); }
-        .scheme-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+        .timeline-step { border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; margin-bottom: 12px; background: var(--surface); opacity: 0.5; transition: all 0.3s ease; }
+        .timeline-step.active { opacity: 1; border-color: var(--accent-sage); box-shadow: 0 4px 12px rgba(58, 77, 57, 0.08); }
+        .timeline-step.completed { opacity: 0.7; background: var(--accent-sage-light); border-color: transparent; }
+        
+        .step-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+        .step-title { font-size: 16px; font-weight: 500; }
+        
+        .pause-box { background: #FAF5EF; border-left: 3px solid var(--accent-sand); padding: 12px; border-radius: 0 10px 10px 0; margin-top: 10px; }
+        .pause-title { font-size: 12px; font-weight: 600; color: #8C5E3C; }
+        .pause-idea { font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: 2px; }
 
-        /* Плеер пошагового ухода */
-        .step-badge { display: inline-block; background: var(--accent-sand-light); color: #8C5E3C; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; }
-        .step-heading { font-size: 20px; font-family: serif; margin-bottom: 8px; }
-        .step-category { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-
-        .pause-box { background: #FAF5EF; border-left: 3px solid var(--accent-sand); padding: 14px; border-radius: 0 12px 12px 0; margin: 16px 0; text-align: left; }
-        .pause-title { font-size: 13px; font-weight: 600; color: #8C5E3C; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-        .pause-idea { font-size: 12px; color: var(--text-secondary); font-style: italic; line-height: 1.4; }
-
-        .nav-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .alert-box { background: var(--accent-sand-light); border: 1px solid var(--accent-sand); padding: 10px 14px; border-radius: 12px; font-size: 12px; color: #8C5E3C; margin-bottom: 14px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo-tag">Ritual & Care</div>
-        <h1>Персональный SPA-Уход</h1>
-        <div class="subtitle">Лицо • Волосы • Тело</div>
+        <h1>Умный Ассистент Ухода</h1>
+        <div class="subtitle">Индивидуальный алгоритм под ваш ритм</div>
     </header>
 
-    <!-- ЭКРАН 1: ВЫБОР РЕСУРСА -->
-    <div class="card" id="screenSelect">
-        <div class="card-title">Сколько у вас времени сегодня?</div>
-        <div class="time-selector">
-            <div class="time-option" onclick="selectTime(5, this)">
-                <div class="time-option-left">
-                    <div class="time-dot"></div>
-                    <div>
-                        <div class="time-title">5 минут (Без сил)</div>
-                        <div class="time-desc">Быстрый экспресс-минимум для всех зон</div>
-                    </div>
-                </div>
+    <!-- 1. РАСШИРЕННЫЙ ОПРОСНИК ПОД ЦА -->
+    <div class="card" id="screenOnboarding">
+        <div class="card-title">Персональная настройка</div>
+
+        <div class="q-title">1. Как часто моете голову?</div>
+        <div class="q-option selected" onclick="setOption('washFreq', 1, this)">Каждый день</div>
+        <div class="q-option" onclick="setOption('washFreq', 2, this)">Через день</div>
+        <div class="q-option" onclick="setOption('washFreq', 3, this)">Раз в 3 дня</div>
+
+        <div class="q-title">2. Тип кожи лица</div>
+        <div class="q-option selected" onclick="setOption('skinType', 'normal', this)">Нормальная / Комбинированная</div>
+        <div class="q-option" onclick="setOption('skinType', 'dry', this)">Сухая / Чувствительная</div>
+        <div class="q-option" onclick="setOption('skinType', 'oily', this)">Склонная к жирности / высыпаниям</div>
+
+        <div class="q-title">3. Персональные правила связок:</div>
+        <div class="toggle-row">
+            <div>
+                <div class="toggle-label">Маска для лица только после пилинга</div>
+                <div class="toggle-sub">Не предлагать маску в обычные дни</div>
             </div>
-            <div class="time-option active" onclick="selectTime(20, this)">
-                <div class="time-option-left">
-                    <div class="time-dot"></div>
-                    <div>
-                        <div class="time-title">20 минут (Базовый уход)</div>
-                        <div class="time-desc">Полноценная ежедневная рутина</div>
-                    </div>
-                </div>
-            </div>
-            <div class="time-option" onclick="selectTime(40, this)">
-                <div class="time-option-left">
-                    <div class="time-dot"></div>
-                    <div>
-                        <div class="time-title">40+ минут (SPA Вечер)</div>
-                        <div class="time-desc">Глубокие маски, пилинги и расслабление</div>
-                    </div>
-                </div>
-            </div>
+            <input type="checkbox" id="linkPeelingMask" checked style="accent-color: var(--accent-sage);">
         </div>
-        <button class="btn-primary" onclick="showScheme()">Посмотреть схему ухода ➔</button>
+        <div class="toggle-row">
+            <div>
+                <div class="toggle-label">Маска для волос только при мытье</div>
+                <div class="toggle-sub">Привязывать уход к дням мытья</div>
+            </div>
+            <input type="checkbox" id="linkHairMask" checked style="accent-color: var(--accent-sage);">
+        </div>
+
+        <button class="btn-primary" onclick="finishOnboarding()">Сохранить настройки ➔</button>
     </div>
 
-    <!-- ЭКРАН 2: СХЕМА УХОДА (ПРЕДПРОСМОТР И РЕДАКТИРОВАНИЕ) -->
-    <div class="card" id="screenScheme" style="display: none;">
-        <div class="card-title">Схема вашего ритуала на сегодня</div>
-        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">
-            Вы можете нажатием отредактировать названия средств под свои баночки:
-        </div>
+    <!-- 2. ВЫБОР РЕСУРСА НА СЕГОДНЯ -->
+    <div class="card" id="screenTime" style="display: none;">
+        <div class="card-title">Сколько времени есть сегодня?</div>
         
-        <div id="schemeList"></div>
+        <!-- Симуляция оповещения о переносе с прошлого дня -->
+        <div class="alert-box" id="missedAlert" style="display: none;">
+            ⚠️ <b>Перенос с вчерашнего дня:</b> Вчера было пропущено мытье головы. Процедура перенесена на сегодня.
+        </div>
 
-        <button class="btn-primary" onclick="startPlayer()">Начать ритуал ✨</button>
-        <button class="btn-secondary" onclick="backToSelect()">← Изменить время</button>
-    </div>
-
-    <!-- ЭКРАН 3: ПОШАГОВЫЙ ПЛЕЕР -->
-    <div class="card" id="screenPlayer" style="display: none; text-align: center;">
-        <div id="stepCategory" class="step-category">Лицо</div>
-        <div class="step-badge" id="stepBadge">Шаг 1 из 5</div>
-        <h2 class="step-heading" id="stepTitle">Умывание муссом</h2>
-
-        <div id="pauseBlock" style="display: none;">
-            <div class="pause-box">
-                <div class="pause-title">⏱️ Время выдержки: <span id="pauseMins">15</span> минут</div>
-                <div class="pause-idea" id="pauseIdea">Пока маска работает — налейте себе травяной чай или нанесите крем на руки.</div>
+        <div class="time-option" onclick="selectTime(5, this)">
+            <div>
+                <div style="font-size: 15px; font-weight: 500;">5 минут (Без сил)</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Только самый необходимый минимум</div>
             </div>
         </div>
-
-        <div class="nav-buttons">
-            <button class="btn-secondary" style="flex:1" onclick="prevStep()">Назад</button>
-            <button class="btn-primary" style="flex:2" onclick="nextStep()" id="nextBtn">Готово ➔</button>
+        <div class="time-option active" onclick="selectTime(20, this)">
+            <div>
+                <div style="font-size: 15px; font-weight: 500;">20 минут (База)</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Стандартная ежедневная рутина</div>
+            </div>
         </div>
+        <div class="time-option" onclick="selectTime(40, this)">
+            <div>
+                <div style="font-size: 15px; font-weight: 500;">40+ минут (SPA Вечер)</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Глубокие процедуры и релакс</div>
+            </div>
+        </div>
+        <button class="btn-primary" onclick="generateSmartRoutine()">Сформировать план ✨</button>
+    </div>
+
+    <!-- 3. ЛЕНТА ВЫПОЛНЕНИЯ (Сверху вниз без перелистывания) -->
+    <div id="screenTimeline" style="display: none;">
+        <div class="card-title" style="margin-bottom: 12px;">Выполнение ритуала</div>
+        <div id="timelineContainer"></div>
     </div>
 
     <script>
-        // БАЗОВАЯ БИБЛИОТЕКА ПРОЦЕДУР
-        const database = [
-            // 5 мин (Без сил)
-            { time: 5, zone: "Лицо", icon: "👤", title: "Очищающий мусс/гель", pause: 0, idea: "" },
-            { time: 5, zone: "Лицо", icon: "👤", title: "Увлажняющий крем NMF", pause: 0, idea: "" },
-            { time: 5, zone: "Волосы", icon: "💆‍♀️", title: "Экспресс-флюид на кончики", pause: 0, idea: "" },
-            { time: 5, zone: "Тело", icon: "✨", title: "Быстрый увлажняющий лосьон", pause: 0, idea: "" },
-
-            // 20 мин (База)
-            { time: 20, zone: "Лицо", icon: "👤", title: "Мягкое умывание", pause: 0, idea: "" },
-            { time: 20, zone: "Лицо", icon: "👤", title: "Увлажняющий эссенция-тоник", pause: 2, idea: "Дайте тонику 2 минуты впитаться для глубинного увлажнения." },
-            { time: 20, zone: "Волосы", icon: "💆‍♀️", title: "Кондиционер для волос", pause: 3, idea: "Пока работает кондиционер — сделайте легкий массаж плеч." },
-            { time: 20, zone: "Лицо", icon: "👤", title: "Сыворотка с пептидами/активами", pause: 0, idea: "" },
-            { time: 20, zone: "Тело", icon: "✨", title: "Питательный крем для тела и рук", pause: 0, idea: "" },
-
-            // 40+ мин (SPA)
-            { time: 40, zone: "Тело", icon: "✨", title: "Массаж сухой щеткой перед душем", pause: 0, idea: "" },
-            { time: 40, zone: "Волосы", icon: "💆‍♀️", title: "Глубокая питательная маска для волос", pause: 15, idea: "Заварите травяной чай или зажгите свечу с любимым ароматом." },
-            { time: 40, zone: "Лицо", icon: "👤", title: "Кислотный пилинг или Retiderm 0.25", pause: 20, idea: "Время выдержки актива. Почитайте главу книги или включите расслабляющую музыку." },
-            { time: 40, zone: "Лицо", icon: "👤", title: "Запечатывающий восстанавливающий крем", pause: 0, idea: "" },
-            { time: 40, zone: "Тело", icon: "✨", title: "Питательный баттер для тела + масло для кутикулы", pause: 0, idea: "" }
-        ];
+        // Данные профиля
+        let userConfig = {
+            washFreq: 2,
+            skinType: 'normal',
+            missedWashYesterday: true // Симуляция: вчера пропустили мытье
+        };
 
         let selectedTime = 20;
         let currentRoutine = [];
-        let currentStep = 0;
+        let activeStepIdx = 0;
+
+        function setOption(key, val, el) {
+            userConfig[key] = val;
+            el.parentElement.querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function finishOnboarding() {
+            document.getElementById('screenOnboarding').style.display = 'none';
+            document.getElementById('screenTime').style.display = 'block';
+
+            // Если был пропуск — показываем плашку переноса
+            if (userConfig.missedWashYesterday) {
+                document.getElementById('missedAlert').style.display = 'block';
+            }
+        }
 
         function selectTime(time, el) {
             selectedTime = time;
@@ -175,76 +171,113 @@
             el.classList.add('active');
         }
 
-        function showScheme() {
-            currentRoutine = database.filter(item => item.time <= selectedTime).map(item => ({...item}));
-            let listEl = document.getElementById('schemeList');
-            listEl.innerHTML = '';
+        function generateSmartRoutine() {
+            currentRoutine = [];
+            let linkPeelingMask = document.getElementById('linkPeelingMask').checked;
+            let linkHairMask = document.getElementById('linkHairMask').checked;
+
+            // 1. Уход за лицом
+            currentRoutine.push({ zone: "Лицо", title: "Очищающий мусс", pause: 0, idea: "" });
+
+            let hasPeelingToday = (selectedTime >= 40); // Пилинг ставится только если есть 40+ мин
+
+            if (hasPeelingToday) {
+                currentRoutine.push({ 
+                    zone: "Лицо", 
+                    title: "Кислотный пилинг", 
+                    pause: 10, 
+                    idea: "💡 Сделайте 2 минуты глубокой дыхательной гимнастики для снятия стресса." 
+                });
+            }
+
+            // Маска для лица добавляется ТОЛЬКО если:
+            // а) Включена связка и СЕГОДНЯ есть пилинг
+            // б) Или если связка выключена (пользователь разрешил маску без пилинга)
+            if ((linkPeelingMask && hasPeelingToday) || (!linkPeelingMask && selectedTime >= 20)) {
+                currentRoutine.push({ 
+                    zone: "Лицо", 
+                    title: "Восстанавливающая маска", 
+                    pause: 15, 
+                    idea: "💡 Налейте себе травяной чай или нанесите увлажняющее масло на кутикулу." 
+                });
+            }
+
+            currentRoutine.push({ zone: "Лицо", title: "Запечатывающий крем NMF", pause: 0, idea: "" });
+
+            // 2. Уход за волосами (С учетом переноса пропущенного дня)
+            let needWash = userConfig.missedWashYesterday || (selectedTime >= 20);
+            if (needWash) {
+                currentRoutine.push({ zone: "Волосы", title: "Мытье головы (Перенос / График)", pause: 0, idea: "" });
+                
+                if (linkHairMask && selectedTime >= 20) {
+                    currentRoutine.push({ 
+                        zone: "Волосы", 
+                        title: "Маска для волос", 
+                        pause: 5, 
+                        idea: "💡 Пока работает маска для волос — сделаем легкий массаж шеи." 
+                    });
+                }
+            }
+
+            startTimelinePlayer();
+        }
+
+        function startTimelinePlayer() {
+            activeStepIdx = 0;
+            document.getElementById('screenTime').style.display = 'none';
+            document.getElementById('screenTimeline').style.display = 'block';
+            renderTimeline();
+        }
+
+        function renderTimeline() {
+            let container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
 
             currentRoutine.forEach((step, idx) => {
-                listEl.innerHTML += `
-                    <div class="scheme-item">
-                        <div class="scheme-icon">${step.icon}</div>
-                        <div class="scheme-details">
-                            <input class="scheme-name-input" value="${step.title}" onchange="currentRoutine[${idx}].title = this.value">
-                            <div class="scheme-meta">${step.zone} ${step.pause > 0 ? `• Выдержка ${step.pause} мин` : ''}</div>
+                if (idx > activeStepIdx) return;
+
+                let isCompleted = idx < activeStepIdx;
+                let isActive = idx === activeStepIdx;
+
+                let stepHtml = `
+                    <div class="timeline-step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}">
+                        <div class="step-header">
+                            <span>${step.zone}</span>
+                            <span>${isCompleted ? '✓ Выполнено' : `Шаг ${idx + 1}`}</span>
                         </div>
+                        <div class="step-title">${step.title}</div>
+
+                        ${step.pause > 0 && isActive ? `
+                            <div class="pause-box">
+                                <div class="pause-title">⏱️ Выдержка: ${step.pause} минут</div>
+                                <div class="pause-idea">${step.idea}</div>
+                            </div>
+                        ` : ''}
+
+                        ${isActive ? `
+                            <button class="btn-primary" onclick="completeStep(${idx})">Выполнено ➔</button>
+                            <div style="text-align:center;">
+                                <button class="btn-skip" onclick="skipStep(${idx})">Пропустить действие</button>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
+                container.innerHTML += stepHtml;
             });
-
-            document.getElementById('screenSelect').style.display = 'none';
-            document.getElementById('screenScheme').style.display = 'block';
         }
 
-        function backToSelect() {
-            document.getElementById('screenScheme').style.display = 'none';
-            document.getElementById('screenSelect').style.display = 'block';
-        }
-
-        function startPlayer() {
-            currentStep = 0;
-            document.getElementById('screenScheme').style.display = 'none';
-            document.getElementById('screenPlayer').style.display = 'block';
-            renderStep();
-        }
-
-        function renderStep() {
-            let step = currentRoutine[currentStep];
-            document.getElementById('stepCategory').innerText = `${step.icon} ${step.zone}`;
-            document.getElementById('stepBadge').innerText = `Шаг ${currentStep + 1} из ${currentRoutine.length}`;
-            document.getElementById('stepTitle').innerText = step.title;
-
-            let pauseBlock = document.getElementById('pauseBlock');
-            if (step.pause > 0) {
-                pauseBlock.style.display = 'block';
-                document.getElementById('pauseMins').innerText = step.pause;
-                document.getElementById('pauseIdea').innerText = step.idea || "Отдохните и посвятите эти минуты себе.";
+        function completeStep(idx) {
+            if (activeStepIdx < currentRoutine.length - 1) {
+                activeStepIdx++;
+                renderTimeline();
             } else {
-                pauseBlock.style.display = 'none';
-            }
-
-            document.getElementById('nextBtn').innerText = (currentStep === currentRoutine.length - 1) ? "Завершить ✨" : "Готово ➔";
-        }
-
-        function nextStep() {
-            if (currentStep < currentRoutine.length - 1) {
-                currentStep++;
-                renderStep();
-            } else {
-                alert("Ритуал окончен! Прекрасного вечера и сияющей кожи ✨");
-                document.getElementById('screenPlayer').style.display = 'none';
-                document.getElementById('screenSelect').style.display = 'block';
+                alert("Ритуал завершен! Прекрасного вечера ✨");
+                location.reload();
             }
         }
 
-        function prevStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                renderStep();
-            } else {
-                document.getElementById('screenPlayer').style.display = 'none';
-                document.getElementById('screenScheme').style.display = 'block';
-            }
+        function skipStep(idx) {
+            completeStep(idx);
         }
     </script>
 </body>
