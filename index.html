@@ -15,6 +15,8 @@
             --border-color: #F0E2DF;
             --shadow-soft: 0 10px 30px rgba(122, 74, 88, 0.08);
             --radius-main: 22px;
+            --sos-color: #D96B6B;
+            --sos-bg: #FDF2F2;
         }
 
         body[data-theme="sage"] {
@@ -53,52 +55,58 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; transition: all 0.2s ease; }
         body { background-color: var(--bg-main); color: var(--text-primary); padding: 20px 16px; max-width: 480px; margin: 0 auto; -webkit-font-smoothing: antialiased; }
 
-        /* Верхняя панель */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .logo-tag { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-main); opacity: 0.8; }
-        .settings-icon { font-size: 18px; cursor: pointer; opacity: 0.7; }
+        .settings-icon { font-size: 13px; cursor: pointer; opacity: 0.8; font-weight: 500; }
 
-        header { text-align: center; margin-bottom: 24px; }
+        header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 26px; font-weight: 500; font-family: Georgia, serif; color: var(--accent-main); }
         .subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 4px; font-weight: 300; }
 
-        /* Темы */
-        .theme-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .theme-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 18px; }
         .theme-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid var(--surface); box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
 
-        .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow-soft); }
-        .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-main); margin-bottom: 14px; opacity: 0.9; }
+        .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-main); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-soft); }
+        .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-main); margin-bottom: 12px; opacity: 0.9; }
 
-        /* Кнопки в один клик */
-        .quick-start-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-        .btn-quick { background: var(--accent-light); border: 1px solid var(--border-color); padding: 18px 14px; border-radius: 18px; text-align: center; cursor: pointer; color: var(--accent-main); font-weight: 600; font-size: 14px; }
-        .btn-quick:active { transform: scale(0.98); }
+        /* SOS Кнопка */
+        .btn-sos { background: var(--sos-bg); border: 1px solid var(--sos-color); color: var(--sos-color); padding: 14px; border-radius: 16px; text-align: center; font-weight: 600; font-size: 13px; cursor: pointer; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-sos:active { transform: scale(0.98); }
+
+        /* Сезон и Головомойка тумблеры */
+        .toggles-row { display: flex; gap: 10px; margin-bottom: 16px; }
+        .toggle-chip { flex: 1; background: var(--bg-main); border: 1px solid var(--border-color); padding: 10px; border-radius: 14px; text-align: center; font-size: 12px; font-weight: 500; cursor: pointer; user-select: none; }
+        .toggle-chip.active { background: var(--accent-light); border-color: var(--accent-main); color: var(--accent-main); }
+
+        /* Быстрый запуск */
+        .quick-start-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .btn-quick { background: var(--accent-light); border: 1px solid var(--border-color); padding: 16px 12px; border-radius: 18px; text-align: center; cursor: pointer; color: var(--accent-main); font-weight: 600; font-size: 14px; }
         .btn-quick .sub { font-size: 11px; font-weight: 400; color: var(--text-secondary); margin-top: 4px; display: block; }
 
-        /* Выбор времени (Селектор) */
-        .time-pill-grid { display: flex; gap: 8px; margin-bottom: 16px; }
-        .time-pill { flex: 1; text-align: center; padding: 10px; border: 1px solid var(--border-color); border-radius: 14px; font-size: 12px; cursor: pointer; background: var(--bg-main); color: var(--text-primary); }
-        .time-pill.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
+        /* Skin Cycling переключатели */
+        .cycling-row { display: flex; gap: 6px; margin-top: 10px; }
+        .cycle-chip { flex: 1; text-align: center; padding: 8px 4px; border: 1px solid var(--border-color); border-radius: 12px; font-size: 11px; cursor: pointer; background: var(--bg-main); color: var(--text-secondary); }
+        .cycle-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
-        /* Карточка-Шпаргалка (Cheat Sheet) */
+        /* Шпаргалка */
         .cheat-sheet-card { background: var(--surface); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; box-shadow: var(--shadow-soft); margin-top: 10px; }
         .cheat-header { text-align: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px dashed var(--border-color); }
         .cheat-title { font-size: 20px; font-family: Georgia, serif; color: var(--accent-main); }
         .cheat-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 
-        /* Список шагов на полочку */
         .sheet-list { display: flex; flex-direction: column; gap: 16px; }
         .sheet-item { display: flex; gap: 14px; align-items: flex-start; }
         .sheet-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); color: var(--accent-main); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .sheet-content { flex: 1; }
         .sheet-step-title { font-size: 15px; font-weight: 500; color: var(--text-primary); }
-        .sheet-zone { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+        .sheet-texture { font-size: 11px; color: var(--accent-main); font-style: italic; margin-top: 2px; }
+        .sheet-expired { font-size: 11px; color: var(--sos-color); font-weight: 600; margin-top: 4px; }
         
         .pause-box-inline { background: var(--accent-light); border-left: 3px solid var(--accent-main); padding: 10px 12px; border-radius: 0 10px 10px 0; margin-top: 8px; font-size: 12px; color: var(--text-primary); line-height: 1.4; }
 
         .btn-secondary { width: 100%; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 16px; }
         
-        /* Модалка настроек базы */
+        /* Модалка настроек */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--surface); border-radius: 22px; padding: 22px; max-width: 420px; width: 100%; max-height: 80vh; overflow-y: auto; }
         .input-field { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 13px; margin-bottom: 8px; outline: none; background: var(--bg-main); color: var(--text-primary); }
@@ -108,15 +116,14 @@
 
     <div class="top-bar">
         <div class="logo-tag">Care & Beauty</div>
-        <div class="settings-icon" onclick="openSettings()" title="Настройка своей базы">⚙️ Настройки</div>
+        <div class="settings-icon" onclick="openSettings()">⚙️ База средств</div>
     </div>
 
     <header>
         <h1>Шпаргалка Ухода</h1>
-        <div class="subtitle">Поставь телефон на полочку и просто следуй списку</div>
+        <div class="subtitle">Уход под ваш день, состояние кожи и сезон</div>
     </header>
 
-    <!-- Переключатель тем -->
     <div class="theme-bar">
         <div class="theme-dot" style="background: #E8C5C8;" onclick="setTheme('blush')"></div>
         <div class="theme-dot" style="background: #8FA89B;" onclick="setTheme('sage')"></div>
@@ -124,46 +131,59 @@
         <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')"></div>
     </div>
 
-    <!-- ЭКРАН 1: БЫСТРЫЙ ВЫБОР -->
     <div class="card" id="screenHome">
-        <div class="card-title">Быстрый запуск в один клик</div>
         
+        <!-- 🆘 SOS КНОПКА -->
+        <div class="btn-sos" onclick="generateSOS()">
+            <span>🔥</span>
+            <span>SOS: Кожа горит / Перебор с активами</span>
+        </div>
+
+        <!-- ТУМБЛЕРЫ: СЕЗОН И ВОЛОСЫ -->
+        <div class="toggles-row">
+            <div class="toggle-chip active" id="btnSeason" onclick="toggleSeason()">☀️ Лето / Легкий</div>
+            <div class="toggle-chip" id="btnHair" onclick="toggleHair()">💆‍♀️ + Моем голову</div>
+        </div>
+
+        <!-- БЫСТРЫЙ ВЫБОР УТРО / ВЕЧЕР -->
+        <div class="card-title">Быстрый запуск</div>
         <div class="quick-start-grid">
             <div class="btn-quick" onclick="generatePreset('morning')">
-                ☀️ Утро
-                <span class="sub">3 быстрых шага</span>
+                ☀️ Утренний уход
+                <span class="sub">База на день</span>
             </div>
             <div class="btn-quick" onclick="generatePreset('evening')">
-                🌙 Вечер
-                <span class="sub">Базовый уход</span>
+                🌙 Вечерний уход
+                <span class="sub">По режиму дня</span>
             </div>
         </div>
 
-        <div class="card-title" style="margin-top: 8px;">Или сколько минут есть?</div>
-        <div class="time-pill-grid">
-            <div class="time-pill active" onclick="selectTime(5, this)">5 минут</div>
-            <div class="time-pill" onclick="selectTime(20, this)">20 минут</div>
-            <div class="time-pill" onclick="selectTime(40, this)">40+ мин (SPA)</div>
+        <!-- SKIN CYCLING (ЧЕРЕДОВАНИЕ) -->
+        <div class="card-title" style="margin-top: 10px;">Режим вечера (Skin Cycling)</div>
+        <div class="cycling-row">
+            <div class="cycle-chip" onclick="setCycle('acid', this)">🧪 Кислоты</div>
+            <div class="cycle-chip" onclick="setCycle('retinol', this)">✨ Ретинол</div>
+            <div class="cycle-chip active" onclick="setCycle('rest', this)">🌿 Отдых</div>
         </div>
     </div>
 
-    <!-- ЭКРАН 2: КАРТОЧКА-ШПАРГАЛКА (Без кликов "Выполнено") -->
+    <!-- КАРТОЧКА-ШПАРГАЛКА НА ПОЛОЧКУ -->
     <div class="cheat-sheet-card" id="screenSheet" style="display: none;">
         <div class="cheat-header">
-            <div class="cheat-title" id="sheetTitle">Ваш Вечерний Уход</div>
-            <div class="cheat-subtitle" id="sheetSub">3 шага • Время: ~5 минут</div>
+            <div class="cheat-title" id="sheetTitle">Утренний Уход</div>
+            <div class="cheat-subtitle" id="sheetSub">3 шага • Порядок нанесения от легкого к плотному</div>
         </div>
 
         <div class="sheet-list" id="sheetList"></div>
 
-        <button class="btn-secondary" onclick="backToHome()">← Изменить / Выбрать другой</button>
+        <button class="btn-secondary" onclick="backToHome()">← Изменить режим / Выбрать другой</button>
     </div>
 
-    <!-- МОДАЛКА НАСТРОЙКИ БАЗЫ (Запрятана в шестеренку) -->
+    <!-- МОДАЛКА НАСТРОЕК БАЗЫ С ДАТОЙ ОТКРЫТИЯ (PAO) -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
-            <div class="card-title">⚙️ Моя база средств</div>
-            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Вы можете добавить свое средство или изменить пресеты</div>
+            <div class="card-title">⚙️ Настройка средства (PAO)</div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Укажите дату открытия, чтобы отслеживать свежесть средств</div>
             
             <input type="text" id="addTitle" class="input-field" placeholder="Название средства">
             <select id="addZone" class="input-field">
@@ -171,34 +191,32 @@
                 <option value="Волосы">Зона: Волосы</option>
                 <option value="Тело">Зона: Тело</option>
             </select>
-            <select id="addTime" class="input-field">
-                <option value="5">5 минут</option>
-                <option value="20" selected>20 минут</option>
-                <option value="40">40+ минут</option>
-            </select>
-            <input type="number" id="addPause" class="input-field" placeholder="Пауза в мин (0 если нет)">
+            <input type="text" id="addTexture" class="input-field" placeholder="Консистенция (напр. Жидкий тоник / Плотный крем)">
+            <input type="date" id="addOpenedDate" class="input-field" placeholder="Дата открытия">
+            <input type="number" id="addShelfMonths" class="input-field" placeholder="Срок PAO в месяцах (напр. 6 или 12)">
             
-            <button class="btn-quick" style="width: 100%; margin-top: 6px;" onclick="addCustomToDB()">+ Добавить средства</button>
+            <button class="btn-quick" style="width: 100%; margin-top: 6px;" onclick="addCustomToDB()">+ Сохранить средство</button>
             <button class="btn-secondary" onclick="closeSettings()">Закрыть</button>
         </div>
     </div>
 
     <script>
-        // Пресеты по умолчанию (Готовая база)
         const defaultDB = [
-            { id: 1, title: "Мусс / Гель для умывания", zone: "Лицо", timeSlot: 5, tod: "both", pause: 0 },
-            { id: 2, title: "Увлажняющий тоник NMF", zone: "Лицо", timeSlot: 5, tod: "both", pause: 0 },
-            { id: 3, title: "SPF-Крем (Защита от солнца)", zone: "Лицо", timeSlot: 5, tod: "morning", pause: 0 },
-            { id: 4, title: "Сыворотка с Витамином С", zone: "Лицо", timeSlot: 20, tod: "morning", pause: 0 },
-            { id: 5, title: "Retiderm / Ретинол 0.25", zone: "Лицо", timeSlot: 40, tod: "evening", pause: 15, tip: "🧘‍♀️ Пока актив впитывается — сделайте пару глубоких вдохов или выпейте чашку травяного чая." },
-            { id: 6, title: "Восстанавливающий крем с церамидами", zone: "Лицо", timeSlot: 20, tod: "evening", pause: 0 },
-            { id: 7, title: "Несмываемый флюид для волос", zone: "Волосы", timeSlot: 5, tod: "both", pause: 0 },
-            { id: 8, title: "Массаж сухой щеткой перед душем", zone: "Тело", timeSlot: 40, tod: "evening", pause: 0 },
-            { id: 9, title: "Питательное молочко для тела", zone: "Тело", timeSlot: 20, tod: "evening", pause: 0 }
+            { id: 1, title: "Мусс для умывания", zone: "Лицо", texture: "Водная пена ➔ Наносить 1-м", tod: "both", type: "clean", pause: 0 },
+            { id: 2, title: "Тоник / Эссенция", zone: "Лицо", texture: "Жидкая текстура ➔ Наносить 2-м", tod: "both", type: "base", pause: 0 },
+            { id: 3, title: "Флюид SPF 50 (Лето)", zone: "Лицо", texture: "Легкий защитный флюид", season: "summer", tod: "morning", type: "spf", pause: 0 },
+            { id: 4, title: "Плотный питательный SPF-крем (Зима)", zone: "Лицо", texture: "Плотный крем ➔ Финальный слой", season: "winter", tod: "morning", type: "spf", pause: 0 },
+            { id: 5, title: "Сыворотка с AHA/BHA кислотами", zone: "Лицо", texture: "Легкая сыворотка", tod: "evening", type: "acid", pause: 10, tip: "☕ Выпейте стакан чистой воды и подышите." },
+            { id: 6, title: "Retiderm / Ретинол 0.25", zone: "Лицо", texture: "Активный крем на сухую кожу", tod: "evening", type: "retinol", pause: 15, tip: "🧘‍♀️ Практика 4-7-8: Длинный выдох для снятия стресса." },
+            { id: 7, title: "Крем с церамидами NMF", zone: "Лицо", texture: "Плотный восстанавливающий крем ➔ Запечатывание", tod: "evening", type: "rest", pause: 0 },
+            { id: 8, title: "SOS-Бальзам с Пантенолом / Церамидами", zone: "Лицо", texture: "Плотный защитный слой", tod: "both", type: "sos", pause: 0 },
+            { id: 9, title: "Шампунь + Глубокая маска для волос", zone: "Волосы", texture: "Уход за волосами", tod: "both", type: "hair", pause: 5, tip: "💆‍♀️ Сделайте мягкий массаж плеч." }
         ];
 
-        let database = JSON.parse(localStorage.getItem('sheet_skincare_db')) || defaultDB;
-        let selectedTime = 5;
+        let database = JSON.parse(localStorage.getItem('sheet_skincare_db_v2')) || defaultDB;
+        let isSummer = true;
+        let needHair = false;
+        let activeCycle = 'rest';
 
         function setTheme(t) {
             document.body.setAttribute('data-theme', t);
@@ -206,51 +224,95 @@
         }
         setTheme(localStorage.getItem('sheet_skincare_theme') || 'blush');
 
-        function selectTime(time, el) {
-            selectedTime = time;
-            document.querySelectorAll('.time-pill').forEach(p => p.classList.remove('active'));
+        function toggleSeason() {
+            isSummer = !isSummer;
+            let btn = document.getElementById('btnSeason');
+            btn.innerText = isSummer ? "☀️ Лето / Легкий" : "❄️ Зима / Плотный";
+            btn.classList.toggle('active', isSummer);
+        }
+
+        function toggleHair() {
+            needHair = !needHair;
+            let btn = document.getElementById('btnHair');
+            btn.classList.toggle('active', needHair);
+        }
+
+        function setCycle(mode, el) {
+            activeCycle = mode;
+            document.querySelectorAll('.cycle-chip').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
-            renderSheet('custom');
         }
 
+        // РЕЖИМ 🆘 SOS
+        function generateSOS() {
+            let list = [
+                database.find(d => d.id === 1), // Мусс
+                database.find(d => d.id === 8)  // SOS Пантенол
+            ];
+            renderSheetUI("🆘 SOS: Восстановление Кожи", "Снятие раздражения • Только базовое заживление без активов", list);
+        }
+
+        // ГЕНЕРАЦИЯ ПО СЦЕНАРИЯМ
         function generatePreset(tod) {
-            renderSheet(tod);
-        }
+            let list = [];
+            let title = "";
 
-        // ГЕНЕРАЦИЯ ОДНОЙ КАРТОЧКИ-ШПАРГАЛКИ
-        function renderSheet(type) {
-            let filtered = [];
-            let titleText = "";
-            let subText = "";
-
-            if (type === 'morning') {
-                filtered = database.filter(d => d.tod === 'morning' || d.tod === 'both').slice(0, 3);
-                titleText = "☀️ Утренний Уход";
-                subText = `${filtered.length} шага • Время: ~3-5 минут`;
-            } else if (type === 'evening') {
-                filtered = database.filter(d => (d.tod === 'evening' || d.tod === 'both') && d.timeSlot <= 20).slice(0, 4);
-                titleText = "🌙 Вечерний Уход";
-                subText = `${filtered.length} шага • Время: ~10 минут`;
+            if (tod === 'morning') {
+                title = "☀️ Утренний Уход";
+                list.push(database.find(d => d.id === 1)); // Очищение
+                list.push(database.find(d => d.id === 2)); // Тоник
+                // Подбор SPF по сезону
+                let spf = database.find(d => d.type === 'spf' && (isSummer ? d.season === 'summer' : d.season === 'winter'));
+                if (spf) list.push(spf);
             } else {
-                filtered = database.filter(d => d.timeSlot <= selectedTime);
-                titleText = `✨ Ритуал на ${selectedTime} минут`;
-                subText = `${filtered.length} шагов • Выбранное время`;
+                title = `🌙 Вечерний Уход (${activeCycle === 'acid' ? 'Кислоты' : activeCycle === 'retinol' ? 'Ретинол' : 'Отдых'})`;
+                list.push(database.find(d => d.id === 1)); // Очищение
+
+                if (activeCycle === 'acid') {
+                    let acid = database.find(d => d.type === 'acid');
+                    if (acid) list.push(acid);
+                } else if (activeCycle === 'retinol') {
+                    let ret = database.find(d => d.type === 'retinol');
+                    if (ret) list.push(ret);
+                }
+
+                list.push(database.find(d => d.id === 7)); // Восстанавливающий крем
             }
 
+            // Добавляем волосы, если включен тумблер
+            if (needHair) {
+                let hair = database.find(d => d.type === 'hair');
+                if (hair) list.push(hair);
+            }
+
+            renderSheetUI(title, "Схема нанесения: от самого жидкого к плотному", list.filter(Boolean));
+        }
+
+        function renderSheetUI(title, sub, items) {
             let listContainer = document.getElementById('sheetList');
             listContainer.innerHTML = '';
 
-            filtered.forEach((item, idx) => {
+            items.forEach((item, idx) => {
+                // Проверка срока PAO
+                let isExpired = false;
+                if (item.openedDate && item.shelfMonths) {
+                    let opened = new Date(item.openedDate);
+                    let now = new Date();
+                    let monthsDiff = (now.getFullYear() - opened.getFullYear()) * 12 + (now.getMonth() - opened.getMonth());
+                    if (monthsDiff > item.shelfMonths) isExpired = true;
+                }
+
                 listContainer.innerHTML += `
                     <div class="sheet-item">
                         <div class="sheet-num">${idx + 1}</div>
                         <div class="sheet-content">
                             <div class="sheet-step-title">${item.title}</div>
-                            <div class="sheet-zone">${item.zone}</div>
+                            <div class="sheet-texture">${item.texture || item.zone}</div>
+                            ${isExpired ? `<div class="sheet-expired">⚠️ Проверьте срок PAO (возможно, средство окислилось)</div>` : ''}
                             ${item.pause > 0 ? `
                                 <div class="pause-box-inline">
                                     <b>⏱️ Выдержка: ${item.pause} минут</b><br>
-                                    ${item.tip || 'Посвятите эти минуты себе и отдохните.'}
+                                    ${item.tip || 'Посвятите эти минуты себе.'}
                                 </div>
                             ` : ''}
                         </div>
@@ -258,8 +320,8 @@
                 `;
             });
 
-            document.getElementById('sheetTitle').innerText = titleText;
-            document.getElementById('sheetSub').innerText = subText;
+            document.getElementById('sheetTitle').innerText = title;
+            document.getElementById('sheetSub').innerText = sub;
             document.getElementById('screenHome').style.display = 'none';
             document.getElementById('screenSheet').style.display = 'block';
         }
@@ -269,35 +331,31 @@
             document.getElementById('screenHome').style.display = 'block';
         }
 
-        function openSettings() {
-            document.getElementById('settingsModal').style.display = 'flex';
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsModal').style.display = 'none';
-        }
+        function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
+        function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
 
         function addCustomToDB() {
             let t = document.getElementById('addTitle').value;
             let z = document.getElementById('addZone').value;
-            let slot = parseInt(document.getElementById('addTime').value);
-            let p = parseInt(document.getElementById('addPause').value) || 0;
+            let tex = document.getElementById('addTexture').value;
+            let date = document.getElementById('addOpenedDate').value;
+            let shelf = parseInt(document.getElementById('addShelfMonths').value) || 12;
 
-            if (!t) return alert("Введите название средств!");
+            if (!t) return alert("Введите название средства!");
 
             database.push({
                 id: Date.now(),
                 title: t,
                 zone: z,
-                timeSlot: slot,
+                texture: tex || z,
                 tod: 'both',
-                pause: p,
-                tip: p >= 10 ? "🧘‍♀️ Посвятите время выдержки отдыху или дыханию." : ""
+                openedDate: date,
+                shelfMonths: shelf,
+                pause: 0
             });
 
-            localStorage.setItem('sheet_skincare_db', JSON.stringify(database));
-            alert("Средство добавлено в базу!");
-            document.getElementById('addTitle').value = '';
+            localStorage.setItem('sheet_skincare_db_v2', JSON.stringify(database));
+            alert("Средство сохранено в базу!");
             closeSettings();
         }
     </script>
