@@ -958,7 +958,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.60.0';
+        const APP_VERSION = '2.61.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1319,6 +1319,60 @@
             const container = document.getElementById('routineContainer');
             const btnAction = document.getElementById('btnCompleteRoutine');
 
+            // Режим просмотра БУДУЩИХ ДНЕЙ
+            if (isFuture) {
+                banner.style.display = 'block';
+                banner.innerText = "Это план на выбранный день!";
+
+                const activeProducts = getActiveProductsForCurrentView();
+                if (activeProducts.length === 0) {
+                    container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">В этот день отдых</div>`;
+                } else {
+                    const htmlBuffer = [];
+                    activeProducts.forEach((item, index) => {
+                        const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
+                        let pauseHtmlBefore = '';
+                        let pauseHtmlAfter = '';
+                        const activeProgressHtml = getActiveProgressHtml(item);
+
+                        if (item.hasPause && item.pauseBefore) {
+                            pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
+                        }
+                        if (item.hasPause && item.pauseAfter) {
+                            pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
+                        }
+
+                        htmlBuffer.push(`
+                            <div class="routine-item">
+                                ${pauseHtmlBefore}
+                                <div class="routine-item-main">
+                                    <div class="item-left">
+                                        <div class="item-num">${index + 1}</div>
+                                        <div class="item-details">
+                                            <span class="item-name">${escapeHtml(item.name)}</span>
+                                            <span class="item-tag">${escapeHtml(item.type)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="item-right-group">
+                                        ${activeProgressHtml}
+                                        <div class="expiry-dots">${dotsHtml}</div>
+                                    </div>
+                                </div>
+                                ${pauseHtmlAfter}
+                            </div>
+                        `);
+                    });
+                    container.innerHTML = htmlBuffer.join('');
+                }
+
+                btnAction.innerText = 'Вернуться к актуальному дню';
+                btnAction.classList.remove('brand-font');
+                btnAction.style.opacity = '1';
+                btnAction.style.pointerEvents = 'auto';
+                return;
+            }
+
+            // Режим АРХИВА (прошедшие дни)
             if (inArchive && !isFuture) {
                 banner.style.display = 'block';
                 const routineDate = getRoutineDateObj();
@@ -1369,23 +1423,17 @@
                 btnAction.style.pointerEvents = 'auto';
             }
 
+            // Обычный режим ТЕКУЩЕГО ДНЯ
             const activeProducts = getActiveProductsForCurrentView();
 
             if (activeProducts.length === 0) {
                 banner.style.display = 'none';
-                
-                if (isFuture) {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">В этот день отдых</div>`;
-                } else {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">Отдых</div>`;
-                }
+                container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">Отдых</div>`;
 
                 btnAction.innerText = 'добавить средство в мою коллекцию';
                 btnAction.classList.add('brand-font');
             } else {
-                banner.style.display = isFuture ? 'block' : 'none';
-                if (isFuture) banner.innerText = "Это план на выбранный день!";
-
+                banner.style.display = 'none';
                 btnAction.innerText = 'Завершить уход';
                 btnAction.classList.remove('brand-font');
 
@@ -1485,6 +1533,13 @@
             const btnAction = document.getElementById('btnCompleteRoutine');
             const hasBrandFont = btnAction.classList.contains('brand-font');
             const text = btnAction.innerText.trim();
+
+            // Если просматриваем будущее, нажатие возвращает к актуальному дню и времени суток
+            if (isFuturePlan()) {
+                localStorage.removeItem('cb_selected_date');
+                switchTOD(getInitialTOD());
+                return;
+            }
 
             if (hasBrandFont || text.toLowerCase().includes('добавить средство')) {
                 openSettings();
@@ -1773,7 +1828,6 @@
         }
 
         function checkUrlImport() {
-            // Очищаем служебный параметр перезагрузки из URL
             if (window.location.search && window.location.search.includes('reload=')) {
                 history.replaceState(null, null, window.location.pathname + window.location.hash);
             }
@@ -2090,7 +2144,7 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Обработчики переноса, бэкапа и принудительного обновления
+            // Обработчики переноса, бэкапа и обновления
             document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
             document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
             document.getElementById('btnImportJson').addEventListener('click', () => {
@@ -2205,7 +2259,6 @@
                 }
             });
 
-            // Инициализация верного времени суток и проверка входящих ссылок
             switchTOD(currentTOD);
             checkUrlImport();
         });
