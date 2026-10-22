@@ -167,56 +167,11 @@
             gap: 6px;
             background: var(--accent-light);
             color: var(--accent-main);
-            padding: 4px 14px;
+            padding: 6px 16px;
             border-radius: 12px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 12px;
             letter-spacing: 0.2px;
-        }
-
-        .hearts-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 8px;
-            margin-bottom: 4px;
-        }
-
-        .heart-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .svg-icon {
-            width: 22px;
-            height: 22px;
-            fill: var(--icon-inactive);
-            transition: fill 0.3s ease, transform 0.3s ease;
-        }
-
-        .heart-item.active .svg-icon {
-            fill: var(--accent-main);
-            transform: scale(1.15);
-        }
-
-        .heart-day {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .months-total-badge {
-            margin-top: 10px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--accent-main);
-            background: var(--accent-light);
-            padding: 4px 10px;
-            border-radius: 10px;
-            display: inline-block;
         }
 
         .scanner-notice-banner {
@@ -739,44 +694,9 @@
         <button type="button" class="btn-settings brand-font" id="btnOpenSettings">моя коллекция</button>
     </div>
 
-    <!-- Трекер прогресса с SVG иконками -->
+    <!-- Календарь текущей даты -->
     <div class="streak-card" id="streakCard">
         <div class="date-chip" id="currentDateChip">22 октября</div>
-        
-        <div class="hearts-container" id="heartsContainer">
-            <div class="heart-item" id="heart-1">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span class="heart-day">ПН</span>
-            </div>
-            <div class="heart-item" id="heart-2">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span class="heart-day">ВТ</span>
-            </div>
-            <div class="heart-item" id="heart-3">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span class="heart-day">СР</span>
-            </div>
-            <div class="heart-item" id="heart-4">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span class="heart-day">ЧТ</span>
-            </div>
-            <div class="heart-item" id="heart-5">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span class="heart-day">ПТ</span>
-            </div>
-            <div class="heart-item" id="heart-6">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span class="heart-day">СБ</span>
-            </div>
-            <div class="heart-item" id="heart-0">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span class="heart-day">ВС</span>
-            </div>
-        </div>
-
-        <div id="monthsTotalBadge" class="months-total-badge" style="display: none;">
-            🏆 0 месяцев ухода
-        </div>
     </div>
 
     <div class="main-card">
@@ -802,7 +722,7 @@
             
             <div class="product-manage-list" id="manageList"></div>
 
-            <button type="button" class="btn-add-toggle" id="btnAddToggle">+ добавить средство</button>
+            <button type="button" class="btn-add-toggle brand-font" id="btnAddToggle">+ добавить средство</button>
             <button type="button" class="btn-secondary" id="btnScanBarcode" style="margin-bottom: 16px;">📷 Сканировать штрихкод</button>
             
             <!-- Контейнер для камеры сканера штрихкодов с кнопкой отмены -->
@@ -931,7 +851,7 @@
                 </div>
 
                 <div class="form-sticky-footer">
-                    <button type="button" class="btn-action" id="btnSaveProduct">Сохранить средство</button>
+                    <button type="button" class="btn-action brand-font" id="btnSaveProduct">Сохранить средство</button>
                     <button type="button" class="btn-secondary" id="btnCancelProduct">Отмена</button>
                 </div>
             </div>
@@ -950,14 +870,6 @@
                 </div>
             </div>
 
-            <div class="toggle-container">
-                <span style="font-size: 13px; font-weight: 500;">отмечать пройденные дни</span>
-                <label class="switch">
-                    <input type="checkbox" id="streakToggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
             <button type="button" class="btn-secondary" id="btnCloseSettings">Закрыть</button>
         </div>
     </div>
@@ -971,7 +883,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.30.0';
+        const APP_VERSION = '2.31.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1007,8 +919,6 @@
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
-
-        const realTodayStr = getLocalTodayStr(new Date());
 
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
@@ -1066,7 +976,6 @@
         const nowInit = new Date();
         let currentTOD = nowInit.getHours() >= 18 ? 'evening' : 'morning';
 
-        let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
         let selectedPauseBeforeVal = null;
         let selectedPauseAfterVal = null;
@@ -1076,13 +985,6 @@
         if (!installDateStr) {
             installDateStr = getLocalTodayStr();
             localStorage.setItem('cb_install_date', installDateStr);
-        }
-
-        document.getElementById('streakToggle').checked = showStreakTracker;
-
-        function updateStreakVisibility() {
-            const streakCard = document.getElementById('streakCard');
-            streakCard.style.display = showStreakTracker ? 'block' : 'none';
         }
 
         function renderCurrentDateChip() {
@@ -1119,59 +1021,6 @@
             document.getElementById('btnMorning').classList.toggle('active', tod === 'morning');
             document.getElementById('btnEvening').classList.toggle('active', tod === 'evening');
             renderRoutine();
-        }
-
-        function getStartOfWeek(date) {
-            const d = new Date(date);
-            const day = d.getDay();
-            const diff = d.getDate() - (day === 0 ? 6 : day - 1);
-            return new Date(d.setDate(diff));
-        }
-
-        function renderStreak() {
-            updateStreakVisibility();
-            if (!showStreakTracker) return;
-
-            const now = new Date();
-            const todayStr = getLocalTodayStr(now);
-            const installDate = localStorage.getItem('cb_install_date') || todayStr;
-            
-            const diffTime = new Date(todayStr) - new Date(installDate);
-            const daysSinceInstall = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
-
-            const completedMonthsTotal = Math.floor(daysSinceInstall / 28);
-
-            const badgeEl = document.getElementById('monthsTotalBadge');
-            if (completedMonthsTotal > 0) {
-                badgeEl.style.display = 'inline-block';
-                const monthWord = getMonthDeclension(completedMonthsTotal);
-                badgeEl.innerText = `🏆 ${completedMonthsTotal} ${monthWord} идеального ухода`;
-            } else {
-                badgeEl.style.display = 'none';
-            }
-
-            const monday = getStartOfWeek(now);
-            const daysMap = [1, 2, 3, 4, 5, 6, 0];
-
-            daysMap.forEach((dayNum, index) => {
-                const currentDayDate = new Date(monday);
-                currentDayDate.setDate(monday.getDate() + index);
-                const currentDayStr = getLocalTodayStr(currentDayDate);
-                
-                const heartEl = document.getElementById(`heart-${dayNum}`);
-                if (heartEl) {
-                    const isCompleted = completedLog[currentDayStr] && (completedLog[currentDayStr].morning || completedLog[currentDayStr].evening);
-                    const isPast = currentDayStr < todayStr && currentDayStr >= installDate;
-                    const isActive = isCompleted || isPast;
-                    heartEl.classList.toggle('active', isActive);
-                }
-            });
-        }
-
-        function getMonthDeclension(number) {
-            const cases = [2, 0, 1, 1, 1, 2];
-            const titles = ['месяц', 'месяца', 'месяцев'];
-            return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
         }
 
         function applyPAO(months) {
@@ -1303,7 +1152,6 @@
         }
 
         function renderRoutine() {
-            renderStreak();
             renderCurrentDateChip();
             
             const nowTime = new Date();
@@ -1343,20 +1191,23 @@
 
             if (products.length === 0) {
                 container.innerHTML = '';
-                btnAction.innerText = 'Добавить средства в мою коллекцию';
+                btnAction.innerHTML = '<span class="brand-font">Добавить средства в мою коллекцию</span>';
             } else if (isTomorrowRest) {
                 const restLabel = currentHour >= 2 ? 'Отдых' : 'Завтра отдых';
                 container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">${restLabel}</div>`;
-                btnAction.innerText = 'Добавить средства в мою коллекцию';
+                btnAction.innerHTML = '<span class="brand-font">Добавить средства в мою коллекцию</span>';
             } else if (activeProducts.length === 0) {
                 container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">Отдых</div>`;
-                btnAction.innerText = 'Добавить средства в мою коллекцию';
-            } else {
-                if (currentTOD === 'evening' && !isTomorrowPlan) {
+                if (currentTOD === 'evening') {
                     btnAction.innerText = 'Посмотреть схему на завтра';
+                    btnAction.classList.remove('brand-font');
                 } else {
-                    btnAction.innerText = 'Завершить уход';
+                    btnAction.innerHTML = '<span class="brand-font">Добавить средства в мою коллекцию</span>';
                 }
+            } else {
+                container.innerHTML = '';
+                btnAction.innerText = 'Завершить уход';
+                btnAction.classList.remove('brand-font');
             }
 
             const htmlBuffer = [];
@@ -1457,7 +1308,6 @@
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
-            // Если были на завтрашнем плане и завершили его
             if (localStorage.getItem('cb_is_tomorrow_plan') === 'true') {
                 localStorage.removeItem('cb_is_tomorrow_plan');
             }
@@ -1472,11 +1322,11 @@
         function handleActionButton() {
             const btnAction = document.getElementById('btnCompleteRoutine');
             const btnText = btnAction.innerText.trim();
+            const hasBrandFont = btnAction.querySelector('.brand-font') !== null;
 
-            if (products.length === 0 || btnText === 'Добавить средства в мою коллекцию') {
+            if (products.length === 0 || hasBrandFont || btnText.toLowerCase().includes('добавить средства')) {
                 openSettings();
             } else if (btnText === 'Посмотреть схему на завтра') {
-                // Проверяем наличие ухода на завтра
                 const realNow = new Date();
                 const tomorrowDate = new Date(realNow.getFullYear(), realNow.getMonth(), realNow.getDate() + 1);
                 const tomorrowDayOfWeek = tomorrowDate.getDay();
@@ -1959,12 +1809,6 @@
                     const months = chip.getAttribute('data-months');
                     if (months) applyPAO(months);
                 }
-            });
-
-            document.getElementById('streakToggle').addEventListener('change', (e) => {
-                showStreakTracker = e.target.checked;
-                localStorage.setItem('cb_show_streak', JSON.stringify(showStreakTracker));
-                renderStreak();
             });
 
             document.getElementById('manageList').addEventListener('click', (e) => {
