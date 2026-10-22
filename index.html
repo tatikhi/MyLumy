@@ -1184,7 +1184,7 @@
             }
         }
 
-        // Интеллектуальный расчет недели и шага для активов по правилам календаря и пропусков
+        // Интеллектуальный безопасный расчёт недели и шага для активов
         function getActiveProgressDetails(item) {
             if (item.type !== 'Активы') return { week: 1, step: 1, totalSteps: 1 };
 
@@ -1200,13 +1200,18 @@
             const progressData = productProgress[item.id] || { dates: [] };
             const completedSet = new Set(progressData.dates || []);
 
-            const startTimestamp = Number(item.id) || Date.now();
+            // Защита от некорректных/старых ID (предотвращает зависание с 1970 года)
+            let startTimestamp = Number(item.id);
+            if (!startTimestamp || isNaN(startTimestamp) || startTimestamp < 1600000000000) {
+                startTimestamp = Date.now();
+            }
             let startDate = new Date(startTimestamp);
-            if (isNaN(startDate.getTime())) startDate = new Date();
             startDate.setHours(0,0,0,0);
 
             const now = new Date();
             now.setHours(0,0,0,0);
+
+            if (startDate > now) startDate = new Date(now);
 
             let currentWeek = 1;
             let expectedStep = 1;
@@ -1216,7 +1221,9 @@
             const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
             weekStart.setDate(diff);
 
-            while (weekStart <= now) {
+            let safetyCounter = 0;
+            while (weekStart <= now && safetyCounter < 500) {
+                safetyCounter++;
                 let weekScheduledDates = [];
                 for (let i = 0; i < 7; i++) {
                     let d = new Date(weekStart);
@@ -1231,10 +1238,9 @@
                 }
 
                 expectedStep = 1;
-                let weekCompletedLast = true;
 
                 for (let idx = 0; idx < weekScheduledDates.length; idx++) {
-                    let sched = weekScheduledDates.get ? weekScheduledDates[idx] : weekScheduledDates[idx];
+                    let sched = weekScheduledDates[idx];
                     let stepNum = idx + 1;
 
                     if (sched.dateObj > now) {
@@ -1250,13 +1256,9 @@
                     if (isCompleted) {
                         if (stepNum < Z) {
                             expectedStep = stepNum + 1;
-                        } else {
-                            weekCompletedLast = true;
                         }
                     } else {
-                        if (stepNum === Z) {
-                            weekCompletedLast = false;
-                        } else {
+                        if (stepNum !== Z) {
                             expectedStep = stepNum; // Повторяем пропущенный промежуточный шаг
                         }
                     }
