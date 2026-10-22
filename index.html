@@ -762,10 +762,10 @@
                     <div class="form-section-title">График использования</div>
                     
                     <div class="form-group">
-                        <label>Время суток (можно выбрать оба)</label>
+                        <label>Время суток (можно выбрать одно или оба)</label>
                         <div class="picker-group" id="todPicker">
-                            <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
-                            <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
+                            <button type="button" class="picker-btn" data-tod="morning">Утро</button>
+                            <button type="button" class="picker-btn" data-tod="evening">Вечер</button>
                         </div>
                     </div>
 
@@ -877,7 +877,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.40.0';
+        const APP_VERSION = '2.43.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -885,7 +885,7 @@
                 localStorage.removeItem('cb_view_date_offset');
                 localStorage.removeItem('cb_is_tomorrow_plan');
                 localStorage.removeItem('cb_tomorrow_rest');
-                localStorage.removeItem('cb_viewing_tomorrow'); // Очистка старых флагов
+                localStorage.removeItem('cb_viewing_tomorrow');
                 if (!sessionStorage.getItem('cb_reloaded')) {
                     sessionStorage.setItem('cb_reloaded', 'true');
                     window.location.reload(true);
@@ -902,8 +902,6 @@
             });
         }
 
-        // --- ЛОГИКА ДАТ ---
-        
         function getLocalTodayStr(d = new Date()) {
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -911,25 +909,21 @@
             return `${year}-${month}-${day}`;
         }
 
-        // "Логическое сегодня" — до 02:00 ночи считается вчерашним днем
+        // Логическое сегодня (до 02:00 ночи относится к предыдущему дню)
         function getLogicalTodayStr() {
             const d = new Date();
             d.setHours(d.getHours() - 2); 
             return getLocalTodayStr(d);
         }
 
-        // Проверяем, смотрим ли мы сейчас схему на завтра
         function isViewingTomorrow() {
-            // Если сохраненная в памяти дата логического "сегодня" совпадает с текущим логическим "сегодня",
-            // значит мы все еще находимся в "завтрашнем плане" относительно того момента, когда нажали кнопку.
             return localStorage.getItem('cb_viewing_tomorrow') === getLogicalTodayStr();
         }
 
-        // Получаем объект даты, для которой сейчас нужно отфильтровать график
         function getRoutineDateObj() {
             const logicalTodayStr = getLogicalTodayStr();
             const parts = logicalTodayStr.split('-');
-            const d = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0); // 12:00 во избежание сдвигов часовых поясов
+            const d = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             if (isViewingTomorrow()) {
                 d.setDate(d.getDate() + 1);
             }
@@ -959,7 +953,6 @@
         let selectedPauseAfterVal = null;
         let html5QrCodeScanner = null;
 
-        // Календарь всегда отображает исключительно реальную текущую дату
         function renderCurrentDateChip() {
             const now = new Date();
             const options = { day: 'numeric', month: 'long' };
@@ -1148,7 +1141,7 @@
             const currentHour = realNow.getHours();
             const isTomorrow = isViewingTomorrow();
 
-            // Автопереключение на вечернюю схему в 18:00 (если мы смотрим текущий день)
+            // Автопереключение на вечер в 18:00 (если не смотрим завтра)
             if (!isTomorrow && currentHour >= 18 && currentTOD === 'morning') {
                 currentTOD = 'evening';
                 document.getElementById('btnMorning').classList.remove('active');
@@ -1161,10 +1154,8 @@
             const container = document.getElementById('routineContainer');
             const btnAction = document.getElementById('btnCompleteRoutine');
 
-            // Полностью переписанная логика состояний:
             if (activeProducts.length === 0) {
-                // Если средств нет (Отдых)
-                banner.style.display = 'none'; // Скрываем плашку при отдыхе (выводим в тексте)
+                banner.style.display = 'none';
                 
                 if (isTomorrow) {
                     container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">Завтра отдых</div>`;
@@ -1173,16 +1164,14 @@
                 }
 
                 if (currentTOD === 'morning' || isTomorrow) {
-                    // Утро или мы уже смотрим завтрашний план
                     btnAction.innerText = 'добавить средства в мою коллекцию';
                     btnAction.classList.add('brand-font');
                 } else {
-                    // Вечер (реальный) и пустая схема
+                    // Вечер и отдыхаем
                     btnAction.innerText = 'Посмотреть схему на завтра';
                     btnAction.classList.remove('brand-font');
                 }
             } else {
-                // Средства есть
                 banner.style.display = isTomorrow ? 'block' : 'none';
                 if (isTomorrow) banner.innerText = "Это план на завтра!";
 
@@ -1253,7 +1242,6 @@
         }
 
         function switchToTomorrowPlan() {
-            // Устанавливаем флаг в виде текущей "логической" даты
             localStorage.setItem('cb_viewing_tomorrow', getLogicalTodayStr());
             currentTOD = 'morning';
             document.getElementById('btnMorning').classList.add('active');
@@ -1283,9 +1271,10 @@
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
             if (currentTOD === 'morning') {
+                // Завершили утро -> строго переключаем на вечер текущего дня
                 switchTOD('evening');
             } else {
-                // Если завершен вечер (текущий день или завтрашний), открываем завтрашнее утро.
+                // Завершили вечер -> переключаем на план следующего дня
                 switchToTomorrowPlan();
             }
         }
@@ -1300,7 +1289,6 @@
             } else if (text === 'Посмотреть схему на завтра') {
                 switchToTomorrowPlan();
             } else {
-                // Кнопка "Завершить уход"
                 completeRoutine();
             }
         }
@@ -1571,7 +1559,8 @@
             document.getElementById('pName').value = '';
             document.getElementById('pType').value = 'Очищение';
             
-            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.add('active'));
+            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.remove('active'));
+
             document.getElementById('pFreqType').value = 'daily';
             document.querySelectorAll('#freqPicker .picker-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-freq') === 'daily');
@@ -1621,6 +1610,18 @@
             const targetId = Number(id);
             products = products.filter(p => p.id !== targetId);
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
+
+            // Если удалены абсолютно все средства, полностью сбрасываем прогресс и график
+            if (products.length === 0) {
+                localStorage.removeItem('cb_product_progress');
+                localStorage.removeItem('cb_viewing_tomorrow');
+                productProgress = {};
+                const nowInit = new Date();
+                currentTOD = (nowInit.getHours() >= 18) ? 'evening' : 'morning';
+                document.getElementById('btnMorning').classList.toggle('active', currentTOD === 'morning');
+                document.getElementById('btnEvening').classList.toggle('active', currentTOD === 'evening');
+            }
+
             renderManageList();
             renderRoutine();
         }
@@ -1689,10 +1690,6 @@
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
                     btn.classList.toggle('active');
-                    const activeCount = document.querySelectorAll('#todPicker .picker-btn.active').length;
-                    if (activeCount === 0) {
-                        btn.classList.add('active');
-                    }
                 }
             });
 
