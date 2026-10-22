@@ -9,6 +9,8 @@
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
+    <!-- Подключаем библиотеку сканирования штрихкодов Html5-Qrcode -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <style>
         :root {
             /* 1. Nude & Silk (по умолчанию) */
@@ -199,7 +201,7 @@
             border-radius: 12px;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             letter-spacing: 0.2px;
         }
 
@@ -851,8 +853,12 @@
             <div class="product-manage-list" id="manageList"></div>
 
             <button type="button" class="btn-add-toggle" id="btnAddToggle">+ Добавить средство</button>
+            <button type="button" class="btn-secondary" id="btnScanBarcode" style="margin-bottom: 16px;">📷 Сканировать штрихкод</button>
+            
+            <!-- Контейнер для камеры сканера штрихкодов -->
+            <div id="barcodeReader" style="display: none; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color);"></div>
 
-            <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
+            <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); paddingTop: 16px;">
                 <div class="modal-title" id="formModalTitle" style="font-size: 15px;">Новое средство</div>
                 <input type="hidden" id="editProductId" value="">
 
@@ -962,7 +968,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '1.7.0';
+        const APP_VERSION = '1.8.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1015,9 +1021,11 @@
         };
 
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
+        let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
         let currentTOD = 'morning';
         let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
+        let html5QrCodeScanner = null;
 
         let installDateStr = localStorage.getItem('cb_install_date');
         if (!installDateStr) {
@@ -1397,6 +1405,7 @@
         }
 
         function closeSettings() {
+            stopBarcodeScanner();
             document.body.classList.remove('modal-open');
             document.getElementById('settingsModal').style.display = 'none';
             resetForm();
@@ -1404,6 +1413,7 @@
         }
 
         function showForm() {
+            stopBarcodeScanner();
             document.getElementById('productFormContainer').style.display = 'block';
             document.getElementById('btnAddToggle').style.display = 'none';
         }
@@ -1412,6 +1422,80 @@
             document.getElementById('productFormContainer').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'block';
             resetForm();
+        }
+
+        // Логика сканирования штрихкода (Open Beauty Facts + Локальный кэш)
+        async function startBarcodeScanner() {
+            const readerEl = document.getElementById('barcodeReader');
+            readerEl.style.display = 'block';
+
+            if (!html5QrCodeScanner) {
+                html5QrCodeScanner = new Html5Qrcode("barcodeReader");
+            }
+
+            try {
+                await html5QrCodeScanner.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 150 } },
+                    async (decodedText) => {
+                        // Успешно отсканировано
+                        stopBarcodeScanner();
+                        showToast(`🔍 Штрихкод найден: ${decodedText}`);
+
+                        // 1. Проверяем локальный кэш
+                        if (barcodeCache[decodedText]) {
+                            const cached = barcodeCache[decodedText];
+                            showForm();
+                            document.getElementById('pName').value = cached.name;
+                            document.getElementById('pType').value = cached.type;
+                            return;
+                        }
+
+                        // 2. Запрос в Open Beauty Facts API
+                        try {
+                            const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${decodedText}.json`);
+                            const data = await res.json();
+                            if (data && data.status === 1 && data.product) {
+                                const prod = data.product;
+                                const productName = prod.product_name || prod.brands || `Средство (${decodedText})`;
+                                
+                                showForm();
+                                document.getElementById('pName').value = productName;
+                                
+                                // Сохраняем в кэш
+                                barcodeCache[decodedText] = { name: productName, type: 'Очищение' };
+                                localStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
+                                return;
+                            }
+                        } catch (err) {
+                            console.log('API fetch error, falling back to manual:', err);
+                        }
+
+                        // 3. Если не нашлось в базе
+                        showForm();
+                        document.getElementById('pName').value = `Товар [${decodedText}]`;
+                    },
+                    (errorMessage) => {
+                        // Ошибки сканирования кадров игнорируем (сканер ищет штрихкод)
+                    }
+                );
+            } catch (err) {
+                console.error("Camera start error:", err);
+                alert("Не удалось запустить камеру. Проверьте разрешения браузера.");
+                readerEl.style.display = 'none';
+            }
+        }
+
+        async function stopBarcodeScanner() {
+            const readerEl = document.getElementById('barcodeReader');
+            if (html5QrCodeScanner) {
+                try {
+                    await html5QrCodeScanner.stop();
+                } catch (e) {
+                    // Игнорируем если уже остановлен
+                }
+            }
+            readerEl.style.display = 'none';
         }
 
         function toggleFreqDays() {
@@ -1579,7 +1663,11 @@
             document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
             document.getElementById('btnAddToggle').addEventListener('click', showForm);
-            document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
+            document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
+            document.getElementById('btnCancelProduct').addEventListener('click', () => {
+                stopBarcodeScanner();
+                hideForm();
+            });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
             document.getElementById('settingsModal').addEventListener('click', (e) => {
