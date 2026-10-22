@@ -116,7 +116,6 @@
             margin-bottom: 16px;
         }
 
-        /* Премиальный скандинавский люкс: чистый гротеск с широким трекингом и строчными буквами */
         .logo {
             font-family: 'Montserrat', sans-serif;
             font-size: 16px;
@@ -124,49 +123,6 @@
             letter-spacing: 0.28em;
             text-transform: lowercase;
             color: var(--text-primary);
-        }
-
-        .theme-selector {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .theme-btn {
-            position: relative;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid var(--surface);
-            box-shadow: 0 0 0 1px var(--border-color);
-            transition: transform 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            padding: 0;
-            background: transparent;
-        }
-
-        .theme-btn::before {
-            content: '';
-            position: absolute;
-            top: -11px;
-            bottom: -11px;
-            left: -11px;
-            right: -11px;
-        }
-
-        .theme-btn:hover, .theme-btn:focus-visible {
-            transform: scale(1.2);
-            outline: 2px solid var(--accent-main);
-        }
-
-        .theme-btn.auto-btn {
-            background: var(--surface);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
         }
 
         .btn-settings {
@@ -285,39 +241,17 @@
             display: inline-block;
         }
 
-        /* Всплывающее уведомление с высоким z-index поверх модального окна */
-        .toast-notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            width: calc(100% - 32px);
-            max-width: 440px;
-            background: var(--surface);
+        .scanner-notice-banner {
+            background: var(--accent-light);
+            border: 1px solid var(--accent-main);
             color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 16px 48px rgba(0,0,0,0.22);
-            padding: 14px 18px;
-            border-radius: 16px;
+            padding: 12px 14px;
+            border-radius: 12px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 14px;
             text-align: center;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 2000;
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .toast-notification.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            pointer-events: auto;
-        }
-
-        .toast-heart {
-            color: var(--accent-main);
-            display: inline-block;
-            transform: scale(1.1);
         }
 
         .main-card {
@@ -825,22 +759,9 @@
 </head>
 <body>
 
-    <!-- Всплывающее Toast-уведомление поверх модальных окон -->
-    <div class="toast-notification" id="toastNotification">✨ Уход успешно выполнен!</div>
-
     <div class="header-bar">
         <div class="logo">myspa</div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <div class="theme-selector" id="themeSelector">
-                <button type="button" class="theme-btn auto-btn" data-theme="auto" aria-label="Тема как на устройстве" title="Тема как на устройстве">📱</button>
-                <button type="button" class="theme-btn" data-theme="nude" style="background: #C49A82;" aria-label="Тема Nude & Silk" title="Nude & Silk"></button>
-                <button type="button" class="theme-btn" data-theme="mint" style="background: #5B8A82;" aria-label="Тема Eucalyptus & Mint" title="Eucalyptus & Mint"></button>
-                <button type="button" class="theme-btn" data-theme="lavender" style="background: #8B789D;" aria-label="Тема Blush Lavender" title="Blush Lavender"></button>
-                <button type="button" class="theme-btn" data-theme="sage" style="background: #3A4D39;" aria-label="Тема Sage & Spa" title="Sage & Spa"></button>
-                <button type="button" class="theme-btn" data-theme="midnight" style="background: #242A3B;" aria-label="Тема Midnight Calm" title="Midnight Calm"></button>
-            </div>
-            <button type="button" class="btn-settings" id="btnOpenSettings">⚙️ Настройки</button>
-        </div>
+        <button type="button" class="btn-settings" id="btnOpenSettings">⚙️ Настройки</button>
     </div>
 
     <!-- Трекер прогресса с SVG иконками (без лишних надписей) -->
@@ -931,7 +852,12 @@
             <div id="barcodeReader" style="display: none; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color);"></div>
 
             <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
-                <div class="modal-title" id="formModalTitle" style="font-size: 15px;">Новое средство</div>
+                <!-- Центральная плашка для неизвестного штрихкода -->
+                <div id="scannerNoticeBanner" class="scanner-notice-banner" style="display: none;">
+                    В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.
+                </div>
+
+                <div class="modal-title" id="formModalTitle" style="font-size: 15px; margin-top: 12px;">Новое средство</div>
                 <input type="hidden" id="editProductId" value="">
 
                 <!-- СЕКЦИЯ 1: О средстве -->
@@ -1052,6 +978,21 @@
 
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
+            <!-- Выбор темы внутри настроек -->
+            <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section-title" style="margin-bottom: 8px;">Тема оформления</div>
+                <div class="picker-group" id="themeSelectorModal" style="margin-bottom: 8px;">
+                    <button type="button" class="picker-btn auto-btn" data-theme="auto">📱 Как на устройстве</button>
+                </div>
+                <div class="picker-group" id="themeColorsModal">
+                    <button type="button" class="picker-btn" data-theme="nude" style="background: #C49A82; color: #FFF;">Nude</button>
+                    <button type="button" class="picker-btn" data-theme="mint" style="background: #5B8A82; color: #FFF;">Mint</button>
+                    <button type="button" class="picker-btn" data-theme="lavender" style="background: #8B789D; color: #FFF;">Lavender</button>
+                    <button type="button" class="picker-btn" data-theme="sage" style="background: #3A4D39; color: #FFF;">Sage</button>
+                    <button type="button" class="picker-btn" data-theme="midnight" style="background: #242A3B; color: #FFF;">Midnight</button>
+                </div>
+            </div>
+
             <div class="toggle-container">
                 <span style="font-size: 13px; font-weight: 500;">🌟 Показывать трекер серии и недель</span>
                 <label class="switch">
@@ -1064,8 +1005,16 @@
         </div>
     </div>
 
+    <!-- Кастомное модальное окно для валидации названия -->
+    <div class="modal-overlay" id="customAlertModal">
+        <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
+            <div class="modal-title" style="font-size: 16px; margin-bottom: 16px;">Введите название</div>
+            <button type="button" class="btn-action" id="btnAlertOk" style="padding: 12px;">ОК</button>
+        </div>
+    </div>
+
     <script>
-        const APP_VERSION = '2.2.0';
+        const APP_VERSION = '2.4.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1097,16 +1046,6 @@
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toastNotification');
-            const formattedMsg = message.replace('💖', '<span class="toast-heart">❤️</span>');
-            toast.innerHTML = formattedMsg;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3500);
         }
 
         const typeOrder = {
@@ -1151,20 +1090,29 @@
         }
 
         function setTheme(theme) {
-            if (theme === 'auto') {
+            const activeTheme = theme || 'auto';
+            if (activeTheme === 'auto') {
                 const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 document.body.setAttribute('data-theme', isDark ? 'midnight' : 'nude');
                 localStorage.setItem('cb_theme', 'auto');
             } else {
-                document.body.setAttribute('data-theme', theme);
-                localStorage.setItem('cb_theme', theme);
+                document.body.setAttribute('data-theme', activeTheme);
+                localStorage.setItem('cb_theme', activeTheme);
             }
+
+            // Обновляем активные кнопки темы в модалке настроек
+            document.querySelectorAll('#themeSelectorModal .picker-btn, #themeColorsModal .picker-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-theme') === activeTheme);
+            });
         }
 
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            if (localStorage.getItem('cb_theme') === 'auto') setTheme('auto');
+            if (localStorage.getItem('cb_theme') === 'auto' || !localStorage.getItem('cb_theme')) {
+                setTheme('auto');
+            }
         });
 
+        // По умолчанию тема устройства (auto)
         setTheme(localStorage.getItem('cb_theme') || 'auto');
 
         function switchTOD(tod) {
@@ -1212,7 +1160,7 @@
             }
 
             const monday = getStartOfWeek(now);
-            const daysMap = [1, 2, 3, 4, 5, 6, 0]; // Пн, Вт, Ср, Чт, Пт, Сб, Вс
+            const daysMap = [1, 2, 3, 4, 5, 6, 0];
 
             daysMap.forEach((dayNum, index) => {
                 const currentDayDate = new Date(monday);
@@ -1486,9 +1434,6 @@
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
-            const todName = currentTOD === 'morning' ? 'Утренний уход' : 'Вечерний уход';
-            showToast(`✨ ${todName} выполнен! Отличная работа 💖`);
-
             switchTOD(currentTOD === 'morning' ? 'evening' : 'morning');
         }
 
@@ -1511,15 +1456,17 @@
             renderRoutine();
         }
 
-        function showForm() {
+        function showForm(showNotice = false) {
             stopBarcodeScanner();
             document.getElementById('productFormContainer').style.display = 'block';
             document.getElementById('btnAddToggle').style.display = 'none';
+            document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
         }
 
         function hideForm() {
             document.getElementById('productFormContainer').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'block';
+            document.getElementById('scannerNoticeBanner').style.display = 'none';
             resetForm();
         }
 
@@ -1547,11 +1494,10 @@
                     async (decodedText) => {
                         stopBarcodeScanner();
                         currentScannedBarcode = decodedText;
-                        showToast(`🔍 Штрихкод найден: ${decodedText}`);
 
                         if (barcodeCache[decodedText]) {
                             const cached = barcodeCache[decodedText];
-                            showForm();
+                            showForm(false);
                             document.getElementById('pName').value = cached.name;
                             document.getElementById('pType').value = cached.type;
                             return;
@@ -1565,7 +1511,7 @@
                                 const rawName = prod.product_name || prod.brands || '';
                                 
                                 if (!isGarbageName(rawName)) {
-                                    showForm();
+                                    showForm(false);
                                     document.getElementById('pName').value = rawName;
                                     barcodeCache[decodedText] = { name: rawName, type: 'Очищение' };
                                     localStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
@@ -1576,9 +1522,8 @@
                             console.log('API fetch error, falling back to manual:', err);
                         }
 
-                        showForm();
+                        showForm(true);
                         document.getElementById('pName').value = '';
-                        showToast('В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.');
                     },
                     (errorMessage) => {}
                 );
@@ -1618,6 +1563,17 @@
             });
         }
 
+        function showCustomAlert() {
+            document.getElementById('customAlertModal').style.display = 'flex';
+        }
+
+        document.getElementById('btnAlertOk').addEventListener('click', () => {
+            document.getElementById('customAlertModal').style.display = 'none';
+            const nameInput = document.getElementById('pName');
+            nameInput.focus();
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
         function saveProduct() {
             const name = document.getElementById('pName').value.trim();
             const type = document.getElementById('pType').value;
@@ -1635,7 +1591,7 @@
             const editId = document.getElementById('editProductId').value;
 
             if (!name) {
-                alert('Пожалуйста, введите название.');
+                showCustomAlert();
                 return;
             }
 
@@ -1661,7 +1617,6 @@
                 expDate
             };
 
-            // Если продукт был добавлен через сканирование неизвестного штрихкода, сохраняем в персональный кэш
             if (currentScannedBarcode && !editId) {
                 barcodeCache[currentScannedBarcode] = { name, type };
                 localStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
@@ -1686,7 +1641,7 @@
             const item = products.find(p => p.id === targetId);
             if (!item) return;
 
-            showForm();
+            showForm(false);
 
             document.getElementById('editProductId').value = item.id;
             document.getElementById('pName').value = item.name;
@@ -1793,17 +1748,18 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderCurrentDateChip();
 
-            document.getElementById('themeSelector').addEventListener('click', (e) => {
-                const btn = e.target.closest('.theme-btn');
-                if (btn) {
-                    const theme = btn.getAttribute('data-theme');
-                    if (theme) setTheme(theme);
+            // Обработчик выбора темы в настройках
+            document.getElementById('settingsModal').addEventListener('click', (e) => {
+                const themeBtn = e.target.closest('[data-theme]');
+                if (themeBtn) {
+                    const theme = themeBtn.getAttribute('data-theme');
+                    setTheme(theme);
                 }
             });
 
             document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
-            document.getElementById('btnAddToggle').addEventListener('click', showForm);
+            document.getElementById('btnAddToggle').addEventListener('click', () => showForm(false));
             document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
             document.getElementById('btnCancelProduct').addEventListener('click', () => {
                 stopBarcodeScanner();
@@ -1811,7 +1767,6 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Множественный выбор времени суток (утро/вечер)
             document.getElementById('todPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
@@ -1823,7 +1778,6 @@
                 }
             });
 
-            // Выбор частоты (ежедневно / кастом)
             document.getElementById('freqPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
@@ -1846,6 +1800,12 @@
             document.getElementById('settingsModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('settingsModal')) {
                     closeSettings();
+                }
+            });
+
+            document.getElementById('customAlertModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('customAlertModal')) {
+                    document.getElementById('customAlertModal').style.display = 'none';
                 }
             });
 
@@ -1899,6 +1859,10 @@
                     const modal = document.getElementById('settingsModal');
                     if (modal && modal.style.display === 'flex') {
                         closeSettings();
+                    }
+                    const alertModal = document.getElementById('customAlertModal');
+                    if (alertModal && alertModal.style.display === 'flex') {
+                        alertModal.style.display = 'none';
                     }
                 }
             });
