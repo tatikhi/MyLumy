@@ -966,7 +966,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.15.0';
+        const APP_VERSION = '2.17.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1000,6 +1000,28 @@
             return `${year}-${month}-${day}`;
         }
 
+        let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
+
+        // Определение эффективной даты отображения (с учетом льготного периода до 02:00 ночи для вчерашнего вечера)
+        function getEffectiveViewingDate() {
+            const now = new Date();
+            const realDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const hours = now.getHours();
+
+            if (hours < 2) {
+                const yesterday = new Date(realDate);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = getLocalTodayStr(yesterday);
+                
+                const yLog = completedLog[yesterdayStr];
+                if (!yLog || !yLog.evening) {
+                    return yesterday;
+                }
+            }
+
+            return realDate;
+        }
+
         const typeOrder = {
             "Очищение": 1,
             "Тонизирование": 2,
@@ -1011,7 +1033,18 @@
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
         let currentScannedBarcode = null;
-        let currentTOD = 'morning';
+
+        // Автоматическое определение начального режима (Утро / Вечер)
+        const effectiveDate = getEffectiveViewingDate();
+        const nowInit = new Date();
+        let initialTOD = 'morning';
+        if (effectiveDate < new Date(nowInit.getFullYear(), nowInit.getMonth(), nowInit.getDate())) {
+            initialTOD = 'evening';
+        } else {
+            initialTOD = nowInit.getHours() >= 17 ? 'evening' : 'morning';
+        }
+        let currentTOD = initialTOD;
+
         let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
         let selectedPauseBeforeVal = null;
@@ -1024,7 +1057,6 @@
             localStorage.setItem('cb_install_date', installDateStr);
         }
 
-        let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
 
         document.getElementById('streakToggle').checked = showStreakTracker;
@@ -1035,7 +1067,7 @@
         }
 
         function renderCurrentDateChip() {
-            const now = new Date();
+            const now = getEffectiveViewingDate();
             const options = { day: 'numeric', month: 'long' };
             let formatted = now.toLocaleDateString('ru-RU', options);
             document.getElementById('currentDateChip').innerText = formatted;
@@ -1134,7 +1166,7 @@
         function calculateExpiryFromPAO() {
             const openDateInput = document.getElementById('pOpenDate');
             if (!openDateInput.value) {
-                const todayStr = getLocalTodayStr();
+                const todayStr = getLocalTodayStr(getEffectiveViewingDate());
                 openDateInput.value = todayStr;
                 openDateInput.type = 'date';
             }
@@ -1177,7 +1209,7 @@
             let startDate = new Date(startTimestamp);
             startDate.setHours(0,0,0,0);
 
-            const now = new Date();
+            const now = getEffectiveViewingDate();
             now.setHours(0,0,0,0);
 
             if (startDate > now) startDate = new Date(now);
@@ -1253,8 +1285,9 @@
 
         function renderRoutine() {
             renderStreak();
+            renderCurrentDateChip();
             const container = document.getElementById('routineContainer');
-            const today = new Date();
+            const today = getEffectiveViewingDate();
             const todayDayOfWeek = today.getDay();
 
             let activeProducts = products.filter(p => {
@@ -1324,7 +1357,7 @@
         function calcExpiryDots(openDateStr, expDateStr) {
             if (!expDateStr) return '<div class="dot dot-green"></div><div class="dot dot-green"></div><div class="dot dot-green"></div>';
 
-            const now = new Date();
+            const now = getEffectiveViewingDate();
             const expDate = new Date(expDateStr);
             const openDate = openDateStr ? new Date(openDateStr) : new Date(now.getFullYear(), 0, 1);
 
@@ -1347,8 +1380,10 @@
         }
 
         function completeRoutine() {
-            const todayStr = getLocalTodayStr();
-            const todayDayOfWeek = new Date().getDay();
+            const today = getEffectiveViewingDate();
+            const todayStr = getLocalTodayStr(today);
+            const todayDayOfWeek = today.getDay();
+
             let todaysActiveProducts = products.filter(p => {
                 const tads = p.tods || ['morning', 'evening'];
                 const matchTOD = tads.includes(currentTOD);
@@ -1376,7 +1411,11 @@
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
-            switchTOD(currentTOD === 'morning' ? 'evening' : 'morning');
+            if (currentTOD === 'morning') {
+                switchTOD('evening');
+            } else {
+                switchTOD('morning');
+            }
         }
 
         function openSettings() {
