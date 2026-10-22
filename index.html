@@ -399,6 +399,19 @@
             position: relative;
         }
 
+        @keyframes modalShake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+            100% { transform: translateX(0); }
+        }
+
+        .modal-card.shake {
+            animation: modalShake 0.35s ease-in-out;
+        }
+
         .modal-header-row {
             display: flex;
             justify-content: space-between;
@@ -616,6 +629,29 @@
             border-radius: 10px;
         }
 
+        .swipe-wrapper {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #E74C3C;
+        }
+
+        .swipe-background-delete {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 18px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
         .manage-item {
             display: flex;
             justify-content: space-between;
@@ -625,7 +661,7 @@
             background: var(--bg-main);
             font-size: 13px;
             position: relative;
-            overflow: hidden;
+            z-index: 2;
             will-change: transform;
         }
 
@@ -737,6 +773,7 @@
     <!-- Интерактивный календарь (с архивом с даты установки) -->
     <div class="streak-card" id="streakCard">
         <div class="date-chip" id="currentDateChip">
+            <span>📅</span>
             <span id="dateChipText"></span>
             <input type="date" id="hiddenDateInput">
         </div>
@@ -758,7 +795,7 @@
 
     <!-- Модальное окно "моя коллекция" -->
     <div class="modal-overlay" id="settingsModal">
-        <div class="modal-card">
+        <div class="modal-card" id="settingsModalCard">
             <div class="modal-header-row">
                 <div class="modal-title brand-font">моя коллекция</div>
                 <button type="button" class="modal-close-icon" id="btnHeaderClose" aria-label="Закрыть">✕</button>
@@ -921,7 +958,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.54.0';
+        const APP_VERSION = '2.55.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -944,6 +981,44 @@
             installDate = getLocalTodayStr();
             localStorage.setItem('cb_install_date', installDate);
         }
+
+        function cleanOldLogs() {
+            try {
+                const ninetyDaysAgo = new Date();
+                ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+                const cutoffStr = getLocalTodayStr(ninetyDaysAgo);
+
+                let logData = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
+                let logModified = false;
+                for (let dateStr in logData) {
+                    if (dateStr < cutoffStr) {
+                        delete logData[dateStr];
+                        logModified = true;
+                    }
+                }
+                if (logModified) {
+                    localStorage.setItem('cb_completed_log', JSON.stringify(logData));
+                }
+
+                let progressData = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
+                let progressModified = false;
+                for (let pid in progressData) {
+                    if (progressData[pid] && Array.isArray(progressData[pid].dates)) {
+                        const originalLen = progressData[pid].dates.length;
+                        progressData[pid].dates = progressData[pid].dates.filter(d => d >= cutoffStr);
+                        if (progressData[pid].dates.length !== originalLen) {
+                            progressModified = true;
+                        }
+                    }
+                }
+                if (progressModified) {
+                    localStorage.setItem('cb_product_progress', JSON.stringify(progressData));
+                }
+            } catch (err) {
+                console.error('Error cleaning old logs:', err);
+            }
+        }
+        cleanOldLogs();
 
         function escapeHtml(str) {
             if (typeof str !== 'string') return '';
@@ -995,7 +1070,9 @@
         let selectedPAOMonths = null;
         let selectedPauseBeforeVal = null;
         let selectedPauseAfterVal = null;
+        
         let html5QrCodeScanner = null;
+        let isScannerBusy = false;
 
         function getRoutineDateObj() {
             const selectedDateStr = localStorage.getItem('cb_selected_date');
@@ -1115,91 +1192,97 @@
         function getActiveProgressDetails(item) {
             if (item.type !== 'Активы') return { week: 1, step: 1, totalSteps: 1 };
 
-            const freq = item.freqType;
-            let schDays;
-            if (freq === 'custom' && Array.isArray(item.days) && item.days.length > 0) {
-                schDays = [...item.days].sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b));
-            } else {
-                schDays = [1, 2, 3, 4, 5, 6, 0];
-            }
-            const Z = schDays.length;
-
-            const progressData = productProgress[item.id] || { dates: [] };
-            const completedSet = new Set(progressData.dates || []);
-
-            let startTimestamp = Number(item.id);
-            if (!startTimestamp || isNaN(startTimestamp) || startTimestamp < 1600000000000) {
-                startTimestamp = Date.now();
-            }
-            let startDate = new Date(startTimestamp);
-            startDate.setHours(0,0,0,0);
-
-            const routineDate = getRoutineDateObj();
-            routineDate.setHours(0,0,0,0);
-
-            if (startDate > routineDate) startDate = new Date(routineDate);
-
-            let currentWeek = 1;
-            let currentStep = 1;
-
-            let weekStart = new Date(startDate);
-            const day = weekStart.getDay();
-            const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
-            weekStart.setDate(diff);
-
-            let safetyCounter = 0;
-            while (weekStart <= routineDate && safetyCounter < 500) {
-                safetyCounter++;
-                let weekScheduledDates = [];
-                for (let i = 0; i < 7; i++) {
-                    let d = new Date(weekStart);
-                    d.setDate(weekStart.getDate() + i);
-                    let dow = d.getDay();
-                    if (schDays.includes(dow)) {
-                        weekScheduledDates.push({
-                            dateObj: new Date(d),
-                            dateStr: getLocalTodayStr(d)
-                        });
-                    }
+            try {
+                const freq = item.freqType;
+                let schDays;
+                if (freq === 'custom' && Array.isArray(item.days) && item.days.length > 0) {
+                    schDays = [...item.days].sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b));
+                } else {
+                    schDays = [1, 2, 3, 4, 5, 6, 0];
                 }
+                const Z = schDays.length;
 
-                currentStep = 1;
+                const progressData = productProgress[item.id] || { dates: [] };
+                const completedSet = new Set(progressData.dates || []);
 
-                for (let idx = 0; idx < weekScheduledDates.length; idx++) {
-                    let sched = weekScheduledDates[idx];
-                    let stepNum = idx + 1;
+                let startTimestamp = Number(item.id);
+                if (!startTimestamp || isNaN(startTimestamp) || startTimestamp < 1600000000000) {
+                    startTimestamp = Date.now();
+                }
+                let startDate = new Date(startTimestamp);
+                if (isNaN(startDate.getTime())) startDate = new Date();
+                startDate.setHours(0,0,0,0);
 
-                    if (sched.dateObj > routineDate) {
-                        return { week: currentWeek, step: currentStep, totalSteps: Z };
-                    }
+                const routineDate = getRoutineDateObj();
+                routineDate.setHours(0,0,0,0);
 
-                    let isCompleted = completedSet.has(sched.dateStr);
+                if (startDate > routineDate) startDate = new Date(routineDate);
 
-                    if (sched.dateStr === getLocalTodayStr(routineDate)) {
-                        return { week: currentWeek, step: currentStep, totalSteps: Z };
-                    }
+                let currentWeek = 1;
+                let currentStep = 1;
 
-                    if (isCompleted) {
-                        if (stepNum < Z) {
-                            currentStep = stepNum + 1;
-                        } else {
-                            currentStep = 1;
-                        }
-                    } else {
-                        if (stepNum === Z) {
-                            currentStep = 1;
-                        } else {
-                            currentStep = stepNum;
+                let weekStart = new Date(startDate);
+                const day = weekStart.getDay();
+                const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
+                weekStart.setDate(diff);
+
+                let safetyCounter = 0;
+                while (weekStart <= routineDate && safetyCounter < 300) {
+                    safetyCounter++;
+                    let weekScheduledDates = [];
+                    for (let i = 0; i < 7; i++) {
+                        let d = new Date(weekStart);
+                        d.setDate(weekStart.getDate() + i);
+                        let dow = d.getDay();
+                        if (schDays.includes(dow)) {
+                            weekScheduledDates.push({
+                                dateObj: new Date(d),
+                                dateStr: getLocalTodayStr(d)
+                            });
                         }
                     }
+
+                    currentStep = 1;
+
+                    for (let idx = 0; idx < weekScheduledDates.length; idx++) {
+                        let sched = weekScheduledDates[idx];
+                        let stepNum = idx + 1;
+
+                        if (sched.dateObj > routineDate) {
+                            return { week: currentWeek, step: currentStep, totalSteps: Z };
+                        }
+
+                        let isCompleted = completedSet.has(sched.dateStr);
+
+                        if (sched.dateStr === getLocalTodayStr(routineDate)) {
+                            return { week: currentWeek, step: currentStep, totalSteps: Z };
+                        }
+
+                        if (isCompleted) {
+                            if (stepNum < Z) {
+                                currentStep = stepNum + 1;
+                            } else {
+                                currentStep = 1;
+                            }
+                        } else {
+                            if (stepNum === Z) {
+                                currentStep = 1;
+                            } else {
+                                currentStep = stepNum;
+                            }
+                        }
+                    }
+
+                    currentWeek++;
+                    currentStep = 1;
+                    weekStart.setDate(weekStart.getDate() + 7);
                 }
 
-                currentWeek++;
-                currentStep = 1;
-                weekStart.setDate(weekStart.getDate() + 7);
+                return { week: currentWeek > 1 ? currentWeek - 1 : 1, step: currentStep, totalSteps: Z };
+            } catch (e) {
+                console.error("Error in getActiveProgressDetails:", e);
+                return { week: 1, step: 1, totalSteps: 1 };
             }
-
-            return { week: currentWeek > 1 ? currentWeek - 1 : 1, step: currentStep, totalSteps: Z };
         }
 
         function getActiveProgressHtml(item) {
@@ -1434,7 +1517,6 @@
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
             
-            // Надежный флаг: добавляем класс на подложку модального окна
             document.getElementById('settingsModal').classList.add('form-open');
         }
 
@@ -1444,8 +1526,18 @@
             document.getElementById('scannerNoticeBanner').style.display = 'none';
             resetForm();
             
-            // Снимаем флаг при закрытии формы
             document.getElementById('settingsModal').classList.remove('form-open');
+        }
+
+        function triggerModalShake() {
+            const card = document.getElementById('settingsModalCard');
+            if (!card) return;
+            card.classList.remove('shake');
+            void card.offsetWidth; // Триггер reflow для перезапуска CSS анимации
+            card.classList.add('shake');
+            setTimeout(() => {
+                card.classList.remove('shake');
+            }, 350);
         }
 
         function isGarbageName(name) {
@@ -1453,11 +1545,14 @@
             const clean = name.trim().toLowerCase();
             if (/^\d+$/.test(clean)) return true;
             if (/^\[.*\]$/.test(clean)) return true;
-            if (clean === 'товар' || clean === 'product' || clean === 'item' || clean === 'неизвестно' || clean.length < 2) return true;
+            if (clean === 'товар' || clean === 'product' || clean === 'item' || clean.length < 2) return true;
             return false;
         }
 
         async function startBarcodeScanner() {
+            if (isScannerBusy) return;
+            isScannerBusy = true;
+
             const scannerWrapper = document.getElementById('scannerWrapper');
             scannerWrapper.style.display = 'block';
             document.getElementById('btnScanBarcode').style.display = 'none';
@@ -1511,6 +1606,8 @@
                 console.error("Camera start error:", err);
                 alert("Не удалось запустить камеру. Проверьте разрешения браузера.");
                 stopBarcodeScanner();
+            } finally {
+                isScannerBusy = false;
             }
         }
 
@@ -1523,6 +1620,7 @@
             }
             scannerWrapper.style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'block';
+            isScannerBusy = false;
         }
 
         function togglePauseInputs() {
@@ -1732,14 +1830,17 @@
             products.forEach((p) => {
                 const dotsHtml = calcExpiryDots(p.openDate, p.expDate);
                 htmlBuffer.push(`
-                    <div class="manage-item" data-id="${p.id}">
-                        <div class="manage-info">
-                            <div class="expiry-dots">${dotsHtml}</div>
-                            <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
-                        </div>
-                        <div class="manage-actions">
-                            <button type="button" class="manage-edit" data-action="edit" data-id="${p.id}" aria-label="Редактировать">✏️</button>
-                            <button type="button" class="manage-del" data-action="delete" data-id="${p.id}" aria-label="Удалить">✕</button>
+                    <div class="swipe-wrapper">
+                        <div class="swipe-background-delete">🗑️</div>
+                        <div class="manage-item" data-id="${p.id}">
+                            <div class="manage-info">
+                                <div class="expiry-dots">${dotsHtml}</div>
+                                <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
+                            </div>
+                            <div class="manage-actions">
+                                <button type="button" class="manage-edit" data-action="edit" data-id="${p.id}" aria-label="Редактировать">✏️</button>
+                                <button type="button" class="manage-del" data-action="delete" data-id="${p.id}" aria-label="Удалить">✕</button>
+                            </div>
                         </div>
                     </div>
                 `);
@@ -1769,12 +1870,15 @@
 
         let touchStartX = 0;
         let activeSwipeItem = null;
+        let activeSwipeBg = null;
 
         document.addEventListener('touchstart', (e) => {
             const item = e.target.closest('.manage-item');
             if (!item) return;
             touchStartX = e.touches[0].clientX;
             activeSwipeItem = item;
+            const wrapper = item.closest('.swipe-wrapper');
+            activeSwipeBg = wrapper ? wrapper.querySelector('.swipe-background-delete') : null;
             item.style.transition = 'none';
         });
 
@@ -1783,7 +1887,11 @@
             const currentX = e.touches[0].clientX;
             const diffX = currentX - touchStartX;
             if (diffX < 0) {
-                activeSwipeItem.style.transform = `translateX(${Math.max(diffX, -90)}px)`;
+                const shift = Math.max(diffX, -90);
+                activeSwipeItem.style.transform = `translateX(${shift}px)`;
+                if (activeSwipeBg) {
+                    activeSwipeBg.style.opacity = Math.min(Math.abs(shift) / 70, 1);
+                }
             }
         });
 
@@ -1796,13 +1904,16 @@
                 const id = activeSwipeItem.getAttribute('data-id');
                 activeSwipeItem.style.transform = 'translateX(-100%)';
                 activeSwipeItem.style.opacity = '0';
+                if (activeSwipeBg) activeSwipeBg.style.opacity = '1';
                 setTimeout(() => {
                     deleteProduct(id);
                 }, 300);
             } else {
                 activeSwipeItem.style.transform = 'translateX(0)';
+                if (activeSwipeBg) activeSwipeBg.style.opacity = '0';
             }
             activeSwipeItem = null;
+            activeSwipeBg = null;
         });
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1825,7 +1936,6 @@
                 renderRoutine();
             });
 
-            // Стабильный обработчик фона
             document.getElementById('settingsModal').addEventListener('click', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
@@ -1833,15 +1943,15 @@
                     return;
                 }
 
-                // Клик произошел по белой карточке — ничего не делаем
                 if (e.target.closest('.modal-card')) {
                     return;
                 }
 
-                // Клик произошел строго по темному фону: закрываем ТОЛЬКО если форма не открыта
                 const isFormOpen = e.currentTarget.classList.contains('form-open');
                 if (!isFormOpen) {
                     closeSettings();
+                } else {
+                    triggerModalShake();
                 }
             });
 
@@ -1949,8 +2059,12 @@
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('settingsModal');
                     const isFormOpen = modal && modal.classList.contains('form-open');
-                    if (modal && modal.style.display === 'flex' && !isFormOpen) {
-                        closeSettings();
+                    if (modal && modal.style.display === 'flex') {
+                        if (!isFormOpen) {
+                            closeSettings();
+                        } else {
+                            triggerModalShake();
+                        }
                     }
                     const alertModal = document.getElementById('customAlertModal');
                     if (alertModal && alertModal.style.display === 'flex') {
