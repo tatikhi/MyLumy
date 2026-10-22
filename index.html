@@ -116,7 +116,6 @@
             margin-bottom: 16px;
         }
 
-        /* Фирменный стиль логотипа и элементов коллекции */
         .brand-font {
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
@@ -704,7 +703,7 @@
         <button type="button" class="btn-settings brand-font" id="btnOpenSettings">моя коллекция</button>
     </div>
 
-    <!-- Интерактивный календарь -->
+    <!-- Интерактивный календарь (с поддержкой архива с даты установки) -->
     <div class="streak-card" id="streakCard">
         <div class="date-chip" id="currentDateChip">
             <span id="dateChipText"></span>
@@ -718,10 +717,8 @@
             <button type="button" class="tod-btn" id="btnEvening">Вечерний уход</button>
         </div>
 
-        <!-- Плашка для завтрашнего / выбранного плана -->
-        <div id="tomorrowNoticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;">
-            Это план на выбранный день!
-        </div>
+        <!-- Плашка для уведомлений / архива -->
+        <div id="noticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;"></div>
 
         <div class="routine-list" id="routineContainer"></div>
 
@@ -890,7 +887,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.46.0';
+        const APP_VERSION = '2.47.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -899,8 +896,6 @@
                 localStorage.removeItem('cb_is_tomorrow_plan');
                 localStorage.removeItem('cb_tomorrow_rest');
                 localStorage.removeItem('cb_viewing_tomorrow');
-                localStorage.removeItem('cb_selected_date');
-                localStorage.removeItem('cb_evening_completed');
                 if (!sessionStorage.getItem('cb_reloaded')) {
                     sessionStorage.setItem('cb_reloaded', 'true');
                     window.location.reload(true);
@@ -908,6 +903,13 @@
             }
         } catch (e) {
             console.error('Version check error:', e);
+        }
+
+        // Инициализация даты установки приложения (начало архива)
+        let installDate = localStorage.getItem('cb_install_date');
+        if (!installDate) {
+            installDate = getLocalTodayStr();
+            localStorage.setItem('cb_install_date', installDate);
         }
 
         function escapeHtml(str) {
@@ -924,14 +926,12 @@
             return `${year}-${month}-${day}`;
         }
 
-        // Логическое сегодня (до 03:00 ночи относится к предыдущему вечеру)
         function getLogicalTodayStr() {
             const d = new Date();
             d.setHours(d.getHours() - 3); 
             return getLocalTodayStr(d);
         }
 
-        // Жесткие интервалы: 03:00 - 15:00 -> утро, 15:01 - 02:59 -> вечер
         function getInitialTOD() {
             const now = new Date();
             const h = now.getHours();
@@ -970,13 +970,12 @@
                 const parts = selectedDateStr.split('-');
                 return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             }
-            
             const logicalTodayStr = getLogicalTodayStr();
             const parts = logicalTodayStr.split('-');
             return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
         }
 
-        function isViewingFuture() {
+        function isFuturePlan() {
             const selectedDateStr = localStorage.getItem('cb_selected_date');
             if (!selectedDateStr) return false;
             return selectedDateStr > getLogicalTodayStr();
@@ -984,8 +983,24 @@
 
         function isEveningCompletedToday() {
             const logicalToday = getLogicalTodayStr();
-            if (localStorage.getItem('cb_selected_date')) return false;
+            if (localStorage.getItem('cb_selected_date')) {
+                const selected = localStorage.getItem('cb_selected_date');
+                if (selected < logicalToday) return true; // Прошедшие дни считаются завершенными
+                if (selected === logicalToday) {
+                    return localStorage.getItem('cb_evening_completed') === logicalToday;
+                }
+                return false;
+            }
             return localStorage.getItem('cb_evening_completed') === logicalToday;
+        }
+
+        function isArchiveMode() {
+            const selected = localStorage.getItem('cb_selected_date');
+            const logicalToday = getLogicalTodayStr();
+            if (!selected) {
+                return localStorage.getItem('cb_evening_completed') === logicalToday;
+            }
+            return selected < logicalToday || (selected === logicalToday && localStorage.getItem('cb_evening_completed') === logicalToday);
         }
 
         function renderCurrentDateChip() {
@@ -994,13 +1009,15 @@
             let formatted = routineDate.toLocaleDateString('ru-RU', options);
             
             let chipText = formatted;
-            if (isViewingFuture()) {
+            if (isFuturePlan()) {
                 chipText += " (План)";
+            } else if (isArchiveMode()) {
+                chipText += " (Архив)";
             }
             document.getElementById('dateChipText').innerText = chipText;
 
             const hiddenInput = document.getElementById('hiddenDateInput');
-            hiddenInput.min = getLogicalTodayStr();
+            hiddenInput.min = localStorage.getItem('cb_install_date') || getLocalTodayStr();
             hiddenInput.value = getLocalTodayStr(routineDate);
         }
 
@@ -1179,17 +1196,55 @@
         function renderRoutine() {
             renderCurrentDateChip();
             
-            const isFuture = isViewingFuture();
-            const eveningDone = isEveningCompletedToday();
-            const banner = document.getElementById('tomorrowNoticeBanner');
+            const isFuture = isFuturePlan();
+            const inArchive = isArchiveMode();
+            const banner = document.getElementById('noticeBanner');
             const container = document.getElementById('routineContainer');
             const btnAction = document.getElementById('btnCompleteRoutine');
 
-            // Если вечер сегодня уже завершен
-            if (eveningDone) {
-                banner.style.display = 'none';
-                container.innerHTML = `<div style="text-align: center; padding: 25px 0; color: var(--text-primary); font-size: 15px; font-weight: 600; letter-spacing: 0.3px;">Это все на сегодня!<br>До встречи завтра!</div>`;
-                btnAction.innerText = 'День завершен';
+            // Режим архива / завершенного дня
+            if (inArchive && !isFuture) {
+                banner.style.display = 'block';
+                const routineDate = getRoutineDateObj();
+                const dateStr = routineDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+                
+                if (routineDate.toDateString() === new Date().toDateString()) {
+                    banner.innerHTML = "Это все на сегодня!<br>До встречи завтра!";
+                } else {
+                    banner.innerText = `Архив ухода за ${dateStr}`;
+                }
+
+                const activeProducts = getActiveProductsForCurrentView();
+                if (activeProducts.length === 0) {
+                    container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">В этот день был отдых</div>`;
+                } else {
+                    const htmlBuffer = [];
+                    activeProducts.forEach((item, index) => {
+                        const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
+                        const activeProgressHtml = getActiveProgressHtml(item);
+                        htmlBuffer.push(`
+                            <div class="routine-item" style="opacity: 0.85;">
+                                <div class="routine-item-main">
+                                    <div class="item-left">
+                                        <div class="item-num" style="background: var(--text-secondary);">✓</div>
+                                        <div class="item-details">
+                                            <span class="item-name">${escapeHtml(item.name)}</span>
+                                            <span class="item-tag">${escapeHtml(item.type)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="item-right-group">
+                                        ${activeProgressHtml}
+                                        <div class="expiry-dots">${dotsHtml}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                    container.innerHTML = htmlBuffer.join('');
+                }
+
+                btnAction.innerText = 'День завершен (Архив)';
+                btnAction.classList.remove('brand-font');
                 btnAction.style.opacity = '0.6';
                 btnAction.style.pointerEvents = 'none';
                 return;
@@ -1209,7 +1264,6 @@
                     container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">Отдых</div>`;
                 }
 
-                // При отсутствии средств НИКАКИХ кнопок "Посмотреть схему на завтра" быть не должно. Только добавление средств.
                 btnAction.innerText = 'добавить средство в мою коллекцию';
                 btnAction.classList.add('brand-font');
             } else {
@@ -1304,10 +1358,8 @@
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
             if (currentTOD === 'morning') {
-                // Утром при нажатии завершить — сразу переключаемся на вечер
                 switchTOD('evening');
             } else {
-                // Вечером при нажатии завершить — фиксируем выполнение и показываем плашку "Это все на сегодня..."
                 localStorage.setItem('cb_evening_completed', getLogicalTodayStr());
                 renderRoutine();
             }
@@ -1591,7 +1643,6 @@
             document.getElementById('pName').value = '';
             document.getElementById('pType').value = 'Очищение';
             
-            // По умолчанию при добавлении нового средства активны оба (утро и вечер)
             document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.add('active'));
 
             document.getElementById('pFreqType').value = 'daily';
@@ -1648,6 +1699,7 @@
                 localStorage.removeItem('cb_product_progress');
                 localStorage.removeItem('cb_selected_date');
                 localStorage.removeItem('cb_evening_completed');
+                localStorage.removeItem('cb_install_date');
                 productProgress = {};
                 currentTOD = getInitialTOD();
                 document.getElementById('btnMorning').classList.toggle('active', currentTOD === 'morning');
@@ -1707,7 +1759,7 @@
                     currentTOD = getInitialTOD();
                     document.getElementById('btnMorning').classList.toggle('active', currentTOD === 'morning');
                     document.getElementById('btnEvening').classList.toggle('active', currentTOD === 'evening');
-                } else if (val > logicalToday) {
+                } else {
                     localStorage.setItem('cb_selected_date', val);
                     currentTOD = 'morning';
                     document.getElementById('btnMorning').classList.add('active');
@@ -1768,11 +1820,19 @@
             });
 
             document.getElementById('btnMorning').addEventListener('click', () => {
-                localStorage.removeItem('cb_selected_date');
+                const selected = localStorage.getItem('cb_selected_date');
+                const logicalToday = getLogicalTodayStr();
+                if (!selected || selected === logicalToday) {
+                    localStorage.removeItem('cb_selected_date');
+                }
                 switchTOD('morning');
             });
             document.getElementById('btnEvening').addEventListener('click', () => {
-                localStorage.removeItem('cb_selected_date');
+                const selected = localStorage.getItem('cb_selected_date');
+                const logicalToday = getLogicalTodayStr();
+                if (!selected || selected === logicalToday) {
+                    localStorage.removeItem('cb_selected_date');
+                }
                 switchTOD('evening');
             });
 
