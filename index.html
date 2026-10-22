@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-
+    
     <title>MySpa</title>
     <!-- Подключаем шрифт Montserrat для премиального скандинавского стиля логотипа -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -116,6 +116,14 @@
             margin-bottom: 16px;
         }
 
+        /* Фирменный стиль логотипа и элементов коллекции */
+        .brand-font {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.22em;
+            text-transform: lowercase;
+        }
+
         .logo {
             font-family: 'Montserrat', sans-serif;
             font-size: 16px;
@@ -131,8 +139,7 @@
             color: var(--text-primary);
             padding: 8px 14px;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -761,7 +768,7 @@
 
     <div class="header-bar">
         <div class="logo">myspa</div>
-        <button type="button" class="btn-settings" id="btnOpenSettings">⚙️ Настройки</button>
+        <button type="button" class="btn-settings brand-font" id="btnOpenSettings">⚙️ моя коллекция</button>
     </div>
 
     <!-- Трекер прогресса с SVG иконками (без лишних надписей) -->
@@ -838,10 +845,10 @@
         <button type="button" class="btn-action" id="btnCompleteRoutine">✨ Всё сделано</button>
     </div>
 
-    <!-- Модальное окно "Мои средства" -->
+    <!-- Модальное окно "моя коллекция" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card">
-            <div class="modal-title">Мои средства</div>
+            <div class="modal-title brand-font">моя коллекция</div>
             
             <div class="product-manage-list" id="manageList"></div>
 
@@ -978,18 +985,16 @@
 
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
-            <!-- Выбор темы внутри настроек -->
+            <!-- Выбор темы в виде цветных прямоугольников на ширину экрана -->
             <div class="form-section" style="margin-bottom: 12px;">
                 <div class="form-section-title" style="margin-bottom: 8px;">Тема оформления</div>
-                <div class="picker-group" id="themeSelectorModal" style="margin-bottom: 8px;">
-                    <button type="button" class="picker-btn auto-btn" data-theme="auto">📱 Как на устройстве</button>
-                </div>
-                <div class="picker-group" id="themeColorsModal">
-                    <button type="button" class="picker-btn" data-theme="nude" style="background: #C49A82; color: #FFF;">Nude</button>
-                    <button type="button" class="picker-btn" data-theme="mint" style="background: #5B8A82; color: #FFF;">Mint</button>
-                    <button type="button" class="picker-btn" data-theme="lavender" style="background: #8B789D; color: #FFF;">Lavender</button>
-                    <button type="button" class="picker-btn" data-theme="sage" style="background: #3A4D39; color: #FFF;">Sage</button>
-                    <button type="button" class="picker-btn" data-theme="midnight" style="background: #242A3B; color: #FFF;">Midnight</button>
+                <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
+                    <button type="button" class="picker-btn auto-btn" data-theme="auto" style="flex: 1; height: 36px; border-radius: 8px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center;" title="Авто">📱</button>
+                    <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; height: 36px; border-radius: 8px; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
+                    <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; height: 36px; border-radius: 8px; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
+                    <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; height: 36px; border-radius: 8px; background: #8B789D; border-color: #8B789D;" title="Lavender"></button>
+                    <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; height: 36px; border-radius: 8px; background: #3A4D39; border-color: #3A4D39;" title="Sage"></button>
+                    <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; height: 36px; border-radius: 8px; background: #242A3B; border-color: #242A3B;" title="Midnight"></button>
                 </div>
             </div>
 
@@ -1014,7 +1019,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.4.0';
+        const APP_VERSION = '2.6.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1100,8 +1105,7 @@
                 localStorage.setItem('cb_theme', activeTheme);
             }
 
-            // Обновляем активные кнопки темы в модалке настроек
-            document.querySelectorAll('#themeSelectorModal .picker-btn, #themeColorsModal .picker-btn').forEach(btn => {
+            document.querySelectorAll('#themeRow [data-theme]').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-theme') === activeTheme);
             });
         }
@@ -1112,7 +1116,6 @@
             }
         });
 
-        // По умолчанию тема устройства (auto)
         setTheme(localStorage.getItem('cb_theme') || 'auto');
 
         function switchTOD(tod) {
@@ -1330,7 +1333,7 @@
             const btnAction = document.getElementById('btnCompleteRoutine');
             if (products.length === 0) {
                 container.innerHTML = '';
-                btnAction.innerText = '⚙️ Настройки (добавить средства)';
+                btnAction.innerText = '⚙️ моя коллекция (добавить средства)';
             } else {
                 btnAction.innerText = '✨ Всё сделано';
                 if (activeProducts.length === 0) {
@@ -1748,7 +1751,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderCurrentDateChip();
 
-            // Обработчик выбора темы в настройках
             document.getElementById('settingsModal').addEventListener('click', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
