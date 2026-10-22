@@ -396,12 +396,34 @@
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
+            position: relative;
+        }
+
+        .modal-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-close-icon {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            line-height: 1;
         }
 
         .modal-title {
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 16px;
             color: var(--text-primary);
         }
 
@@ -737,7 +759,10 @@
     <!-- Модальное окно "моя коллекция" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card">
-            <div class="modal-title brand-font">моя коллекция</div>
+            <div class="modal-header-row">
+                <div class="modal-title brand-font">моя коллекция</div>
+                <button type="button" class="modal-close-icon" id="btnHeaderClose" aria-label="Закрыть">✕</button>
+            </div>
             
             <div class="product-manage-list" id="manageList"></div>
 
@@ -896,7 +921,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.52.0';
+        const APP_VERSION = '2.53.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1794,8 +1819,8 @@
                 renderRoutine();
             });
 
-            // Корректный обработчик закрытия окна коллекции при клике по фону
-            document.getElementById('settingsModal').addEventListener('click', (e) => {
+            // Корректный кроссплатформенный обработчик кликов по модальному окну
+            const handleBackdropTap = (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
                     const theme = themeBtn.getAttribute('data-theme');
@@ -1803,17 +1828,26 @@
                     return;
                 }
 
-                // Закрываем окно ТОЛЬКО если клик был вне белой карточки И при этом скрыта форма добавления/редактирования
+                // Проверяем: если касание началось или произошло СТРОГО ВНЕ белой карточки
                 if (!e.target.closest('.modal-card')) {
-                    const isFormVisible = document.getElementById('productFormContainer').style.display === 'block';
-                    if (!isFormVisible) {
+                    const formContainer = document.getElementById('productFormContainer');
+                    const isFormOpen = formContainer && formContainer.style.display === 'block';
+                    
+                    // Если форма добавления/редактирования ЗАКРЫТА — закрываем коллекцию
+                    if (!isFormOpen) {
                         closeSettings();
                     }
                 }
-            });
+            };
+
+            // Вешаем обработчики на события нажатия для немедленного отклика на любых планшетах/смартфонах
+            const settingsModal = document.getElementById('settingsModal');
+            settingsModal.addEventListener('click', handleBackdropTap);
 
             document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
+            document.getElementById('btnHeaderClose').addEventListener('click', closeSettings);
+
             document.getElementById('btnAddToggle').addEventListener('click', () => showForm(false));
             document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
             document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
