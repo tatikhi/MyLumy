@@ -418,8 +418,8 @@
             font-weight: 700;
             color: var(--accent-main);
             margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.1em;
+            font-style: normal;
         }
 
         .form-group {
@@ -477,6 +477,15 @@
 
         #themeRow .picker-btn.active {
             box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main);
+        }
+
+        .type-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        .type-picker-grid .picker-btn:last-child {
+            grid-column: span 2;
         }
 
         .days-picker {
@@ -703,7 +712,7 @@
         <button type="button" class="btn-settings brand-font" id="btnOpenSettings">моя коллекция</button>
     </div>
 
-    <!-- Интерактивный календарь (с поддержкой архива с даты установки) -->
+    <!-- Интерактивный календарь (с архивом с даты установки) -->
     <div class="streak-card" id="streakCard">
         <div class="date-chip" id="currentDateChip">
             <span id="dateChipText"></span>
@@ -749,7 +758,7 @@
                 <input type="hidden" id="editProductId" value="">
 
                 <div class="form-section">
-                    <div class="form-section-title">О средстве</div>
+                    <div class="form-section-title brand-font">О средстве</div>
                     
                     <div class="form-group">
                         <label for="pName">Название</label>
@@ -757,25 +766,25 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="pType">Тип / Этап ухода</label>
-                        <select id="pType" class="input-control">
-                            <option value="Очищение">Очищение</option>
-                            <option value="Тонизирование">Тонизирование</option>
-                            <option value="Активы">Активы</option>
-                            <option value="Уход за глазами">Уход за глазами</option>
-                            <option value="Питание / Увлажнение">Питание / Увлажнение</option>
-                        </select>
+                        <label>Тип / Этап ухода</label>
+                        <div class="type-picker-grid" id="typePicker">
+                            <button type="button" class="picker-btn" data-type="Очищение">Очищение</button>
+                            <button type="button" class="picker-btn" data-type="Тонизирование">Тонизирование</button>
+                            <button type="button" class="picker-btn" data-type="Активы">Активы</button>
+                            <button type="button" class="picker-btn" data-type="Уход за глазами">Уход за глазами</button>
+                            <button type="button" class="picker-btn" data-type="Питание / Увлажнение">Питание / Увлажнение</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <div class="form-section-title">График использования</div>
+                    <div class="form-section-title brand-font">График использования</div>
                     
                     <div class="form-group">
                         <label>Время суток</label>
                         <div class="picker-group" id="todPicker">
-                            <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
-                            <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
+                            <button type="button" class="picker-btn" data-tod="morning">Утро</button>
+                            <button type="button" class="picker-btn" data-tod="evening">Вечер</button>
                         </div>
                     </div>
 
@@ -832,10 +841,10 @@
                 </div>
 
                 <div class="form-section">
-                    <div class="form-section-title">Сроки</div>
+                    <div class="form-section-title brand-font">Сроки</div>
 
                     <div class="form-group">
-                        <label for="pOpenDate">Дата вскрытия</label>
+                        <label for="pOpenDate">Дата начала использования</label>
                         <input type="text" placeholder="Выбрать дату" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" id="pOpenDate" class="input-control">
                     </div>
 
@@ -864,7 +873,7 @@
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
             <div class="form-section" style="margin-bottom: 12px;">
-                <div class="form-section-title" style="margin-bottom: 8px;">Тема оформления</div>
+                <div class="form-section-title brand-font" style="margin-bottom: 8px;">Тема оформления</div>
                 <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
                     <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; height: 36px; border-radius: 8px; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
                     <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; height: 36px; border-radius: 8px; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
@@ -878,16 +887,16 @@
         </div>
     </div>
 
-    <!-- Кастомное модальное окно для валидации названия -->
+    <!-- Кастомное модальное окно для валидации -->
     <div class="modal-overlay" id="customAlertModal">
         <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
-            <div class="modal-title" style="font-size: 16px; margin-bottom: 16px;">Введите название</div>
+            <div class="modal-title" id="customAlertText" style="font-size: 16px; margin-bottom: 16px;">Введите название</div>
             <button type="button" class="btn-action" id="btnAlertOk" style="padding: 12px;">ОК</button>
         </div>
     </div>
 
     <script>
-        const APP_VERSION = '2.47.0';
+        const APP_VERSION = '2.48.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -905,7 +914,6 @@
             console.error('Version check error:', e);
         }
 
-        // Инициализация даты установки приложения (начало архива)
         let installDate = localStorage.getItem('cb_install_date');
         if (!installDate) {
             installDate = getLocalTodayStr();
@@ -985,7 +993,7 @@
             const logicalToday = getLogicalTodayStr();
             if (localStorage.getItem('cb_selected_date')) {
                 const selected = localStorage.getItem('cb_selected_date');
-                if (selected < logicalToday) return true; // Прошедшие дни считаются завершенными
+                if (selected < logicalToday) return true;
                 if (selected === logicalToday) {
                     return localStorage.getItem('cb_evening_completed') === logicalToday;
                 }
@@ -1202,7 +1210,6 @@
             const container = document.getElementById('routineContainer');
             const btnAction = document.getElementById('btnCompleteRoutine');
 
-            // Режим архива / завершенного дня
             if (inArchive && !isFuture) {
                 banner.style.display = 'block';
                 const routineDate = getRoutineDateObj();
@@ -1440,7 +1447,8 @@
                             const cached = barcodeCache[decodedText];
                             showForm(false);
                             document.getElementById('pName').value = cached.name;
-                            document.getElementById('pType').value = cached.type;
+                            const typeBtn = document.querySelector(`#typePicker .picker-btn[data-type="${cached.type}"]`);
+                            if (typeBtn) typeBtn.click();
                             return;
                         }
 
@@ -1505,26 +1513,46 @@
             });
         }
 
-        function showCustomAlert() {
+        function showCustomAlert(msg, targetElement) {
+            document.getElementById('customAlertText').innerText = msg;
             document.getElementById('customAlertModal').style.display = 'flex';
+            window.alertTarget = targetElement;
         }
 
         document.getElementById('btnAlertOk').addEventListener('click', () => {
             document.getElementById('customAlertModal').style.display = 'none';
-            const nameInput = document.getElementById('pName');
-            nameInput.focus();
-            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (window.alertTarget) {
+                window.alertTarget.focus();
+                window.alertTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                window.alertTarget = null;
+            }
         });
 
         function saveProduct() {
             const name = document.getElementById('pName').value.trim();
-            const type = document.getElementById('pType').value;
             
+            const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
+            const type = activeTypeBtn ? activeTypeBtn.getAttribute('data-type') : null;
+
             let tods = [];
             document.querySelectorAll('#todPicker .picker-btn.active').forEach(btn => {
                 tods.push(btn.getAttribute('data-tod'));
             });
-            if (tods.length === 0) tods = ['morning', 'evening'];
+
+            if (!name) {
+                showCustomAlert('Введите название', document.getElementById('pName'));
+                return;
+            }
+
+            if (!type) {
+                showCustomAlert('Выберите тип средства', document.getElementById('typePicker'));
+                return;
+            }
+
+            if (tods.length === 0) {
+                showCustomAlert('Выберите время суток', document.getElementById('todPicker'));
+                return;
+            }
 
             const freqType = document.getElementById('pFreqType').value;
             const hasPause = document.getElementById('pPauseToggle').checked;
@@ -1532,11 +1560,6 @@
             const openDate = openDateEl.type === 'date' ? openDateEl.value : '';
             const expDate = document.getElementById('pExpDate').value;
             const editId = document.getElementById('editProductId').value;
-
-            if (!name) {
-                showCustomAlert();
-                return;
-            }
 
             let days = [];
             if (freqType === 'custom') {
@@ -1588,9 +1611,14 @@
 
             document.getElementById('editProductId').value = item.id;
             document.getElementById('pName').value = item.name;
-            document.getElementById('pType').value = item.type;
             
-            const itemTods = item.tods || ['morning', 'evening'];
+            // Выбор типа средства
+            document.querySelectorAll('#typePicker .picker-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-type') === item.type);
+            });
+
+            // Выбор времени суток
+            const itemTods = item.tods || [];
             document.querySelectorAll('#todPicker .picker-btn').forEach(btn => {
                 const tod = btn.getAttribute('data-tod');
                 btn.classList.toggle('active', itemTods.includes(tod));
@@ -1641,9 +1669,10 @@
             currentScannedBarcode = null;
             document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
-            document.getElementById('pType').value = 'Очищение';
             
-            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.add('active'));
+            // По умолчанию тип и время не выбраны (все неактивны)
+            document.querySelectorAll('#typePicker .picker-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.remove('active'));
 
             document.getElementById('pFreqType').value = 'daily';
             document.querySelectorAll('#freqPicker .picker-btn').forEach(btn => {
@@ -1787,6 +1816,16 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
+            // Обработка выбора типа (этапа ухода) - строго одна активная кнопка
+            document.getElementById('typePicker').addEventListener('click', (e) => {
+                const btn = e.target.closest('.picker-btn');
+                if (btn) {
+                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            });
+
+            // Время суток - мультивыбор (можно и утро, и вечер, или только одно)
             document.getElementById('todPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
