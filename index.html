@@ -63,7 +63,7 @@
             --icon-inactive: #B5C2B6;
         }
 
-        /* 5. Midnight Calm (с улучшенной WCAG AA контрастностью) */
+        /* 5. Midnight Calm (с улучшенной контрастностью) */
         body[data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
@@ -1118,7 +1118,7 @@
             for (let w = 1; w <= 4; w++) {
                 const starEl = document.getElementById(`star-${w}`);
                 if (starEl) {
-                    starEl.classList.toggle('active', w <= Math.min(4, Math.floor(daysSinceInstall / 7) + 1));
+                    starEl.classList.toggle('active', w <= Math.min(4, Math.floor(daysSinceInstall / 7)));
                 }
             }
 
@@ -1184,7 +1184,7 @@
             }
         }
 
-        // Интеллектуальный безопасный расчёт недели и шага для активов
+        // Интеллектуальный безопасный расчёт недели и шага для активов с учётом пропусков
         function getActiveProgressDetails(item) {
             if (item.type !== 'Активы') return { week: 1, step: 1, totalSteps: 1 };
 
@@ -1200,7 +1200,6 @@
             const progressData = productProgress[item.id] || { dates: [] };
             const completedSet = new Set(progressData.dates || []);
 
-            // Защита от некорректных/старых ID (предотвращает зависание с 1970 года)
             let startTimestamp = Number(item.id);
             if (!startTimestamp || isNaN(startTimestamp) || startTimestamp < 1600000000000) {
                 startTimestamp = Date.now();
@@ -1214,7 +1213,7 @@
             if (startDate > now) startDate = new Date(now);
 
             let currentWeek = 1;
-            let expectedStep = 1;
+            let currentStep = 1;
 
             let weekStart = new Date(startDate);
             const day = weekStart.getDay();
@@ -1237,39 +1236,43 @@
                     }
                 }
 
-                expectedStep = 1;
+                currentStep = 1;
 
                 for (let idx = 0; idx < weekScheduledDates.length; idx++) {
                     let sched = weekScheduledDates[idx];
                     let stepNum = idx + 1;
 
                     if (sched.dateObj > now) {
-                        return { week: currentWeek, step: expectedStep, totalSteps: Z };
+                        return { week: currentWeek, step: currentStep, totalSteps: Z };
                     }
 
                     let isCompleted = completedSet.has(sched.dateStr);
 
                     if (sched.dateStr === getLocalTodayStr(now)) {
-                        return { week: currentWeek, step: expectedStep, totalSteps: Z };
+                        return { week: currentWeek, step: currentStep, totalSteps: Z };
                     }
 
                     if (isCompleted) {
                         if (stepNum < Z) {
-                            expectedStep = stepNum + 1;
+                            currentStep = stepNum + 1;
+                        } else {
+                            currentStep = 1;
                         }
                     } else {
-                        if (stepNum !== Z) {
-                            expectedStep = stepNum; // Повторяем пропущенный промежуточный шаг
+                        if (stepNum === Z) {
+                            currentStep = 1; // Пропуск последнего шага -> новая неделя с шага 1
+                        } else {
+                            currentStep = stepNum; // Повторяем пропущенный промежуточный шаг
                         }
                     }
                 }
 
                 currentWeek++;
-                expectedStep = 1;
+                currentStep = 1;
                 weekStart.setDate(weekStart.getDate() + 7);
             }
 
-            return { week: currentWeek > 1 ? currentWeek - 1 : 1, step: expectedStep, totalSteps: Z };
+            return { week: currentWeek > 1 ? currentWeek - 1 : 1, step: currentStep, totalSteps: Z };
         }
 
         function getActiveProgressHtml(item) {
@@ -1402,17 +1405,22 @@
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
+            // Безопасный запуск салюта (не прерывает работу кнопки при любых сбоях анимации)
             if (enableConfetti && typeof confetti === 'function') {
-                const heartScalar = 2;
-                const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
+                try {
+                    const heartScalar = 2;
+                    const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
 
-                confetti({
-                    shapes: [heartShape],
-                    scalar: heartScalar,
-                    particleCount: 40,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
+                    confetti({
+                        shapes: [heartShape],
+                        scalar: heartScalar,
+                        particleCount: 40,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                } catch (e) {
+                    console.error("Confetti error:", e);
+                }
             }
 
             const todName = currentTOD === 'morning' ? 'Утренний уход' : 'Вечерний уход';
