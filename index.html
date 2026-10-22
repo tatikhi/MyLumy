@@ -896,7 +896,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.48.0';
+        const APP_VERSION = '2.49.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1612,12 +1612,10 @@
             document.getElementById('editProductId').value = item.id;
             document.getElementById('pName').value = item.name;
             
-            // Выбор типа средства
             document.querySelectorAll('#typePicker .picker-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-type') === item.type);
             });
 
-            // Выбор времени суток
             const itemTods = item.tods || [];
             document.querySelectorAll('#todPicker .picker-btn').forEach(btn => {
                 const tod = btn.getAttribute('data-tod');
@@ -1670,7 +1668,6 @@
             document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
             
-            // По умолчанию тип и время не выбраны (все неактивны)
             document.querySelectorAll('#typePicker .picker-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.remove('active'));
 
@@ -1802,6 +1799,15 @@
                 if (themeBtn) {
                     const theme = themeBtn.getAttribute('data-theme');
                     setTheme(theme);
+                    return;
+                }
+
+                // Защита от закрытия по клику на фон, если открыта форма создания/редактирования
+                if (e.target === document.getElementById('settingsModal')) {
+                    const isFormVisible = document.getElementById('productFormContainer').style.display === 'block';
+                    if (!isFormVisible) {
+                        closeSettings();
+                    }
                 }
             });
 
@@ -1816,7 +1822,6 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Обработка выбора типа (этапа ухода) - строго одна активная кнопка
             document.getElementById('typePicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
@@ -1825,7 +1830,6 @@
                 }
             });
 
-            // Время суток - мультивыбор (можно и утро, и вечер, или только одно)
             document.getElementById('todPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
@@ -1845,12 +1849,6 @@
             });
 
             document.getElementById('btnCompleteRoutine').addEventListener('click', handleActionButton);
-
-            document.getElementById('settingsModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('settingsModal')) {
-                    closeSettings();
-                }
-            });
 
             document.getElementById('customAlertModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('customAlertModal')) {
@@ -1914,7 +1912,8 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('settingsModal');
-                    if (modal && modal.style.display === 'flex') {
+                    const isFormVisible = document.getElementById('productFormContainer').style.display === 'block';
+                    if (modal && modal.style.display === 'flex' && !isFormVisible) {
                         closeSettings();
                     }
                     const alertModal = document.getElementById('customAlertModal');
