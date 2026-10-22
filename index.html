@@ -2,13 +2,15 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Защита от агрессивного кэширования браузером -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
+    <!-- Подключаем шрифт Montserrat для премиального скандинавского стиля логотипа -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Подключаем библиотеку сканирования штрихкодов Html5-Qrcode -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <style>
@@ -87,6 +89,7 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            touch-action: manipulation;
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
@@ -113,10 +116,13 @@
             margin-bottom: 16px;
         }
 
+        /* Премиальный скандинавский люкс: чистый гротеск с широким трекингом и строчными буквами */
         .logo {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            text-transform: lowercase;
             color: var(--text-primary);
         }
 
@@ -279,36 +285,33 @@
             display: inline-block;
         }
 
+        /* Всплывающее уведомление с высоким z-index поверх модального окна */
         .toast-notification {
-            width: 100%;
-            max-width: 480px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            width: calc(100% - 32px);
+            max-width: 440px;
             background: var(--surface);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-soft);
-            padding: 12px 16px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.22);
+            padding: 14px 18px;
             border-radius: 16px;
             font-size: 13px;
             font-weight: 600;
             text-align: center;
-            margin-bottom: 16px;
             opacity: 0;
-            transform: translateY(-10px);
-            max-height: 0;
-            overflow: hidden;
-            padding-top: 0;
-            padding-bottom: 0;
-            border-width: 0;
+            pointer-events: none;
+            z-index: 2000;
             transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .toast-notification.show {
             opacity: 1;
-            transform: translateY(0);
-            max-height: 120px;
-            padding-top: 12px;
-            padding-bottom: 12px;
-            border-width: 1px;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
         }
 
         .toast-heart {
@@ -364,11 +367,6 @@
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 4px;
-        }
-
-        .card-header p {
-            font-size: 13px;
-            color: var(--text-secondary);
         }
 
         .routine-list {
@@ -827,8 +825,11 @@
 </head>
 <body>
 
+    <!-- Всплывающее Toast-уведомление поверх модальных окон -->
+    <div class="toast-notification" id="toastNotification">✨ Уход успешно выполнен!</div>
+
     <div class="header-bar">
-        <div class="logo">MySpa</div>
+        <div class="logo">myspa</div>
         <div style="display: flex; gap: 10px; align-items: center;">
             <div class="theme-selector" id="themeSelector">
                 <button type="button" class="theme-btn auto-btn" data-theme="auto" aria-label="Тема как на устройстве" title="Тема как на устройстве">📱</button>
@@ -842,7 +843,7 @@
         </div>
     </div>
 
-    <!-- Трекер прогресса с SVG иконками -->
+    <!-- Трекер прогресса с SVG иконками (без лишних надписей) -->
     <div class="streak-card" id="streakCard">
         <div class="date-chip" id="currentDateChip">22 октября</div>
         
@@ -901,9 +902,6 @@
         </div>
     </div>
 
-    <!-- Всплывающее Toast-уведомление -->
-    <div class="toast-notification" id="toastNotification">✨ Уход успешно выполнен!</div>
-
     <div class="main-card">
         <div class="tod-switch">
             <button type="button" class="tod-btn active" id="btnMorning">☀️ Утренний уход</button>
@@ -912,7 +910,6 @@
 
         <div class="card-header">
             <h2 id="routineTitle">☀️ Утренний уход</h2>
-            <p id="routineSub">Индивидуальная программа на сегодня</p>
         </div>
 
         <div class="routine-list" id="routineContainer"></div>
@@ -1027,9 +1024,8 @@
                     <div class="form-section-title">Сроки</div>
 
                     <div class="form-group">
-                        <label>Дата вскрытия</label>
-                        <input type="date" id="pOpenDate" style="display: none;">
-                        <button type="button" class="input-control" id="openDateBtn" style="text-align: left; background: var(--surface); cursor: pointer;">Выбрать дату</button>
+                        <label for="pOpenDate">Дата вскрытия</label>
+                        <input type="date" id="pOpenDate" class="input-control">
                     </div>
 
                     <div class="form-group">
@@ -1069,7 +1065,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.1.0';
+        const APP_VERSION = '2.2.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1103,13 +1099,6 @@
             return `${year}-${month}-${day}`;
         }
 
-        function formatDateReadable(dateStr) {
-            if (!dateStr) return 'Выбрать дату';
-            const [y, m, d] = dateStr.split('-');
-            const dateObj = new Date(Number(y), Number(m) - 1, Number(d));
-            return dateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-        }
-
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
             const formattedMsg = message.replace('💖', '<span class="toast-heart">❤️</span>');
@@ -1117,7 +1106,7 @@
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 3000);
+            }, 3500);
         }
 
         const typeOrder = {
@@ -1130,6 +1119,7 @@
 
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
+        let currentScannedBarcode = null;
         let currentTOD = 'morning';
         let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
@@ -1254,16 +1244,13 @@
         }
 
         function calculateExpiryFromPAO() {
-            const openDateVal = document.getElementById('pOpenDate').value;
-            if (!openDateVal) {
-                const today = getLocalTodayStr();
-                document.getElementById('pOpenDate').value = today;
-                document.getElementById('openDateBtn').innerText = formatDateReadable(today);
+            const openDateInput = document.getElementById('pOpenDate');
+            if (!openDateInput.value) {
+                openDateInput.value = getLocalTodayStr();
             }
 
             if (selectedPAOMonths) {
-                const currentOpenVal = document.getElementById('pOpenDate').value;
-                const parts = currentOpenVal.split('-');
+                const parts = openDateInput.value.split('-');
                 const year = parseInt(parts[0], 10);
                 const month = parseInt(parts[1], 10) - 1;
                 const day = parseInt(parts[2], 10);
@@ -1559,6 +1546,7 @@
                     { fps: 10, qrbox: { width: 250, height: 150 } },
                     async (decodedText) => {
                         stopBarcodeScanner();
+                        currentScannedBarcode = decodedText;
                         showToast(`🔍 Штрихкод найден: ${decodedText}`);
 
                         if (barcodeCache[decodedText]) {
@@ -1590,7 +1578,7 @@
 
                         showForm();
                         document.getElementById('pName').value = '';
-                        showToast('В глобальной базе нет точного описания. Пожалуйста, введите название вручную, и оно сохранится в вашей персональной базе данных для дальнейшего использования!');
+                        showToast('В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.');
                     },
                     (errorMessage) => {}
                 );
@@ -1647,7 +1635,7 @@
             const editId = document.getElementById('editProductId').value;
 
             if (!name) {
-                alert('Пожалуйста, введите название средства.');
+                alert('Пожалуйста, введите название.');
                 return;
             }
 
@@ -1672,6 +1660,13 @@
                 paoMonths: selectedPAOMonths,
                 expDate
             };
+
+            // Если продукт был добавлен через сканирование неизвестного штрихкода, сохраняем в персональный кэш
+            if (currentScannedBarcode && !editId) {
+                barcodeCache[currentScannedBarcode] = { name, type };
+                localStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
+            }
+            currentScannedBarcode = null;
 
             if (editId) {
                 const idx = products.findIndex(p => p.id === Number(editId));
@@ -1716,10 +1711,7 @@
             applyPauseBefore(item.pauseBefore || null);
             applyPauseAfter(item.pauseAfter || null);
 
-            const openVal = item.openDate || '';
-            document.getElementById('pOpenDate').value = openVal;
-            document.getElementById('openDateBtn').innerText = formatDateReadable(openVal);
-
+            document.getElementById('pOpenDate').value = item.openDate || '';
             document.getElementById('pExpDate').value = item.expDate || '';
 
             if (item.paoMonths) {
@@ -1741,6 +1733,7 @@
             selectedPAOMonths = null;
             selectedPauseBeforeVal = null;
             selectedPauseAfterVal = null;
+            currentScannedBarcode = null;
             document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
             document.getElementById('pType').value = 'Очищение';
@@ -1756,7 +1749,6 @@
             document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(b => b.classList.remove('active'));
             
             document.getElementById('pOpenDate').value = '';
-            document.getElementById('openDateBtn').innerText = 'Выбрать дату';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
             togglePauseInputs();
@@ -1824,7 +1816,6 @@
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
                     btn.classList.toggle('active');
-                    // Не даем снять оба, если оба сняты
                     const activeCount = document.querySelectorAll('#todPicker .picker-btn.active').length;
                     if (activeCount === 0) {
                         btn.classList.add('active');
@@ -1842,22 +1833,6 @@
                     document.getElementById('pFreqType').value = freq;
                     document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
                 }
-            });
-
-            // Кнопка выбора даты вскрытия
-            document.getElementById('openDateBtn').addEventListener('click', () => {
-                const dateInput = document.getElementById('pOpenDate');
-                if (dateInput.showPicker) {
-                    dateInput.showPicker();
-                } else {
-                    dateInput.click();
-                }
-            });
-
-            document.getElementById('pOpenDate').addEventListener('change', (e) => {
-                const val = e.target.value;
-                document.getElementById('openDateBtn').innerText = formatDateReadable(val);
-                calculateExpiryFromPAO();
             });
 
             document.getElementById('btnCompleteRoutine').addEventListener('click', () => {
