@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <title>Care & Beauty — Твой Уход</title>
+    <title>MySpa</title>
     <style>
         :root {
             /* 1. Nude & Silk (по умолчанию) */
@@ -195,21 +195,12 @@
             gap: 6px;
             background: var(--accent-light);
             color: var(--accent-main);
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             letter-spacing: 0.2px;
-        }
-
-        .streak-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
         }
 
         .hearts-container {
@@ -506,14 +497,6 @@
             transform: scale(0.98);
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 30px 10px;
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -768,7 +751,7 @@
 <body>
 
     <div class="header-bar">
-        <div class="logo">Care & Beauty</div>
+        <div class="logo">MySpa</div>
         <div style="display: flex; gap: 10px; align-items: center;">
             <div class="theme-selector" id="themeSelector">
                 <button type="button" class="theme-btn auto-btn" data-theme="auto" aria-label="Тема как на устройстве" title="Тема как на устройстве">📱</button>
@@ -784,8 +767,7 @@
 
     <!-- Трекер прогресса с SVG иконками -->
     <div class="streak-card" id="streakCard">
-        <div class="date-chip" id="currentDateChip">📅 Сегодня</div>
-        <div class="streak-title">Люби себя каждый день 💖</div>
+        <div class="date-chip" id="currentDateChip">22 октября</div>
         
         <div class="hearts-container" id="heartsContainer">
             <div class="heart-item" id="heart-1">
@@ -980,8 +962,7 @@
     </div>
 
     <script>
-        // Интеллектуальный контроль версии и сброс кэша браузера без потери пользовательских данных
-        const APP_VERSION = '1.5.0';
+        const APP_VERSION = '1.7.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1056,10 +1037,9 @@
 
         function renderCurrentDateChip() {
             const now = new Date();
-            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            const options = { day: 'numeric', month: 'long' };
             let formatted = now.toLocaleDateString('ru-RU', options);
-            formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
-            document.getElementById('currentDateChip').innerText = `📅 ${formatted}`;
+            document.getElementById('currentDateChip').innerText = formatted;
         }
 
         function setTheme(theme) {
@@ -1134,8 +1114,8 @@
                 const heartEl = document.getElementById(`heart-${dayNum}`);
                 if (heartEl) {
                     const isCompleted = completedLog[currentDayStr] && (completedLog[currentDayStr].morning || completedLog[currentDayStr].evening);
-                    const isPastOrToday = currentDayStr >= installDate && currentDayStr <= todayStr;
-                    const isActive = isCompleted || isPastOrToday;
+                    const isPast = currentDayStr < todayStr && currentDayStr >= installDate;
+                    const isActive = isCompleted || isPast;
                     heartEl.classList.toggle('active', isActive);
                 }
             });
@@ -1177,7 +1157,6 @@
             }
         }
 
-        // Логика активов: каждая новая неделя всегда начинается с Шага 1
         function getActiveProgressDetails(item) {
             if (item.type !== 'Активы') return { week: 1, step: 1, totalSteps: 1 };
 
@@ -1229,7 +1208,6 @@
                     }
                 }
 
-                // Каждая новая неделя всегда начинается с Шага 1
                 currentStep = 1;
 
                 for (let idx = 0; idx < weekScheduledDates.length; idx++) {
@@ -1292,14 +1270,18 @@
 
             activeProducts.sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
 
-            if (activeProducts.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        У вас пока нет средств на это время суток или сегодня день отдыха.<br>
-                        Добавьте баночки в <b>⚙️ Настройках</b>.
-                    </div>
-                `;
-                return;
+            const btnAction = document.getElementById('btnCompleteRoutine');
+            if (products.length === 0) {
+                container.innerHTML = '';
+                btnAction.innerText = '⚙️ Настройки (добавить средства)';
+                btnAction.onclick = openSettings;
+            } else {
+                btnAction.innerText = '✨ Всё сделано';
+                btnAction.onclick = completeRoutine;
+
+                if (activeProducts.length === 0) {
+                    container.innerHTML = '';
+                }
             }
 
             const htmlBuffer = [];
@@ -1338,7 +1320,9 @@
                 `);
             });
 
-            container.innerHTML = htmlBuffer.join('');
+            if (activeProducts.length > 0) {
+                container.innerHTML = htmlBuffer.join('');
+            }
         }
 
         function calcExpiryDots(openDateStr, expDateStr) {
@@ -1489,6 +1473,7 @@
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
             renderManageList();
             hideForm();
+            renderRoutine();
         }
 
         function editProduct(id) {
@@ -1549,7 +1534,7 @@
         function renderManageList() {
             const container = document.getElementById('manageList');
             if (products.length === 0) {
-                container.innerHTML = '<div style="font-size: 13px; color: var(--text-secondary); text-align: center; padding: 10px;">Список пуст. Нажмите «+ Добавить средство».</div>';
+                container.innerHTML = '';
                 return;
             }
 
@@ -1577,6 +1562,7 @@
             products = products.filter(p => p.id !== targetId);
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
             renderManageList();
+            renderRoutine();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1604,7 +1590,6 @@
 
             document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning'));
             document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
-            document.getElementById('btnCompleteRoutine').addEventListener('click', completeRoutine);
 
             document.getElementById('pFreqType').addEventListener('change', toggleFreqDays);
             document.getElementById('pPauseToggle').addEventListener('change', togglePauseInputs);
