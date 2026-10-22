@@ -738,6 +738,36 @@
             transform: translateX(20px);
         }
 
+        .accordion-toggle-btn {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .accordion-toggle-btn:active {
+            background: var(--accent-light);
+        }
+
+        .accordion-content {
+            display: none;
+            padding-top: 4px;
+        }
+
+        .accordion-content.open {
+            display: block;
+        }
+
         .form-sticky-footer {
             position: sticky;
             bottom: 0;
@@ -806,6 +836,7 @@
                 <div class="modal-title" id="formModalTitle" style="font-size: 15px; margin-top: 12px;">Новое средство</div>
                 <input type="hidden" id="editProductId" value="">
 
+                <!-- МИНИМАЛИСТИЧНЫЙ ГЛАВНЫЙ БЛОК -->
                 <div class="form-section">
                     <div class="form-section-title brand-font">О средстве</div>
                     
@@ -824,12 +855,8 @@
                             <button type="button" class="picker-btn" data-type="Питание / Увлажнение">Питание / Увлажнение</button>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-section">
-                    <div class="form-section-title brand-font">График использования</div>
-                    
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 12px;">
                         <label>Время суток</label>
                         <div class="picker-group" id="todPicker">
                             <button type="button" class="picker-btn" data-tod="morning">Утро</button>
@@ -857,16 +884,23 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group" style="margin-top: 8px;">
-                        <div class="toggle-container">
-                            <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">⏱️ Пауза (до/после)</label>
+                <!-- ДОП. ОПЦИЯ: ПАУЗЫ (АККОРДЕОН) -->
+                <div class="form-section">
+                    <button type="button" class="accordion-toggle-btn" id="btnTogglePauseAccordion">
+                        <span>⏱️ Указать паузы (до/после)</span>
+                        <span id="pauseAccordionArrow">▼</span>
+                    </button>
+                    <div class="accordion-content" id="pauseAccordionContent">
+                        <div class="toggle-container" style="margin-bottom: 8px;">
+                            <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">Включить паузы</label>
                             <label class="switch">
                                 <input type="checkbox" id="pPauseToggle">
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <div id="pauseOptionsContainer" style="display: none; margin-top: 8px; background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div id="pauseOptionsContainer" style="display: none; background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border-color);">
                             <div style="margin-bottom: 10px;">
                                 <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ДО</label>
                                 <div class="picker-group" id="pauseBeforePicker">
@@ -889,27 +923,32 @@
                     </div>
                 </div>
 
+                <!-- ДОП. ОПЦИЯ: СРОКИ И PAO (АККОРДЕОН) -->
                 <div class="form-section">
-                    <div class="form-section-title brand-font">Сроки</div>
-
-                    <div class="form-group">
-                        <label for="pOpenDate">Дата начала использования</label>
-                        <input type="text" placeholder="Выбрать дату" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" id="pOpenDate" class="input-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Срок после вскрытия (PAO)</label>
-                        <div class="pao-picker" id="paoPicker">
-                            <button type="button" class="pao-chip" data-months="3">3M</button>
-                            <button type="button" class="pao-chip" data-months="6">6M</button>
-                            <button type="button" class="pao-chip" data-months="12">12M</button>
-                            <button type="button" class="pao-chip" data-months="24">24M</button>
+                    <button type="button" class="accordion-toggle-btn" id="btnToggleExpiryAccordion">
+                        <span>📅 Указать сроки годности и PAO</span>
+                        <span id="expiryAccordionArrow">▼</span>
+                    </button>
+                    <div class="accordion-content" id="expiryAccordionContent">
+                        <div class="form-group" style="margin-top: 8px;">
+                            <label for="pOpenDate">Дата начала использования</label>
+                            <input type="text" placeholder="Выбрать дату" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" id="pOpenDate" class="input-control">
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="pExpDate">Окончание срока годности</label>
-                        <input type="date" id="pExpDate" class="input-control">
+                        <div class="form-group">
+                            <label>Срок после вскрытия (PAO)</label>
+                            <div class="pao-picker" id="paoPicker">
+                                <button type="button" class="pao-chip" data-months="3">3M</button>
+                                <button type="button" class="pao-chip" data-months="6">6M</button>
+                                <button type="button" class="pao-chip" data-months="12">12M</button>
+                                <button type="button" class="pao-chip" data-months="24">24M</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pExpDate">Окончание срока годности</label>
+                            <input type="date" id="pExpDate" class="input-control">
+                        </div>
                     </div>
                 </div>
 
@@ -958,7 +997,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.61.0';
+        const APP_VERSION = '2.62.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1534,7 +1573,6 @@
             const hasBrandFont = btnAction.classList.contains('brand-font');
             const text = btnAction.innerText.trim();
 
-            // Если просматриваем будущее, нажатие возвращает к актуальному дню и времени суток
             if (isFuturePlan()) {
                 localStorage.removeItem('cb_selected_date');
                 switchTOD(getInitialTOD());
@@ -1697,6 +1735,21 @@
                 window.alertTarget = null;
             }
         });
+
+        // ------------------ УПРАВЛЕНИЕ АККОРДЕОНАМИ (ФОРМА) ------------------
+        function toggleAccordion(contentId, arrowId) {
+            const content = document.getElementById(contentId);
+            const arrow = document.getElementById(arrowId);
+            const isOpen = content.classList.contains('open');
+            
+            if (isOpen) {
+                content.classList.remove('open');
+                arrow.innerText = '▼';
+            } else {
+                content.classList.add('open');
+                arrow.innerText = '▲';
+            }
+        }
 
         // ------------------ ЛОГИКА ЭКСПОРТА / ИМПОРТА / ПЕРЕНОСА / ОБНОВЛЕНИЯ ------------------
         function toBase64(str) {
@@ -1881,7 +1934,9 @@
             const freqType = document.getElementById('pFreqType').value;
             const hasPause = document.getElementById('pPauseToggle').checked;
             const openDateEl = document.getElementById('pOpenDate');
-            const openDate = openDateEl.type === 'date' ? openDateEl.value : '';
+            
+            // Если дата вскрытия не заполнена пользователем, подставляется сегодняшнее число
+            const openDate = (openDateEl.value) ? openDateEl.value : getLocalTodayStr();
             const expDate = document.getElementById('pExpDate').value;
             const editId = document.getElementById('editProductId').value;
 
@@ -1953,19 +2008,25 @@
             });
             document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
 
+            // Если у редактируемого средства были паузы — автоматически раскрываем аккордеон пауз
             document.getElementById('pPauseToggle').checked = Boolean(item.hasPause);
             togglePauseInputs();
+            if (item.hasPause) {
+                document.getElementById('pauseAccordionContent').classList.add('open');
+                document.getElementById('pauseAccordionArrow').innerText = '▲';
+            }
 
             applyPauseBefore(item.pauseBefore || null);
             applyPauseAfter(item.pauseAfter || null);
 
+            // Редактирование сроков
             const openDateEl = document.getElementById('pOpenDate');
             if (item.openDate) {
                 openDateEl.value = item.openDate;
                 openDateEl.type = 'date';
             } else {
-                openDateEl.value = '';
-                openDateEl.type = 'text';
+                openDateEl.value = getLocalTodayStr();
+                openDateEl.type = 'date';
             }
             document.getElementById('pExpDate').value = item.expDate || '';
 
@@ -1974,6 +2035,12 @@
             } else {
                 document.querySelectorAll('.pao-chip').forEach(c => c.classList.remove('active'));
                 selectedPAOMonths = null;
+            }
+
+            // Если были указаны спец. сроки — раскрываем аккордеон сроков
+            if (item.expDate || item.paoMonths) {
+                document.getElementById('expiryAccordionContent').classList.add('open');
+                document.getElementById('expiryAccordionArrow').innerText = '▲';
             }
 
             document.querySelectorAll('.day-chip').forEach(chip => {
@@ -2004,12 +2071,19 @@
             document.getElementById('pPauseToggle').checked = false;
             document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(b => b.classList.remove('active'));
             
+            // Автоматическая подстановка сегодняшней даты в свернутый блок
             const openDateEl = document.getElementById('pOpenDate');
-            openDateEl.value = '';
-            openDateEl.type = 'text';
+            openDateEl.value = getLocalTodayStr();
+            openDateEl.type = 'date';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
             togglePauseInputs();
+
+            // Сворачиваем аккордеоны при сбросе
+            document.getElementById('pauseAccordionContent').classList.remove('open');
+            document.getElementById('pauseAccordionArrow').innerText = '▼';
+            document.getElementById('expiryAccordionContent').classList.remove('open');
+            document.getElementById('expiryAccordionArrow').innerText = '▼';
 
             document.getElementById('formModalTitle').innerText = 'Новое средство';
         }
@@ -2143,6 +2217,14 @@
                 hideForm();
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
+
+            // Переключение аккордеонов формы
+            document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => {
+                toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow');
+            });
+            document.getElementById('btnToggleExpiryAccordion').addEventListener('click', () => {
+                toggleAccordion('expiryAccordionContent', 'expiryAccordionArrow');
+            });
 
             // Обработчики переноса, бэкапа и обновления
             document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
