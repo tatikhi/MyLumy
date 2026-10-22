@@ -883,7 +883,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.31.0';
+        const APP_VERSION = '2.32.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1315,7 +1315,13 @@
             if (currentTOD === 'morning') {
                 switchTOD('evening');
             } else {
-                switchTOD('morning');
+                // При завершении вечернего ухода открываем утреннюю схему следующего дня
+                localStorage.setItem('cb_is_tomorrow_plan', 'true');
+                localStorage.removeItem('cb_tomorrow_rest');
+                currentTOD = 'morning';
+                document.getElementById('btnMorning').classList.add('active');
+                document.getElementById('btnEvening').classList.remove('active');
+                renderRoutine();
             }
         }
 
