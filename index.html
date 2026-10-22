@@ -768,7 +768,7 @@
 
     <div class="main-card">
         <div class="tod-switch">
-            <button type="button" class="tod-btn active" id="btnMorning">Утренний уход</button>
+            <button type="button" class="tod-btn" id="btnMorning">Утренний уход</button>
             <button type="button" class="tod-btn" id="btnEvening">Вечерний уход</button>
         </div>
 
@@ -945,7 +945,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.56.0';
+        const APP_VERSION = '2.58.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1283,8 +1283,9 @@
             const targetDayOfWeek = routineDate.getDay();
 
             let activeProducts = products.filter(p => {
-                const tads = p.tods || ['morning', 'evening'];
+                const tads = Array.isArray(p.tods) ? p.tods : [];
                 const matchTOD = tads.includes(currentTOD);
+                
                 let matchDay = true;
                 if (p.freqType === 'custom') {
                     matchDay = Array.isArray(p.days) && p.days.includes(targetDayOfWeek);
@@ -1831,13 +1832,11 @@
                 localStorage.removeItem('cb_evening_completed');
                 localStorage.removeItem('cb_install_date');
                 productProgress = {};
-                currentTOD = getInitialTOD();
-                document.getElementById('btnMorning').classList.toggle('active', currentTOD === 'morning');
-                document.getElementById('btnEvening').classList.toggle('active', currentTOD === 'evening');
+                switchTOD(getInitialTOD());
+            } else {
+                renderManageList();
+                renderRoutine();
             }
-
-            renderManageList();
-            renderRoutine();
         }
 
         let touchStartX = 0;
@@ -1896,19 +1895,13 @@
                 
                 if (val === logicalToday) {
                     localStorage.removeItem('cb_selected_date');
-                    currentTOD = getInitialTOD();
-                    document.getElementById('btnMorning').classList.toggle('active', currentTOD === 'morning');
-                    document.getElementById('btnEvening').classList.toggle('active', currentTOD === 'evening');
+                    switchTOD(getInitialTOD());
                 } else {
                     localStorage.setItem('cb_selected_date', val);
-                    currentTOD = 'morning';
-                    document.getElementById('btnMorning').classList.add('active');
-                    document.getElementById('btnEvening').classList.remove('active');
+                    switchTOD('morning');
                 }
-                renderRoutine();
             });
 
-            // Переключение темы оформления
             document.getElementById('themeRow').addEventListener('click', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
@@ -1971,6 +1964,7 @@
                 }
                 switchTOD('morning');
             });
+
             document.getElementById('btnEvening').addEventListener('click', () => {
                 const selected = localStorage.getItem('cb_selected_date');
                 const logicalToday = getLogicalTodayStr();
@@ -2029,7 +2023,8 @@
                 }
             });
 
-            renderRoutine();
+            // Инициализация верного времени суток и активной кнопки
+            switchTOD(currentTOD);
         });
     </script>
 </body>
