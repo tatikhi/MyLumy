@@ -374,6 +374,7 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(4px);
+            pointer-events: auto; /* Гарантирует корректный прием касаний на планшетах и мобильных */
             display: none;
             justify-content: center;
             align-items: center;
@@ -896,7 +897,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.50.0';
+        const APP_VERSION = '2.51.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1794,7 +1795,8 @@
                 renderRoutine();
             });
 
-            document.getElementById('settingsModal').addEventListener('click', (e) => {
+            // Используем pointerdown для надежного срабатывания на планшетах и сенсорных экранах
+            document.getElementById('settingsModal').addEventListener('pointerdown', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
                     const theme = themeBtn.getAttribute('data-theme');
@@ -1802,7 +1804,7 @@
                     return;
                 }
 
-                // Исправленная проверка: если клик пришелся вне белой карточки (на фон)
+                // Если клик пришелся строго по фону (а не по модальной карточке)
                 if (!e.target.closest('.modal-card')) {
                     const isFormVisible = document.getElementById('productFormContainer').style.display === 'block';
                     if (!isFormVisible) {
