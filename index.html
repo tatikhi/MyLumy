@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Защита от агрессивного кэширования браузером -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <title>Care & Beauty — Твой Уход</title>
     <!-- Canvas-confetti для праздничного салюта -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -788,7 +793,7 @@
         </div>
     </div>
 
-    <!-- Трекер прогресса с SVG иконками (опционально) -->
+    <!-- Трекер прогресса с SVG иконками -->
     <div class="streak-card" id="streakCard">
         <div class="date-chip" id="currentDateChip">📅 Сегодня</div>
         <div class="streak-title">Люби себя каждый день 💖</div>
@@ -848,7 +853,7 @@
         </div>
     </div>
 
-    <!-- Всплывающее Toast-уведомление (наверху) -->
+    <!-- Всплывающее Toast-уведомление -->
     <div class="toast-notification" id="toastNotification">✨ Уход успешно выполнен!</div>
 
     <div class="main-card">
@@ -911,7 +916,6 @@
                         <option value="daily">Ежедневно</option>
                         <option value="custom">Выбранные дни недели</option>
                     </select>
-                    <!-- Блок выбора дней с понятной подсказкой -->
                     <div id="daysGroup" style="display: none; margin-top: 8px;">
                         <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">📅 В какие дни недели вы используете это средство?</label>
                         <div class="days-picker" id="daysPicker">
@@ -946,7 +950,6 @@
                     </div>
                 </div>
 
-                <!-- Выбор PAO срока годности (3-6-12-24 месяцев) -->
                 <div class="form-group">
                     <label for="pOpenDate">Дата вскрытия / Открытия</label>
                     <input type="date" id="pOpenDate" class="input-control">
@@ -967,7 +970,6 @@
                     <input type="date" id="pExpDate" class="input-control">
                 </div>
 
-                <!-- Sticky Footer для кнопок сохранения -->
                 <div class="form-sticky-footer">
                     <button type="button" class="btn-action" id="btnSaveProduct">Сохранить средство</button>
                     <button type="button" class="btn-secondary" id="btnCancelProduct">Отмена</button>
@@ -997,6 +999,21 @@
     </div>
 
     <script>
+        // Интеллектуальный контроль версии и сброс кэша браузера без потери пользовательских данных
+        const APP_VERSION = '1.4.0';
+        try {
+            const savedVersion = localStorage.getItem('cb_app_version');
+            if (savedVersion !== APP_VERSION) {
+                localStorage.setItem('cb_app_version', APP_VERSION);
+                if (!sessionStorage.getItem('cb_reloaded')) {
+                    sessionStorage.setItem('cb_reloaded', 'true');
+                    window.location.reload(true);
+                }
+            }
+        } catch (e) {
+            console.error('Version check error:', e);
+        }
+
         // Защита от DOM-XSS уязвимостей
         function escapeHtml(str) {
             if (typeof str !== 'string') return '';
@@ -1627,7 +1644,7 @@
             document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Закрытие модального окна кликом по тёмному оверлею (Overlay Click)
+            // Закрытие модального окна кликом по тёмному оверлею
             document.getElementById('settingsModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('settingsModal')) {
                     closeSettings();
