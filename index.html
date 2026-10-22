@@ -537,8 +537,33 @@
             color: var(--text-primary);
         }
 
-        .form-group {
+        /* Секции формы */
+        .form-section {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 14px;
             margin-bottom: 14px;
+        }
+
+        .form-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
         }
 
         .form-group label {
@@ -554,32 +579,89 @@
             padding: 10px 14px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            background: var(--bg-main);
+            background: var(--surface);
             color: var(--text-primary);
             font-size: 14px;
             outline: none;
         }
 
-        .days-picker, .pao-picker {
+        /* Набор кнопок-переключателей */
+        .picker-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .picker-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--surface);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-secondary);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .picker-btn.active {
+            background: var(--accent-main);
+            color: #FFF;
+            border-color: var(--accent-main);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        /* Компактные дни недели (строго в 1 ряд без переноса) */
+        .days-picker {
+            display: flex;
+            gap: 3px;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .day-chip {
+            flex: 1;
+            padding: 6px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--surface);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-secondary);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .day-chip.active {
+            background: var(--accent-main);
+            color: #FFF;
+            border-color: var(--accent-main);
+        }
+
+        .pao-picker {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
-        .day-chip, .pao-chip {
-            padding: 6px 12px;
+        .pao-chip {
+            flex: 1;
+            padding: 8px 6px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            background: var(--bg-main);
+            background: var(--surface);
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             color: var(--text-secondary);
+            text-align: center;
             transition: all 0.2s;
         }
 
-        .day-chip.active, .pao-chip.active {
+        .pao-chip.active {
             background: var(--accent-main);
             color: #FFF;
             border-color: var(--accent-main);
@@ -608,7 +690,7 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .product-manage-list {
@@ -635,11 +717,6 @@
         .product-manage-list::-webkit-scrollbar-thumb {
             background: var(--accent-main);
             border-radius: 10px;
-        }
-
-        .product-manage-list {
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-main) var(--bg-main);
         }
 
         .manage-item {
@@ -691,7 +768,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 6px 0;
         }
 
         .switch {
@@ -858,93 +935,110 @@
             <!-- Контейнер для камеры сканера штрихкодов -->
             <div id="barcodeReader" style="display: none; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color);"></div>
 
-            <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); paddingTop: 16px;">
+            <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
                 <div class="modal-title" id="formModalTitle" style="font-size: 15px;">Новое средство</div>
                 <input type="hidden" id="editProductId" value="">
 
-                <div class="form-group">
-                    <label for="pName">Название средства</label>
-                    <input type="text" id="pName" class="input-control" placeholder="Напр. Retiderm 0.25 или Пенка">
+                <!-- СЕКЦИЯ 1: О средстве -->
+                <div class="form-section">
+                    <div class="form-section-title">🧴 1. О средстве</div>
+                    
+                    <div class="form-group">
+                        <label for="pName">Название средства</label>
+                        <input type="text" id="pName" class="input-control" placeholder="Напр. Retiderm 0.25 или Пенка">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pType">Тип / Этап ухода</label>
+                        <select id="pType" class="input-control">
+                            <option value="Очищение">Очищение</option>
+                            <option value="Тонизирование">Тонизирование</option>
+                            <option value="Активы">Активы</option>
+                            <option value="Уход за глазами">Уход за глазами</option>
+                            <option value="Питание / Увлажнение">Питание / Увлажнение</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="pType">Тип / Этап ухода</label>
-                    <select id="pType" class="input-control">
-                        <option value="Очищение">Очищение</option>
-                        <option value="Тонизирование">Тонизирование</option>
-                        <option value="Активы">Активы</option>
-                        <option value="Уход за глазами">Уход за глазами</option>
-                        <option value="Питание / Увлажнение">Питание / Увлажнение</option>
-                    </select>
-                </div>
+                <!-- СЕКЦИЯ 2: График использования -->
+                <div class="form-section">
+                    <div class="form-section-title">📅 2. График использования</div>
+                    
+                    <div class="form-group">
+                        <label>Время суток</label>
+                        <input type="hidden" id="pTOD" value="both">
+                        <div class="picker-group" id="todPicker">
+                            <button type="button" class="picker-btn active" data-tod="both">Оба</button>
+                            <button type="button" class="picker-btn" data-tod="morning">Утро</button>
+                            <button type="button" class="picker-btn" data-tod="evening">Вечер</button>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label for="pTOD">Время суток</label>
-                    <select id="pTOD" class="input-control">
-                        <option value="both">И утро, и вечер</option>
-                        <option value="morning">Только утро</option>
-                        <option value="evening">Только вечер</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label>Частота применения</label>
+                        <input type="hidden" id="pFreqType" value="daily">
+                        <div class="picker-group" id="freqPicker">
+                            <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
+                            <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
+                        </div>
+                        <div id="daysGroup" style="display: none; margin-top: 10px;">
+                            <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
+                            <div class="days-picker" id="daysPicker">
+                                <button type="button" class="day-chip" data-day="1">Пн</button>
+                                <button type="button" class="day-chip" data-day="2">Вт</button>
+                                <button type="button" class="day-chip" data-day="3">Ср</button>
+                                <button type="button" class="day-chip" data-day="4">Чт</button>
+                                <button type="button" class="day-chip" data-day="5">Пт</button>
+                                <button type="button" class="day-chip" data-day="6">Сб</button>
+                                <button type="button" class="day-chip" data-day="0">Вс</button>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label for="pFreqType">Частота применения</label>
-                    <select id="pFreqType" class="input-control">
-                        <option value="daily">Ежедневно</option>
-                        <option value="custom">Выбранные дни недели</option>
-                    </select>
-                    <div id="daysGroup" style="display: none; margin-top: 8px;">
-                        <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">📅 В какие дни недели вы используете это средство?</label>
-                        <div class="days-picker" id="daysPicker">
-                            <button type="button" class="day-chip" data-day="1">Пн</button>
-                            <button type="button" class="day-chip" data-day="2">Вт</button>
-                            <button type="button" class="day-chip" data-day="3">Ср</button>
-                            <button type="button" class="day-chip" data-day="4">Чт</button>
-                            <button type="button" class="day-chip" data-day="5">Пт</button>
-                            <button type="button" class="day-chip" data-day="6">Сб</button>
-                            <button type="button" class="day-chip" data-day="0">Вс</button>
+                    <div class="form-group" style="margin-top: 8px;">
+                        <div class="toggle-container">
+                            <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">⏱️ Пауза / выдержка</label>
+                            <label class="switch">
+                                <input type="checkbox" id="pPauseToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div id="pauseOptionsContainer" style="display: none; margin-top: 8px; background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border-color);">
+                            <div style="margin-bottom: 8px;">
+                                <label for="pPauseBefore" style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ДО (минут)</label>
+                                <input type="number" id="pPauseBefore" class="input-control" placeholder="Напр. 15">
+                            </div>
+                            <div>
+                                <label for="pPauseAfter" style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ПОСЛЕ (минут)</label>
+                                <input type="number" id="pPauseAfter" class="input-control" placeholder="Напр. 15">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="toggle-container">
-                        <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">⏱️ Включить паузу/выдержку для средства</label>
-                        <label class="switch">
-                            <input type="checkbox" id="pPauseToggle">
-                            <span class="slider"></span>
-                        </label>
+                <!-- СЕКЦИЯ 3: Сроки и свежесть -->
+                <div class="form-section">
+                    <div class="form-section-title">⏳ 3. Сроки и свежесть</div>
+
+                    <div class="form-group">
+                        <label for="pOpenDate">Дата вскрытия / Открытия</label>
+                        <input type="date" id="pOpenDate" class="input-control">
                     </div>
-                    <div id="pauseOptionsContainer" style="display: none; margin-top: 8px; background: var(--bg-main); padding: 10px; border-radius: 12px;">
-                        <div style="margin-bottom: 8px;">
-                            <label for="pPauseBefore" style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ДО применения (минут)</label>
-                            <input type="number" id="pPauseBefore" class="input-control" placeholder="Напр. 15 (после умывания)">
+
+                    <div class="form-group">
+                        <label>Срок после вскрытия (PAO)</label>
+                        <div class="pao-picker" id="paoPicker">
+                            <button type="button" class="pao-chip" data-months="3">3M</button>
+                            <button type="button" class="pao-chip" data-months="6">6M</button>
+                            <button type="button" class="pao-chip" data-months="12">12M</button>
+                            <button type="button" class="pao-chip" data-months="24">24M</button>
                         </div>
-                        <div>
-                            <label for="pPauseAfter" style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ПОСЛЕ применения (минут)</label>
-                            <input type="number" id="pPauseAfter" class="input-control" placeholder="Напр. 15 (перед кремом)">
-                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="pOpenDate">Дата вскрытия / Открытия</label>
-                    <input type="date" id="pOpenDate" class="input-control">
-                </div>
-
-                <div class="form-group">
-                    <label>Срок после открытия (PAO)</label>
-                    <div class="pao-picker" id="paoPicker">
-                        <button type="button" class="pao-chip" data-months="3">3 мес (3M)</button>
-                        <button type="button" class="pao-chip" data-months="6">6 мес (6M)</button>
-                        <button type="button" class="pao-chip" data-months="12">12 мес (12M)</button>
-                        <button type="button" class="pao-chip" data-months="24">24 мес (24M)</button>
+                    <div class="form-group">
+                        <label for="pExpDate">Окончание срока годности</label>
+                        <input type="date" id="pExpDate" class="input-control">
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="pExpDate">Окончание срока годности (Рассчитано)</label>
-                    <input type="date" id="pExpDate" class="input-control">
                 </div>
 
                 <div class="form-sticky-footer">
@@ -968,7 +1062,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '1.8.0';
+        const APP_VERSION = '2.0.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1282,11 +1376,8 @@
             if (products.length === 0) {
                 container.innerHTML = '';
                 btnAction.innerText = '⚙️ Настройки (добавить средства)';
-                btnAction.onclick = openSettings;
             } else {
                 btnAction.innerText = '✨ Всё сделано';
-                btnAction.onclick = completeRoutine;
-
                 if (activeProducts.length === 0) {
                     container.innerHTML = '';
                 }
@@ -1424,7 +1515,6 @@
             resetForm();
         }
 
-        // Логика сканирования штрихкода (Open Beauty Facts + Локальный кэш)
         async function startBarcodeScanner() {
             const readerEl = document.getElementById('barcodeReader');
             readerEl.style.display = 'block';
@@ -1438,11 +1528,9 @@
                     { facingMode: "environment" },
                     { fps: 10, qrbox: { width: 250, height: 150 } },
                     async (decodedText) => {
-                        // Успешно отсканировано
                         stopBarcodeScanner();
                         showToast(`🔍 Штрихкод найден: ${decodedText}`);
 
-                        // 1. Проверяем локальный кэш
                         if (barcodeCache[decodedText]) {
                             const cached = barcodeCache[decodedText];
                             showForm();
@@ -1451,7 +1539,6 @@
                             return;
                         }
 
-                        // 2. Запрос в Open Beauty Facts API
                         try {
                             const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${decodedText}.json`);
                             const data = await res.json();
@@ -1462,7 +1549,6 @@
                                 showForm();
                                 document.getElementById('pName').value = productName;
                                 
-                                // Сохраняем в кэш
                                 barcodeCache[decodedText] = { name: productName, type: 'Очищение' };
                                 localStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
                                 return;
@@ -1471,13 +1557,10 @@
                             console.log('API fetch error, falling back to manual:', err);
                         }
 
-                        // 3. Если не нашлось в базе
                         showForm();
                         document.getElementById('pName').value = `Товар [${decodedText}]`;
                     },
-                    (errorMessage) => {
-                        // Ошибки сканирования кадров игнорируем (сканер ищет штрихкод)
-                    }
+                    (errorMessage) => {}
                 );
             } catch (err) {
                 console.error("Camera start error:", err);
@@ -1491,16 +1574,20 @@
             if (html5QrCodeScanner) {
                 try {
                     await html5QrCodeScanner.stop();
-                } catch (e) {
-                    // Игнорируем если уже остановлен
-                }
+                } catch (e) {}
             }
             readerEl.style.display = 'none';
         }
 
-        function toggleFreqDays() {
-            const val = document.getElementById('pFreqType').value;
-            document.getElementById('daysGroup').style.display = val === 'custom' ? 'block' : 'none';
+        function setPickerValue(containerId, inputId, valueAttr, value) {
+            document.getElementById(inputId).value = value;
+            const container = document.getElementById(containerId);
+            container.querySelectorAll('.picker-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute(valueAttr) === value);
+            });
+            if (inputId === 'pFreqType') {
+                document.getElementById('daysGroup').style.display = (value === 'custom') ? 'block' : 'none';
+            }
         }
 
         function togglePauseInputs() {
@@ -1570,15 +1657,16 @@
             document.getElementById('editProductId').value = item.id;
             document.getElementById('pName').value = item.name;
             document.getElementById('pType').value = item.type;
-            document.getElementById('pTOD').value = item.tod;
-            document.getElementById('pFreqType').value = item.freqType;
+            
+            setPickerValue('todPicker', 'pTOD', 'data-tod', item.tod || 'both');
+            setPickerValue('freqPicker', 'pFreqType', 'data-freq', item.freqType || 'daily');
+
             document.getElementById('pPauseToggle').checked = Boolean(item.hasPause);
             document.getElementById('pPauseBefore').value = item.pauseBefore || '';
             document.getElementById('pPauseAfter').value = item.pauseAfter || '';
             document.getElementById('pOpenDate').value = item.openDate || '';
             document.getElementById('pExpDate').value = item.expDate || '';
 
-            toggleFreqDays();
             togglePauseInputs();
 
             if (item.paoMonths) {
@@ -1601,15 +1689,16 @@
             document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
             document.getElementById('pType').value = 'Очищение';
-            document.getElementById('pTOD').value = 'both';
-            document.getElementById('pFreqType').value = 'daily';
+            
+            setPickerValue('todPicker', 'pTOD', 'data-tod', 'both');
+            setPickerValue('freqPicker', 'pFreqType', 'data-freq', 'daily');
+
             document.getElementById('pPauseToggle').checked = false;
             document.getElementById('pPauseBefore').value = '';
             document.getElementById('pPauseAfter').value = '';
             document.getElementById('pOpenDate').value = '';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
-            toggleFreqDays();
             togglePauseInputs();
 
             document.getElementById('formModalTitle').innerText = 'Новое средство';
@@ -1670,6 +1759,32 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
+            // Обработчик кнопок времени суток
+            document.getElementById('todPicker').addEventListener('click', (e) => {
+                const btn = e.target.closest('.picker-btn');
+                if (btn) {
+                    const val = btn.getAttribute('data-tod');
+                    setPickerValue('todPicker', 'pTOD', 'data-tod', val);
+                }
+            });
+
+            // Обработчик кнопок частоты
+            document.getElementById('freqPicker').addEventListener('click', (e) => {
+                const btn = e.target.closest('.picker-btn');
+                if (btn) {
+                    const val = btn.getAttribute('data-freq');
+                    setPickerValue('freqPicker', 'pFreqType', 'data-freq', val);
+                }
+            });
+
+            document.getElementById('btnCompleteRoutine').addEventListener('click', () => {
+                if (products.length === 0) {
+                    openSettings();
+                } else {
+                    completeRoutine();
+                }
+            });
+
             document.getElementById('settingsModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('settingsModal')) {
                     closeSettings();
@@ -1679,7 +1794,6 @@
             document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning'));
             document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
 
-            document.getElementById('pFreqType').addEventListener('change', toggleFreqDays);
             document.getElementById('pPauseToggle').addEventListener('change', togglePauseInputs);
             document.getElementById('pOpenDate').addEventListener('change', calculateExpiryFromPAO);
 
