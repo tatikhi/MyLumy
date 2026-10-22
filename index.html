@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Care & Beauty — Твой Уход</title>
-    <!-- Canvas-confetti library for optional celebratory effect -->
+    <!-- Canvas-confetti для салюта из сердечек -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -46,20 +46,7 @@
             --shadow-soft: 0 12px 36px rgba(139, 120, 157, 0.12);
         }
 
-        /* 4. Velvet Espresso */
-        body[data-theme="espresso"] {
-            --bg-main: #181514;
-            --surface: #24201E;
-            --text-primary: #F2ECE9;
-            --text-secondary: #9E918C;
-            --accent-main: #D4A373;
-            --accent-grad: linear-gradient(135deg, #E2B88B 0%, #B88959 100%);
-            --accent-light: #332B27;
-            --border-color: #36302D;
-            --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
-        }
-
-        /* 5. Sage & Spa */
+        /* 4. Sage & Spa */
         body[data-theme="sage"] {
             --bg-main: #F4F6F4;
             --surface: #FFFFFF;
@@ -72,20 +59,7 @@
             --shadow-soft: 0 12px 36px rgba(58, 77, 57, 0.12);
         }
 
-        /* 6. Berry & Velvet */
-        body[data-theme="berry"] {
-            --bg-main: #FAF0F2;
-            --surface: #FFFFFF;
-            --text-primary: #3B1C24;
-            --text-secondary: #7A4D58;
-            --accent-main: #6B2337;
-            --accent-grad: linear-gradient(135deg, #8C324B 0%, #4D1826 100%);
-            --accent-light: #F7E6EB;
-            --border-color: #EED5DC;
-            --shadow-soft: 0 12px 36px rgba(107, 35, 55, 0.12);
-        }
-
-        /* 7. Midnight Calm */
+        /* 5. Midnight Calm (Единственная темная тема) */
         body[data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
@@ -96,19 +70,6 @@
             --accent-light: #2D354A;
             --border-color: #323B52;
             --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
-        }
-
-        /* 8. Blush & Nude */
-        body[data-theme="blush"] {
-            --bg-main: #FDF6F6;
-            --surface: #FFFFFF;
-            --text-primary: #4A3B3C;
-            --text-secondary: #9E8284;
-            --accent-main: #D9A0A0;
-            --accent-grad: linear-gradient(135deg, #E8B4B4 0%, #C48888 100%);
-            --accent-light: #FBF0F0;
-            --border-color: #F2E1E1;
-            --shadow-soft: 0 12px 36px rgba(217, 160, 160, 0.15);
         }
 
         * {
@@ -135,7 +96,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .logo {
@@ -149,14 +110,11 @@
             display: flex;
             gap: 6px;
             align-items: center;
-            flex-wrap: wrap;
-            max-width: 220px;
-            justify-content: flex-end;
         }
 
         .theme-dot {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid var(--surface);
@@ -184,30 +142,66 @@
             white-space: nowrap;
         }
 
+        /* Недельный трекер сердечек */
+        .streak-card {
+            background: var(--surface);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .streak-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .hearts-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .heart-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .heart-icon {
+            font-size: 20px;
+            opacity: 0.25;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .heart-item.active .heart-icon {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        .heart-day {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
         .main-card {
             background: var(--surface);
             border-radius: 28px;
             width: 100%;
             max-width: 480px;
-            padding: 28px 20px;
+            padding: 24px 20px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
-        }
-
-        .card-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .card-header h2 {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .card-header p {
-            font-size: 13px;
-            color: var(--text-secondary);
         }
 
         .tod-switch {
@@ -238,6 +232,22 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
         .routine-list {
             display: flex;
             flex-direction: column;
@@ -250,6 +260,12 @@
             border: 1px solid var(--border-color);
             border-radius: 18px;
             padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -290,6 +306,20 @@
             font-size: 11px;
             color: var(--text-secondary);
             margin-top: 2px;
+        }
+
+        .pause-badge {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--accent-main);
+            background: var(--accent-light);
+            padding: 6px 10px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+            align-self: flex-start;
         }
 
         .expiry-dots {
@@ -415,6 +445,26 @@
             border-color: var(--accent-main);
         }
 
+        .pause-presets {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .preset-btn {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-main);
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .preset-btn:hover {
+            background: var(--accent-light);
+        }
+
         .btn-secondary {
             width: 100%;
             padding: 12px;
@@ -433,7 +483,7 @@
             flex-direction: column;
             gap: 8px;
             margin-bottom: 20px;
-            max-height: 180px;
+            max-height: 160px;
             overflow-y: auto;
         }
 
@@ -466,7 +516,7 @@
             padding: 2px 4px;
         }
 
-        .toggle-switch-container {
+        .toggle-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -490,13 +540,24 @@
                 <div class="theme-dot" style="background: #C49A82;" onclick="setTheme('nude')" title="Nude & Silk"></div>
                 <div class="theme-dot" style="background: #5B8A82;" onclick="setTheme('mint')" title="Eucalyptus & Mint"></div>
                 <div class="theme-dot" style="background: #8B789D;" onclick="setTheme('lavender')" title="Blush Lavender"></div>
-                <div class="theme-dot" style="background: #24201E;" onclick="setTheme('espresso')" title="Velvet Espresso"></div>
                 <div class="theme-dot" style="background: #3A4D39;" onclick="setTheme('sage')" title="Sage & Spa"></div>
-                <div class="theme-dot" style="background: #6B2337;" onclick="setTheme('berry')" title="Berry & Velvet"></div>
                 <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')" title="Midnight Calm"></div>
-                <div class="theme-dot" style="background: #D9A0A0;" onclick="setTheme('blush')" title="Blush & Nude"></div>
             </div>
             <button class="btn-settings" onclick="openSettings()">⚙️ Настройки</button>
+        </div>
+    </div>
+
+    <!-- Недельный трекер сердечек -->
+    <div class="streak-card">
+        <div class="streak-title">ЛЮБИ СЕБЯ КАЖДЫЙ ДЕНЬ 💖</div>
+        <div class="hearts-container" id="heartsContainer">
+            <div class="heart-item" id="heart-1"><span class="heart-icon">💖</span><span class="heart-day">ПН</span></div>
+            <div class="heart-item" id="heart-2"><span class="heart-icon">💖</span><span class="heart-day">ВТ</span></div>
+            <div class="heart-item" id="heart-3"><span class="heart-icon">💖</span><span class="heart-day">СР</span></div>
+            <div class="heart-item" id="heart-4"><span class="heart-icon">💖</span><span class="heart-day">ЧТ</span></div>
+            <div class="heart-item" id="heart-5"><span class="heart-icon">💖</span><span class="heart-day">ПТ</span></div>
+            <div class="heart-item" id="heart-6"><span class="heart-icon">💖</span><span class="heart-day">СБ</span></div>
+            <div class="heart-item" id="heart-0"><span class="heart-icon">💖</span><span class="heart-day">ВС</span></div>
         </div>
     </div>
 
@@ -572,6 +633,21 @@
             </div>
 
             <div class="form-group">
+                <div class="toggle-container">
+                    <label for="pPauseToggle" style="cursor: pointer; margin: 0;">⏱️ Требуется пауза/выдержка после нанесения</label>
+                    <input type="checkbox" id="pPauseToggle" class="toggle-checkbox" onchange="togglePauseInput()">
+                </div>
+                <div id="pauseInputContainer" style="display: none; margin-top: 6px;">
+                    <input type="number" id="pPauseMinutes" class="input-control" placeholder="Минут выдержки (напр. 15)">
+                    <div class="pause-presets">
+                        <button class="preset-btn" onclick="setPausePreset(10)">10 мин</button>
+                        <button class="preset-btn" onclick="setPausePreset(15)">15 мин</button>
+                        <button class="preset-btn" onclick="setPausePreset(20)">20 мин</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label>Дата вскрытия / Начало использования</label>
                 <input type="date" id="pOpenDate" class="input-control">
             </div>
@@ -586,9 +662,9 @@
 
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
-            <div class="toggle-switch-container">
-                <label for="confettiToggle" style="font-size: 13px; font-weight: 500; color: var(--text-primary); cursor: pointer;">
-                    💖 Праздничные сердечки и конфетти при нажатии «Всё сделано»
+            <div class="toggle-container">
+                <label for="confettiToggle" style="font-size: 13px; font-weight: 500; cursor: pointer;">
+                    💖 Праздничный салют из сердечек при завершении недели
                 </label>
                 <input type="checkbox" id="confettiToggle" class="toggle-checkbox" onchange="toggleConfettiPref(this)">
             </div>
@@ -609,9 +685,10 @@
 
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let currentTOD = 'morning';
-        let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) || false;
+        let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) ?? true;
+        let completedDays = JSON.parse(localStorage.getItem('cb_completed_days')) || [];
 
-        // Инициализация тумблера конфетти
+        // Инициализация
         document.getElementById('confettiToggle').checked = enableConfetti;
 
         function setTheme(theme) {
@@ -633,7 +710,22 @@
             renderRoutine();
         }
 
+        function renderStreak() {
+            const days = [1, 2, 3, 4, 5, 6, 0]; // Пн-Вс
+            days.forEach(d => {
+                const el = document.getElementById(`heart-${d}`);
+                if (el) {
+                    if (completedDays.includes(d)) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+            });
+        }
+
         function renderRoutine() {
+            renderStreak();
             const container = document.getElementById('routineContainer');
             container.innerHTML = '';
 
@@ -652,7 +744,7 @@
                 return matchTOD && matchDay;
             });
 
-            // Автоматическая сортировка по косметологическим этапам
+            // Автоматическая косметологическая сортировка
             activeProducts.sort((a, b) => {
                 const orderA = typeOrder[a.type] || 99;
                 const orderB = typeOrder[b.type] || 99;
@@ -671,16 +763,23 @@
 
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
+                const pauseHtml = (item.hasPause && item.pauseMinutes) 
+                    ? `<div class="pause-badge">⏱️ Выдержка: ${item.pauseMinutes} мин перед след. шагом</div>` 
+                    : '';
+
                 container.innerHTML += `
                     <div class="routine-item">
-                        <div class="item-left">
-                            <div class="item-num">${index + 1}</div>
-                            <div class="item-details">
-                                <span class="item-name">${item.name}</span>
-                                <span class="item-tag">${item.type}</span>
+                        <div class="item-row">
+                            <div class="item-left">
+                                <div class="item-num">${index + 1}</div>
+                                <div class="item-details">
+                                    <span class="item-name">${item.name}</span>
+                                    <span class="item-tag">${item.type}</span>
+                                </div>
                             </div>
+                            <div class="expiry-dots">${dotsHtml}</div>
                         </div>
-                        <div class="expiry-dots">${dotsHtml}</div>
+                        ${pauseHtml}
                     </div>
                 `;
             });
@@ -712,16 +811,28 @@
         }
 
         function completeRoutine() {
-            // Запуск салюта при активной опции
-            if (enableConfetti && typeof confetti === 'function') {
+            const todayDay = new Date().getDay();
+            
+            if (!completedDays.includes(todayDay)) {
+                completedDays.push(todayDay);
+                localStorage.setItem('cb_completed_days', JSON.stringify(completedDays));
+            }
+
+            // Праздничный салют из сердечек при завершении 7 дней
+            if (completedDays.length === 7 && enableConfetti && typeof confetti === 'function') {
+                const heartScalar = 2;
+                const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
+
                 confetti({
-                    particleCount: 80,
-                    spread: 70,
+                    shapes: [heartShape],
+                    scalar: heartScalar,
+                    particleCount: 40,
+                    spread: 80,
                     origin: { y: 0.6 }
                 });
             }
 
-            // Переключение на следующий этап без всплывающих окон
+            // Автоматическое переключение этапа без alert
             if (currentTOD === 'morning') {
                 switchTOD('evening');
             } else {
@@ -746,6 +857,15 @@
             document.getElementById('daysPicker').style.display = val === 'custom' ? 'flex' : 'none';
         }
 
+        function togglePauseInput() {
+            const checked = document.getElementById('pPauseToggle').checked;
+            document.getElementById('pauseInputContainer').style.display = checked ? 'block' : 'none';
+        }
+
+        function setPausePreset(mins) {
+            document.getElementById('pPauseMinutes').value = mins;
+        }
+
         function toggleDayChip(el) {
             el.classList.toggle('active');
         }
@@ -755,6 +875,8 @@
             const type = document.getElementById('pType').value;
             const tod = document.getElementById('pTOD').value;
             const freqType = document.getElementById('pFreqType').value;
+            const hasPause = document.getElementById('pPauseToggle').checked;
+            const pauseMinutes = document.getElementById('pPauseMinutes').value;
             const openDate = document.getElementById('pOpenDate').value;
             const expDate = document.getElementById('pExpDate').value;
             const editId = document.getElementById('editProductId').value;
@@ -772,7 +894,6 @@
             }
 
             if (editId) {
-                // Редактирование существующего
                 const idx = products.findIndex(p => p.id == editId);
                 if (idx !== -1) {
                     products[idx] = {
@@ -782,12 +903,13 @@
                         tod,
                         freqType,
                         days,
+                        hasPause,
+                        pauseMinutes: hasPause ? pauseMinutes : null,
                         openDate,
                         expDate
                     };
                 }
             } else {
-                // Добавление нового
                 products.push({
                     id: Date.now(),
                     name,
@@ -795,6 +917,8 @@
                     tod,
                     freqType,
                     days,
+                    hasPause,
+                    pauseMinutes: hasPause ? pauseMinutes : null,
                     openDate,
                     expDate
                 });
@@ -814,10 +938,13 @@
             document.getElementById('pType').value = item.type;
             document.getElementById('pTOD').value = item.tod;
             document.getElementById('pFreqType').value = item.freqType;
+            document.getElementById('pPauseToggle').checked = !!item.hasPause;
+            document.getElementById('pPauseMinutes').value = item.pauseMinutes || '';
             document.getElementById('pOpenDate').value = item.openDate || '';
             document.getElementById('pExpDate').value = item.expDate || '';
 
             toggleFreqDays();
+            togglePauseInput();
 
             document.querySelectorAll('.day-chip').forEach(chip => {
                 const day = parseInt(chip.getAttribute('data-day'));
@@ -838,10 +965,13 @@
             document.getElementById('pType').value = 'Очищение';
             document.getElementById('pTOD').value = 'both';
             document.getElementById('pFreqType').value = 'daily';
+            document.getElementById('pPauseToggle').checked = false;
+            document.getElementById('pPauseMinutes').value = '';
             document.getElementById('pOpenDate').value = '';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('active'));
             toggleFreqDays();
+            togglePauseInput();
 
             document.getElementById('formModalTitle').innerText = '+ Добавить средство';
             document.getElementById('btnCancelEdit').style.display = 'none';
@@ -875,7 +1005,7 @@
             renderManageList();
         }
 
-        // Старт
+        // Запуск
         renderRoutine();
     </script>
 </body>
