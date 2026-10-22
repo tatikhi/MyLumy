@@ -921,7 +921,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.53.0';
+        const APP_VERSION = '2.54.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1433,6 +1433,9 @@
             document.getElementById('productFormContainer').style.display = 'block';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
+            
+            // Надежный флаг: добавляем класс на подложку модального окна
+            document.getElementById('settingsModal').classList.add('form-open');
         }
 
         function hideForm() {
@@ -1440,6 +1443,9 @@
             document.getElementById('btnAddToggle').style.display = 'block';
             document.getElementById('scannerNoticeBanner').style.display = 'none';
             resetForm();
+            
+            // Снимаем флаг при закрытии формы
+            document.getElementById('settingsModal').classList.remove('form-open');
         }
 
         function isGarbageName(name) {
@@ -1819,30 +1825,25 @@
                 renderRoutine();
             });
 
-            // Корректный кроссплатформенный обработчик кликов по модальному окну
-            const handleBackdropTap = (e) => {
+            // Стабильный обработчик фона
+            document.getElementById('settingsModal').addEventListener('click', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
-                    const theme = themeBtn.getAttribute('data-theme');
-                    setTheme(theme);
+                    setTheme(themeBtn.getAttribute('data-theme'));
                     return;
                 }
 
-                // Проверяем: если касание началось или произошло СТРОГО ВНЕ белой карточки
-                if (!e.target.closest('.modal-card')) {
-                    const formContainer = document.getElementById('productFormContainer');
-                    const isFormOpen = formContainer && formContainer.style.display === 'block';
-                    
-                    // Если форма добавления/редактирования ЗАКРЫТА — закрываем коллекцию
-                    if (!isFormOpen) {
-                        closeSettings();
-                    }
+                // Клик произошел по белой карточке — ничего не делаем
+                if (e.target.closest('.modal-card')) {
+                    return;
                 }
-            };
 
-            // Вешаем обработчики на события нажатия для немедленного отклика на любых планшетах/смартфонах
-            const settingsModal = document.getElementById('settingsModal');
-            settingsModal.addEventListener('click', handleBackdropTap);
+                // Клик произошел строго по темному фону: закрываем ТОЛЬКО если форма не открыта
+                const isFormOpen = e.currentTarget.classList.contains('form-open');
+                if (!isFormOpen) {
+                    closeSettings();
+                }
+            });
 
             document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
@@ -1947,8 +1948,8 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('settingsModal');
-                    const isFormVisible = document.getElementById('productFormContainer').style.display === 'block';
-                    if (modal && modal.style.display === 'flex' && !isFormVisible) {
+                    const isFormOpen = modal && modal.classList.contains('form-open');
+                    if (modal && modal.style.display === 'flex' && !isFormOpen) {
                         closeSettings();
                     }
                     const alertModal = document.getElementById('customAlertModal');
