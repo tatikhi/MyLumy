@@ -1047,7 +1047,7 @@
         // Фиксация даты установки/первого запуска приложения
         let installDateStr = localStorage.getItem('cb_install_date');
         if (!installDateStr) {
-            installDateStr = new Date().toISOString();
+            installDateStr = getLocalTodayStr();
             localStorage.setItem('cb_install_date', installDateStr);
         }
 
@@ -1107,8 +1107,10 @@
             if (!showStreakTracker) return;
 
             const now = new Date();
-            const installDate = new Date(installDateStr);
-            const diffTime = now - installDate;
+            const todayStr = getLocalTodayStr(now);
+            const installDate = localStorage.getItem('cb_install_date') || todayStr;
+            
+            const diffTime = new Date(todayStr) - new Date(installDate);
             const daysSinceInstall = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
 
             const completedMonthsTotal = Math.floor(daysSinceInstall / 28);
@@ -1116,7 +1118,7 @@
             for (let w = 1; w <= 4; w++) {
                 const starEl = document.getElementById(`star-${w}`);
                 if (starEl) {
-                    starEl.classList.toggle('active', w <= Math.min(4, Math.floor(daysSinceInstall / 7)));
+                    starEl.classList.toggle('active', w <= Math.min(4, Math.floor(daysSinceInstall / 7) + 1));
                 }
             }
 
@@ -1129,18 +1131,19 @@
                 badgeEl.style.display = 'none';
             }
 
-            // Сердечки текущей недели закрашиваются автоматически
+            // Сердечки текущей недели закрашиваются СТРОГО с даты установки по сегодняшний день
             const monday = getStartOfWeek(now);
             const daysMap = [1, 2, 3, 4, 5, 6, 0]; // Пн, Вт, Ср, Чт, Пт, Сб, Вс
 
             daysMap.forEach((dayNum, index) => {
                 const currentDayDate = new Date(monday);
                 currentDayDate.setDate(monday.getDate() + index);
+                const currentDayStr = getLocalTodayStr(currentDayDate);
                 
                 const heartEl = document.getElementById(`heart-${dayNum}`);
                 if (heartEl) {
-                    const isPastOrToday = currentDayDate <= now;
-                    heartEl.classList.toggle('active', isPastOrToday);
+                    const isActive = currentDayStr >= installDate && currentDayStr <= todayStr;
+                    heartEl.classList.toggle('active', isActive);
                 }
             });
         }
@@ -1181,15 +1184,96 @@
             }
         }
 
-        // Расчёт шагов для активов (Неделя X, шаг Y из Z)
+        // Интеллектуальный расчет недели и шага для активов по правилам календаря и пропусков
+        function getActiveProgressDetails(item) {
+            if (item.type !== 'Активы') return { week: 1, step: 1, totalSteps: 1 };
+
+            const freq = item.freqType;
+            let schDays;
+            if (freq === 'custom' && Array.isArray(item.days) && item.days.length > 0) {
+                schDays = [...item.days].sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b));
+            } else {
+                schDays = [1, 2, 3, 4, 5, 6, 0]; // ежедневно
+            }
+            const Z = schDays.length;
+
+            const progressData = productProgress[item.id] || { dates: [] };
+            const completedSet = new Set(progressData.dates || []);
+
+            const startTimestamp = Number(item.id) || Date.now();
+            let startDate = new Date(startTimestamp);
+            if (isNaN(startDate.getTime())) startDate = new Date();
+            startDate.setHours(0,0,0,0);
+
+            const now = new Date();
+            now.setHours(0,0,0,0);
+
+            let currentWeek = 1;
+            let expectedStep = 1;
+
+            let weekStart = new Date(startDate);
+            const day = weekStart.getDay();
+            const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
+            weekStart.setDate(diff);
+
+            while (weekStart <= now) {
+                let weekScheduledDates = [];
+                for (let i = 0; i < 7; i++) {
+                    let d = new Date(weekStart);
+                    d.setDate(weekStart.getDate() + i);
+                    let dow = d.getDay();
+                    if (schDays.includes(dow)) {
+                        weekScheduledDates.push({
+                            dateObj: new Date(d),
+                            dateStr: getLocalTodayStr(d)
+                        });
+                    }
+                }
+
+                expectedStep = 1;
+                let weekCompletedLast = true;
+
+                for (let idx = 0; idx < weekScheduledDates.length; idx++) {
+                    let sched = weekScheduledDates.get ? weekScheduledDates[idx] : weekScheduledDates[idx];
+                    let stepNum = idx + 1;
+
+                    if (sched.dateObj > now) {
+                        return { week: currentWeek, step: expectedStep, totalSteps: Z };
+                    }
+
+                    let isCompleted = completedSet.has(sched.dateStr);
+
+                    if (sched.dateStr === getLocalTodayStr(now)) {
+                        return { week: currentWeek, step: expectedStep, totalSteps: Z };
+                    }
+
+                    if (isCompleted) {
+                        if (stepNum < Z) {
+                            expectedStep = stepNum + 1;
+                        } else {
+                            weekCompletedLast = true;
+                        }
+                    } else {
+                        if (stepNum === Z) {
+                            weekCompletedLast = false;
+                        } else {
+                            expectedStep = stepNum; // Повторяем пропущенный промежуточный шаг
+                        }
+                    }
+                }
+
+                currentWeek++;
+                expectedStep = 1;
+                weekStart.setDate(weekStart.getDate() + 7);
+            }
+
+            return { week: currentWeek > 1 ? currentWeek - 1 : 1, step: expectedStep, totalSteps: Z };
+        }
+
         function getActiveProgressHtml(item) {
             if (item.type !== 'Активы') return '';
-            const Z = item.freqType === 'custom' ? (Array.isArray(item.days) && item.days.length > 0 ? item.days.length : 1) : 7;
-            const dates = (productProgress[item.id] && productProgress[item.id].dates) || [];
-            const count = dates.length;
-            const week = Math.floor(count / Z) + 1;
-            const stepInWeek = (count % Z) + 1;
-            return `<div class="active-progress-chip">🧬 Нед ${week}, шаг ${stepInWeek}/${Z}</div>`;
+            const { week, step, totalSteps } = getActiveProgressDetails(item);
+            return `<div class="active-progress-chip">🧬 Нед ${week}, шаг ${step}/${totalSteps}</div>`;
         }
 
         function renderRoutine() {
