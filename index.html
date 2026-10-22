@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Care & Beauty — Твой Уход</title>
-    <!-- Canvas-confetti для салюта из сердечек -->
+    <!-- Canvas-confetti для праздничного салюта -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -59,7 +59,7 @@
             --shadow-soft: 0 12px 36px rgba(58, 77, 57, 0.12);
         }
 
-        /* 5. Midnight Calm (Единственная темная тема) */
+        /* 5. Midnight Calm (Единственная глубокая темная тема) */
         body[data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
@@ -142,7 +142,7 @@
             white-space: nowrap;
         }
 
-        /* Недельный трекер сердечек */
+        /* Недельный + месячный трекер прогресса */
         .streak-card {
             background: var(--surface);
             border-radius: 20px;
@@ -159,7 +159,7 @@
             font-size: 12px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             letter-spacing: 0.5px;
         }
 
@@ -168,6 +168,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 8px;
+            margin-bottom: 12px;
         }
 
         .heart-item {
@@ -181,17 +182,51 @@
             font-size: 20px;
             opacity: 0.25;
             transition: transform 0.3s ease, opacity 0.3s ease;
+            filter: grayscale(100%);
         }
 
         .heart-item.active .heart-icon {
             opacity: 1;
             transform: scale(1.15);
+            filter: grayscale(0%);
         }
 
         .heart-day {
             font-size: 10px;
             font-weight: 600;
             color: var(--text-secondary);
+        }
+
+        /* Трекер 4 недель (звёздочки) */
+        .weeks-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .star-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .star-icon {
+            font-size: 16px;
+            opacity: 0.3;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        .star-item.active .star-icon {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.2);
         }
 
         .main-card {
@@ -445,26 +480,6 @@
             border-color: var(--accent-main);
         }
 
-        .pause-presets {
-            display: flex;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        .preset-btn {
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-main);
-            font-size: 12px;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-
-        .preset-btn:hover {
-            background: var(--accent-light);
-        }
-
         .btn-secondary {
             width: 100%;
             padding: 12px;
@@ -478,12 +493,25 @@
             margin-top: 8px;
         }
 
+        .btn-add-toggle {
+            width: 100%;
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px dashed var(--accent-main);
+            background: var(--accent-light);
+            color: var(--accent-main);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
         .product-manage-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 20px;
-            max-height: 160px;
+            margin-bottom: 16px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
@@ -495,6 +523,12 @@
             border-radius: 10px;
             background: var(--bg-main);
             font-size: 13px;
+        }
+
+        .manage-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .manage-actions {
@@ -547,7 +581,7 @@
         </div>
     </div>
 
-    <!-- Недельный трекер сердечек -->
+    <!-- Недельный и Месячный трекер прогресса -->
     <div class="streak-card">
         <div class="streak-title">ЛЮБИ СЕБЯ КАЖДЫЙ ДЕНЬ 💖</div>
         <div class="hearts-container" id="heartsContainer">
@@ -558,6 +592,14 @@
             <div class="heart-item" id="heart-5"><span class="heart-icon">💖</span><span class="heart-day">ПТ</span></div>
             <div class="heart-item" id="heart-6"><span class="heart-icon">💖</span><span class="heart-day">СБ</span></div>
             <div class="heart-item" id="heart-0"><span class="heart-icon">💖</span><span class="heart-day">ВС</span></div>
+        </div>
+
+        <!-- Звёздочки 4 недель месяца -->
+        <div class="weeks-container">
+            <div class="star-item" id="star-1"><span class="star-icon">⭐</span>1 нед.</div>
+            <div class="star-item" id="star-2"><span class="star-icon">⭐</span>2 нед.</div>
+            <div class="star-item" id="star-3"><span class="star-icon">⭐</span>3 нед.</div>
+            <div class="star-item" id="star-4"><span class="star-icon">⭐</span>4 нед.</div>
         </div>
     </div>
 
@@ -577,94 +619,81 @@
         <button class="btn-action" onclick="completeRoutine()">✨ Всё сделано</button>
     </div>
 
-    <!-- Модальное окно настроек и косметички -->
+    <!-- Модальное окно настроек "Мои средства" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card">
-            <div class="modal-title">⚙️ Настройки и Косметичка</div>
+            <div class="modal-title">Мои средства</div>
             
-            <div style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Мои средства:</div>
             <div class="product-manage-list" id="manageList"></div>
 
-            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
+            <button class="btn-add-toggle" id="btnAddToggle" onclick="showForm()">+ Добавить средство</button>
 
-            <div class="modal-title" id="formModalTitle" style="font-size: 15px;">+ Добавить средство</div>
-            <input type="hidden" id="editProductId" value="">
+            <!-- По умолчанию скрытая форма добавления / редактирования -->
+            <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                <div class="modal-title" id="formModalTitle" style="font-size: 15px;">Новое средство</div>
+                <input type="hidden" id="editProductId" value="">
 
-            <div class="form-group">
-                <label>Название средства</label>
-                <input type="text" id="pName" class="input-control" placeholder="Напр. Retiderm 0.25 или Пенка">
-            </div>
-
-            <div class="form-group">
-                <label>Тип / Этап ухода</label>
-                <select id="pType" class="input-control">
-                    <option value="Очищение">Очищение</option>
-                    <option value="Тонизирование">Тонизирование</option>
-                    <option value="Активы">Активы</option>
-                    <option value="Уход за глазами">Уход за глазами</option>
-                    <option value="Питание / Увлажнение">Питание / Увлажнение</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Время суток</label>
-                <select id="pTOD" class="input-control">
-                    <option value="both">И утро, и вечер</option>
-                    <option value="morning">Только утро</option>
-                    <option value="evening">Только вечер</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Частота применения</label>
-                <select id="pFreqType" class="input-control" onchange="toggleFreqDays()">
-                    <option value="daily">Ежедневно</option>
-                    <option value="custom">Выбранные дни недели</option>
-                </select>
-                <div class="days-picker" id="daysPicker" style="display: none;">
-                    <div class="day-chip" data-day="1" onclick="toggleDayChip(this)">Пн</div>
-                    <div class="day-chip" data-day="2" onclick="toggleDayChip(this)">Вт</div>
-                    <div class="day-chip" data-day="3" onclick="toggleDayChip(this)">Ср</div>
-                    <div class="day-chip" data-day="4" onclick="toggleDayChip(this)">Чт</div>
-                    <div class="day-chip" data-day="5" onclick="toggleDayChip(this)">Пт</div>
-                    <div class="day-chip" data-day="6" onclick="toggleDayChip(this)">Сб</div>
-                    <div class="day-chip" data-day="0" onclick="toggleDayChip(this)">Вс</div>
+                <div class="form-group">
+                    <label>Название средства</label>
+                    <input type="text" id="pName" class="input-control" placeholder="Напр. Retiderm 0.25 или Пенка">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="toggle-container">
-                    <label for="pPauseToggle" style="cursor: pointer; margin: 0;">⏱️ Требуется пауза/выдержка после нанесения</label>
-                    <input type="checkbox" id="pPauseToggle" class="toggle-checkbox" onchange="togglePauseInput()">
+                <div class="form-group">
+                    <label>Тип / Этап ухода</label>
+                    <select id="pType" class="input-control">
+                        <option value="Очищение">Очищение</option>
+                        <option value="Тонизирование">Тонизирование</option>
+                        <option value="Активы">Активы</option>
+                        <option value="Уход за глазами">Уход за глазами</option>
+                        <option value="Питание / Увлажнение">Питание / Увлажнение</option>
+                    </select>
                 </div>
-                <div id="pauseInputContainer" style="display: none; margin-top: 6px;">
-                    <input type="number" id="pPauseMinutes" class="input-control" placeholder="Минут выдержки (напр. 15)">
-                    <div class="pause-presets">
-                        <button class="preset-btn" onclick="setPausePreset(10)">10 мин</button>
-                        <button class="preset-btn" onclick="setPausePreset(15)">15 мин</button>
-                        <button class="preset-btn" onclick="setPausePreset(20)">20 мин</button>
+
+                <div class="form-group">
+                    <label>Время суток</label>
+                    <select id="pTOD" class="input-control">
+                        <option value="both">И утро, и вечер</option>
+                        <option value="morning">Только утро</option>
+                        <option value="evening">Только вечер</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Частота применения</label>
+                    <select id="pFreqType" class="input-control" onchange="toggleFreqDays()">
+                        <option value="daily">Ежедневно</option>
+                        <option value="custom">Выбранные дни недели</option>
+                    </select>
+                    <div class="days-picker" id="daysPicker" style="display: none;">
+                        <div class="day-chip" data-day="1" onclick="toggleDayChip(this)">Пн</div>
+                        <div class="day-chip" data-day="2" onclick="toggleDayChip(this)">Вт</div>
+                        <div class="day-chip" data-day="3" onclick="toggleDayChip(this)">Ср</div>
+                        <div class="day-chip" data-day="4" onclick="toggleDayChip(this)">Чт</div>
+                        <div class="day-chip" data-day="5" onclick="toggleDayChip(this)">Пт</div>
+                        <div class="day-chip" data-day="6" onclick="toggleDayChip(this)">Сб</div>
+                        <div class="day-chip" data-day="0" onclick="toggleDayChip(this)">Вс</div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label>Дата вскрытия / Начало использования</label>
-                <input type="date" id="pOpenDate" class="input-control">
-            </div>
+                <div class="form-group">
+                    <label>Дата вскрытия / Начало использования</label>
+                    <input type="date" id="pOpenDate" class="input-control">
+                </div>
 
-            <div class="form-group">
-                <label>Срок годности (Дата окончания)</label>
-                <input type="date" id="pExpDate" class="input-control">
-            </div>
+                <div class="form-group">
+                    <label>Срок годности (Дата окончания)</label>
+                    <input type="date" id="pExpDate" class="input-control">
+                </div>
 
-            <button class="btn-action" style="margin-top: 12px;" onclick="saveProduct()">Сохранить средство</button>
-            <button class="btn-secondary" id="btnCancelEdit" style="display: none;" onclick="resetForm()">Отмена редактирования</button>
+                <button class="btn-action" style="margin-top: 8px;" onclick="saveProduct()">Сохранить средство</button>
+                <button class="btn-secondary" onclick="hideForm()">Отмена</button>
+            </div>
 
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
             <div class="toggle-container">
                 <label for="confettiToggle" style="font-size: 13px; font-weight: 500; cursor: pointer;">
-                    💖 Праздничный салют из сердечек при завершении недели
+                    💖 Праздничный салют при завершении недели
                 </label>
                 <input type="checkbox" id="confettiToggle" class="toggle-checkbox" onchange="toggleConfettiPref(this)">
             </div>
@@ -674,7 +703,7 @@
     </div>
 
     <script>
-        // Иерархия шагов для строгого соблюдения косметологической последовательности
+        // Иерархия шагов для косметологической последовательности
         const typeOrder = {
             "Очищение": 1,
             "Тонизирование": 2,
@@ -686,9 +715,9 @@
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let currentTOD = 'morning';
         let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) ?? true;
-        let completedDays = JSON.parse(localStorage.getItem('cb_completed_days')) || [];
+        let completedDates = JSON.parse(localStorage.getItem('cb_completed_dates')) || [];
+        let completedWeeksCount = JSON.parse(localStorage.getItem('cb_completed_weeks')) || 0;
 
-        // Инициализация
         document.getElementById('confettiToggle').checked = enableConfetti;
 
         function setTheme(theme) {
@@ -710,18 +739,51 @@
             renderRoutine();
         }
 
+        function getStartOfWeek(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        function formatDateKey(date) {
+            return date.toISOString().split('T')[0];
+        }
+
         function renderStreak() {
-            const days = [1, 2, 3, 4, 5, 6, 0]; // Пн-Вс
-            days.forEach(d => {
-                const el = document.getElementById(`heart-${d}`);
-                if (el) {
-                    if (completedDays.includes(d)) {
-                        el.classList.add('active');
+            const now = new Date();
+            const monday = getStartOfWeek(now);
+            
+            const daysMap = [1, 2, 3, 4, 5, 6, 0];
+            let thisWeekCompletedDays = 0;
+
+            daysMap.forEach((dayNum, index) => {
+                const currentDayDate = new Date(monday);
+                currentDayDate.setDate(monday.getDate() + index);
+                const dateKey = formatDateKey(currentDayDate);
+
+                const heartEl = document.getElementById(`heart-${dayNum}`);
+                if (heartEl) {
+                    if (completedDates.includes(dateKey)) {
+                        heartEl.classList.add('active');
+                        thisWeekCompletedDays++;
                     } else {
-                        el.classList.remove('active');
+                        heartEl.classList.remove('active');
                     }
                 }
             });
+
+            // Автоматический учет закрашивания 4 звёздочек недель
+            for (let w = 1; w <= 4; w++) {
+                const starEl = document.getElementById(`star-${w}`);
+                if (starEl) {
+                    if (w <= completedWeeksCount || (w === (completedWeeksCount + 1) && thisWeekCompletedDays === 7)) {
+                        starEl.classList.add('active');
+                    } else {
+                        starEl.classList.remove('active');
+                    }
+                }
+            }
         }
 
         function renderRoutine() {
@@ -730,9 +792,9 @@
             container.innerHTML = '';
 
             const today = new Date();
-            const todayDayOfWeek = today.getDay(); // 0 - Вс, 1 - Пн ...
+            const todayDayOfWeek = today.getDay(); // 0 = Вс, 1 = Пн ...
 
-            // Фильтрация по времени суток и дням недели
+            // Получаем список средств на текущий день
             let activeProducts = products.filter(p => {
                 const matchTOD = p.tod === 'both' || p.tod === currentTOD;
                 let matchDay = true;
@@ -744,12 +806,15 @@
                 return matchTOD && matchDay;
             });
 
-            // Автоматическая косметологическая сортировка
+            // Косметологическая сортировка
             activeProducts.sort((a, b) => {
                 const orderA = typeOrder[a.type] || 99;
                 const orderB = typeOrder[b.type] || 99;
                 return orderA - orderB;
             });
+
+            // Проверяем, есть ли сегодня в расписании Активы (Ретинол)
+            const hasActiveToday = activeProducts.some(p => p.type === 'Активы');
 
             if (activeProducts.length === 0) {
                 container.innerHTML = `
@@ -763,9 +828,16 @@
 
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
-                const pauseHtml = (item.hasPause && item.pauseMinutes) 
-                    ? `<div class="pause-badge">⏱️ Выдержка: ${item.pauseMinutes} мин перед след. шагом</div>` 
-                    : '';
+                
+                // Умные паузы: показываются строго при наличии Активов в расписании
+                let pauseHtml = '';
+                if (hasActiveToday) {
+                    if (item.type === 'Очищение') {
+                        pauseHtml = `<div class="pause-badge">⏱️ Пауза: 15 минут</div>`;
+                    } else if (item.type === 'Активы') {
+                        pauseHtml = `<div class="pause-badge">⏱️ Пауза: 15 минут</div>`;
+                    }
+                }
 
                 container.innerHTML += `
                     <div class="routine-item">
@@ -811,28 +883,42 @@
         }
 
         function completeRoutine() {
-            const todayDay = new Date().getDay();
+            const todayStr = formatDateKey(new Date());
             
-            if (!completedDays.includes(todayDay)) {
-                completedDays.push(todayDay);
-                localStorage.setItem('cb_completed_days', JSON.stringify(completedDays));
+            if (!completedDates.includes(todayStr)) {
+                completedDates.push(todayStr);
+                localStorage.setItem('cb_completed_dates', JSON.stringify(completedDates));
             }
 
-            // Праздничный салют из сердечек при завершении 7 дней
-            if (completedDays.length === 7 && enableConfetti && typeof confetti === 'function') {
-                const heartScalar = 2;
-                const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
-
-                confetti({
-                    shapes: [heartShape],
-                    scalar: heartScalar,
-                    particleCount: 40,
-                    spread: 80,
-                    origin: { y: 0.6 }
-                });
+            // Проверяем, заполнена ли вся текущая неделя
+            const now = new Date();
+            const monday = getStartOfWeek(now);
+            let daysThisWeek = 0;
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(monday);
+                d.setDate(monday.getDate() + i);
+                if (completedDates.includes(formatDateKey(d))) {
+                    daysThisWeek++;
+                }
             }
 
-            // Автоматическое переключение этапа без alert
+            // Салют при закрытии 7 дней
+            if (daysThisWeek === 7) {
+                if (enableConfetti && typeof confetti === 'function') {
+                    const heartScalar = 2;
+                    const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
+
+                    confetti({
+                        shapes: [heartShape],
+                        scalar: heartScalar,
+                        particleCount: 40,
+                        spread: 80,
+                        origin: { y: 0.6 }
+                    });
+                }
+            }
+
+            // Переключение этапа без alert
             if (currentTOD === 'morning') {
                 switchTOD('evening');
             } else {
@@ -840,9 +926,10 @@
             }
         }
 
-        /* Modal Logic */
+        /* Modal & Form Logic */
         function openSettings() {
             renderManageList();
+            hideForm();
             document.getElementById('settingsModal').style.display = 'flex';
         }
 
@@ -852,18 +939,20 @@
             renderRoutine();
         }
 
+        function showForm() {
+            document.getElementById('productFormContainer').style.display = 'block';
+            document.getElementById('btnAddToggle').style.display = 'none';
+        }
+
+        function hideForm() {
+            document.getElementById('productFormContainer').style.display = 'none';
+            document.getElementById('btnAddToggle').style.display = 'block';
+            resetForm();
+        }
+
         function toggleFreqDays() {
             const val = document.getElementById('pFreqType').value;
             document.getElementById('daysPicker').style.display = val === 'custom' ? 'flex' : 'none';
-        }
-
-        function togglePauseInput() {
-            const checked = document.getElementById('pPauseToggle').checked;
-            document.getElementById('pauseInputContainer').style.display = checked ? 'block' : 'none';
-        }
-
-        function setPausePreset(mins) {
-            document.getElementById('pPauseMinutes').value = mins;
         }
 
         function toggleDayChip(el) {
@@ -875,8 +964,6 @@
             const type = document.getElementById('pType').value;
             const tod = document.getElementById('pTOD').value;
             const freqType = document.getElementById('pFreqType').value;
-            const hasPause = document.getElementById('pPauseToggle').checked;
-            const pauseMinutes = document.getElementById('pPauseMinutes').value;
             const openDate = document.getElementById('pOpenDate').value;
             const expDate = document.getElementById('pExpDate').value;
             const editId = document.getElementById('editProductId').value;
@@ -903,8 +990,6 @@
                         tod,
                         freqType,
                         days,
-                        hasPause,
-                        pauseMinutes: hasPause ? pauseMinutes : null,
                         openDate,
                         expDate
                     };
@@ -917,34 +1002,31 @@
                     tod,
                     freqType,
                     days,
-                    hasPause,
-                    pauseMinutes: hasPause ? pauseMinutes : null,
                     openDate,
                     expDate
                 });
             }
 
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
-            resetForm();
             renderManageList();
+            hideForm();
         }
 
         function editProduct(id) {
             const item = products.find(p => p.id == id);
             if (!item) return;
 
+            showForm();
+
             document.getElementById('editProductId').value = item.id;
             document.getElementById('pName').value = item.name;
             document.getElementById('pType').value = item.type;
             document.getElementById('pTOD').value = item.tod;
             document.getElementById('pFreqType').value = item.freqType;
-            document.getElementById('pPauseToggle').checked = !!item.hasPause;
-            document.getElementById('pPauseMinutes').value = item.pauseMinutes || '';
             document.getElementById('pOpenDate').value = item.openDate || '';
             document.getElementById('pExpDate').value = item.expDate || '';
 
             toggleFreqDays();
-            togglePauseInput();
 
             document.querySelectorAll('.day-chip').forEach(chip => {
                 const day = parseInt(chip.getAttribute('data-day'));
@@ -956,7 +1038,6 @@
             });
 
             document.getElementById('formModalTitle').innerText = '✏️ Редактировать средство';
-            document.getElementById('btnCancelEdit').style.display = 'block';
         }
 
         function resetForm() {
@@ -965,16 +1046,12 @@
             document.getElementById('pType').value = 'Очищение';
             document.getElementById('pTOD').value = 'both';
             document.getElementById('pFreqType').value = 'daily';
-            document.getElementById('pPauseToggle').checked = false;
-            document.getElementById('pPauseMinutes').value = '';
             document.getElementById('pOpenDate').value = '';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('active'));
             toggleFreqDays();
-            togglePauseInput();
 
-            document.getElementById('formModalTitle').innerText = '+ Добавить средство';
-            document.getElementById('btnCancelEdit').style.display = 'none';
+            document.getElementById('formModalTitle').innerText = 'Новое средство';
         }
 
         function renderManageList() {
@@ -982,14 +1059,18 @@
             container.innerHTML = '';
 
             if (products.length === 0) {
-                container.innerHTML = '<div style="font-size: 12px; color: var(--text-secondary);">Список пуст</div>';
+                container.innerHTML = '<div style="font-size: 13px; color: var(--text-secondary); text-align: center; padding: 10px;">Список пуст. Нажмите «+ Добавить средство».</div>';
                 return;
             }
 
             products.forEach((p) => {
+                const dotsHtml = calcExpiryDots(p.openDate, p.expDate);
                 container.innerHTML += `
                     <div class="manage-item">
-                        <span><b>${p.name}</b> (${p.type})</span>
+                        <div class="manage-info">
+                            <div class="expiry-dots">${dotsHtml}</div>
+                            <span><b>${p.name}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${p.type})</span></span>
+                        </div>
                         <div class="manage-actions">
                             <span class="manage-edit" onclick="editProduct(${p.id})">✏️</span>
                             <span class="manage-del" onclick="deleteProduct(${p.id})">✕</span>
