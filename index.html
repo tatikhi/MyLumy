@@ -9,8 +9,6 @@
     <meta http-equiv="Expires" content="0">
     
     <title>Care & Beauty — Твой Уход</title>
-    <!-- Canvas-confetti для праздничного салюта -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             /* 1. Nude & Silk (по умолчанию) */
@@ -68,7 +66,7 @@
             --icon-inactive: #B5C2B6;
         }
 
-        /* 5. Midnight Calm (с улучшенной контрастностью) */
+        /* 5. Midnight Calm */
         body[data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
@@ -100,7 +98,6 @@
             padding: 24px 16px;
         }
 
-        /* Мягкая блокировка скролла без прыжков страницы */
         body.modal-open {
             overflow: hidden;
         }
@@ -127,7 +124,6 @@
             align-items: center;
         }
 
-        /* Touch Targets: расширенная область клика 44px */
         .theme-btn {
             position: relative;
             width: 22px;
@@ -290,7 +286,6 @@
             display: inline-block;
         }
 
-        /* Toast-уведомление (наверху, над карточкой ухода) */
         .toast-notification {
             width: 100%;
             max-width: 480px;
@@ -444,7 +439,6 @@
             margin-top: 2px;
         }
 
-        /* Правая группа элементов в карточке (шаг недели + точки срока) */
         .item-right-group {
             display: flex;
             align-items: center;
@@ -452,7 +446,6 @@
             flex-shrink: 0;
         }
 
-        /* Чип прогресса актива справа */
         .active-progress-chip {
             display: inline-flex;
             align-items: center;
@@ -466,7 +459,6 @@
             white-space: nowrap;
         }
 
-        /* Инлайн-чипы пауз */
         .pause-inline-chip {
             display: inline-flex;
             align-items: center;
@@ -550,7 +542,7 @@
             border: 1px solid var(--border-color);
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
-            touch-action: pan-y; /* Защита от смещений при свайпах в углах */
+            touch-action: pan-y;
         }
 
         .modal-title {
@@ -634,7 +626,6 @@
             margin-bottom: 16px;
         }
 
-        /* Список средств с эффектом подглядывания (~3.5 карточки) и кастомным скроллбаром */
         .product-manage-list {
             display: flex;
             flex-direction: column;
@@ -718,7 +709,6 @@
             padding: 10px 0;
         }
 
-        /* Современный тумблер переключения */
         .switch {
             position: relative;
             display: inline-block;
@@ -763,7 +753,6 @@
             transform: translateX(20px);
         }
 
-        /* Sticky Footer для кнопок сохранения в форме */
         .form-sticky-footer {
             position: sticky;
             bottom: 0;
@@ -979,14 +968,6 @@
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
             <div class="toggle-container">
-                <span style="font-size: 13px; font-weight: 500;">💖 Праздничный салют при завершении недели</span>
-                <label class="switch">
-                    <input type="checkbox" id="confettiToggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="toggle-container">
                 <span style="font-size: 13px; font-weight: 500;">🌟 Показывать трекер серии и недель</span>
                 <label class="switch">
                     <input type="checkbox" id="streakToggle">
@@ -1000,7 +981,7 @@
 
     <script>
         // Интеллектуальный контроль версии и сброс кэша браузера без потери пользовательских данных
-        const APP_VERSION = '1.4.0';
+        const APP_VERSION = '1.5.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1014,7 +995,6 @@
             console.error('Version check error:', e);
         }
 
-        // Защита от DOM-XSS уязвимостей
         function escapeHtml(str) {
             if (typeof str !== 'string') return '';
             return str.replace(/[&<>"']/g, function(m) {
@@ -1028,7 +1008,6 @@
             });
         }
 
-        // Честный локальный расчёт даты YYYY-MM-DD без сдвигов по Гринвичу (UTC)
         function getLocalTodayStr(d = new Date()) {
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -1036,7 +1015,6 @@
             return `${year}-${month}-${day}`;
         }
 
-        // Функция показа Toast-уведомления с сердечком в цвет темы
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
             const formattedMsg = message.replace('💖', '<span class="toast-heart">❤️</span>');
@@ -1057,11 +1035,9 @@
 
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let currentTOD = 'morning';
-        let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) ?? true;
         let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
 
-        // Фиксация даты установки/первого запуска приложения
         let installDateStr = localStorage.getItem('cb_install_date');
         if (!installDateStr) {
             installDateStr = getLocalTodayStr();
@@ -1071,7 +1047,6 @@
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
 
-        document.getElementById('confettiToggle').checked = enableConfetti;
         document.getElementById('streakToggle').checked = showStreakTracker;
 
         function updateStreakVisibility() {
@@ -1148,7 +1123,6 @@
                 badgeEl.style.display = 'none';
             }
 
-            // Сердечки текущей недели закрашиваются СТРОГО с даты установки по сегодняшний день
             const monday = getStartOfWeek(now);
             const daysMap = [1, 2, 3, 4, 5, 6, 0]; // Пн, Вт, Ср, Чт, Пт, Сб, Вс
 
@@ -1159,7 +1133,9 @@
                 
                 const heartEl = document.getElementById(`heart-${dayNum}`);
                 if (heartEl) {
-                    const isActive = currentDayStr >= installDate && currentDayStr <= todayStr;
+                    const isCompleted = completedLog[currentDayStr] && (completedLog[currentDayStr].morning || completedLog[currentDayStr].evening);
+                    const isPastOrToday = currentDayStr >= installDate && currentDayStr <= todayStr;
+                    const isActive = isCompleted || isPastOrToday;
                     heartEl.classList.toggle('active', isActive);
                 }
             });
@@ -1201,7 +1177,7 @@
             }
         }
 
-        // Интеллектуальный безопасный расчёт недели и шага для активов с учётом пропусков
+        // Логика активов: каждая новая неделя всегда начинается с Шага 1
         function getActiveProgressDetails(item) {
             if (item.type !== 'Активы') return { week: 1, step: 1, totalSteps: 1 };
 
@@ -1210,7 +1186,7 @@
             if (freq === 'custom' && Array.isArray(item.days) && item.days.length > 0) {
                 schDays = [...item.days].sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b));
             } else {
-                schDays = [1, 2, 3, 4, 5, 6, 0]; // ежедневно
+                schDays = [1, 2, 3, 4, 5, 6, 0];
             }
             const Z = schDays.length;
 
@@ -1253,6 +1229,7 @@
                     }
                 }
 
+                // Каждая новая неделя всегда начинается с Шага 1
                 currentStep = 1;
 
                 for (let idx = 0; idx < weekScheduledDates.length; idx++) {
@@ -1277,9 +1254,9 @@
                         }
                     } else {
                         if (stepNum === Z) {
-                            currentStep = 1; // Пропуск последнего шага -> новая неделя с шага 1
+                            currentStep = 1;
                         } else {
-                            currentStep = stepNum; // Повторяем пропущенный промежуточный шаг
+                            currentStep = stepNum;
                         }
                     }
                 }
@@ -1333,11 +1310,9 @@
                 let pauseHtmlAfter = '';
                 const activeProgressHtml = getActiveProgressHtml(item);
 
-                // Пауза ДО — строго НАД средством
                 if (item.hasPause && item.pauseBefore) {
                     pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
                 }
-                // Пауза ПОСЛЕ — строго ПОД средством
                 if (item.hasPause && item.pauseAfter) {
                     pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
                 }
@@ -1393,8 +1368,6 @@
 
         function completeRoutine() {
             const todayStr = getLocalTodayStr();
-            
-            // Фиксируем выполнение шага ТОЛЬКО при нажатии кнопки «Всё сделано»
             const todayDayOfWeek = new Date().getDay();
             let todaysActiveProducts = products.filter(p => {
                 const matchTOD = p.tod === 'both' || p.tod === currentTOD;
@@ -1421,24 +1394,6 @@
 
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
-
-            // Безопасный запуск салюта (не прерывает работу кнопки при любых сбоях анимации)
-            if (enableConfetti && typeof confetti === 'function') {
-                try {
-                    const heartScalar = 2;
-                    const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
-
-                    confetti({
-                        shapes: [heartShape],
-                        scalar: heartScalar,
-                        particleCount: 40,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
-                } catch (e) {
-                    console.error("Confetti error:", e);
-                }
-            }
 
             const todName = currentTOD === 'morning' ? 'Утренний уход' : 'Вечерний уход';
             showToast(`✨ ${todName} выполнен! Отличная работа 💖`);
@@ -1624,11 +1579,9 @@
             renderManageList();
         }
 
-        // Единая точка старта и безопасные слушатели событий (Event Delegation)
         document.addEventListener('DOMContentLoaded', () => {
             renderCurrentDateChip();
 
-            // Переключение тем
             document.getElementById('themeSelector').addEventListener('click', (e) => {
                 const btn = e.target.closest('.theme-btn');
                 if (btn) {
@@ -1637,26 +1590,22 @@
                 }
             });
 
-            // Кнопки интерфейса и настроек
             document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
             document.getElementById('btnAddToggle').addEventListener('click', showForm);
             document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Закрытие модального окна кликом по тёмному оверлею
             document.getElementById('settingsModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('settingsModal')) {
                     closeSettings();
                 }
             });
 
-            // Переключение Утро/Вечер и Завершение ухода
             document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning'));
             document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
             document.getElementById('btnCompleteRoutine').addEventListener('click', completeRoutine);
 
-            // Контролы формы
             document.getElementById('pFreqType').addEventListener('change', toggleFreqDays);
             document.getElementById('pPauseToggle').addEventListener('change', togglePauseInputs);
             document.getElementById('pOpenDate').addEventListener('change', calculateExpiryFromPAO);
@@ -1674,18 +1623,12 @@
                 }
             });
 
-            document.getElementById('confettiToggle').addEventListener('change', (e) => {
-                enableConfetti = e.target.checked;
-                localStorage.setItem('cb_enable_confetti', JSON.stringify(enableConfetti));
-            });
-
             document.getElementById('streakToggle').addEventListener('change', (e) => {
                 showStreakTracker = e.target.checked;
                 localStorage.setItem('cb_show_streak', JSON.stringify(showStreakTracker));
                 renderStreak();
             });
 
-            // Безопасное делегирование событий для списка «Мои средства»
             document.getElementById('manageList').addEventListener('click', (e) => {
                 const btn = e.target.closest('button');
                 if (!btn) return;
@@ -1697,7 +1640,6 @@
                 if (action === 'delete' && id) deleteProduct(id);
             });
 
-            // Поддержка клавиши Escape для закрытия настроек
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('settingsModal');
@@ -1707,7 +1649,6 @@
                 }
             });
 
-            // Первичная и единственная отрисовка при загрузке
             renderRoutine();
         });
     </script>
