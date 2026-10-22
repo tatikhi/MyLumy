@@ -95,6 +95,11 @@
             padding: 24px 16px;
         }
 
+        /* Мягкая блокировка скролла без прыжков страницы */
+        body.modal-open {
+            overflow: hidden;
+        }
+
         .header-bar {
             width: 100%;
             max-width: 480px;
@@ -278,6 +283,45 @@
             padding: 4px 10px;
             border-radius: 10px;
             display: inline-block;
+        }
+
+        /* Toast-уведомление (наверху, над карточкой ухода) */
+        .toast-notification {
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateY(-10px);
+            max-height: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-width: 0;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 80px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            border-width: 1px;
+        }
+
+        .toast-heart {
+            color: var(--accent-main);
+            display: inline-block;
+            transform: scale(1.1);
         }
 
         .main-card {
@@ -464,6 +508,7 @@
             align-items: center;
             padding: 16px;
             z-index: 1000;
+            overscroll-behavior: contain;
         }
 
         .modal-card {
@@ -476,6 +521,8 @@
             padding: 24px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             border: 1px solid var(--border-color);
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal-title {
@@ -568,6 +615,7 @@
             max-height: 215px;
             overflow-y: auto;
             padding-right: 4px;
+            overscroll-behavior: contain;
         }
 
         .product-manage-list::-webkit-scrollbar {
@@ -659,32 +707,6 @@
             border-top: 1px solid var(--border-color);
             z-index: 10;
         }
-
-        /* Toast-уведомление (дофаминовый фидбек) */
-        .toast-notification {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: var(--surface);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-soft);
-            padding: 12px 20px;
-            border-radius: 18px;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 2000;
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        .toast-notification.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
@@ -763,6 +785,9 @@
             🏆 0 месяцев ухода
         </div>
     </div>
+
+    <!-- Всплывающее Toast-уведомление (наверху) -->
+    <div class="toast-notification" id="toastNotification">✨ Уход успешно выполнен!</div>
 
     <div class="main-card">
         <div class="tod-switch">
@@ -897,9 +922,6 @@
         </div>
     </div>
 
-    <!-- Всплывающее Toast-уведомление -->
-    <div class="toast-notification" id="toastNotification">✨ Уход успешно выполнен!</div>
-
     <script>
         // Защита от DOM-XSS уязвимостей
         function escapeHtml(str) {
@@ -923,14 +945,15 @@
             return `${year}-${month}-${day}`;
         }
 
-        // Функция показа Toast-уведомления
+        // Функция показа Toast-уведомления с сердечком в цвет темы
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
-            toast.innerText = message;
+            const formattedMsg = message.replace('💖', '<span class="toast-heart">❤️</span>');
+            toast.innerHTML = formattedMsg;
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 2200);
+            }, 2400);
         }
 
         const typeOrder = {
@@ -1215,6 +1238,7 @@
         function openSettings() {
             renderManageList();
             hideForm();
+            document.body.classList.add('modal-open');
             const modal = document.getElementById('settingsModal');
             modal.style.display = 'flex';
             
@@ -1223,6 +1247,7 @@
         }
 
         function closeSettings() {
+            document.body.classList.remove('modal-open');
             document.getElementById('settingsModal').style.display = 'none';
             resetForm();
             renderRoutine();
