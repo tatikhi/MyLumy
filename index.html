@@ -347,8 +347,15 @@
             border-radius: 18px;
             padding: 14px 16px;
             display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .routine-item-main {
+            display: flex;
             align-items: center;
             justify-content: space-between;
+            width: 100%;
         }
 
         .item-left {
@@ -388,22 +395,18 @@
             margin-top: 2px;
         }
 
-        .pause-divider {
-            display: flex;
+        /* Инлайн-чипы пауз внутри карточки */
+        .pause-inline-chip {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: var(--accent-light);
-            border: 1px dashed var(--accent-main);
-            border-radius: 14px;
-            padding: 8px 12px;
-            font-size: 12px;
+            gap: 4px;
+            font-size: 11px;
             font-weight: 500;
             color: var(--accent-main);
-            margin: -2px 0;
-            align-self: center;
-            width: 90%;
-            text-align: center;
+            background: var(--accent-light);
+            padding: 3px 8px;
+            border-radius: 8px;
+            align-self: flex-start;
         }
 
         .expiry-dots {
@@ -556,13 +559,34 @@
             margin-bottom: 16px;
         }
 
+        /* Список средств с эффектом подглядывания (~3.5 карточки) и кастомным скроллбаром */
         .product-manage-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
             margin-bottom: 16px;
-            max-height: 200px;
+            max-height: 215px;
             overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .product-manage-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .product-manage-list::-webkit-scrollbar-track {
+            background: var(--bg-main);
+            border-radius: 10px;
+        }
+
+        .product-manage-list::-webkit-scrollbar-thumb {
+            background: var(--accent-main);
+            border-radius: 10px;
+        }
+
+        .product-manage-list {
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-main) var(--bg-main);
         }
 
         .manage-item {
@@ -622,6 +646,44 @@
             height: 18px;
             accent-color: var(--accent-main);
             cursor: pointer;
+        }
+
+        /* Sticky Footer для кнопок сохранения в форме */
+        .form-sticky-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--surface);
+            padding-top: 12px;
+            padding-bottom: 4px;
+            margin-top: 16px;
+            border-top: 1px solid var(--border-color);
+            z-index: 10;
+        }
+
+        /* Toast-уведомление (дофаминовый фидбек) */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+            padding: 12px 20px;
+            border-radius: 18px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2000;
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
     </style>
 </head>
@@ -762,14 +824,18 @@
                         <option value="daily">Ежедневно</option>
                         <option value="custom">Выбранные дни недели</option>
                     </select>
-                    <div class="days-picker" id="daysPicker" style="display: none;">
-                        <button type="button" class="day-chip" data-day="1">Пн</button>
-                        <button type="button" class="day-chip" data-day="2">Вт</button>
-                        <button type="button" class="day-chip" data-day="3">Ср</button>
-                        <button type="button" class="day-chip" data-day="4">Чт</button>
-                        <button type="button" class="day-chip" data-day="5">Пт</button>
-                        <button type="button" class="day-chip" data-day="6">Сб</button>
-                        <button type="button" class="day-chip" data-day="0">Вс</button>
+                    <!-- Блок выбора дней с понятной подсказкой -->
+                    <div id="daysGroup" style="display: none; margin-top: 8px;">
+                        <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">📅 В какие дни недели вы используете это средство?</label>
+                        <div class="days-picker" id="daysPicker">
+                            <button type="button" class="day-chip" data-day="1">Пн</button>
+                            <button type="button" class="day-chip" data-day="2">Вт</button>
+                            <button type="button" class="day-chip" data-day="3">Ср</button>
+                            <button type="button" class="day-chip" data-day="4">Чт</button>
+                            <button type="button" class="day-chip" data-day="5">Пт</button>
+                            <button type="button" class="day-chip" data-day="6">Сб</button>
+                            <button type="button" class="day-chip" data-day="0">Вс</button>
+                        </div>
                     </div>
                 </div>
 
@@ -811,8 +877,11 @@
                     <input type="date" id="pExpDate" class="input-control">
                 </div>
 
-                <button type="button" class="btn-action" id="btnSaveProduct" style="margin-top: 8px;">Сохранить средство</button>
-                <button type="button" class="btn-secondary" id="btnCancelProduct">Отмена</button>
+                <!-- Sticky Footer для кнопок сохранения -->
+                <div class="form-sticky-footer">
+                    <button type="button" class="btn-action" id="btnSaveProduct">Сохранить средство</button>
+                    <button type="button" class="btn-secondary" id="btnCancelProduct">Отмена</button>
+                </div>
             </div>
 
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
@@ -827,6 +896,9 @@
             <button type="button" class="btn-secondary" id="btnCloseSettings">Закрыть</button>
         </div>
     </div>
+
+    <!-- Всплывающее Toast-уведомление -->
+    <div class="toast-notification" id="toastNotification">✨ Уход успешно выполнен!</div>
 
     <script>
         // Защита от DOM-XSS уязвимостей
@@ -849,6 +921,16 @@
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        // Функция показа Toast-уведомления
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2200);
         }
 
         const typeOrder = {
@@ -1013,35 +1095,32 @@
 
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
+                let pauseHtmlBefore = '';
+                let pauseHtmlAfter = '';
 
                 if (item.hasPause && item.pauseBefore) {
-                    htmlBuffer.push(`
-                        <div class="pause-divider">
-                            ⏱️ Пауза: ${escapeHtml(String(item.pauseBefore))} минут
-                        </div>
-                    `);
+                    pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
+                }
+                if (item.hasPause && item.pauseAfter) {
+                    pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
                 }
 
                 htmlBuffer.push(`
                     <div class="routine-item">
-                        <div class="item-left">
-                            <div class="item-num">${index + 1}</div>
-                            <div class="item-details">
-                                <span class="item-name">${escapeHtml(item.name)}</span>
-                                <span class="item-tag">${escapeHtml(item.type)}</span>
+                        <div class="routine-item-main">
+                            <div class="item-left">
+                                <div class="item-num">${index + 1}</div>
+                                <div class="item-details">
+                                    <span class="item-name">${escapeHtml(item.name)}</span>
+                                    <span class="item-tag">${escapeHtml(item.type)}</span>
+                                </div>
                             </div>
+                            <div class="expiry-dots">${dotsHtml}</div>
                         </div>
-                        <div class="expiry-dots">${dotsHtml}</div>
+                        ${pauseHtmlBefore}
+                        ${pauseHtmlAfter}
                     </div>
                 `);
-
-                if (item.hasPause && item.pauseAfter) {
-                    htmlBuffer.push(`
-                        <div class="pause-divider">
-                            ⏱️ Пауза: ${escapeHtml(String(item.pauseAfter))} минут
-                        </div>
-                    `);
-                }
             });
 
             container.innerHTML = htmlBuffer.join('');
@@ -1117,7 +1196,7 @@
                 }
                 localStorage.setItem('cb_completed_weeks', JSON.stringify(completedWeeksCount));
 
-                // Устранение «дня сурка»: очищаем историю недели для старта нового цикла
+                // Очистка истории недели (защита от дня сурка)
                 for (let i = 0; i < 7; i++) {
                     const d = new Date(monday);
                     d.setDate(monday.getDate() + i);
@@ -1126,6 +1205,9 @@
                 }
                 localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
             }
+
+            const todName = currentTOD === 'morning' ? 'Утренний уход' : 'Вечерний уход';
+            showToast(`✨ ${todName} выполнен! Отличная работа 💖`);
 
             switchTOD(currentTOD === 'morning' ? 'evening' : 'morning');
         }
@@ -1159,7 +1241,7 @@
 
         function toggleFreqDays() {
             const val = document.getElementById('pFreqType').value;
-            document.getElementById('daysPicker').style.display = val === 'custom' ? 'flex' : 'none';
+            document.getElementById('daysGroup').style.display = val === 'custom' ? 'block' : 'none';
         }
 
         function togglePauseInputs() {
