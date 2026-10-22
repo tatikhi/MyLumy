@@ -896,7 +896,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.49.0';
+        const APP_VERSION = '2.50.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1802,8 +1802,8 @@
                     return;
                 }
 
-                // Защита от закрытия по клику на фон, если открыта форма создания/редактирования
-                if (e.target === document.getElementById('settingsModal')) {
+                // Исправленная проверка: если клик пришелся вне белой карточки (на фон)
+                if (!e.target.closest('.modal-card')) {
                     const isFormVisible = document.getElementById('productFormContainer').style.display === 'block';
                     if (!isFormVisible) {
                         closeSettings();
