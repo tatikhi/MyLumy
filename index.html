@@ -922,6 +922,18 @@
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
             <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section-title brand-font" style="margin-bottom: 8px;">Перенос и бэкап</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button type="button" class="btn-secondary" id="btnCopyShareLink">🔗 Скопировать ссылку для переноса</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" class="btn-secondary" id="btnExportJson" style="flex: 1; margin-top: 0;">📥 Скачать файл (.json)</button>
+                        <button type="button" class="btn-secondary" id="btnImportJson" style="flex: 1; margin-top: 0;">📤 Загрузить файл</button>
+                    </div>
+                    <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+                </div>
+            </div>
+
+            <div class="form-section" style="margin-bottom: 12px;">
                 <div class="form-section-title brand-font" style="margin-bottom: 8px;">Тема оформления</div>
                 <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
                     <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; height: 36px; border-radius: 8px; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
@@ -945,7 +957,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.58.0';
+        const APP_VERSION = '2.59.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1630,6 +1642,149 @@
             }
         });
 
+        // ------------------ ЛОГИКА ЭКСПОРТА / ИМПОРТА / ПЕРЕНОСА ------------------
+        function toBase64(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => 
+                String.fromCharCode('0x' + p1)
+            ));
+        }
+
+        function fromBase64(str) {
+            return decodeURIComponent(Array.prototype.map.call(atob(str), c => 
+                '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join(''));
+        }
+
+        function getBackupData() {
+            return {
+                version: APP_VERSION,
+                timestamp: Date.now(),
+                products: JSON.parse(localStorage.getItem('cb_custom_products')) || [],
+                productProgress: JSON.parse(localStorage.getItem('cb_product_progress')) || {},
+                completedLog: JSON.parse(localStorage.getItem('cb_completed_log')) || {},
+                theme: localStorage.getItem('cb_theme') || 'nude',
+                installDate: localStorage.getItem('cb_install_date') || getLocalTodayStr()
+            };
+        }
+
+        function applyImportData(data) {
+            if (!data || typeof data !== 'object') return false;
+            
+            if (data.products && Array.isArray(data.products)) {
+                localStorage.setItem('cb_custom_products', JSON.stringify(data.products));
+                products = data.products;
+            }
+            if (data.productProgress) {
+                localStorage.setItem('cb_product_progress', JSON.stringify(data.productProgress));
+                productProgress = data.productProgress;
+            }
+            if (data.completedLog) {
+                localStorage.setItem('cb_completed_log', JSON.stringify(data.completedLog));
+                completedLog = data.completedLog;
+            }
+            if (data.theme) {
+                setTheme(data.theme);
+            }
+            if (data.installDate) {
+                localStorage.setItem('cb_install_date', data.installDate);
+            }
+            
+            renderManageList();
+            switchTOD(currentTOD);
+            return true;
+        }
+
+        function exportJsonFile() {
+            const data = getBackupData();
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `myspa_backup_${getLocalTodayStr()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importJsonFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (confirm('Импортировать коллекцию и архив из файла? Все данные будут обновлены.')) {
+                        if (applyImportData(data)) {
+                            showCustomAlert('Данные успешно импортированы!');
+                        }
+                    }
+                } catch (err) {
+                    showCustomAlert('Ошибка чтения файла резервной копии.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function copyShareLink() {
+            try {
+                const data = getBackupData();
+                const jsonStr = JSON.stringify(data);
+                const encoded = toBase64(jsonStr);
+                const fullUrl = window.location.origin + window.location.pathname + '#import=' + encoded;
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(fullUrl).then(() => {
+                        showCustomAlert('🔗 Ссылка скопирована! Отправьте её на второй девайс или в созданный ярлык.');
+                    }).catch(() => {
+                        fallbackCopyText(fullUrl);
+                    });
+                } else {
+                    fallbackCopyText(fullUrl);
+                }
+            } catch(e) {
+                showCustomAlert('Данные слишком объемны для ссылки. Попробуйте скачать файл бэкапа.');
+            }
+        }
+
+        function fallbackCopyText(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showCustomAlert('🔗 Ссылка скопирована в буфер обмена!');
+            } catch(err) {
+                showCustomAlert('Ошибка копирования ссылки');
+            }
+            document.body.removeChild(ta);
+        }
+
+        function checkUrlImport() {
+            if (window.location.hash && window.location.hash.startsWith('#import=')) {
+                const rawHash = window.location.hash.substring(8);
+                if (!rawHash) return;
+                try {
+                    const jsonStr = fromBase64(rawHash);
+                    const data = JSON.parse(jsonStr);
+                    setTimeout(() => {
+                        if (confirm('Найдена ссылка с данными ухода MySpa!\n\nИмпортировать коллекцию и архив на этот девайс?')) {
+                            if (applyImportData(data)) {
+                                showCustomAlert('Коллекция и архив успешно перенесены!');
+                            }
+                        }
+                        history.replaceState(null, null, window.location.pathname);
+                    }, 400);
+                } catch (err) {
+                    console.error('Import from URL failed', err);
+                }
+            }
+        }
+
         function saveProduct() {
             const name = document.getElementById('pName').value.trim();
             
@@ -1922,6 +2077,19 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
+            // Навешивание слушателей для импорта/экспорта
+            document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
+            document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
+            document.getElementById('btnImportJson').addEventListener('click', () => {
+                document.getElementById('jsonFileInput').click();
+            });
+            document.getElementById('jsonFileInput').addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    importJsonFile(e.target.files[0]);
+                    e.target.value = '';
+                }
+            });
+
             document.getElementById('typePicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
@@ -2023,8 +2191,9 @@
                 }
             });
 
-            // Инициализация верного времени суток и активной кнопки
+            // Синхронизируем интерфейс и сразу проверяем наличие ссылки для импорта
             switchTOD(currentTOD);
+            checkUrlImport();
         });
     </script>
 </body>
