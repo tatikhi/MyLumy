@@ -785,6 +785,11 @@
             <button type="button" class="tod-btn" id="btnEvening">Вечерний уход</button>
         </div>
 
+        <!-- Плашка для завтрашнего плана -->
+        <div id="tomorrowNoticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;">
+            Это план на завтра!
+        </div>
+
         <div class="routine-list" id="routineContainer"></div>
 
         <button type="button" class="btn-action" id="btnCompleteRoutine">✨ Всё сделано</button>
@@ -966,7 +971,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.17.0';
+        const APP_VERSION = '2.19.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1002,24 +1007,50 @@
 
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
 
-        // Определение эффективной даты отображения (с учетом льготного периода до 02:00 ночи для вчерашнего вечера)
+        // Управление смещением дней и проверкой смены реальной даты
+        const realTodayStr = getLocalTodayStr(new Date());
+        let lastRealDate = localStorage.getItem('cb_last_real_date');
+        let viewDateOffset = parseInt(localStorage.getItem('cb_view_date_offset')) || 0;
+
+        if (lastRealDate !== realTodayStr) {
+            viewDateOffset = 0;
+            localStorage.setItem('cb_last_real_date', realTodayStr);
+            localStorage.setItem('cb_view_date_offset', 0);
+            localStorage.removeItem('cb_is_tomorrow_plan');
+        }
+
         function getEffectiveViewingDate() {
             const now = new Date();
             const realDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const hours = now.getHours();
 
-            if (hours < 2) {
+            // Льготный период до 02:00 ночи для вчерашнего вечера, если он не был завершен
+            if (hours < 2 && viewDateOffset === 0) {
                 const yesterday = new Date(realDate);
                 yesterday.setDate(yesterday.getDate() - 1);
                 const yesterdayStr = getLocalTodayStr(yesterday);
-                
                 const yLog = completedLog[yesterdayStr];
                 if (!yLog || !yLog.evening) {
                     return yesterday;
                 }
             }
 
-            return realDate;
+            const effective = new Date(realDate);
+            effective.setDate(effective.getDate() + viewDateOffset);
+            return effective;
+        }
+
+        function shouldShowTomorrowNotice() {
+            const isTomorrowPlan = localStorage.getItem('cb_is_tomorrow_plan') === 'true';
+            if (!isTomorrowPlan) return false;
+            
+            const now = new Date();
+            const hours = now.getHours();
+            if (hours >= 2) {
+                localStorage.removeItem('cb_is_tomorrow_plan');
+                return false;
+            }
+            return true;
         }
 
         const typeOrder = {
@@ -1286,6 +1317,13 @@
         function renderRoutine() {
             renderStreak();
             renderCurrentDateChip();
+            
+            // Управление отображением плашки "Это план на завтра!"
+            const tomorrowBanner = document.getElementById('tomorrowNoticeBanner');
+            if (tomorrowBanner) {
+                tomorrowBanner.style.display = shouldShowTomorrowNotice() ? 'block' : 'none';
+            }
+
             const container = document.getElementById('routineContainer');
             const today = getEffectiveViewingDate();
             const todayDayOfWeek = today.getDay();
@@ -1414,6 +1452,10 @@
             if (currentTOD === 'morning') {
                 switchTOD('evening');
             } else {
+                // При завершении вечера переходим на утренний уход следующего дня и активируем плашку плана на завтра
+                viewDateOffset++;
+                localStorage.setItem('cb_view_date_offset', viewDateOffset);
+                localStorage.setItem('cb_is_tomorrow_plan', 'true');
                 switchTOD('morning');
             }
         }
