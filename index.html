@@ -929,6 +929,7 @@
                         <button type="button" class="btn-secondary" id="btnExportJson" style="flex: 1; margin-top: 0;">📥 Скачать файл (.json)</button>
                         <button type="button" class="btn-secondary" id="btnImportJson" style="flex: 1; margin-top: 0;">📤 Загрузить файл</button>
                     </div>
+                    <button type="button" class="btn-secondary" id="btnForceUpdate" style="margin-top: 0;">🔄 Проверить и обновить MySpa</button>
                     <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
                 </div>
             </div>
@@ -957,7 +958,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.59.0';
+        const APP_VERSION = '2.60.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1642,7 +1643,7 @@
             }
         });
 
-        // ------------------ ЛОГИКА ЭКСПОРТА / ИМПОРТА / ПЕРЕНОСА ------------------
+        // ------------------ ЛОГИКА ЭКСПОРТА / ИМПОРТА / ПЕРЕНОСА / ОБНОВЛЕНИЯ ------------------
         function toBase64(str) {
             return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => 
                 String.fromCharCode('0x' + p1)
@@ -1714,7 +1715,7 @@
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (confirm('Импортировать коллекцию и архив из файла? Все данные будут обновлены.')) {
+                    if (confirm('Импортировать коллекцию и архив из файла? Все текущие данные будут обновлены.')) {
                         if (applyImportData(data)) {
                             showCustomAlert('Данные успешно импортированы!');
                         }
@@ -1735,7 +1736,7 @@
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(fullUrl).then(() => {
-                        showCustomAlert('🔗 Ссылка скопирована! Отправьте её на второй девайс или в созданный ярлык.');
+                        showCustomAlert('🔗 Ссылка скопирована! Отправьте её на второй девайс или открывайте в ярлыке.');
                     }).catch(() => {
                         fallbackCopyText(fullUrl);
                     });
@@ -1743,7 +1744,7 @@
                     fallbackCopyText(fullUrl);
                 }
             } catch(e) {
-                showCustomAlert('Данные слишком объемны для ссылки. Попробуйте скачать файл бэкапа.');
+                showCustomAlert('Данные слишком объемны для ссылки. Воспользуйтесь кнопкой "Скачать файл (.json)".');
             }
         }
 
@@ -1764,7 +1765,19 @@
             document.body.removeChild(ta);
         }
 
+        function forceAppUpdate() {
+            if (confirm('Проверить и обновить MySpa?\n\nВсе ваши средства, история и архив сохранятся.')) {
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.location.href = cleanUrl + '?reload=' + Date.now();
+            }
+        }
+
         function checkUrlImport() {
+            // Очищаем служебный параметр перезагрузки из URL
+            if (window.location.search && window.location.search.includes('reload=')) {
+                history.replaceState(null, null, window.location.pathname + window.location.hash);
+            }
+
             if (window.location.hash && window.location.hash.startsWith('#import=')) {
                 const rawHash = window.location.hash.substring(8);
                 if (!rawHash) return;
@@ -2077,7 +2090,7 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Навешивание слушателей для импорта/экспорта
+            // Обработчики переноса, бэкапа и принудительного обновления
             document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
             document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
             document.getElementById('btnImportJson').addEventListener('click', () => {
@@ -2089,6 +2102,7 @@
                     e.target.value = '';
                 }
             });
+            document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
 
             document.getElementById('typePicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
@@ -2191,7 +2205,7 @@
                 }
             });
 
-            // Синхронизируем интерфейс и сразу проверяем наличие ссылки для импорта
+            // Инициализация верного времени суток и проверка входящих ссылок
             switchTOD(currentTOD);
             checkUrlImport();
         });
