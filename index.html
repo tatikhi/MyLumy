@@ -10,7 +10,7 @@
     
     <title>MySpa</title>
     <!-- Подключаем шрифт Montserrat для премиального скандинавского стиля логотипа -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
     <!-- Подключаем библиотеку сканирования штрихкодов Html5-Qrcode -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <style>
@@ -519,6 +519,11 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
 
+        /* Стиль активного прямоугольника темы */
+        #themeRow .picker-btn.active {
+            box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main);
+        }
+
         /* Компактные дни недели (строго в 1 ряд без переноса) */
         .days-picker {
             display: flex;
@@ -596,6 +601,10 @@
             color: var(--accent-main);
             font-size: 14px;
             font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            font-style: italic;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
             cursor: pointer;
             margin-bottom: 12px;
         }
@@ -803,11 +812,14 @@
             
             <div class="product-manage-list" id="manageList"></div>
 
-            <button type="button" class="btn-add-toggle" id="btnAddToggle">+ Добавить средство</button>
+            <button type="button" class="btn-add-toggle" id="btnAddToggle">+ добавить средство</button>
             <button type="button" class="btn-secondary" id="btnScanBarcode" style="margin-bottom: 16px;">📷 Сканировать штрихкод</button>
             
-            <!-- Контейнер для камеры сканера штрихкодов -->
-            <div id="barcodeReader" style="display: none; margin-bottom: 16px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color);"></div>
+            <!-- Контейнер для камеры сканера штрихкодов с кнопкой отмены -->
+            <div id="scannerWrapper" style="display: none; margin-bottom: 16px;">
+                <div id="barcodeReader" style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
+                <button type="button" class="btn-secondary" id="btnCancelScanner">Отмена</button>
+            </div>
 
             <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
                 <!-- Центральная плашка для неизвестного штрихкода -->
@@ -823,8 +835,8 @@
                     <div class="form-section-title">О средстве</div>
                     
                     <div class="form-group">
-                        <label for="pName">Название средства</label>
-                        <input type="text" id="pName" class="input-control" placeholder="Напр. Гельтек Пенка или Retiderm">
+                        <label for="pName">Название</label>
+                        <input type="text" id="pName" class="input-control" placeholder="">
                     </div>
 
                     <div class="form-group">
@@ -909,7 +921,7 @@
 
                     <div class="form-group">
                         <label for="pOpenDate">Дата вскрытия</label>
-                        <input type="date" id="pOpenDate" class="input-control">
+                        <input type="text" placeholder="Выбрать дату" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" id="pOpenDate" class="input-control">
                     </div>
 
                     <div class="form-group">
@@ -940,7 +952,6 @@
             <div class="form-section" style="margin-bottom: 12px;">
                 <div class="form-section-title" style="margin-bottom: 8px;">Тема оформления</div>
                 <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
-                    <button type="button" class="picker-btn auto-btn" data-theme="auto" style="flex: 1; height: 36px; border-radius: 8px; font-size: 10px; padding: 0; display: flex; align-items: center; justify-content: center;" title="Авто">📱</button>
                     <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; height: 36px; border-radius: 8px; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
                     <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; height: 36px; border-radius: 8px; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
                     <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; height: 36px; border-radius: 8px; background: #8B789D; border-color: #8B789D;" title="Lavender"></button>
@@ -950,7 +961,7 @@
             </div>
 
             <div class="toggle-container">
-                <span style="font-size: 13px; font-weight: 500;">Показывать трекер серии</span>
+                <span style="font-size: 13px; font-weight: 500;">отмечать пройденные дни</span>
                 <label class="switch">
                     <input type="checkbox" id="streakToggle">
                     <span class="slider"></span>
@@ -970,7 +981,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.9.0';
+        const APP_VERSION = '2.12.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1046,28 +1057,26 @@
         }
 
         function setTheme(theme) {
-            const activeTheme = theme || 'auto';
-            if (activeTheme === 'auto') {
+            let activeTheme = theme;
+            if (!activeTheme) {
                 const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.body.setAttribute('data-theme', isDark ? 'midnight' : 'nude');
-                localStorage.setItem('cb_theme', 'auto');
-            } else {
-                document.body.setAttribute('data-theme', activeTheme);
-                localStorage.setItem('cb_theme', activeTheme);
+                activeTheme = isDark ? 'midnight' : 'nude';
             }
+            document.body.setAttribute('data-theme', activeTheme);
+            localStorage.setItem('cb_theme', activeTheme);
 
             document.querySelectorAll('#themeRow [data-theme]').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-theme') === activeTheme);
             });
         }
 
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            if (localStorage.getItem('cb_theme') === 'auto' || !localStorage.getItem('cb_theme')) {
-                setTheme('auto');
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('cb_theme')) {
+                setTheme(e.matches ? 'midnight' : 'nude');
             }
         });
 
-        setTheme(localStorage.getItem('cb_theme') || 'auto');
+        setTheme(localStorage.getItem('cb_theme'));
 
         function switchTOD(tod) {
             currentTOD = tod;
@@ -1141,7 +1150,9 @@
         function calculateExpiryFromPAO() {
             const openDateInput = document.getElementById('pOpenDate');
             if (!openDateInput.value) {
-                openDateInput.value = getLocalTodayStr();
+                const todayStr = getLocalTodayStr();
+                openDateInput.value = todayStr;
+                openDateInput.type = 'date';
             }
 
             if (selectedPAOMonths) {
@@ -1277,7 +1288,7 @@
             const btnAction = document.getElementById('btnCompleteRoutine');
             if (products.length === 0) {
                 container.innerHTML = '';
-                btnAction.innerText = 'моя коллекция (добавить средства)';
+                btnAction.innerHTML = '<span class="brand-font">моя коллекция</span> (добавить средства)';
             } else {
                 btnAction.innerText = '✨ Всё сделано';
                 if (activeProducts.length === 0) {
@@ -1427,8 +1438,9 @@
         }
 
         async function startBarcodeScanner() {
-            const readerEl = document.getElementById('barcodeReader');
-            readerEl.style.display = 'block';
+            const scannerWrapper = document.getElementById('scannerWrapper');
+            scannerWrapper.style.display = 'block';
+            document.getElementById('btnScanBarcode').style.display = 'none';
 
             if (!html5QrCodeScanner) {
                 html5QrCodeScanner = new Html5Qrcode("barcodeReader");
@@ -1477,18 +1489,19 @@
             } catch (err) {
                 console.error("Camera start error:", err);
                 alert("Не удалось запустить камеру. Проверьте разрешения браузера.");
-                readerEl.style.display = 'none';
+                stopBarcodeScanner();
             }
         }
 
         async function stopBarcodeScanner() {
-            const readerEl = document.getElementById('barcodeReader');
+            const scannerWrapper = document.getElementById('scannerWrapper');
             if (html5QrCodeScanner) {
                 try {
                     await html5QrCodeScanner.stop();
                 } catch (e) {}
             }
-            readerEl.style.display = 'none';
+            scannerWrapper.style.display = 'none';
+            document.getElementById('btnScanBarcode').style.display = 'block';
         }
 
         function togglePauseInputs() {
@@ -1533,7 +1546,8 @@
 
             const freqType = document.getElementById('pFreqType').value;
             const hasPause = document.getElementById('pPauseToggle').checked;
-            const openDate = document.getElementById('pOpenDate').value;
+            const openDateEl = document.getElementById('pOpenDate');
+            const openDate = openDateEl.type === 'date' ? openDateEl.value : '';
             const expDate = document.getElementById('pExpDate').value;
             const editId = document.getElementById('editProductId').value;
 
@@ -1613,7 +1627,14 @@
             applyPauseBefore(item.pauseBefore || null);
             applyPauseAfter(item.pauseAfter || null);
 
-            document.getElementById('pOpenDate').value = item.openDate || '';
+            const openDateEl = document.getElementById('pOpenDate');
+            if (item.openDate) {
+                openDateEl.value = item.openDate;
+                openDateEl.type = 'date';
+            } else {
+                openDateEl.value = '';
+                openDateEl.type = 'text';
+            }
             document.getElementById('pExpDate').value = item.expDate || '';
 
             if (item.paoMonths) {
@@ -1650,7 +1671,9 @@
             document.getElementById('pPauseToggle').checked = false;
             document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(b => b.classList.remove('active'));
             
-            document.getElementById('pOpenDate').value = '';
+            const openDateEl = document.getElementById('pOpenDate');
+            openDateEl.value = '';
+            openDateEl.type = 'text';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
             togglePauseInputs();
@@ -1707,6 +1730,7 @@
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
             document.getElementById('btnAddToggle').addEventListener('click', () => showForm(false));
             document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
+            document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
             document.getElementById('btnCancelProduct').addEventListener('click', () => {
                 stopBarcodeScanner();
                 hideForm();
