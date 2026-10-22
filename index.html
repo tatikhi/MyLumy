@@ -374,7 +374,6 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(4px);
-            pointer-events: auto; /* Гарантирует корректный прием касаний на планшетах и мобильных */
             display: none;
             justify-content: center;
             align-items: center;
@@ -897,7 +896,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.51.0';
+        const APP_VERSION = '2.52.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1795,8 +1794,8 @@
                 renderRoutine();
             });
 
-            // Используем pointerdown для надежного срабатывания на планшетах и сенсорных экранах
-            document.getElementById('settingsModal').addEventListener('pointerdown', (e) => {
+            // Корректный обработчик закрытия окна коллекции при клике по фону
+            document.getElementById('settingsModal').addEventListener('click', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
                     const theme = themeBtn.getAttribute('data-theme');
@@ -1804,7 +1803,7 @@
                     return;
                 }
 
-                // Если клик пришелся строго по фону (а не по модальной карточке)
+                // Закрываем окно ТОЛЬКО если клик был вне белой карточки И при этом скрыта форма добавления/редактирования
                 if (!e.target.closest('.modal-card')) {
                     const isFormVisible = document.getElementById('productFormContainer').style.display === 'block';
                     if (!isFormVisible) {
