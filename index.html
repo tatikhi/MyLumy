@@ -439,7 +439,29 @@
             margin-top: 2px;
         }
 
-        /* Инлайн-чипы пауз и прогресса активов внутри карточки */
+        /* Правая группа элементов в карточке (шаг недели + точки срока) */
+        .item-right-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Чип прогресса актива справа */
+        .active-progress-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent-main);
+            background: var(--accent-light);
+            padding: 3px 6px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        /* Инлайн-чипы пауз */
         .pause-inline-chip {
             display: inline-flex;
             align-items: center;
@@ -523,6 +545,7 @@
             border: 1px solid var(--border-color);
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
+            touch-action: pan-y; /* Защита от смещений при свайпах в углах */
         }
 
         .modal-title {
@@ -616,6 +639,7 @@
             overflow-y: auto;
             padding-right: 4px;
             overscroll-behavior: contain;
+            touch-action: pan-y;
         }
 
         .product-manage-list::-webkit-scrollbar {
@@ -1020,9 +1044,14 @@
         let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
 
+        // Фиксация даты установки/первого запуска приложения
+        let installDateStr = localStorage.getItem('cb_install_date');
+        if (!installDateStr) {
+            installDateStr = new Date().toISOString();
+            localStorage.setItem('cb_install_date', installDateStr);
+        }
+
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
-        let completedWeeksCount = JSON.parse(localStorage.getItem('cb_completed_weeks')) || 0;
-        let completedMonthsTotal = JSON.parse(localStorage.getItem('cb_completed_months_total')) || 0;
         let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
 
         document.getElementById('confettiToggle').checked = enableConfetti;
@@ -1078,27 +1107,16 @@
             if (!showStreakTracker) return;
 
             const now = new Date();
-            const monday = getStartOfWeek(now);
-            const daysMap = [1, 2, 3, 4, 5, 6, 0];
+            const installDate = new Date(installDateStr);
+            const diffTime = now - installDate;
+            const daysSinceInstall = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
 
-            daysMap.forEach((dayNum, index) => {
-                const currentDayDate = new Date(monday);
-                currentDayDate.setDate(monday.getDate() + index);
-                const dateKey = getLocalTodayStr(currentDayDate);
-
-                const dayLog = completedLog[dateKey] || {};
-                const isFullDayDone = dayLog.morning && dayLog.evening;
-
-                const heartEl = document.getElementById(`heart-${dayNum}`);
-                if (heartEl) {
-                    heartEl.classList.toggle('active', Boolean(isFullDayDone));
-                }
-            });
+            const completedMonthsTotal = Math.floor(daysSinceInstall / 28);
 
             for (let w = 1; w <= 4; w++) {
                 const starEl = document.getElementById(`star-${w}`);
                 if (starEl) {
-                    starEl.classList.toggle('active', w <= completedWeeksCount);
+                    starEl.classList.toggle('active', w <= Math.min(4, Math.floor(daysSinceInstall / 7)));
                 }
             }
 
@@ -1110,6 +1128,21 @@
             } else {
                 badgeEl.style.display = 'none';
             }
+
+            // Сердечки текущей недели закрашиваются автоматически
+            const monday = getStartOfWeek(now);
+            const daysMap = [1, 2, 3, 4, 5, 6, 0]; // Пн, Вт, Ср, Чт, Пт, Сб, Вс
+
+            daysMap.forEach((dayNum, index) => {
+                const currentDayDate = new Date(monday);
+                currentDayDate.setDate(monday.getDate() + index);
+                
+                const heartEl = document.getElementById(`heart-${dayNum}`);
+                if (heartEl) {
+                    const isPastOrToday = currentDayDate <= now;
+                    heartEl.classList.toggle('active', isPastOrToday);
+                }
+            });
         }
 
         function getMonthDeclension(number) {
@@ -1148,7 +1181,7 @@
             }
         }
 
-        // Расчёт шагов для активов: Неделя X, шаг Y из Z
+        // Расчёт шагов для активов (Неделя X, шаг Y из Z)
         function getActiveProgressHtml(item) {
             if (item.type !== 'Активы') return '';
             const Z = item.freqType === 'custom' ? (Array.isArray(item.days) && item.days.length > 0 ? item.days.length : 1) : 7;
@@ -1156,7 +1189,7 @@
             const count = dates.length;
             const week = Math.floor(count / Z) + 1;
             const stepInWeek = (count % Z) + 1;
-            return `<div class="pause-inline-chip">🧬 Неделя ${week}, шаг ${stepInWeek} из ${Z}</div>`;
+            return `<div class="active-progress-chip">🧬 Нед ${week}, шаг ${stepInWeek}/${Z}</div>`;
         }
 
         function renderRoutine() {
@@ -1194,15 +1227,18 @@
                 let pauseHtmlAfter = '';
                 const activeProgressHtml = getActiveProgressHtml(item);
 
+                // Пауза ДО — строго НАД средством
                 if (item.hasPause && item.pauseBefore) {
                     pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
                 }
+                // Пауза ПОСЛЕ — строго ПОД средством
                 if (item.hasPause && item.pauseAfter) {
                     pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
                 }
 
                 htmlBuffer.push(`
                     <div class="routine-item">
+                        ${pauseHtmlBefore}
                         <div class="routine-item-main">
                             <div class="item-left">
                                 <div class="item-num">${index + 1}</div>
@@ -1211,10 +1247,11 @@
                                     <span class="item-tag">${escapeHtml(item.type)}</span>
                                 </div>
                             </div>
-                            <div class="expiry-dots">${dotsHtml}</div>
+                            <div class="item-right-group">
+                                ${activeProgressHtml}
+                                <div class="expiry-dots">${dotsHtml}</div>
+                            </div>
                         </div>
-                        ${activeProgressHtml}
-                        ${pauseHtmlBefore}
                         ${pauseHtmlAfter}
                     </div>
                 `);
@@ -1251,7 +1288,7 @@
         function completeRoutine() {
             const todayStr = getLocalTodayStr();
             
-            // Фиксируем выполнение шагов для активных средств сегодняшнего ухода
+            // Фиксируем выполнение шага ТОЛЬКО при нажатии кнопки «Всё сделано»
             const todayDayOfWeek = new Date().getDay();
             let todaysActiveProducts = products.filter(p => {
                 const matchTOD = p.tod === 'both' || p.tod === currentTOD;
@@ -1279,49 +1316,17 @@
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
-            const now = new Date();
-            const monday = getStartOfWeek(now);
-            let daysThisWeek = 0;
+            if (enableConfetti && typeof confetti === 'function') {
+                const heartScalar = 2;
+                const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
 
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(monday);
-                d.setDate(monday.getDate() + i);
-                const dKey = getLocalTodayStr(d);
-                if (completedLog[dKey] && completedLog[dKey].morning && completedLog[dKey].evening) {
-                    daysThisWeek++;
-                }
-            }
-
-            if (daysThisWeek === 7) {
-                if (enableConfetti && typeof confetti === 'function') {
-                    const heartScalar = 2;
-                    const heartShape = confetti.shapeFromText({ text: '💖', scalar: heartScalar });
-
-                    confetti({
-                        shapes: [heartShape],
-                        scalar: heartScalar,
-                        particleCount: 50,
-                        spread: 80,
-                        origin: { y: 0.6 }
-                    });
-                }
-
-                completedWeeksCount++;
-                if (completedWeeksCount >= 4) {
-                    completedWeeksCount = 0;
-                    completedMonthsTotal++;
-                    localStorage.setItem('cb_completed_months_total', JSON.stringify(completedMonthsTotal));
-                }
-                localStorage.setItem('cb_completed_weeks', JSON.stringify(completedWeeksCount));
-
-                // Очистка истории недели (защита от дня сурка)
-                for (let i = 0; i < 7; i++) {
-                    const d = new Date(monday);
-                    d.setDate(monday.getDate() + i);
-                    const dKey = getLocalTodayStr(d);
-                    delete completedLog[dKey];
-                }
-                localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
+                confetti({
+                    shapes: [heartShape],
+                    scalar: heartScalar,
+                    particleCount: 40,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
             }
 
             const todName = currentTOD === 'morning' ? 'Утренний уход' : 'Вечерний уход';
