@@ -117,9 +117,9 @@
             align-items: center;
         }
 
-        .theme-dot {
-            width: 18px;
-            height: 18px;
+        .theme-btn {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid var(--surface);
@@ -129,13 +129,16 @@
             align-items: center;
             justify-content: center;
             font-size: 10px;
+            padding: 0;
+            background: transparent;
         }
 
-        .theme-dot:hover {
+        .theme-btn:hover, .theme-btn:focus-visible {
             transform: scale(1.2);
+            outline: 2px solid var(--accent-main);
         }
 
-        .theme-dot.auto-dot {
+        .theme-btn.auto-btn {
             background: var(--surface);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
@@ -157,7 +160,6 @@
             white-space: nowrap;
         }
 
-        /* Недельный и Месячный трекер прогресса с SVG иконками */
         .streak-card {
             background: var(--surface);
             border-radius: 20px;
@@ -212,7 +214,6 @@
             color: var(--text-secondary);
         }
 
-        /* Трекер 4 недель (звёздочки SVG) */
         .weeks-container {
             display: flex;
             justify-content: center;
@@ -351,7 +352,6 @@
             margin-top: 2px;
         }
 
-        /* Самостоятельный разделительный блок пауз между карточками */
         .pause-divider {
             display: flex;
             align-items: center;
@@ -412,7 +412,6 @@
             line-height: 1.5;
         }
 
-        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -470,24 +469,26 @@
             outline: none;
         }
 
-        .days-picker {
+        .days-picker, .pao-picker {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             margin-top: 8px;
         }
 
-        .day-chip {
-            padding: 6px 10px;
+        .day-chip, .pao-chip {
+            padding: 6px 12px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             background: var(--bg-main);
             font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
             color: var(--text-secondary);
+            transition: all 0.2s;
         }
 
-        .day-chip.active {
+        .day-chip.active, .pao-chip.active {
             background: var(--accent-main);
             color: #FFF;
             border-color: var(--accent-main);
@@ -550,17 +551,16 @@
             align-items: center;
         }
 
-        .manage-edit {
+        .manage-edit, .manage-del {
             cursor: pointer;
+            border: none;
+            background: transparent;
             font-size: 13px;
-            opacity: 0.8;
         }
 
         .manage-del {
             color: #E74C3C;
-            cursor: pointer;
             font-weight: bold;
-            padding: 2px 4px;
         }
 
         .toggle-container {
@@ -584,22 +584,21 @@
         <div class="logo">Care & Beauty</div>
         <div style="display: flex; gap: 10px; align-items: center;">
             <div class="theme-selector">
-                <div class="theme-dot auto-dot" onclick="setTheme('auto')" title="Тема как на устройстве">📱</div>
-                <div class="theme-dot" style="background: #C49A82;" onclick="setTheme('nude')" title="Nude & Silk"></div>
-                <div class="theme-dot" style="background: #5B8A82;" onclick="setTheme('mint')" title="Eucalyptus & Mint"></div>
-                <div class="theme-dot" style="background: #8B789D;" onclick="setTheme('lavender')" title="Blush Lavender"></div>
-                <div class="theme-dot" style="background: #3A4D39;" onclick="setTheme('sage')" title="Sage & Spa"></div>
-                <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')" title="Midnight Calm"></div>
+                <button type="button" class="theme-btn auto-btn" onclick="setTheme('auto')" aria-label="Тема как на устройстве" title="Тема как на устройстве">📱</button>
+                <button type="button" class="theme-btn" style="background: #C49A82;" onclick="setTheme('nude')" aria-label="Тема Nude & Silk" title="Nude & Silk"></button>
+                <button type="button" class="theme-btn" style="background: #5B8A82;" onclick="setTheme('mint')" aria-label="Тема Eucalyptus & Mint" title="Eucalyptus & Mint"></button>
+                <button type="button" class="theme-btn" style="background: #8B789D;" onclick="setTheme('lavender')" aria-label="Тема Blush Lavender" title="Blush Lavender"></button>
+                <button type="button" class="theme-btn" style="background: #3A4D39;" onclick="setTheme('sage')" aria-label="Тема Sage & Spa" title="Sage & Spa"></button>
+                <button type="button" class="theme-btn" style="background: #242A3B;" onclick="setTheme('midnight')" aria-label="Тема Midnight Calm" title="Midnight Calm"></button>
             </div>
-            <button class="btn-settings" onclick="openSettings()">⚙️ Настройки</button>
+            <button type="button" class="btn-settings" onclick="openSettings()">⚙️ Настройки</button>
         </div>
     </div>
 
-    <!-- Недельный и Месячный трекер прогресса с SVG иконками -->
+    <!-- Трекер прогресса с SVG иконками -->
     <div class="streak-card">
         <div class="streak-title">Люби себя каждый день 💖</div>
         <div class="hearts-container" id="heartsContainer">
-            <!-- ПН = 1, ВТ = 2, СР = 3, ЧТ = 4, ПТ = 5, СБ = 6, ВС = 0 -->
             <div class="heart-item" id="heart-1">
                 <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                 <span class="heart-day">ПН</span>
@@ -630,7 +629,6 @@
             </div>
         </div>
 
-        <!-- Звёздочки 4 недель месяца (SVG) -->
         <div class="weeks-container">
             <div class="star-item" id="star-1">
                 <svg class="star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
@@ -653,8 +651,8 @@
 
     <div class="main-card">
         <div class="tod-switch">
-            <button class="tod-btn active" id="btnMorning" onclick="switchTOD('morning')">☀️ Утренний уход</button>
-            <button class="tod-btn" id="btnEvening" onclick="switchTOD('evening')">🌙 Вечерний уход</button>
+            <button type="button" class="tod-btn active" id="btnMorning" onclick="switchTOD('morning')">☀️ Утренний уход</button>
+            <button type="button" class="tod-btn" id="btnEvening" onclick="switchTOD('evening')">🌙 Вечерний уход</button>
         </div>
 
         <div class="card-header">
@@ -664,30 +662,29 @@
 
         <div class="routine-list" id="routineContainer"></div>
 
-        <button class="btn-action" onclick="completeRoutine()">✨ Всё сделано</button>
+        <button type="button" class="btn-action" onclick="completeRoutine()">✨ Всё сделано</button>
     </div>
 
-    <!-- Модальное окно настроек "Мои средства" -->
+    <!-- Модальное окно "Мои средства" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card">
             <div class="modal-title">Мои средства</div>
             
             <div class="product-manage-list" id="manageList"></div>
 
-            <button class="btn-add-toggle" id="btnAddToggle" onclick="showForm()">+ Добавить средство</button>
+            <button type="button" class="btn-add-toggle" id="btnAddToggle" onclick="showForm()">+ Добавить средство</button>
 
-            <!-- По умолчанию скрытая форма добавления / редактирования -->
             <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
                 <div class="modal-title" id="formModalTitle" style="font-size: 15px;">Новое средство</div>
                 <input type="hidden" id="editProductId" value="">
 
                 <div class="form-group">
-                    <label>Название средства</label>
+                    <label for="pName">Название средства</label>
                     <input type="text" id="pName" class="input-control" placeholder="Напр. Retiderm 0.25 или Пенка">
                 </div>
 
                 <div class="form-group">
-                    <label>Тип / Этап ухода</label>
+                    <label for="pType">Тип / Этап ухода</label>
                     <select id="pType" class="input-control">
                         <option value="Очищение">Очищение</option>
                         <option value="Тонизирование">Тонизирование</option>
@@ -698,7 +695,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Время суток</label>
+                    <label for="pTOD">Время суток</label>
                     <select id="pTOD" class="input-control">
                         <option value="both">И утро, и вечер</option>
                         <option value="morning">Только утро</option>
@@ -707,23 +704,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Частота применения</label>
+                    <label for="pFreqType">Частота применения</label>
                     <select id="pFreqType" class="input-control" onchange="toggleFreqDays()">
                         <option value="daily">Ежедневно</option>
                         <option value="custom">Выбранные дни недели</option>
                     </select>
                     <div class="days-picker" id="daysPicker" style="display: none;">
-                        <div class="day-chip" data-day="1" onclick="toggleDayChip(this)">Пн</div>
-                        <div class="day-chip" data-day="2" onclick="toggleDayChip(this)">Вт</div>
-                        <div class="day-chip" data-day="3" onclick="toggleDayChip(this)">Ср</div>
-                        <div class="day-chip" data-day="4" onclick="toggleDayChip(this)">Чт</div>
-                        <div class="day-chip" data-day="5" onclick="toggleDayChip(this)">Пт</div>
-                        <div class="day-chip" data-day="6" onclick="toggleDayChip(this)">Сб</div>
-                        <div class="day-chip" data-day="0" onclick="toggleDayChip(this)">Вс</div>
+                        <button type="button" class="day-chip" data-day="1" onclick="toggleDayChip(this)">Пн</button>
+                        <button type="button" class="day-chip" data-day="2" onclick="toggleDayChip(this)">Вт</button>
+                        <button type="button" class="day-chip" data-day="3" onclick="toggleDayChip(this)">СР</button>
+                        <button type="button" class="day-chip" data-day="4" onclick="toggleDayChip(this)">Чт</button>
+                        <button type="button" class="day-chip" data-day="5" onclick="toggleDayChip(this)">Пт</button>
+                        <button type="button" class="day-chip" data-day="6" onclick="toggleDayChip(this)">СБ</button>
+                        <button type="button" class="day-chip" data-day="0" onclick="toggleDayChip(this)">ВС</button>
                     </div>
                 </div>
 
-                <!-- Настройки пауз ДО и ПОСЛЕ нанесения -->
                 <div class="form-group">
                     <div class="toggle-container">
                         <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">⏱️ Включить паузу/выдержку для средства</label>
@@ -731,28 +727,39 @@
                     </div>
                     <div id="pauseOptionsContainer" style="display: none; margin-top: 8px; background: var(--bg-main); padding: 10px; border-radius: 12px;">
                         <div style="margin-bottom: 8px;">
-                            <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ДО применения (минут)</label>
+                            <label for="pPauseBefore" style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ДО применения (минут)</label>
                             <input type="number" id="pPauseBefore" class="input-control" placeholder="Напр. 15 (после умывания)">
                         </div>
                         <div>
-                            <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ПОСЛЕ применения (минут)</label>
+                            <label for="pPauseAfter" style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ПОСЛЕ применения (минут)</label>
                             <input type="number" id="pPauseAfter" class="input-control" placeholder="Напр. 15 (перед кремом)">
                         </div>
                     </div>
                 </div>
 
+                <!-- Быстрый выбор PAO срока годности (3-6-12 месяцев) -->
                 <div class="form-group">
-                    <label>Дата вскрытия / Начало использования</label>
-                    <input type="date" id="pOpenDate" class="input-control">
+                    <label for="pOpenDate">Дата вскрытия / Открытия</label>
+                    <input type="date" id="pOpenDate" class="input-control" onchange="calculateExpiryFromPAO()">
                 </div>
 
                 <div class="form-group">
-                    <label>Срок годности (Дата окончания)</label>
+                    <label>Срок после открытия (PAO)</label>
+                    <div class="pao-picker">
+                        <button type="button" class="pao-chip" onclick="applyPAO(3)">3 мес (3M)</button>
+                        <button type="button" class="pao-chip" onclick="applyPAO(6)">6 мес (6M)</button>
+                        <button type="button" class="pao-chip" onclick="applyPAO(12)">12 мес (12M)</button>
+                        <button type="button" class="pao-chip" onclick="applyPAO(24)">24 мес (24M)</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pExpDate">Окончание срока годности (Рассчитано)</label>
                     <input type="date" id="pExpDate" class="input-control">
                 </div>
 
-                <button class="btn-action" style="margin-top: 8px;" onclick="saveProduct()">Сохранить средство</button>
-                <button class="btn-secondary" onclick="hideForm()">Отмена</button>
+                <button type="button" class="btn-action" style="margin-top: 8px;" onclick="saveProduct()">Сохранить средство</button>
+                <button type="button" class="btn-secondary" onclick="hideForm()">Отмена</button>
             </div>
 
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
@@ -764,11 +771,25 @@
                 <input type="checkbox" id="confettiToggle" class="toggle-checkbox" onchange="toggleConfettiPref(this)">
             </div>
 
-            <button class="btn-secondary" onclick="closeSettings()">Закрыть</button>
+            <button type="button" class="btn-secondary" onclick="closeSettings()">Закрыть</button>
         </div>
     </div>
 
     <script>
+        // Функция экранирования вводных данных (Защита от DOM-XSS)
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return '';
+            return str.replace(/[&<>"']/g, function(m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[m];
+            });
+        }
+
         const typeOrder = {
             "Очищение": 1,
             "Тонизирование": 2,
@@ -780,18 +801,17 @@
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let currentTOD = 'morning';
         let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) ?? true;
-        
+        let selectedPAOMonths = null;
+
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let completedWeeksCount = JSON.parse(localStorage.getItem('cb_completed_weeks')) || 0;
 
         document.getElementById('confettiToggle').checked = enableConfetti;
 
-        // Логика установки и автоопределения системной темы устройства
         function setTheme(theme) {
             if (theme === 'auto') {
                 const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const targetTheme = isDark ? 'midnight' : 'nude';
-                document.body.setAttribute('data-theme', targetTheme);
+                document.body.setAttribute('data-theme', isDark ? 'midnight' : 'nude');
                 localStorage.setItem('cb_theme', 'auto');
             } else {
                 document.body.setAttribute('data-theme', theme);
@@ -799,11 +819,8 @@
             }
         }
 
-        // Слушатель автоматического изменения темы устройства
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (localStorage.getItem('cb_theme') === 'auto') {
-                setTheme('auto');
-            }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (localStorage.getItem('cb_theme') === 'auto') setTheme('auto');
         });
 
         setTheme(localStorage.getItem('cb_theme') || 'auto');
@@ -821,10 +838,11 @@
             renderRoutine();
         }
 
+        // Корректный расчёт начала недели с учетом Воскресенья
         function getStartOfWeek(date) {
             const d = new Date(date);
             const day = d.getDay();
-            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            const diff = d.getDate() - (day === 0 ? 6 : day - 1);
             return new Date(d.setDate(diff));
         }
 
@@ -838,9 +856,7 @@
         function renderStreak() {
             const now = new Date();
             const monday = getStartOfWeek(now);
-            
             const daysMap = [1, 2, 3, 4, 5, 6, 0];
-            let thisWeekCompletedDays = 0;
 
             daysMap.forEach((dayNum, index) => {
                 const currentDayDate = new Date(monday);
@@ -852,51 +868,63 @@
 
                 const heartEl = document.getElementById(`heart-${dayNum}`);
                 if (heartEl) {
-                    if (isFullDayDone) {
-                        heartEl.classList.add('active');
-                        thisWeekCompletedDays++;
-                    } else {
-                        heartEl.classList.remove('active');
-                    }
+                    heartEl.classList.toggle('active', Boolean(isFullDayDone));
                 }
             });
 
             for (let w = 1; w <= 4; w++) {
                 const starEl = document.getElementById(`star-${w}`);
                 if (starEl) {
-                    if (w <= completedWeeksCount) {
-                        starEl.classList.add('active');
-                    } else {
-                        starEl.classList.remove('active');
-                    }
+                    starEl.classList.toggle('active', w <= completedWeeksCount);
                 }
             }
         }
 
+        // Автоматический расчёт PAO (3, 6, 12 месяцев)
+        function applyPAO(months) {
+            selectedPAOMonths = months;
+            document.querySelectorAll('.pao-chip').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            calculateExpiryFromPAO();
+        }
+
+        function calculateExpiryFromPAO() {
+            const openDateVal = document.getElementById('pOpenDate').value;
+            if (!openDateVal) {
+                const todayStr = new Date().toISOString().split('T')[0];
+                document.getElementById('pOpenDate').value = todayStr;
+            }
+
+            if (selectedPAOMonths) {
+                const openDate = new Date(document.getElementById('pOpenDate').value || Date.now());
+                openDate.setMonth(openDate.getMonth() + selectedPAOMonths);
+                
+                const expYear = openDate.getFullYear();
+                const expMonth = String(openDate.getMonth() + 1).padStart(2, '0');
+                const expDay = String(openDate.getDate()).padStart(2, '0');
+
+                document.getElementById('pExpDate').value = `${expYear}-${expMonth}-${expDay}`;
+            }
+        }
+
+        // Буферизация сборки DOM для максимальной производительности (Reflow/Repaint)
         function renderRoutine() {
             renderStreak();
             const container = document.getElementById('routineContainer');
-            container.innerHTML = '';
-
             const today = new Date();
             const todayDayOfWeek = today.getDay();
 
             let activeProducts = products.filter(p => {
                 const matchTOD = p.tod === 'both' || p.tod === currentTOD;
                 let matchDay = true;
-
                 if (p.freqType === 'custom') {
                     matchDay = Array.isArray(p.days) && p.days.includes(todayDayOfWeek);
                 }
-
                 return matchTOD && matchDay;
             });
 
-            activeProducts.sort((a, b) => {
-                const orderA = typeOrder[a.type] || 99;
-                const orderB = typeOrder[b.type] || 99;
-                return orderA - orderB;
-            });
+            activeProducts.sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
 
             if (activeProducts.length === 0) {
                 container.innerHTML = `
@@ -908,41 +936,42 @@
                 return;
             }
 
+            const htmlBuffer = [];
+
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
 
-                // Отрисовка паузы ДО как самостоятельного разделителя
                 if (item.hasPause && item.pauseBefore) {
-                    container.innerHTML += `
+                    htmlBuffer.push(`
                         <div class="pause-divider">
-                            ⏱️ Пауза: ${item.pauseBefore} минут
+                            ⏱️ Пауза: ${escapeHtml(String(item.pauseBefore))} минут
                         </div>
-                    `;
+                    `);
                 }
 
-                // Карточка самого средства
-                container.innerHTML += `
+                htmlBuffer.push(`
                     <div class="routine-item">
                         <div class="item-left">
                             <div class="item-num">${index + 1}</div>
                             <div class="item-details">
-                                <span class="item-name">${item.name}</span>
-                                <span class="item-tag">${item.type}</span>
+                                <span class="item-name">${escapeHtml(item.name)}</span>
+                                <span class="item-tag">${escapeHtml(item.type)}</span>
                             </div>
                         </div>
                         <div class="expiry-dots">${dotsHtml}</div>
                     </div>
-                `;
+                `);
 
-                // Отрисовка паузы ПОСЛЕ как самостоятельного разделителя
                 if (item.hasPause && item.pauseAfter) {
-                    container.innerHTML += `
+                    htmlBuffer.push(`
                         <div class="pause-divider">
-                            ⏱️ Пауза: ${item.pauseAfter} минут
+                            ⏱️ Пауза: ${escapeHtml(String(item.pauseAfter))} минут
                         </div>
-                    `;
+                    `);
                 }
             });
+
+            container.innerHTML = htmlBuffer.join('');
         }
 
         function calcExpiryDots(openDateStr, expDateStr) {
@@ -1011,23 +1040,11 @@
                     completedWeeksCount++;
                     localStorage.setItem('cb_completed_weeks', JSON.stringify(completedWeeksCount));
                 }
-
-                for (let i = 0; i < 7; i++) {
-                    const d = new Date(monday);
-                    d.setDate(monday.getDate() + i);
-                    delete completedLog[formatDateKey(d)];
-                }
-                localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
             }
 
-            if (currentTOD === 'morning') {
-                switchTOD('evening');
-            } else {
-                switchTOD('morning');
-            }
+            switchTOD(currentTOD === 'morning' ? 'evening' : 'morning');
         }
 
-        /* Modal & Form Logic */
         function openSettings() {
             renderManageList();
             hideForm();
@@ -1089,37 +1106,25 @@
                 });
             }
 
+            const productData = {
+                id: editId ? Number(editId) : Date.now(),
+                name,
+                type,
+                tod,
+                freqType,
+                days,
+                hasPause,
+                pauseBefore: hasPause ? pauseBefore : null,
+                pauseAfter: hasPause ? pauseAfter : null,
+                openDate,
+                expDate
+            };
+
             if (editId) {
                 const idx = products.findIndex(p => p.id == editId);
-                if (idx !== -1) {
-                    products[idx] = {
-                        id: Number(editId),
-                        name,
-                        type,
-                        tod,
-                        freqType,
-                        days,
-                        hasPause,
-                        pauseBefore: hasPause ? pauseBefore : null,
-                        pauseAfter: hasPause ? pauseAfter : null,
-                        openDate,
-                        expDate
-                    };
-                }
+                if (idx !== -1) products[idx] = productData;
             } else {
-                products.push({
-                    id: Date.now(),
-                    name,
-                    type,
-                    tod,
-                    freqType,
-                    days,
-                    hasPause,
-                    pauseBefore: hasPause ? pauseBefore : null,
-                    pauseAfter: hasPause ? pauseAfter : null,
-                    openDate,
-                    expDate
-                });
+                products.push(productData);
             }
 
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
@@ -1138,7 +1143,7 @@
             document.getElementById('pType').value = item.type;
             document.getElementById('pTOD').value = item.tod;
             document.getElementById('pFreqType').value = item.freqType;
-            document.getElementById('pPauseToggle').checked = !!item.hasPause;
+            document.getElementById('pPauseToggle').checked = Boolean(item.hasPause);
             document.getElementById('pPauseBefore').value = item.pauseBefore || '';
             document.getElementById('pPauseAfter').value = item.pauseAfter || '';
             document.getElementById('pOpenDate').value = item.openDate || '';
@@ -1149,17 +1154,14 @@
 
             document.querySelectorAll('.day-chip').forEach(chip => {
                 const day = parseInt(chip.getAttribute('data-day'));
-                if (Array.isArray(item.days) && item.days.includes(day)) {
-                    chip.classList.add('active');
-                } else {
-                    chip.classList.remove('active');
-                }
+                chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day));
             });
 
             document.getElementById('formModalTitle').innerText = '✏️ Редактировать средство';
         }
 
         function resetForm() {
+            selectedPAOMonths = null;
             document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
             document.getElementById('pType').value = 'Очищение';
@@ -1170,7 +1172,7 @@
             document.getElementById('pPauseAfter').value = '';
             document.getElementById('pOpenDate').value = '';
             document.getElementById('pExpDate').value = '';
-            document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
             toggleFreqDays();
             togglePauseInputs();
 
@@ -1179,28 +1181,28 @@
 
         function renderManageList() {
             const container = document.getElementById('manageList');
-            container.innerHTML = '';
-
             if (products.length === 0) {
                 container.innerHTML = '<div style="font-size: 13px; color: var(--text-secondary); text-align: center; padding: 10px;">Список пуст. Нажмите «+ Добавить средство».</div>';
                 return;
             }
 
+            const htmlBuffer = [];
             products.forEach((p) => {
                 const dotsHtml = calcExpiryDots(p.openDate, p.expDate);
-                container.innerHTML += `
+                htmlBuffer.push(`
                     <div class="manage-item">
                         <div class="manage-info">
                             <div class="expiry-dots">${dotsHtml}</div>
-                            <span><b>${p.name}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${p.type})</span></span>
+                            <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
                         </div>
                         <div class="manage-actions">
-                            <span class="manage-edit" onclick="editProduct(${p.id})">✏️</span>
-                            <span class="manage-del" onclick="deleteProduct(${p.id})">✕</span>
+                            <button type="button" class="manage-edit" onclick="editProduct(${p.id})" aria-label="Редактировать">✏️</button>
+                            <button type="button" class="manage-del" onclick="deleteProduct(${p.id})" aria-label="Удалить">✕</button>
                         </div>
                     </div>
-                `;
+                `);
             });
+            container.innerHTML = htmlBuffer.join('');
         }
 
         function deleteProduct(id) {
