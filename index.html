@@ -399,19 +399,6 @@
             position: relative;
         }
 
-        @keyframes modalShake {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-8px); }
-            40% { transform: translateX(8px); }
-            60% { transform: translateX(-4px); }
-            80% { transform: translateX(4px); }
-            100% { transform: translateX(0); }
-        }
-
-        .modal-card.shake {
-            animation: modalShake 0.35s ease-in-out;
-        }
-
         .modal-header-row {
             display: flex;
             justify-content: space-between;
@@ -958,7 +945,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.55.0';
+        const APP_VERSION = '2.56.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1516,8 +1503,6 @@
             document.getElementById('productFormContainer').style.display = 'block';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
-            
-            document.getElementById('settingsModal').classList.add('form-open');
         }
 
         function hideForm() {
@@ -1525,19 +1510,6 @@
             document.getElementById('btnAddToggle').style.display = 'block';
             document.getElementById('scannerNoticeBanner').style.display = 'none';
             resetForm();
-            
-            document.getElementById('settingsModal').classList.remove('form-open');
-        }
-
-        function triggerModalShake() {
-            const card = document.getElementById('settingsModalCard');
-            if (!card) return;
-            card.classList.remove('shake');
-            void card.offsetWidth; // Триггер reflow для перезапуска CSS анимации
-            card.classList.add('shake');
-            setTimeout(() => {
-                card.classList.remove('shake');
-            }, 350);
         }
 
         function isGarbageName(name) {
@@ -1936,22 +1908,11 @@
                 renderRoutine();
             });
 
-            document.getElementById('settingsModal').addEventListener('click', (e) => {
+            // Переключение темы оформления
+            document.getElementById('themeRow').addEventListener('click', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
                 if (themeBtn) {
                     setTheme(themeBtn.getAttribute('data-theme'));
-                    return;
-                }
-
-                if (e.target.closest('.modal-card')) {
-                    return;
-                }
-
-                const isFormOpen = e.currentTarget.classList.contains('form-open');
-                if (!isFormOpen) {
-                    closeSettings();
-                } else {
-                    triggerModalShake();
                 }
             });
 
@@ -2058,13 +2019,8 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('settingsModal');
-                    const isFormOpen = modal && modal.classList.contains('form-open');
                     if (modal && modal.style.display === 'flex') {
-                        if (!isFormOpen) {
-                            closeSettings();
-                        } else {
-                            triggerModalShake();
-                        }
+                        closeSettings();
                     }
                     const alertModal = document.getElementById('customAlertModal');
                     if (alertModal && alertModal.style.display === 'flex') {
