@@ -125,10 +125,20 @@
             border: 2px solid var(--surface);
             box-shadow: 0 0 0 1px var(--border-color);
             transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
         }
 
         .theme-dot:hover {
-            transform: scale(1.25);
+            transform: scale(1.2);
+        }
+
+        .theme-dot.auto-dot {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
         }
 
         .btn-settings {
@@ -300,12 +310,6 @@
             border-radius: 18px;
             padding: 14px 16px;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .item-row {
-            display: flex;
             align-items: center;
             justify-content: space-between;
         }
@@ -347,18 +351,23 @@
             margin-top: 2px;
         }
 
-        .pause-badge {
-            font-size: 11px;
+        /* Самостоятельный разделительный блок пауз между карточками */
+        .pause-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--accent-light);
+            border: 1px dashed var(--accent-main);
+            border-radius: 14px;
+            padding: 8px 12px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--accent-main);
-            background: var(--accent-light);
-            padding: 6px 10px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 2px;
-            align-self: flex-start;
+            margin: -2px 0;
+            align-self: center;
+            width: 90%;
+            text-align: center;
         }
 
         .expiry-dots {
@@ -575,6 +584,7 @@
         <div class="logo">Care & Beauty</div>
         <div style="display: flex; gap: 10px; align-items: center;">
             <div class="theme-selector">
+                <div class="theme-dot auto-dot" onclick="setTheme('auto')" title="Тема как на устройстве">📱</div>
                 <div class="theme-dot" style="background: #C49A82;" onclick="setTheme('nude')" title="Nude & Silk"></div>
                 <div class="theme-dot" style="background: #5B8A82;" onclick="setTheme('mint')" title="Eucalyptus & Mint"></div>
                 <div class="theme-dot" style="background: #8B789D;" onclick="setTheme('lavender')" title="Blush Lavender"></div>
@@ -759,7 +769,6 @@
     </div>
 
     <script>
-        // Иерархия шагов для косметологической последовательности
         const typeOrder = {
             "Очищение": 1,
             "Тонизирование": 2,
@@ -772,17 +781,32 @@
         let currentTOD = 'morning';
         let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) ?? true;
         
-        // Лог выполнения по дням { "YYYY-MM-DD": { morning: true, evening: true } }
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let completedWeeksCount = JSON.parse(localStorage.getItem('cb_completed_weeks')) || 0;
 
         document.getElementById('confettiToggle').checked = enableConfetti;
 
+        // Логика установки и автоопределения системной темы устройства
         function setTheme(theme) {
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('cb_theme', theme);
+            if (theme === 'auto') {
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const targetTheme = isDark ? 'midnight' : 'nude';
+                document.body.setAttribute('data-theme', targetTheme);
+                localStorage.setItem('cb_theme', 'auto');
+            } else {
+                document.body.setAttribute('data-theme', theme);
+                localStorage.setItem('cb_theme', theme);
+            }
         }
-        setTheme(localStorage.getItem('cb_theme') || 'nude');
+
+        // Слушатель автоматического изменения темы устройства
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (localStorage.getItem('cb_theme') === 'auto') {
+                setTheme('auto');
+            }
+        });
+
+        setTheme(localStorage.getItem('cb_theme') || 'auto');
 
         function toggleConfettiPref(el) {
             enableConfetti = el.checked;
@@ -837,7 +861,6 @@
                 }
             });
 
-            // Отрисовка закрашивания 4 звёздочек (1, 2, 3, 4 недели)
             for (let w = 1; w <= 4; w++) {
                 const starEl = document.getElementById(`star-${w}`);
                 if (starEl) {
@@ -856,7 +879,7 @@
             container.innerHTML = '';
 
             const today = new Date();
-            const todayDayOfWeek = today.getDay(); // 0 = Вс, 1 = Пн ...
+            const todayDayOfWeek = today.getDay();
 
             let activeProducts = products.filter(p => {
                 const matchTOD = p.tod === 'both' || p.tod === currentTOD;
@@ -869,7 +892,6 @@
                 return matchTOD && matchDay;
             });
 
-            // Косметологическая сортировка
             activeProducts.sort((a, b) => {
                 const orderA = typeOrder[a.type] || 99;
                 const orderB = typeOrder[b.type] || 99;
@@ -888,33 +910,38 @@
 
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
-                let pauseBadges = '';
 
-                // Отрисовка пауз ДО и ПОСЛЕ из личных настроек средства
-                if (item.hasPause) {
-                    if (item.pauseBefore) {
-                        pauseBadges += `<div class="pause-badge">⏱️ Пауза: ${item.pauseBefore} минут перед этим шагом</div>`;
-                    }
-                    if (item.pauseAfter) {
-                        pauseBadges += `<div class="pause-badge">⏱️ Пауза: ${item.pauseAfter} минут</div>`;
-                    }
+                // Отрисовка паузы ДО как самостоятельного разделителя
+                if (item.hasPause && item.pauseBefore) {
+                    container.innerHTML += `
+                        <div class="pause-divider">
+                            ⏱️ Пауза: ${item.pauseBefore} минут
+                        </div>
+                    `;
                 }
 
+                // Карточка самого средства
                 container.innerHTML += `
                     <div class="routine-item">
-                        <div class="item-row">
-                            <div class="item-left">
-                                <div class="item-num">${index + 1}</div>
-                                <div class="item-details">
-                                    <span class="item-name">${item.name}</span>
-                                    <span class="item-tag">${item.type}</span>
-                                </div>
+                        <div class="item-left">
+                            <div class="item-num">${index + 1}</div>
+                            <div class="item-details">
+                                <span class="item-name">${item.name}</span>
+                                <span class="item-tag">${item.type}</span>
                             </div>
-                            <div class="expiry-dots">${dotsHtml}</div>
                         </div>
-                        ${pauseBadges}
+                        <div class="expiry-dots">${dotsHtml}</div>
                     </div>
                 `;
+
+                // Отрисовка паузы ПОСЛЕ как самостоятельного разделителя
+                if (item.hasPause && item.pauseAfter) {
+                    container.innerHTML += `
+                        <div class="pause-divider">
+                            ⏱️ Пауза: ${item.pauseAfter} минут
+                        </div>
+                    `;
+                }
             });
         }
 
@@ -953,7 +980,6 @@
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
-            // Проверяем, выполнена ли вся неделя (все 7 дней)
             const now = new Date();
             const monday = getStartOfWeek(now);
             let daysThisWeek = 0;
@@ -967,7 +993,6 @@
                 }
             }
 
-            // Завершение недели: салют + звёздочка + сброс сердечек
             if (daysThisWeek === 7) {
                 if (enableConfetti && typeof confetti === 'function') {
                     const heartScalar = 2;
@@ -982,13 +1007,11 @@
                     });
                 }
 
-                // Закрашиваем 1 звёздочку и сбрасываем лог недели для чистого нового отсчёта
                 if (completedWeeksCount < 4) {
                     completedWeeksCount++;
                     localStorage.setItem('cb_completed_weeks', JSON.stringify(completedWeeksCount));
                 }
 
-                // Сбрасываем дни текущей недели
                 for (let i = 0; i < 7; i++) {
                     const d = new Date(monday);
                     d.setDate(monday.getDate() + i);
@@ -997,7 +1020,6 @@
                 localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
             }
 
-            // Переключение этапа Утро <-> Вечер
             if (currentTOD === 'morning') {
                 switchTOD('evening');
             } else {
@@ -1187,7 +1209,6 @@
             renderManageList();
         }
 
-        // Запуск
         renderRoutine();
     </script>
 </body>
