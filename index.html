@@ -439,7 +439,7 @@
             margin-top: 2px;
         }
 
-        /* Инлайн-чипы пауз внутри карточки */
+        /* Инлайн-чипы пауз и прогресса активов внутри карточки */
         .pause-inline-chip {
             display: inline-flex;
             align-items: center;
@@ -689,11 +689,49 @@
             padding: 10px 0;
         }
 
-        .toggle-checkbox {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent-main);
+        /* Современный тумблер переключения */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
             cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border-color);
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--surface);
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-main);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
         }
 
         /* Sticky Footer для кнопок сохранения в форме */
@@ -726,8 +764,8 @@
         </div>
     </div>
 
-    <!-- Трекер прогресса с SVG иконками -->
-    <div class="streak-card">
+    <!-- Трекер прогресса с SVG иконками (опционально) -->
+    <div class="streak-card" id="streakCard">
         <div class="date-chip" id="currentDateChip">📅 Сегодня</div>
         <div class="streak-title">Люби себя каждый день 💖</div>
         
@@ -867,7 +905,10 @@
                 <div class="form-group">
                     <div class="toggle-container">
                         <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">⏱️ Включить паузу/выдержку для средства</label>
-                        <input type="checkbox" id="pPauseToggle" class="toggle-checkbox">
+                        <label class="switch">
+                            <input type="checkbox" id="pPauseToggle">
+                            <span class="slider"></span>
+                        </label>
                     </div>
                     <div id="pauseOptionsContainer" style="display: none; margin-top: 8px; background: var(--bg-main); padding: 10px; border-radius: 12px;">
                         <div style="margin-bottom: 8px;">
@@ -912,10 +953,19 @@
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
             <div class="toggle-container">
-                <label for="confettiToggle" style="font-size: 13px; font-weight: 500; cursor: pointer;">
-                    💖 Праздничный салют при завершении недели
+                <span style="font-size: 13px; font-weight: 500;">💖 Праздничный салют при завершении недели</span>
+                <label class="switch">
+                    <input type="checkbox" id="confettiToggle">
+                    <span class="slider"></span>
                 </label>
-                <input type="checkbox" id="confettiToggle" class="toggle-checkbox">
+            </div>
+
+            <div class="toggle-container">
+                <span style="font-size: 13px; font-weight: 500;">🌟 Показывать трекер серии и недель</span>
+                <label class="switch">
+                    <input type="checkbox" id="streakToggle">
+                    <span class="slider"></span>
+                </label>
             </div>
 
             <button type="button" class="btn-secondary" id="btnCloseSettings">Закрыть</button>
@@ -967,13 +1017,21 @@
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let currentTOD = 'morning';
         let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) ?? true;
+        let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
 
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let completedWeeksCount = JSON.parse(localStorage.getItem('cb_completed_weeks')) || 0;
         let completedMonthsTotal = JSON.parse(localStorage.getItem('cb_completed_months_total')) || 0;
+        let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
 
         document.getElementById('confettiToggle').checked = enableConfetti;
+        document.getElementById('streakToggle').checked = showStreakTracker;
+
+        function updateStreakVisibility() {
+            const streakCard = document.getElementById('streakCard');
+            streakCard.style.display = showStreakTracker ? 'block' : 'none';
+        }
 
         function renderCurrentDateChip() {
             const now = new Date();
@@ -1016,6 +1074,9 @@
         }
 
         function renderStreak() {
+            updateStreakVisibility();
+            if (!showStreakTracker) return;
+
             const now = new Date();
             const monday = getStartOfWeek(now);
             const daysMap = [1, 2, 3, 4, 5, 6, 0];
@@ -1087,6 +1148,17 @@
             }
         }
 
+        // Расчёт шагов для активов: Неделя X, шаг Y из Z
+        function getActiveProgressHtml(item) {
+            if (item.type !== 'Активы') return '';
+            const Z = item.freqType === 'custom' ? (Array.isArray(item.days) && item.days.length > 0 ? item.days.length : 1) : 7;
+            const dates = (productProgress[item.id] && productProgress[item.id].dates) || [];
+            const count = dates.length;
+            const week = Math.floor(count / Z) + 1;
+            const stepInWeek = (count % Z) + 1;
+            return `<div class="pause-inline-chip">🧬 Неделя ${week}, шаг ${stepInWeek} из ${Z}</div>`;
+        }
+
         function renderRoutine() {
             renderStreak();
             const container = document.getElementById('routineContainer');
@@ -1120,6 +1192,7 @@
                 const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
                 let pauseHtmlBefore = '';
                 let pauseHtmlAfter = '';
+                const activeProgressHtml = getActiveProgressHtml(item);
 
                 if (item.hasPause && item.pauseBefore) {
                     pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
@@ -1140,6 +1213,7 @@
                             </div>
                             <div class="expiry-dots">${dotsHtml}</div>
                         </div>
+                        ${activeProgressHtml}
                         ${pauseHtmlBefore}
                         ${pauseHtmlAfter}
                     </div>
@@ -1177,6 +1251,27 @@
         function completeRoutine() {
             const todayStr = getLocalTodayStr();
             
+            // Фиксируем выполнение шагов для активных средств сегодняшнего ухода
+            const todayDayOfWeek = new Date().getDay();
+            let todaysActiveProducts = products.filter(p => {
+                const matchTOD = p.tod === 'both' || p.tod === currentTOD;
+                let matchDay = true;
+                if (p.freqType === 'custom') {
+                    matchDay = Array.isArray(p.days) && p.days.includes(todayDayOfWeek);
+                }
+                return matchTOD && matchDay && p.type === 'Активы';
+            });
+
+            todaysActiveProducts.forEach(p => {
+                if (!productProgress[p.id]) {
+                    productProgress[p.id] = { dates: [] };
+                }
+                if (!productProgress[p.id].dates.includes(todayStr)) {
+                    productProgress[p.id].dates.push(todayStr);
+                }
+            });
+            localStorage.setItem('cb_product_progress', JSON.stringify(productProgress));
+
             if (!completedLog[todayStr]) {
                 completedLog[todayStr] = {};
             }
@@ -1466,6 +1561,12 @@
             document.getElementById('confettiToggle').addEventListener('change', (e) => {
                 enableConfetti = e.target.checked;
                 localStorage.setItem('cb_enable_confetti', JSON.stringify(enableConfetti));
+            });
+
+            document.getElementById('streakToggle').addEventListener('change', (e) => {
+                showStreakTracker = e.target.checked;
+                localStorage.setItem('cb_show_streak', JSON.stringify(showStreakTracker));
+                renderStreak();
             });
 
             // Безопасное делегирование событий для списка «Мои средства»
