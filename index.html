@@ -785,6 +785,11 @@
             <button type="button" class="tod-btn" id="btnEvening">Вечерний уход</button>
         </div>
 
+        <!-- Плашка для завтрашнего плана -->
+        <div id="tomorrowNoticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;">
+            Это план на завтра!
+        </div>
+
         <div class="routine-list" id="routineContainer"></div>
 
         <button type="button" class="btn-action" id="btnCompleteRoutine">Завершить уход</button>
@@ -966,12 +971,14 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.21.0';
+        const APP_VERSION = '2.30.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
                 localStorage.setItem('cb_app_version', APP_VERSION);
                 localStorage.removeItem('cb_view_date_offset');
+                localStorage.removeItem('cb_is_tomorrow_plan');
+                localStorage.removeItem('cb_tomorrow_rest');
                 if (!sessionStorage.getItem('cb_reloaded')) {
                     sessionStorage.setItem('cb_reloaded', 'true');
                     window.location.reload(true);
@@ -1001,7 +1008,10 @@
             return `${year}-${month}-${day}`;
         }
 
+        const realTodayStr = getLocalTodayStr(new Date());
+
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
+        let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
 
         localStorage.removeItem('cb_view_date_offset');
 
@@ -1009,6 +1019,20 @@
             const now = new Date();
             const realDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const hours = now.getHours();
+            const isTomorrowPlan = localStorage.getItem('cb_is_tomorrow_plan') === 'true';
+            const isTomorrowRest = localStorage.getItem('cb_tomorrow_rest') === 'true';
+
+            if (hours >= 2 && (isTomorrowPlan || isTomorrowRest)) {
+                localStorage.removeItem('cb_is_tomorrow_plan');
+                localStorage.removeItem('cb_tomorrow_rest');
+                return realDate;
+            }
+
+            if (isTomorrowPlan || isTomorrowRest) {
+                const tomorrow = new Date(realDate);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                return tomorrow;
+            }
 
             if (hours < 2) {
                 const yesterday = new Date(realDate);
@@ -1021,6 +1045,10 @@
             }
 
             return realDate;
+        }
+
+        function shouldShowTomorrowNotice() {
+            return localStorage.getItem('cb_is_tomorrow_plan') === 'true';
         }
 
         const typeOrder = {
@@ -1036,7 +1064,7 @@
         let currentScannedBarcode = null;
 
         const nowInit = new Date();
-        let currentTOD = nowInit.getHours() >= 17 ? 'evening' : 'morning';
+        let currentTOD = nowInit.getHours() >= 18 ? 'evening' : 'morning';
 
         let showStreakTracker = JSON.parse(localStorage.getItem('cb_show_streak')) ?? true;
         let selectedPAOMonths = null;
@@ -1049,8 +1077,6 @@
             installDateStr = getLocalTodayStr();
             localStorage.setItem('cb_install_date', installDateStr);
         }
-
-        let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
 
         document.getElementById('streakToggle').checked = showStreakTracker;
 
@@ -1280,6 +1306,23 @@
             renderStreak();
             renderCurrentDateChip();
             
+            const nowTime = new Date();
+            const currentHour = nowTime.getHours();
+            const isTomorrowPlan = localStorage.getItem('cb_is_tomorrow_plan') === 'true';
+            const isTomorrowRest = localStorage.getItem('cb_tomorrow_rest') === 'true';
+
+            // Автопереключение на вечернюю схему в 18:00
+            if (!isTomorrowPlan && !isTomorrowRest && currentHour >= 18 && currentTOD === 'morning') {
+                currentTOD = 'evening';
+                document.getElementById('btnMorning').classList.remove('active');
+                document.getElementById('btnEvening').classList.add('active');
+            }
+
+            const tomorrowBanner = document.getElementById('tomorrowNoticeBanner');
+            if (tomorrowBanner) {
+                tomorrowBanner.style.display = shouldShowTomorrowNotice() ? 'block' : 'none';
+            }
+
             const container = document.getElementById('routineContainer');
             const today = getEffectiveViewingDate();
             const todayDayOfWeek = today.getDay();
@@ -1297,13 +1340,22 @@
             activeProducts.sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
 
             const btnAction = document.getElementById('btnCompleteRoutine');
+
             if (products.length === 0) {
                 container.innerHTML = '';
-                btnAction.innerHTML = '<span class="brand-font">добавить средства в мою коллекцию</span>';
+                btnAction.innerText = 'Добавить средства в мою коллекцию';
+            } else if (isTomorrowRest) {
+                const restLabel = currentHour >= 2 ? 'Отдых' : 'Завтра отдых';
+                container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">${restLabel}</div>`;
+                btnAction.innerText = 'Добавить средства в мою коллекцию';
+            } else if (activeProducts.length === 0) {
+                container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">Отдых</div>`;
+                btnAction.innerText = 'Добавить средства в мою коллекцию';
             } else {
-                btnAction.innerText = 'Завершить уход';
-                if (activeProducts.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">☕ Отдых</div>';
+                if (currentTOD === 'evening' && !isTomorrowPlan) {
+                    btnAction.innerText = 'Посмотреть схему на завтра';
+                } else {
+                    btnAction.innerText = 'Завершить уход';
                 }
             }
 
@@ -1343,7 +1395,7 @@
                 `);
             });
 
-            if (activeProducts.length > 0) {
+            if (activeProducts.length > 0 && !isTomorrowRest) {
                 container.innerHTML = htmlBuffer.join('');
             }
         }
@@ -1405,10 +1457,54 @@
             completedLog[todayStr][currentTOD] = true;
             localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
 
+            // Если были на завтрашнем плане и завершили его
+            if (localStorage.getItem('cb_is_tomorrow_plan') === 'true') {
+                localStorage.removeItem('cb_is_tomorrow_plan');
+            }
+
             if (currentTOD === 'morning') {
                 switchTOD('evening');
             } else {
                 switchTOD('morning');
+            }
+        }
+
+        function handleActionButton() {
+            const btnAction = document.getElementById('btnCompleteRoutine');
+            const btnText = btnAction.innerText.trim();
+
+            if (products.length === 0 || btnText === 'Добавить средства в мою коллекцию') {
+                openSettings();
+            } else if (btnText === 'Посмотреть схему на завтра') {
+                // Проверяем наличие ухода на завтра
+                const realNow = new Date();
+                const tomorrowDate = new Date(realNow.getFullYear(), realNow.getMonth(), realNow.getDate() + 1);
+                const tomorrowDayOfWeek = tomorrowDate.getDay();
+
+                const tomorrowActiveProducts = products.filter(p => {
+                    const tads = p.tods || ['morning', 'evening'];
+                    const matchTOD = tads.includes('morning');
+                    let matchDay = true;
+                    if (p.freqType === 'custom') {
+                        matchDay = Array.isArray(p.days) && p.days.includes(tomorrowDayOfWeek);
+                    }
+                    return matchTOD && matchDay;
+                });
+
+                if (tomorrowActiveProducts.length > 0) {
+                    localStorage.setItem('cb_is_tomorrow_plan', 'true');
+                    localStorage.removeItem('cb_tomorrow_rest');
+                } else {
+                    localStorage.setItem('cb_tomorrow_rest', 'true');
+                    localStorage.removeItem('cb_is_tomorrow_plan');
+                }
+
+                currentTOD = 'morning';
+                document.getElementById('btnMorning').classList.add('active');
+                document.getElementById('btnEvening').classList.remove('active');
+                renderRoutine();
+            } else {
+                completeRoutine();
             }
         }
 
@@ -1815,13 +1911,7 @@
                 }
             });
 
-            document.getElementById('btnCompleteRoutine').addEventListener('click', () => {
-                if (products.length === 0) {
-                    openSettings();
-                } else {
-                    completeRoutine();
-                }
-            });
+            document.getElementById('btnCompleteRoutine').addEventListener('click', handleActionButton);
 
             document.getElementById('settingsModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('settingsModal')) {
@@ -1835,8 +1925,16 @@
                 }
             });
 
-            document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning'));
-            document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
+            document.getElementById('btnMorning').addEventListener('click', () => {
+                localStorage.removeItem('cb_is_tomorrow_plan');
+                localStorage.removeItem('cb_tomorrow_rest');
+                switchTOD('morning');
+            });
+            document.getElementById('btnEvening').addEventListener('click', () => {
+                localStorage.removeItem('cb_is_tomorrow_plan');
+                localStorage.removeItem('cb_tomorrow_rest');
+                switchTOD('evening');
+            });
 
             document.getElementById('pPauseToggle').addEventListener('change', togglePauseInputs);
 
