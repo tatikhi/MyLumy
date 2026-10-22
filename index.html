@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Care & Beauty — Твой Уход</title>
-    <!-- Canvas-confetti для праздничного салюта -->
+    <!-- Canvas-confetti для салюта из сердечек -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -18,6 +18,7 @@
             --accent-light: #F4ECE6;
             --border-color: #EFE8DE;
             --shadow-soft: 0 12px 36px rgba(196, 154, 130, 0.12);
+            --icon-inactive: #D0C6BE;
         }
 
         /* 2. Eucalyptus & Mint */
@@ -31,6 +32,7 @@
             --accent-light: #E7F0EE;
             --border-color: #E1ECE9;
             --shadow-soft: 0 12px 36px rgba(91, 138, 130, 0.12);
+            --icon-inactive: #B8C9C5;
         }
 
         /* 3. Blush Lavender */
@@ -44,6 +46,7 @@
             --accent-light: #EFECF3;
             --border-color: #EAE4EF;
             --shadow-soft: 0 12px 36px rgba(139, 120, 157, 0.12);
+            --icon-inactive: #CBBFCF;
         }
 
         /* 4. Sage & Spa */
@@ -57,9 +60,10 @@
             --accent-light: #ECEFEA;
             --border-color: #E0E5E0;
             --shadow-soft: 0 12px 36px rgba(58, 77, 57, 0.12);
+            --icon-inactive: #B5C2B6;
         }
 
-        /* 5. Midnight Calm (Единственная глубокая темная тема) */
+        /* 5. Midnight Calm */
         body[data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
@@ -70,6 +74,7 @@
             --accent-light: #2D354A;
             --border-color: #323B52;
             --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
+            --icon-inactive: #434D66;
         }
 
         * {
@@ -142,7 +147,7 @@
             white-space: nowrap;
         }
 
-        /* Недельный + месячный трекер прогресса */
+        /* Недельный и Месячный трекер прогресса с SVG иконками */
         .streak-card {
             background: var(--surface);
             border-radius: 20px;
@@ -161,6 +166,7 @@
             color: var(--text-secondary);
             margin-bottom: 12px;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .hearts-container {
@@ -178,17 +184,16 @@
             gap: 4px;
         }
 
-        .heart-icon {
-            font-size: 20px;
-            opacity: 0.25;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            filter: grayscale(100%);
+        .svg-icon {
+            width: 22px;
+            height: 22px;
+            fill: var(--icon-inactive);
+            transition: fill 0.3s ease, transform 0.3s ease;
         }
 
-        .heart-item.active .heart-icon {
-            opacity: 1;
+        .heart-item.active .svg-icon {
+            fill: var(--accent-main);
             transform: scale(1.15);
-            filter: grayscale(0%);
         }
 
         .heart-day {
@@ -197,35 +202,34 @@
             color: var(--text-secondary);
         }
 
-        /* Трекер 4 недель (звёздочки) */
+        /* Трекер 4 недель (звёздочки SVG) */
         .weeks-container {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 16px;
-            padding-top: 8px;
+            padding-top: 10px;
             border-top: 1px dashed var(--border-color);
         }
 
         .star-item {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-size: 11px;
             font-weight: 600;
             color: var(--text-secondary);
         }
 
-        .star-icon {
-            font-size: 16px;
-            opacity: 0.3;
-            filter: grayscale(100%);
-            transition: all 0.3s ease;
+        .star-svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--icon-inactive);
+            transition: fill 0.3s ease, transform 0.3s ease;
         }
 
-        .star-item.active .star-icon {
-            opacity: 1;
-            filter: grayscale(0%);
+        .star-item.active .star-svg {
+            fill: var(--accent-main);
             transform: scale(1.2);
         }
 
@@ -581,25 +585,59 @@
         </div>
     </div>
 
-    <!-- Недельный и Месячный трекер прогресса -->
+    <!-- Недельный и Месячный трекер прогресса с SVG иконками -->
     <div class="streak-card">
-        <div class="streak-title">ЛЮБИ СЕБЯ КАЖДЫЙ ДЕНЬ 💖</div>
+        <div class="streak-title">Люби себя каждый день 💖</div>
         <div class="hearts-container" id="heartsContainer">
-            <div class="heart-item" id="heart-1"><span class="heart-icon">💖</span><span class="heart-day">ПН</span></div>
-            <div class="heart-item" id="heart-2"><span class="heart-icon">💖</span><span class="heart-day">ВТ</span></div>
-            <div class="heart-item" id="heart-3"><span class="heart-icon">💖</span><span class="heart-day">СР</span></div>
-            <div class="heart-item" id="heart-4"><span class="heart-icon">💖</span><span class="heart-day">ЧТ</span></div>
-            <div class="heart-item" id="heart-5"><span class="heart-icon">💖</span><span class="heart-day">ПТ</span></div>
-            <div class="heart-item" id="heart-6"><span class="heart-icon">💖</span><span class="heart-day">СБ</span></div>
-            <div class="heart-item" id="heart-0"><span class="heart-icon">💖</span><span class="heart-day">ВС</span></div>
+            <!-- ПН = 1, ВТ = 2, СР = 3, ЧТ = 4, ПТ = 5, СБ = 6, ВС = 0 -->
+            <div class="heart-item" id="heart-1">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="heart-day">ПН</span>
+            </div>
+            <div class="heart-item" id="heart-2">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="heart-day">ВТ</span>
+            </div>
+            <div class="heart-item" id="heart-3">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="heart-day">СР</span>
+            </div>
+            <div class="heart-item" id="heart-4">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="heart-day">ЧТ</span>
+            </div>
+            <div class="heart-item" id="heart-5">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="heart-day">ПТ</span>
+            </div>
+            <div class="heart-item" id="heart-6">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="heart-day">СБ</span>
+            </div>
+            <div class="heart-item" id="heart-0">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="heart-day">ВС</span>
+            </div>
         </div>
 
-        <!-- Звёздочки 4 недель месяца -->
+        <!-- Звёздочки 4 недель месяца (SVG) -->
         <div class="weeks-container">
-            <div class="star-item" id="star-1"><span class="star-icon">⭐</span>1 нед.</div>
-            <div class="star-item" id="star-2"><span class="star-icon">⭐</span>2 нед.</div>
-            <div class="star-item" id="star-3"><span class="star-icon">⭐</span>3 нед.</div>
-            <div class="star-item" id="star-4"><span class="star-icon">⭐</span>4 нед.</div>
+            <div class="star-item" id="star-1">
+                <svg class="star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                1 нед.
+            </div>
+            <div class="star-item" id="star-2">
+                <svg class="star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                2 нед.
+            </div>
+            <div class="star-item" id="star-3">
+                <svg class="star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                3 нед.
+            </div>
+            <div class="star-item" id="star-4">
+                <svg class="star-svg" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                4 нед.
+            </div>
         </div>
     </div>
 
@@ -675,6 +713,24 @@
                     </div>
                 </div>
 
+                <!-- Настройки пауз ДО и ПОСЛЕ нанесения -->
+                <div class="form-group">
+                    <div class="toggle-container">
+                        <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">⏱️ Включить паузу/выдержку для средства</label>
+                        <input type="checkbox" id="pPauseToggle" class="toggle-checkbox" onchange="togglePauseInputs()">
+                    </div>
+                    <div id="pauseOptionsContainer" style="display: none; margin-top: 8px; background: var(--bg-main); padding: 10px; border-radius: 12px;">
+                        <div style="margin-bottom: 8px;">
+                            <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ДО применения (минут)</label>
+                            <input type="number" id="pPauseBefore" class="input-control" placeholder="Напр. 15 (после умывания)">
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Пауза ПОСЛЕ применения (минут)</label>
+                            <input type="number" id="pPauseAfter" class="input-control" placeholder="Напр. 15 (перед кремом)">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>Дата вскрытия / Начало использования</label>
                     <input type="date" id="pOpenDate" class="input-control">
@@ -715,7 +771,9 @@
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let currentTOD = 'morning';
         let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) ?? true;
-        let completedDates = JSON.parse(localStorage.getItem('cb_completed_dates')) || [];
+        
+        // Лог выполнения по дням { "YYYY-MM-DD": { morning: true, evening: true } }
+        let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let completedWeeksCount = JSON.parse(localStorage.getItem('cb_completed_weeks')) || 0;
 
         document.getElementById('confettiToggle').checked = enableConfetti;
@@ -747,7 +805,10 @@
         }
 
         function formatDateKey(date) {
-            return date.toISOString().split('T')[0];
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         function renderStreak() {
@@ -762,9 +823,12 @@
                 currentDayDate.setDate(monday.getDate() + index);
                 const dateKey = formatDateKey(currentDayDate);
 
+                const dayLog = completedLog[dateKey] || {};
+                const isFullDayDone = dayLog.morning && dayLog.evening;
+
                 const heartEl = document.getElementById(`heart-${dayNum}`);
                 if (heartEl) {
-                    if (completedDates.includes(dateKey)) {
+                    if (isFullDayDone) {
                         heartEl.classList.add('active');
                         thisWeekCompletedDays++;
                     } else {
@@ -773,11 +837,11 @@
                 }
             });
 
-            // Автоматический учет закрашивания 4 звёздочек недель
+            // Отрисовка закрашивания 4 звёздочек (1, 2, 3, 4 недели)
             for (let w = 1; w <= 4; w++) {
                 const starEl = document.getElementById(`star-${w}`);
                 if (starEl) {
-                    if (w <= completedWeeksCount || (w === (completedWeeksCount + 1) && thisWeekCompletedDays === 7)) {
+                    if (w <= completedWeeksCount) {
                         starEl.classList.add('active');
                     } else {
                         starEl.classList.remove('active');
@@ -794,7 +858,6 @@
             const today = new Date();
             const todayDayOfWeek = today.getDay(); // 0 = Вс, 1 = Пн ...
 
-            // Получаем список средств на текущий день
             let activeProducts = products.filter(p => {
                 const matchTOD = p.tod === 'both' || p.tod === currentTOD;
                 let matchDay = true;
@@ -813,9 +876,6 @@
                 return orderA - orderB;
             });
 
-            // Проверяем, есть ли сегодня в расписании Активы (Ретинол)
-            const hasActiveToday = activeProducts.some(p => p.type === 'Активы');
-
             if (activeProducts.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
@@ -828,14 +888,15 @@
 
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
-                
-                // Умные паузы: показываются строго при наличии Активов в расписании
-                let pauseHtml = '';
-                if (hasActiveToday) {
-                    if (item.type === 'Очищение') {
-                        pauseHtml = `<div class="pause-badge">⏱️ Пауза: 15 минут</div>`;
-                    } else if (item.type === 'Активы') {
-                        pauseHtml = `<div class="pause-badge">⏱️ Пауза: 15 минут</div>`;
+                let pauseBadges = '';
+
+                // Отрисовка пауз ДО и ПОСЛЕ из личных настроек средства
+                if (item.hasPause) {
+                    if (item.pauseBefore) {
+                        pauseBadges += `<div class="pause-badge">⏱️ Пауза: ${item.pauseBefore} минут перед этим шагом</div>`;
+                    }
+                    if (item.pauseAfter) {
+                        pauseBadges += `<div class="pause-badge">⏱️ Пауза: ${item.pauseAfter} минут</div>`;
                     }
                 }
 
@@ -851,7 +912,7 @@
                             </div>
                             <div class="expiry-dots">${dotsHtml}</div>
                         </div>
-                        ${pauseHtml}
+                        ${pauseBadges}
                     </div>
                 `;
             });
@@ -885,24 +946,28 @@
         function completeRoutine() {
             const todayStr = formatDateKey(new Date());
             
-            if (!completedDates.includes(todayStr)) {
-                completedDates.push(todayStr);
-                localStorage.setItem('cb_completed_dates', JSON.stringify(completedDates));
+            if (!completedLog[todayStr]) {
+                completedLog[todayStr] = {};
             }
 
-            // Проверяем, заполнена ли вся текущая неделя
+            completedLog[todayStr][currentTOD] = true;
+            localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
+
+            // Проверяем, выполнена ли вся неделя (все 7 дней)
             const now = new Date();
             const monday = getStartOfWeek(now);
             let daysThisWeek = 0;
+
             for (let i = 0; i < 7; i++) {
                 const d = new Date(monday);
                 d.setDate(monday.getDate() + i);
-                if (completedDates.includes(formatDateKey(d))) {
+                const dKey = formatDateKey(d);
+                if (completedLog[dKey] && completedLog[dKey].morning && completedLog[dKey].evening) {
                     daysThisWeek++;
                 }
             }
 
-            // Салют при закрытии 7 дней
+            // Завершение недели: салют + звёздочка + сброс сердечек
             if (daysThisWeek === 7) {
                 if (enableConfetti && typeof confetti === 'function') {
                     const heartScalar = 2;
@@ -911,14 +976,28 @@
                     confetti({
                         shapes: [heartShape],
                         scalar: heartScalar,
-                        particleCount: 40,
+                        particleCount: 50,
                         spread: 80,
                         origin: { y: 0.6 }
                     });
                 }
+
+                // Закрашиваем 1 звёздочку и сбрасываем лог недели для чистого нового отсчёта
+                if (completedWeeksCount < 4) {
+                    completedWeeksCount++;
+                    localStorage.setItem('cb_completed_weeks', JSON.stringify(completedWeeksCount));
+                }
+
+                // Сбрасываем дни текущей недели
+                for (let i = 0; i < 7; i++) {
+                    const d = new Date(monday);
+                    d.setDate(monday.getDate() + i);
+                    delete completedLog[formatDateKey(d)];
+                }
+                localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
             }
 
-            // Переключение этапа без alert
+            // Переключение этапа Утро <-> Вечер
             if (currentTOD === 'morning') {
                 switchTOD('evening');
             } else {
@@ -955,6 +1034,11 @@
             document.getElementById('daysPicker').style.display = val === 'custom' ? 'flex' : 'none';
         }
 
+        function togglePauseInputs() {
+            const checked = document.getElementById('pPauseToggle').checked;
+            document.getElementById('pauseOptionsContainer').style.display = checked ? 'block' : 'none';
+        }
+
         function toggleDayChip(el) {
             el.classList.toggle('active');
         }
@@ -964,6 +1048,9 @@
             const type = document.getElementById('pType').value;
             const tod = document.getElementById('pTOD').value;
             const freqType = document.getElementById('pFreqType').value;
+            const hasPause = document.getElementById('pPauseToggle').checked;
+            const pauseBefore = document.getElementById('pPauseBefore').value;
+            const pauseAfter = document.getElementById('pPauseAfter').value;
             const openDate = document.getElementById('pOpenDate').value;
             const expDate = document.getElementById('pExpDate').value;
             const editId = document.getElementById('editProductId').value;
@@ -990,6 +1077,9 @@
                         tod,
                         freqType,
                         days,
+                        hasPause,
+                        pauseBefore: hasPause ? pauseBefore : null,
+                        pauseAfter: hasPause ? pauseAfter : null,
                         openDate,
                         expDate
                     };
@@ -1002,6 +1092,9 @@
                     tod,
                     freqType,
                     days,
+                    hasPause,
+                    pauseBefore: hasPause ? pauseBefore : null,
+                    pauseAfter: hasPause ? pauseAfter : null,
                     openDate,
                     expDate
                 });
@@ -1023,10 +1116,14 @@
             document.getElementById('pType').value = item.type;
             document.getElementById('pTOD').value = item.tod;
             document.getElementById('pFreqType').value = item.freqType;
+            document.getElementById('pPauseToggle').checked = !!item.hasPause;
+            document.getElementById('pPauseBefore').value = item.pauseBefore || '';
+            document.getElementById('pPauseAfter').value = item.pauseAfter || '';
             document.getElementById('pOpenDate').value = item.openDate || '';
             document.getElementById('pExpDate').value = item.expDate || '';
 
             toggleFreqDays();
+            togglePauseInputs();
 
             document.querySelectorAll('.day-chip').forEach(chip => {
                 const day = parseInt(chip.getAttribute('data-day'));
@@ -1046,10 +1143,14 @@
             document.getElementById('pType').value = 'Очищение';
             document.getElementById('pTOD').value = 'both';
             document.getElementById('pFreqType').value = 'daily';
+            document.getElementById('pPauseToggle').checked = false;
+            document.getElementById('pPauseBefore').value = '';
+            document.getElementById('pPauseAfter').value = '';
             document.getElementById('pOpenDate').value = '';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('active'));
             toggleFreqDays();
+            togglePauseInputs();
 
             document.getElementById('formModalTitle').innerText = 'Новое средство';
         }
