@@ -120,8 +120,9 @@
         .brand-font {
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
-            letter-spacing: 0.22em;
+            letter-spacing: 0.18em;
             text-transform: lowercase;
+            font-style: normal;
         }
 
         .logo {
@@ -267,17 +268,6 @@
             background: var(--surface);
             color: var(--text-primary);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .card-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .card-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 4px;
         }
 
         .routine-list {
@@ -601,10 +591,6 @@
             color: var(--accent-main);
             font-size: 14px;
             font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-            font-style: italic;
-            letter-spacing: 0.15em;
-            text-transform: lowercase;
             cursor: pointer;
             margin-bottom: 12px;
         }
@@ -643,6 +629,9 @@
             border-radius: 10px;
             background: var(--bg-main);
             font-size: 13px;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
         }
 
         .manage-info {
@@ -794,10 +783,6 @@
         <div class="tod-switch">
             <button type="button" class="tod-btn active" id="btnMorning">Утренний уход</button>
             <button type="button" class="tod-btn" id="btnEvening">Вечерний уход</button>
-        </div>
-
-        <div class="card-header">
-            <h2 id="routineTitle">Утренний уход</h2>
         </div>
 
         <div class="routine-list" id="routineContainer"></div>
@@ -981,7 +966,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.12.0';
+        const APP_VERSION = '2.15.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1082,7 +1067,6 @@
             currentTOD = tod;
             document.getElementById('btnMorning').classList.toggle('active', tod === 'morning');
             document.getElementById('btnEvening').classList.toggle('active', tod === 'evening');
-            document.getElementById('routineTitle').innerText = tod === 'morning' ? 'Утренний уход' : 'Вечерний уход';
             renderRoutine();
         }
 
@@ -1288,7 +1272,7 @@
             const btnAction = document.getElementById('btnCompleteRoutine');
             if (products.length === 0) {
                 container.innerHTML = '';
-                btnAction.innerHTML = '<span class="brand-font">моя коллекция</span> (добавить средства)';
+                btnAction.innerHTML = '<span class="brand-font">добавить средства в мою коллекцию</span>';
             } else {
                 btnAction.innerText = '✨ Всё сделано';
                 if (activeProducts.length === 0) {
@@ -1692,7 +1676,7 @@
             products.forEach((p) => {
                 const dotsHtml = calcExpiryDots(p.openDate, p.expDate);
                 htmlBuffer.push(`
-                    <div class="manage-item">
+                    <div class="manage-item" data-id="${p.id}">
                         <div class="manage-info">
                             <div class="expiry-dots">${dotsHtml}</div>
                             <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
@@ -1714,6 +1698,45 @@
             renderManageList();
             renderRoutine();
         }
+
+        // Логика смахивания влево для удаления в списке коллекции
+        let touchStartX = 0;
+        let activeSwipeItem = null;
+
+        document.addEventListener('touchstart', (e) => {
+            const item = e.target.closest('.manage-item');
+            if (!item) return;
+            touchStartX = e.touches[0].clientX;
+            activeSwipeItem = item;
+            item.style.transition = 'none';
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!activeSwipeItem) return;
+            const currentX = e.touches[0].clientX;
+            const diffX = currentX - touchStartX;
+            if (diffX < 0) {
+                activeSwipeItem.style.transform = `translateX(${Math.max(diffX, -90)}px)`;
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (!activeSwipeItem) return;
+            const currentX = e.changedTouches[0].clientX;
+            const diffX = currentX - touchStartX;
+            activeSwipeItem.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            if (diffX < -70) {
+                const id = activeSwipeItem.getAttribute('data-id');
+                activeSwipeItem.style.transform = 'translateX(-100%)';
+                activeSwipeItem.style.opacity = '0';
+                setTimeout(() => {
+                    deleteProduct(id);
+                }, 300);
+            } else {
+                activeSwipeItem.style.transform = 'translateX(0)';
+            }
+            activeSwipeItem = null;
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             renderCurrentDateChip();
