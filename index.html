@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Care & Beauty — Твой Уход</title>
+    <!-- Canvas-confetti library for optional celebratory effect -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            /* По умолчанию: Nude & Silk */
+            /* 1. Nude & Silk (по умолчанию) */
             --bg-main: #F9F6F0;
             --surface: #FFFFFF;
             --text-primary: #4A3E3D;
@@ -18,6 +20,7 @@
             --shadow-soft: 0 12px 36px rgba(196, 154, 130, 0.12);
         }
 
+        /* 2. Eucalyptus & Mint */
         body[data-theme="mint"] {
             --bg-main: #F2F6F5;
             --surface: #FFFFFF;
@@ -30,6 +33,7 @@
             --shadow-soft: 0 12px 36px rgba(91, 138, 130, 0.12);
         }
 
+        /* 3. Blush Lavender */
         body[data-theme="lavender"] {
             --bg-main: #F7F5F9;
             --surface: #FFFFFF;
@@ -42,6 +46,7 @@
             --shadow-soft: 0 12px 36px rgba(139, 120, 157, 0.12);
         }
 
+        /* 4. Velvet Espresso */
         body[data-theme="espresso"] {
             --bg-main: #181514;
             --surface: #24201E;
@@ -52,6 +57,58 @@
             --accent-light: #332B27;
             --border-color: #36302D;
             --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
+        }
+
+        /* 5. Sage & Spa */
+        body[data-theme="sage"] {
+            --bg-main: #F4F6F4;
+            --surface: #FFFFFF;
+            --text-primary: #2C3A2E;
+            --text-secondary: #607062;
+            --accent-main: #3A4D39;
+            --accent-grad: linear-gradient(135deg, #526E51 0%, #2A3829 100%);
+            --accent-light: #ECEFEA;
+            --border-color: #E0E5E0;
+            --shadow-soft: 0 12px 36px rgba(58, 77, 57, 0.12);
+        }
+
+        /* 6. Berry & Velvet */
+        body[data-theme="berry"] {
+            --bg-main: #FAF0F2;
+            --surface: #FFFFFF;
+            --text-primary: #3B1C24;
+            --text-secondary: #7A4D58;
+            --accent-main: #6B2337;
+            --accent-grad: linear-gradient(135deg, #8C324B 0%, #4D1826 100%);
+            --accent-light: #F7E6EB;
+            --border-color: #EED5DC;
+            --shadow-soft: 0 12px 36px rgba(107, 35, 55, 0.12);
+        }
+
+        /* 7. Midnight Calm */
+        body[data-theme="midnight"] {
+            --bg-main: #1A1F2C;
+            --surface: #242A3B;
+            --text-primary: #F0F3F9;
+            --text-secondary: #9DA8C2;
+            --accent-main: #D4A373;
+            --accent-grad: linear-gradient(135deg, #E0B384 0%, #B58455 100%);
+            --accent-light: #2D354A;
+            --border-color: #323B52;
+            --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
+        }
+
+        /* 8. Blush & Nude */
+        body[data-theme="blush"] {
+            --bg-main: #FDF6F6;
+            --surface: #FFFFFF;
+            --text-primary: #4A3B3C;
+            --text-secondary: #9E8284;
+            --accent-main: #D9A0A0;
+            --accent-grad: linear-gradient(135deg, #E8B4B4 0%, #C48888 100%);
+            --accent-light: #FBF0F0;
+            --border-color: #F2E1E1;
+            --shadow-soft: 0 12px 36px rgba(217, 160, 160, 0.15);
         }
 
         * {
@@ -90,17 +147,25 @@
 
         .theme-selector {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
+            flex-wrap: wrap;
+            max-width: 220px;
+            justify-content: flex-end;
         }
 
         .theme-dot {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid var(--surface);
             box-shadow: 0 0 0 1px var(--border-color);
+            transition: transform 0.2s;
+        }
+
+        .theme-dot:hover {
+            transform: scale(1.25);
         }
 
         .btn-settings {
@@ -116,6 +181,7 @@
             align-items: center;
             gap: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            white-space: nowrap;
         }
 
         .main-card {
@@ -154,7 +220,7 @@
 
         .tod-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             border-radius: 12px;
             font-size: 14px;
@@ -163,6 +229,7 @@
             color: var(--text-secondary);
             border: none;
             background: transparent;
+            transition: all 0.2s ease;
         }
 
         .tod-btn.active {
@@ -205,6 +272,7 @@
             justify-content: center;
             font-size: 12px;
             font-weight: 700;
+            flex-shrink: 0;
         }
 
         .item-details {
@@ -228,6 +296,7 @@
             display: flex;
             gap: 4px;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .dot {
@@ -242,7 +311,7 @@
 
         .btn-action {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border-radius: 18px;
             border: none;
             background: var(--accent-grad);
@@ -272,7 +341,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(4px);
             display: none;
             justify-content: center;
@@ -327,7 +396,7 @@
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-top: 6px;
+            margin-top: 8px;
         }
 
         .day-chip {
@@ -378,11 +447,37 @@
             font-size: 13px;
         }
 
+        .manage-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .manage-edit {
+            cursor: pointer;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
         .manage-del {
             color: #E74C3C;
             cursor: pointer;
             font-weight: bold;
-            padding: 2px 6px;
+            padding: 2px 4px;
+        }
+
+        .toggle-switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .toggle-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-main);
+            cursor: pointer;
         }
     </style>
 </head>
@@ -390,12 +485,16 @@
 
     <div class="header-bar">
         <div class="logo">Care & Beauty</div>
-        <div style="display: flex; gap: 12px; align-items: center;">
+        <div style="display: flex; gap: 10px; align-items: center;">
             <div class="theme-selector">
                 <div class="theme-dot" style="background: #C49A82;" onclick="setTheme('nude')" title="Nude & Silk"></div>
                 <div class="theme-dot" style="background: #5B8A82;" onclick="setTheme('mint')" title="Eucalyptus & Mint"></div>
                 <div class="theme-dot" style="background: #8B789D;" onclick="setTheme('lavender')" title="Blush Lavender"></div>
                 <div class="theme-dot" style="background: #24201E;" onclick="setTheme('espresso')" title="Velvet Espresso"></div>
+                <div class="theme-dot" style="background: #3A4D39;" onclick="setTheme('sage')" title="Sage & Spa"></div>
+                <div class="theme-dot" style="background: #6B2337;" onclick="setTheme('berry')" title="Berry & Velvet"></div>
+                <div class="theme-dot" style="background: #242A3B;" onclick="setTheme('midnight')" title="Midnight Calm"></div>
+                <div class="theme-dot" style="background: #D9A0A0;" onclick="setTheme('blush')" title="Blush & Nude"></div>
             </div>
             <button class="btn-settings" onclick="openSettings()">⚙️ Настройки</button>
         </div>
@@ -427,16 +526,23 @@
 
             <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
 
-            <div class="modal-title" style="font-size: 15px;">+ Добавить средство</div>
-            
+            <div class="modal-title" id="formModalTitle" style="font-size: 15px;">+ Добавить средство</div>
+            <input type="hidden" id="editProductId" value="">
+
             <div class="form-group">
                 <label>Название средства</label>
                 <input type="text" id="pName" class="input-control" placeholder="Напр. Retiderm 0.25 или Пенка">
             </div>
 
             <div class="form-group">
-                <label>Тип / Зона</label>
-                <input type="text" id="pType" class="input-control" placeholder="Напр. Очищение, Увлажнение, Ретинол">
+                <label>Тип / Этап ухода</label>
+                <select id="pType" class="input-control">
+                    <option value="Очищение">Очищение</option>
+                    <option value="Тонизирование">Тонизирование</option>
+                    <option value="Активы">Активы</option>
+                    <option value="Уход за глазами">Уход за глазами</option>
+                    <option value="Питание / Увлажнение">Питание / Увлажнение</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -475,20 +581,49 @@
                 <input type="date" id="pExpDate" class="input-control">
             </div>
 
-            <button class="btn-action" style="margin-top: 12px;" onclick="addProduct()">Сохранить средство</button>
+            <button class="btn-action" style="margin-top: 12px;" onclick="saveProduct()">Сохранить средство</button>
+            <button class="btn-secondary" id="btnCancelEdit" style="display: none;" onclick="resetForm()">Отмена редактирования</button>
+
+            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
+
+            <div class="toggle-switch-container">
+                <label for="confettiToggle" style="font-size: 13px; font-weight: 500; color: var(--text-primary); cursor: pointer;">
+                    💖 Праздничные сердечки и конфетти при нажатии «Всё сделано»
+                </label>
+                <input type="checkbox" id="confettiToggle" class="toggle-checkbox" onchange="toggleConfettiPref(this)">
+            </div>
+
             <button class="btn-secondary" onclick="closeSettings()">Закрыть</button>
         </div>
     </div>
 
     <script>
+        // Иерархия шагов для строгого соблюдения косметологической последовательности
+        const typeOrder = {
+            "Очищение": 1,
+            "Тонизирование": 2,
+            "Активы": 3,
+            "Уход за глазами": 4,
+            "Питание / Увлажнение": 5
+        };
+
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let currentTOD = 'morning';
+        let enableConfetti = JSON.parse(localStorage.getItem('cb_enable_confetti')) || false;
+
+        // Инициализация тумблера конфетти
+        document.getElementById('confettiToggle').checked = enableConfetti;
 
         function setTheme(theme) {
             document.body.setAttribute('data-theme', theme);
             localStorage.setItem('cb_theme', theme);
         }
         setTheme(localStorage.getItem('cb_theme') || 'nude');
+
+        function toggleConfettiPref(el) {
+            enableConfetti = el.checked;
+            localStorage.setItem('cb_enable_confetti', JSON.stringify(enableConfetti));
+        }
 
         function switchTOD(tod) {
             currentTOD = tod;
@@ -506,7 +641,7 @@
             const todayDayOfWeek = today.getDay(); // 0 - Вс, 1 - Пн ...
 
             // Фильтрация по времени суток и дням недели
-            const activeProducts = products.filter(p => {
+            let activeProducts = products.filter(p => {
                 const matchTOD = p.tod === 'both' || p.tod === currentTOD;
                 let matchDay = true;
 
@@ -517,10 +652,17 @@
                 return matchTOD && matchDay;
             });
 
+            // Автоматическая сортировка по косметологическим этапам
+            activeProducts.sort((a, b) => {
+                const orderA = typeOrder[a.type] || 99;
+                const orderB = typeOrder[b.type] || 99;
+                return orderA - orderB;
+            });
+
             if (activeProducts.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        У вас пока нет средств на этот время суток или сегодня день отдыха.<br>
+                        У вас пока нет средств на это время суток или сегодня день отдыха.<br>
                         Добавьте баночки в <b>⚙️ Настройках</b>.
                     </div>
                 `;
@@ -570,7 +712,21 @@
         }
 
         function completeRoutine() {
-            alert('Прекрасная работа! Забота о себе завершена ✨');
+            // Запуск салюта при активной опции
+            if (enableConfetti && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Переключение на следующий этап без всплывающих окон
+            if (currentTOD === 'morning') {
+                switchTOD('evening');
+            } else {
+                switchTOD('morning');
+            }
         }
 
         /* Modal Logic */
@@ -581,6 +737,7 @@
 
         function closeSettings() {
             document.getElementById('settingsModal').style.display = 'none';
+            resetForm();
             renderRoutine();
         }
 
@@ -593,13 +750,14 @@
             el.classList.toggle('active');
         }
 
-        function addProduct() {
+        function saveProduct() {
             const name = document.getElementById('pName').value.trim();
-            const type = document.getElementById('pType').value.trim() || 'Базовый уход';
+            const type = document.getElementById('pType').value;
             const tod = document.getElementById('pTOD').value;
             const freqType = document.getElementById('pFreqType').value;
             const openDate = document.getElementById('pOpenDate').value;
             const expDate = document.getElementById('pExpDate').value;
+            const editId = document.getElementById('editProductId').value;
 
             if (!name) {
                 alert('Пожалуйста, введите название средства.');
@@ -613,27 +771,80 @@
                 });
             }
 
-            products.push({
-                id: Date.now(),
-                name,
-                type,
-                tod,
-                freqType,
-                days,
-                openDate,
-                expDate
-            });
+            if (editId) {
+                // Редактирование существующего
+                const idx = products.findIndex(p => p.id == editId);
+                if (idx !== -1) {
+                    products[idx] = {
+                        id: Number(editId),
+                        name,
+                        type,
+                        tod,
+                        freqType,
+                        days,
+                        openDate,
+                        expDate
+                    };
+                }
+            } else {
+                // Добавление нового
+                products.push({
+                    id: Date.now(),
+                    name,
+                    type,
+                    tod,
+                    freqType,
+                    days,
+                    openDate,
+                    expDate
+                });
+            }
 
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
+            resetForm();
+            renderManageList();
+        }
 
-            // Сброс формы
+        function editProduct(id) {
+            const item = products.find(p => p.id == id);
+            if (!item) return;
+
+            document.getElementById('editProductId').value = item.id;
+            document.getElementById('pName').value = item.name;
+            document.getElementById('pType').value = item.type;
+            document.getElementById('pTOD').value = item.tod;
+            document.getElementById('pFreqType').value = item.freqType;
+            document.getElementById('pOpenDate').value = item.openDate || '';
+            document.getElementById('pExpDate').value = item.expDate || '';
+
+            toggleFreqDays();
+
+            document.querySelectorAll('.day-chip').forEach(chip => {
+                const day = parseInt(chip.getAttribute('data-day'));
+                if (Array.isArray(item.days) && item.days.includes(day)) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+
+            document.getElementById('formModalTitle').innerText = '✏️ Редактировать средство';
+            document.getElementById('btnCancelEdit').style.display = 'block';
+        }
+
+        function resetForm() {
+            document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
-            document.getElementById('pType').value = '';
+            document.getElementById('pType').value = 'Очищение';
+            document.getElementById('pTOD').value = 'both';
+            document.getElementById('pFreqType').value = 'daily';
             document.getElementById('pOpenDate').value = '';
             document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('active'));
+            toggleFreqDays();
 
-            renderManageList();
+            document.getElementById('formModalTitle').innerText = '+ Добавить средство';
+            document.getElementById('btnCancelEdit').style.display = 'none';
         }
 
         function renderManageList() {
@@ -645,18 +856,21 @@
                 return;
             }
 
-            products.forEach((p, idx) => {
+            products.forEach((p) => {
                 container.innerHTML += `
                     <div class="manage-item">
                         <span><b>${p.name}</b> (${p.type})</span>
-                        <span class="manage-del" onclick="deleteProduct(${idx})">✕</span>
+                        <div class="manage-actions">
+                            <span class="manage-edit" onclick="editProduct(${p.id})">✏️</span>
+                            <span class="manage-del" onclick="deleteProduct(${p.id})">✕</span>
+                        </div>
                     </div>
                 `;
             });
         }
 
-        function deleteProduct(idx) {
-            products.splice(idx, 1);
+        function deleteProduct(id) {
+            products = products.filter(p => p.id != id);
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
             renderManageList();
         }
