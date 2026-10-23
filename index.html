@@ -315,7 +315,6 @@
             gap: 4px;
         }
 
-        /* Размер шрифта 11px как у "моя коллекция" и "мои ритуалы" */
         .tod-btn.brand-font {
             font-size: 11px;
             letter-spacing: 0.18em;
@@ -329,7 +328,6 @@
             box-shadow: 0 4px 14px rgba(0,0,0,0.04);
         }
 
-        /* Адаптация для планшетов и широких экранов */
         @media (min-width: 440px) {
             .tod-btn {
                 flex-wrap: nowrap;
@@ -530,6 +528,23 @@
         .modal-overlay.active-modal .modal-card {
             transform: translateY(0) scale(1);
             opacity: 1;
+        }
+
+        /* КОМПАКТНАЯ МОБИЛЬНАЯ ЭРГОНОМИКА (iPhone SE и др.) */
+        @media (max-width: 480px) {
+            .modal-card {
+                padding: 20px 16px 14px;
+                border-radius: 26px;
+            }
+            .form-section {
+                padding: 14px 12px !important;
+                margin-bottom: 12px !important;
+                border-radius: 16px !important;
+            }
+            .input-control {
+                padding: 10px 14px !important;
+                font-size: 12px !important;
+            }
         }
 
         .modal-header-row {
@@ -1324,7 +1339,7 @@
                 </div>
             </div>
 
-            <!-- ФИКСИРОВАННАЯ КНОПКА ЗАКРЫТЬ ВНИЗУ ОCНОВНОГО ЭКРАНА КОЛЛЕКЦИИ -->
+            <!-- ФИКСИРОВАННАЯ КНОПКА ЗАКРЫТЬ ВНИЗУ ОСНОВНОГО ЭКРАНА КОЛЛЕКЦИИ -->
             <div class="sticky-close-footer" id="mainModalFooter">
                 <button type="button" class="btn-secondary brand-font" id="btnCloseSettings">закрыть</button>
             </div>
@@ -1347,7 +1362,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.6.3</span>
+                    <span class="version-text brand-font">версия v1.6.4</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                 </div>
             </div>
@@ -1379,10 +1394,10 @@
         </div>
     </div>
 
-    <!-- Кастомное модальное окно валидации -->
+    <!-- Кастомное модальное окно уведомлений / алертов -->
     <div class="modal-overlay" id="customAlertModal">
         <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
-            <div class="modal-title" id="customAlertText" style="font-size: 15px; margin-bottom: 18px;">Введите название</div>
+            <div class="modal-title" id="customAlertText" style="font-size: 15px; margin-bottom: 18px;">Сообщение</div>
             <button type="button" class="btn-action brand-font" id="btnAlertOk" style="padding: 12px;">ок</button>
         </div>
     </div>
@@ -1391,8 +1406,35 @@
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.6.3';
-        const savedVersion = localStorage.getItem('cb_app_version');
+        const APP_VERSION = '1.6.4';
+
+        /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE (Безопасность в режиме Инкогнито / при переполнении) */
+        const safeStorage = {
+            getItem(key) {
+                try {
+                    return localStorage.getItem(key);
+                } catch (e) {
+                    console.warn('LocalStorage getItem error:', e);
+                    return null;
+                }
+            },
+            setItem(key, value) {
+                try {
+                    localStorage.setItem(key, value);
+                } catch (e) {
+                    console.warn('LocalStorage setItem error:', e);
+                }
+            },
+            removeItem(key) {
+                try {
+                    localStorage.removeItem(key);
+                } catch (e) {
+                    console.warn('LocalStorage removeItem error:', e);
+                }
+            }
+        };
+
+        const savedVersion = safeStorage.getItem('cb_app_version');
 
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1416,20 +1458,20 @@
             }
 
             if (savedVersion !== APP_VERSION) {
-                localStorage.setItem('cb_app_version', APP_VERSION);
-                localStorage.removeItem('cb_view_date_offset');
-                localStorage.removeItem('cb_is_tomorrow_plan');
-                localStorage.removeItem('cb_tomorrow_rest');
-                localStorage.removeItem('cb_viewing_tomorrow');
+                safeStorage.setItem('cb_app_version', APP_VERSION);
+                safeStorage.removeItem('cb_view_date_offset');
+                safeStorage.removeItem('cb_is_tomorrow_plan');
+                safeStorage.removeItem('cb_tomorrow_rest');
+                safeStorage.removeItem('cb_viewing_tomorrow');
             }
             
             checkUrlImport();
         });
 
-        let installDate = localStorage.getItem('cb_install_date');
+        let installDate = safeStorage.getItem('cb_install_date');
         if (!installDate) {
             installDate = getLocalTodayStr();
-            localStorage.setItem('cb_install_date', installDate);
+            safeStorage.setItem('cb_install_date', installDate);
         }
 
         function cleanOldLogs() {
@@ -1438,7 +1480,7 @@
                 ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
                 const cutoffStr = getLocalTodayStr(ninetyDaysAgo);
 
-                let logData = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
+                let logData = JSON.parse(safeStorage.getItem('cb_completed_log') || '{}');
                 let logModified = false;
                 for (let dateStr in logData) {
                     if (dateStr < cutoffStr) {
@@ -1447,10 +1489,10 @@
                     }
                 }
                 if (logModified) {
-                    localStorage.setItem('cb_completed_log', JSON.stringify(logData));
+                    safeStorage.setItem('cb_completed_log', JSON.stringify(logData));
                 }
 
-                let progressData = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
+                let progressData = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
                 let progressModified = false;
                 for (let pid in progressData) {
                     if (progressData[pid] && Array.isArray(progressData[pid].dates)) {
@@ -1462,7 +1504,7 @@
                     }
                 }
                 if (progressModified) {
-                    localStorage.setItem('cb_product_progress', JSON.stringify(progressData));
+                    safeStorage.setItem('cb_product_progress', JSON.stringify(progressData));
                 }
             } catch (err) {
                 console.error('Error cleaning old logs:', err);
@@ -1484,9 +1526,9 @@
             return `${year}-${month}-${day}`;
         }
 
+        /* ЧЕСТНОЕ ЛОКАЛЬНОЕ ВРЕМЯ УСТРОЙСТВА БЕЗ ХАРДКОДА ЧАСОВЫХ ПОЯСОВ */
         function getLogicalTodayStr() {
             const d = new Date();
-            d.setHours(d.getHours() - 3); 
             return getLocalTodayStr(d);
         }
 
@@ -1500,8 +1542,8 @@
             }
         }
 
-        let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
-        let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
+        let completedLog = JSON.parse(safeStorage.getItem('cb_completed_log') || '{}');
+        let productProgress = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
 
         const CATEGORIES = [
             "Очищение",
@@ -1519,8 +1561,8 @@
             "Питание / Увлажнение": 5
         };
 
-        let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
-        let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
+        let products = JSON.parse(safeStorage.getItem('cb_custom_products') || '[]');
+        let barcodeCache = JSON.parse(safeStorage.getItem('cb_barcode_cache') || '{}');
         let currentScannedBarcode = null;
         let activePopoverProductId = null;
         let autoExpandCategoryName = null;
@@ -1548,7 +1590,7 @@
         let autocompleteDebounceTimer = null;
 
         function getRoutineDateObj() {
-            const selectedDateStr = localStorage.getItem('cb_selected_date');
+            const selectedDateStr = safeStorage.getItem('cb_selected_date');
             if (selectedDateStr) {
                 const parts = selectedDateStr.split('-');
                 return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
@@ -1559,13 +1601,13 @@
         }
 
         function isFuturePlan() {
-            const selectedDateStr = localStorage.getItem('cb_selected_date');
+            const selectedDateStr = safeStorage.getItem('cb_selected_date');
             if (!selectedDateStr) return false;
             return selectedDateStr > getLogicalTodayStr();
         }
 
         function isArchiveMode() {
-            const selected = localStorage.getItem('cb_selected_date');
+            const selected = safeStorage.getItem('cb_selected_date');
             const logicalToday = getLogicalTodayStr();
             if (!selected) return false;
             return selected < logicalToday;
@@ -1585,7 +1627,7 @@
             document.getElementById('dateChipText').innerText = chipText;
 
             const hiddenInput = document.getElementById('hiddenDateInput');
-            hiddenInput.min = localStorage.getItem('cb_install_date') || getLocalTodayStr();
+            hiddenInput.min = safeStorage.getItem('cb_install_date') || getLocalTodayStr();
             hiddenInput.value = getLocalTodayStr(routineDate);
         }
 
@@ -1596,7 +1638,7 @@
                 activeTheme = isDark ? 'midnight' : 'nude';
             }
             document.body.setAttribute('data-theme', activeTheme);
-            localStorage.setItem('cb_theme', activeTheme);
+            safeStorage.setItem('cb_theme', activeTheme);
 
             document.querySelectorAll('#themeRow [data-theme]').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-theme') === activeTheme);
@@ -1604,12 +1646,12 @@
         }
 
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('cb_theme')) {
+            if (!safeStorage.getItem('cb_theme')) {
                 setTheme(e.matches ? 'midnight' : 'nude');
             }
         });
 
-        setTheme(localStorage.getItem('cb_theme'));
+        setTheme(safeStorage.getItem('cb_theme'));
 
         function switchTOD(tod) {
             currentTOD = tod;
@@ -1743,7 +1785,7 @@
                 dates.push(routineDateStr);
             }
 
-            localStorage.setItem('cb_product_progress', JSON.stringify(productProgress));
+            safeStorage.setItem('cb_product_progress', JSON.stringify(productProgress));
             renderRoutine();
         }
 
@@ -2138,7 +2180,7 @@
                                     showForm(false);
                                     document.getElementById('pName').value = rawName;
                                     barcodeCache[decodedText] = { name: rawName, type: 'Очищение' };
-                                    localStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
+                                    safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
                                     return;
                                 }
                             }
@@ -2153,7 +2195,7 @@
                 );
             } catch (err) {
                 console.error("Camera start error:", err);
-                alert("Не удалось запустить камеру. Проверьте разрешения браузера.");
+                showCustomAlert("Не удалось запустить камеру. Проверьте разрешения браузера.");
                 stopBarcodeScanner();
             } finally {
                 isScannerBusy = false;
@@ -2165,7 +2207,9 @@
             if (html5QrCodeScanner) {
                 try {
                     await html5QrCodeScanner.stop();
-                } catch (e) {}
+                } catch (e) {
+                    console.log('Scanner stop warning:', e);
+                }
             }
             scannerWrapper.style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'block';
@@ -2194,6 +2238,7 @@
             });
         }
 
+        /* ЕДИНЫЙ ИНТЕРФЕЙС КАСТОМНЫХ МОДАЛЬНЫХ АЛЕРТОВ */
         function showCustomAlert(msg, targetElement) {
             document.getElementById('customAlertText').innerText = msg;
             const modal = document.getElementById('customAlertModal');
@@ -2242,39 +2287,60 @@
             return {
                 version: APP_VERSION,
                 timestamp: Date.now(),
-                products: JSON.parse(localStorage.getItem('cb_custom_products')) || [],
-                productProgress: JSON.parse(localStorage.getItem('cb_product_progress')) || {},
-                completedLog: JSON.parse(localStorage.getItem('cb_completed_log')) || {},
-                theme: localStorage.getItem('cb_theme') || 'nude',
-                installDate: localStorage.getItem('cb_install_date') || getLocalTodayStr()
+                products: JSON.parse(safeStorage.getItem('cb_custom_products') || '[]'),
+                productProgress: JSON.parse(safeStorage.getItem('cb_product_progress') || '{}'),
+                completedLog: JSON.parse(safeStorage.getItem('cb_completed_log') || '{}'),
+                theme: safeStorage.getItem('cb_theme') || 'nude',
+                installDate: safeStorage.getItem('cb_install_date') || getLocalTodayStr()
             };
         }
 
+        /* СТРОГАЯ ВАЛИДАЦИЯ ДАННЫХ ПРИ ИМПОРТЕ */
         function applyImportData(data) {
-            if (!data || typeof data !== 'object') return false;
+            if (!data || typeof data !== 'object') {
+                showCustomAlert('Неверный формат данных.');
+                return false;
+            }
+            if (!Array.isArray(data.products)) {
+                showCustomAlert('Ошибка: файл поврежден или не содержит список средств.');
+                return false;
+            }
             
-            if (data.products && Array.isArray(data.products)) {
-                localStorage.setItem('cb_custom_products', JSON.stringify(data.products));
+            try {
+                safeStorage.setItem('cb_custom_products', JSON.stringify(data.products));
                 products = data.products;
+
+                if (data.productProgress && typeof data.productProgress === 'object') {
+                    safeStorage.setItem('cb_product_progress', JSON.stringify(data.productProgress));
+                    productProgress = data.productProgress;
+                } else {
+                    productProgress = {};
+                    safeStorage.setItem('cb_product_progress', JSON.stringify({}));
+                }
+
+                if (data.completedLog && typeof data.completedLog === 'object') {
+                    safeStorage.setItem('cb_completed_log', JSON.stringify(data.completedLog));
+                    completedLog = data.completedLog;
+                } else {
+                    completedLog = {};
+                    safeStorage.setItem('cb_completed_log', JSON.stringify({}));
+                }
+
+                if (data.theme && typeof data.theme === 'string') {
+                    setTheme(data.theme);
+                }
+
+                if (data.installDate && typeof data.installDate === 'string') {
+                    safeStorage.setItem('cb_install_date', data.installDate);
+                }
+                
+                renderManageList();
+                switchTOD(currentTOD);
+                return true;
+            } catch (err) {
+                showCustomAlert('Ошибка при применении данных.');
+                return false;
             }
-            if (data.productProgress) {
-                localStorage.setItem('cb_product_progress', JSON.stringify(data.productProgress));
-                productProgress = data.productProgress;
-            }
-            if (data.completedLog) {
-                localStorage.setItem('cb_completed_log', JSON.stringify(data.completedLog));
-                completedLog = data.completedLog;
-            }
-            if (data.theme) {
-                setTheme(data.theme);
-            }
-            if (data.installDate) {
-                localStorage.setItem('cb_install_date', data.installDate);
-            }
-            
-            renderManageList();
-            switchTOD(currentTOD);
-            return true;
         }
 
         function exportJsonFile() {
@@ -2375,6 +2441,7 @@
                     }, 400);
                 } catch (err) {
                     console.error('Import from URL failed', err);
+                    showCustomAlert('Ошибка импорта из ссылки.');
                 }
             }
         }
@@ -2433,7 +2500,7 @@
 
             if (currentScannedBarcode && !editId) {
                 barcodeCache[currentScannedBarcode] = { name, type };
-                localStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
+                safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
             }
             currentScannedBarcode = null;
 
@@ -2446,7 +2513,7 @@
 
             autoExpandCategoryName = type;
 
-            localStorage.setItem('cb_custom_products', JSON.stringify(products));
+            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
             renderManageList();
             hideForm();
             renderRoutine();
@@ -2607,13 +2674,13 @@
             closeAllPopovers();
             const targetId = Number(id);
             products = products.filter(p => p.id !== targetId);
-            localStorage.setItem('cb_custom_products', JSON.stringify(products));
+            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
 
             if (products.length === 0) {
-                localStorage.removeItem('cb_product_progress');
-                localStorage.removeItem('cb_selected_date');
-                localStorage.removeItem('cb_evening_completed');
-                localStorage.removeItem('cb_install_date');
+                safeStorage.removeItem('cb_product_progress');
+                safeStorage.removeItem('cb_selected_date');
+                safeStorage.removeItem('cb_evening_completed');
+                safeStorage.removeItem('cb_install_date');
                 productProgress = {};
                 switchTOD(getInitialTOD());
             } else {
@@ -2629,10 +2696,10 @@
                 const logicalToday = getLogicalTodayStr();
                 
                 if (val === logicalToday) {
-                    localStorage.removeItem('cb_selected_date');
+                    safeStorage.removeItem('cb_selected_date');
                     switchTOD(getInitialTOD());
                 } else {
-                    localStorage.setItem('cb_selected_date', val);
+                    safeStorage.setItem('cb_selected_date', val);
                     switchTOD('morning');
                 }
             });
@@ -2743,19 +2810,19 @@
             });
 
             document.getElementById('btnMorning').addEventListener('click', () => {
-                const selected = localStorage.getItem('cb_selected_date');
+                const selected = safeStorage.getItem('cb_selected_date');
                 const logicalToday = getLogicalTodayStr();
                 if (!selected || selected === logicalToday) {
-                    localStorage.removeItem('cb_selected_date');
+                    safeStorage.removeItem('cb_selected_date');
                 }
                 switchTOD('morning');
             });
 
             document.getElementById('btnEvening').addEventListener('click', () => {
-                const selected = localStorage.getItem('cb_selected_date');
+                const selected = safeStorage.getItem('cb_selected_date');
                 const logicalToday = getLogicalTodayStr();
                 if (!selected || selected === logicalToday) {
-                    localStorage.removeItem('cb_selected_date');
+                    safeStorage.removeItem('cb_selected_date');
                 }
                 switchTOD('evening');
             });
