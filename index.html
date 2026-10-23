@@ -9,8 +9,8 @@
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
-    <!-- Подключаем шрифт Montserrat для премиального скандинавского стиля логотипа -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <!-- Подключаем шрифт Montserrat для премиального скандинавского стиля -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- Подключаем библиотеку сканирования штрихкодов Html5-Qrcode -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <style>
@@ -21,11 +21,12 @@
             --text-primary: #4A3E3D;
             --text-secondary: #968583;
             --accent-main: #C49A82;
-            --accent-grad: linear-gradient(135deg, #D8B4A0 0%, #B0836B 100%);
+            --accent-grad: #B0836B;
             --accent-light: #F4ECE6;
             --border-color: #EFE8DE;
-            --shadow-soft: 0 12px 36px rgba(196, 154, 130, 0.12);
+            --shadow-soft: 0 16px 40px rgba(196, 154, 130, 0.08);
             --icon-inactive: #D0C6BE;
+            --item-bg: rgba(255, 255, 255, 0.65);
         }
 
         /* 2. Eucalyptus & Mint */
@@ -35,11 +36,12 @@
             --text-primary: #2A3B37;
             --text-secondary: #6B8782;
             --accent-main: #5B8A82;
-            --accent-grad: linear-gradient(135deg, #709F97 0%, #48756D 100%);
+            --accent-grad: #48756D;
             --accent-light: #E7F0EE;
             --border-color: #E1ECE9;
-            --shadow-soft: 0 12px 36px rgba(91, 138, 130, 0.12);
+            --shadow-soft: 0 16px 40px rgba(91, 138, 130, 0.08);
             --icon-inactive: #B8C9C5;
+            --item-bg: rgba(255, 255, 255, 0.65);
         }
 
         /* 3. Blush Lavender */
@@ -49,11 +51,12 @@
             --text-primary: #3B3342;
             --text-secondary: #83788C;
             --accent-main: #8B789D;
-            --accent-grad: linear-gradient(135deg, #A28FB5 0%, #756287 100%);
+            --accent-grad: #756287;
             --accent-light: #EFECF3;
             --border-color: #EAE4EF;
-            --shadow-soft: 0 12px 36px rgba(139, 120, 157, 0.12);
+            --shadow-soft: 0 16px 40px rgba(139, 120, 157, 0.08);
             --icon-inactive: #CBBFCF;
+            --item-bg: rgba(255, 255, 255, 0.65);
         }
 
         /* 4. Sage & Spa */
@@ -62,12 +65,13 @@
             --surface: #FFFFFF;
             --text-primary: #2C3A2E;
             --text-secondary: #607062;
-            --accent-main: #3A4D39;
-            --accent-grad: linear-gradient(135deg, #526E51 0%, #2A3829 100%);
+            --accent-main: #4A6148;
+            --accent-grad: #3A4D39;
             --accent-light: #ECEFEA;
             --border-color: #E0E5E0;
-            --shadow-soft: 0 12px 36px rgba(58, 77, 57, 0.12);
+            --shadow-soft: 0 16px 40px rgba(58, 77, 57, 0.08);
             --icon-inactive: #B5C2B6;
+            --item-bg: rgba(255, 255, 255, 0.65);
         }
 
         /* 5. Midnight Calm */
@@ -77,11 +81,12 @@
             --text-primary: #F0F3F9;
             --text-secondary: #A6B4C9;
             --accent-main: #D4A373;
-            --accent-grad: linear-gradient(135deg, #E0B384 0%, #B58455 100%);
+            --accent-grad: #B58455;
             --accent-light: #2D354A;
             --border-color: #3A455C;
-            --shadow-soft: 0 12px 36px rgba(0, 0, 0, 0.45);
+            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
             --icon-inactive: #525E7A;
+            --item-bg: rgba(36, 42, 59, 0.65);
         }
 
         * {
@@ -90,7 +95,7 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             touch-action: manipulation;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         body {
@@ -100,7 +105,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 24px 16px;
+            padding: 24px 16px 40px;
         }
 
         body.modal-open {
@@ -113,28 +118,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .header-right-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .brand-font {
             font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            letter-spacing: 0.18em;
+            font-weight: 500;
+            letter-spacing: 0.22em;
             text-transform: lowercase;
             font-style: normal;
         }
 
         .logo {
             font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
-            letter-spacing: 0.28em;
+            letter-spacing: 0.3em;
             text-transform: lowercase;
             color: var(--text-primary);
         }
@@ -143,14 +148,14 @@
             background: var(--surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             white-space: nowrap;
         }
 
@@ -165,25 +170,25 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             padding: 0;
             flex-shrink: 0;
         }
 
         .btn-icon-settings svg {
-            width: 18px;
-            height: 18px;
+            width: 17px;
+            height: 17px;
             fill: var(--text-primary);
             transition: fill 0.3s ease;
         }
 
         .streak-card {
             background: var(--surface);
-            border-radius: 20px;
+            border-radius: 24px;
             width: 100%;
             max-width: 480px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
             text-align: center;
@@ -193,14 +198,14 @@
         .date-chip {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             background: var(--accent-light);
             color: var(--accent-main);
-            padding: 6px 16px;
-            border-radius: 12px;
-            font-size: 14px;
+            padding: 8px 18px;
+            border-radius: 14px;
+            font-size: 13px;
             font-weight: 600;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.3px;
             cursor: pointer;
             position: relative;
         }
@@ -218,70 +223,76 @@
 
         .scanner-notice-banner {
             background: var(--accent-light);
-            border: 1px solid var(--accent-main);
+            border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 12px 14px;
-            border-radius: 12px;
+            padding: 14px 16px;
+            border-radius: 16px;
             font-size: 13px;
             font-weight: 500;
-            line-height: 1.4;
-            margin-bottom: 14px;
+            line-height: 1.5;
+            margin-bottom: 18px;
             text-align: center;
         }
 
+        /* ------------------ ОБНОВЛЕННАЯ НИЖНЯЯ ЧАСТЬ ------------------ */
+
         .main-card {
             background: var(--surface);
-            border-radius: 28px;
+            border-radius: 32px;
             width: 100%;
             max-width: 480px;
-            padding: 24px 20px;
+            padding: 28px 22px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
         }
 
         .tod-switch {
             display: flex;
-            background: var(--accent-light);
-            border-radius: 16px;
-            padding: 4px;
-            margin-bottom: 20px;
+            background: var(--bg-main);
+            border-radius: 20px;
+            padding: 5px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
         }
 
         .tod-btn {
             flex: 1;
-            padding: 12px;
+            padding: 12px 10px;
             text-align: center;
-            border-radius: 12px;
-            font-size: 14px;
+            border-radius: 16px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             color: var(--text-secondary);
             border: none;
             background: transparent;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
 
         .tod-btn.active {
             background: var(--surface);
             color: var(--text-primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
         }
 
         .routine-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 14px;
+            margin-bottom: 28px;
         }
 
+        /* Легкие, "воздушные" карточки средств */
         .routine-item {
-            background: var(--bg-main);
+            background: var(--item-bg);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 14px 16px;
+            border-radius: 20px;
+            padding: 16px 18px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.015);
+            backdrop-filter: blur(8px);
         }
 
         .routine-item-main {
@@ -294,44 +305,44 @@
         .item-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
+        /* Легкий минималистичный текстовый маркер вместо тяжелой плашки */
         .item-num {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: var(--accent-main);
-            color: #FFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 500;
+            color: var(--accent-main);
+            letter-spacing: 0.05em;
             flex-shrink: 0;
+            width: 22px;
+            opacity: 0.9;
         }
 
         .item-details {
             display: flex;
             flex-direction: column;
+            gap: 2px;
         }
 
         .item-name {
             font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
+            letter-spacing: -0.1px;
         }
 
         .item-tag {
             font-size: 11px;
             color: var(--text-secondary);
-            margin-top: 2px;
+            font-weight: 400;
         }
 
         .item-right-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
         }
 
@@ -343,21 +354,21 @@
             font-weight: 600;
             color: var(--accent-main);
             background: var(--accent-light);
-            padding: 3px 6px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 10px;
             white-space: nowrap;
         }
 
         .pause-inline-chip {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-size: 11px;
             font-weight: 500;
             color: var(--accent-main);
             background: var(--accent-light);
-            padding: 3px 8px;
-            border-radius: 8px;
+            padding: 4px 10px;
+            border-radius: 10px;
             align-self: flex-start;
         }
 
@@ -372,7 +383,7 @@
 
         .expiry-dots.clickable {
             cursor: pointer;
-            background: rgba(0,0,0,0.03);
+            background: rgba(0,0,0,0.02);
             transition: background-color 0.2s;
         }
 
@@ -381,32 +392,38 @@
         }
 
         .dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
         }
 
         .dot-green { background-color: #2ECC71; }
         .dot-orange { background-color: #E67E22; }
         .dot-red { background-color: #E74C3C; }
-        .dot-gray { background-color: #BDC3C7; }
+        .dot-gray { background-color: var(--icon-inactive); }
 
+        /* Спокойная матовая главная кнопка */
         .btn-action {
             width: 100%;
             padding: 16px;
-            border-radius: 18px;
+            border-radius: 20px;
             border: none;
-            background: var(--accent-grad);
+            background: var(--accent-main);
             color: #FFF;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
+            letter-spacing: 0.03em;
             cursor: pointer;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
         }
 
         .btn-action:active {
-            transform: scale(0.98);
+            transform: scale(0.985);
+            opacity: 0.9;
         }
+
+        /* ------------------------------------------------------------- */
 
         .modal-overlay {
             position: fixed;
@@ -414,8 +431,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -426,14 +443,14 @@
 
         .modal-card {
             background: var(--surface);
-            border-radius: 24px;
+            border-radius: 28px;
             width: 100%;
             max-width: 460px;
             max-height: 90vh;
             overflow-y: auto;
             padding: 24px;
             padding-bottom: calc(24px + env(safe-area-inset-bottom));
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 24px 48px rgba(0,0,0,0.12);
             border: 1px solid var(--border-color);
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
@@ -445,7 +462,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .modal-close-icon {
@@ -458,13 +475,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             line-height: 1;
         }
 
         .modal-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--text-primary);
         }
@@ -472,17 +489,17 @@
         .form-section {
             background: var(--bg-main);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 14px;
+            border-radius: 18px;
+            padding: 16px;
             margin-bottom: 14px;
         }
 
         .form-section-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--accent-main);
             margin-bottom: 12px;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             font-style: normal;
         }
 
@@ -504,7 +521,7 @@
 
         .input-control {
             width: 100%;
-            padding: 10px 14px;
+            padding: 11px 14px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
             background: var(--surface);
@@ -520,8 +537,8 @@
 
         .picker-btn {
             flex: 1;
-            padding: 8px 10px;
-            border-radius: 10px;
+            padding: 9px 10px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             font-size: 12px;
@@ -536,7 +553,7 @@
             background: var(--accent-main);
             color: #FFF;
             border-color: var(--accent-main);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         #themeRow .picker-btn.active {
@@ -554,15 +571,15 @@
 
         .days-picker {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             width: 100%;
             margin-top: 6px;
         }
 
         .day-chip {
             flex: 1;
-            padding: 6px 0;
-            border-radius: 8px;
+            padding: 7px 0;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             font-size: 11px;
@@ -589,7 +606,7 @@
         .pao-chip {
             flex: 1;
             padding: 8px 6px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             font-size: 12px;
@@ -609,11 +626,11 @@
         .btn-secondary {
             width: 100%;
             padding: 12px;
-            border-radius: 14px;
+            border-radius: 16px;
             border: 1px solid var(--border-color);
             background: transparent;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             margin-top: 8px;
@@ -621,12 +638,12 @@
 
         .btn-add-toggle {
             width: 100%;
-            padding: 12px;
-            border-radius: 14px;
+            padding: 13px;
+            border-radius: 16px;
             border: 1px dashed var(--accent-main);
             background: var(--accent-light);
             color: var(--accent-main);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             margin-bottom: 12px;
@@ -637,7 +654,7 @@
             flex-direction: column;
             gap: 8px;
             margin-bottom: 16px;
-            max-height: 215px;
+            max-height: 220px;
             overflow-y: auto;
             padding-right: 4px;
             overscroll-behavior: contain;
@@ -645,7 +662,7 @@
         }
 
         .product-manage-list::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
 
         .product-manage-list::-webkit-scrollbar-track {
@@ -660,7 +677,7 @@
 
         .swipe-wrapper {
             position: relative;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             background: #E74C3C;
         }
@@ -685,8 +702,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 12px;
-            border-radius: 10px;
+            padding: 12px 14px;
+            border-radius: 12px;
             background: var(--bg-main);
             font-size: 13px;
             position: relative;
@@ -697,7 +714,7 @@
         .manage-info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .manage-actions {
@@ -715,15 +732,6 @@
             padding: 6px 8px;
         }
 
-        .manage-edit::before, .manage-del::before {
-            content: '';
-            position: absolute;
-            top: -6px;
-            bottom: -6px;
-            left: -6px;
-            right: -6px;
-        }
-
         .manage-del {
             color: #E74C3C;
             font-weight: bold;
@@ -731,7 +739,7 @@
 
         .accordion-toggle-btn {
             width: 100%;
-            padding: 10px 14px;
+            padding: 11px 14px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
             background: var(--surface);
@@ -742,7 +750,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
             transition: background-color 0.2s ease;
         }
 
@@ -752,7 +759,7 @@
 
         .accordion-content {
             display: none;
-            padding-top: 4px;
+            padding-top: 6px;
         }
 
         .accordion-content.open {
@@ -763,7 +770,7 @@
             position: sticky;
             bottom: 0;
             background: var(--surface);
-            padding-top: 12px;
+            padding-top: 14px;
             padding-bottom: calc(4px + env(safe-area-inset-bottom));
             margin-top: 16px;
             border-top: 1px solid var(--border-color);
@@ -891,7 +898,7 @@
                         <span id="pauseAccordionArrow">▼</span>
                     </button>
                     <div class="accordion-content" id="pauseAccordionContent">
-                        <div id="pauseOptionsContainer" style="background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 8px;">
+                        <div id="pauseOptionsContainer" style="background: var(--surface); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 8px;">
                             <div style="margin-bottom: 10px;">
                                 <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ДО</label>
                                 <div class="picker-group" id="pauseBeforePicker">
@@ -993,7 +1000,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.63.0';
+        const APP_VERSION = '2.64.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1319,6 +1326,9 @@
             const container = document.getElementById('routineContainer');
             const btnAction = document.getElementById('btnCompleteRoutine');
 
+            // Форматирование минималистичного текстового маркера (01., 02., 03.)
+            const formatIndex = (idx) => String(idx + 1).padStart(2, '0') + '.';
+
             // Режим просмотра БУДУЩИХ ДНЕЙ
             if (isFuture) {
                 banner.style.display = 'block';
@@ -1326,7 +1336,7 @@
 
                 const activeProducts = getActiveProductsForCurrentView();
                 if (activeProducts.length === 0) {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">В этот день отдых</div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 14px; font-weight: 500; letter-spacing: 0.3px;">В этот день отдых</div>`;
                 } else {
                     const htmlBuffer = [];
                     activeProducts.forEach((item, index) => {
@@ -1347,7 +1357,7 @@
                                 ${pauseHtmlBefore}
                                 <div class="routine-item-main">
                                     <div class="item-left">
-                                        <div class="item-num">${index + 1}</div>
+                                        <div class="item-num">${formatIndex(index)}</div>
                                         <div class="item-details">
                                             <span class="item-name">${escapeHtml(item.name)}</span>
                                             <span class="item-tag">${escapeHtml(item.type)}</span>
@@ -1386,7 +1396,7 @@
 
                 const activeProducts = getActiveProductsForCurrentView();
                 if (activeProducts.length === 0) {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">В этот день был отдых</div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 14px; font-weight: 500; letter-spacing: 0.3px;">В этот день был отдых</div>`;
                 } else {
                     const htmlBuffer = [];
                     activeProducts.forEach((item, index) => {
@@ -1396,7 +1406,7 @@
                             <div class="routine-item" style="opacity: 0.85;">
                                 <div class="routine-item-main">
                                     <div class="item-left">
-                                        <div class="item-num" style="background: var(--text-secondary);">✓</div>
+                                        <div class="item-num" style="color: var(--text-secondary);">✓</div>
                                         <div class="item-details">
                                             <span class="item-name">${escapeHtml(item.name)}</span>
                                             <span class="item-tag">${escapeHtml(item.type)}</span>
@@ -1428,7 +1438,7 @@
 
             if (activeProducts.length === 0) {
                 banner.style.display = 'none';
-                container.innerHTML = `<div style="text-align: center; padding: 20px 0; color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 0.3px;">Отдых</div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 14px; font-weight: 500; letter-spacing: 0.3px;">Отдых</div>`;
 
                 btnAction.innerText = 'добавить средство в мою коллекцию';
                 btnAction.classList.add('brand-font');
@@ -1456,7 +1466,7 @@
                             ${pauseHtmlBefore}
                             <div class="routine-item-main">
                                 <div class="item-left">
-                                    <div class="item-num">${index + 1}</div>
+                                    <div class="item-num">${formatIndex(index)}</div>
                                     <div class="item-details">
                                         <span class="item-name">${escapeHtml(item.name)}</span>
                                         <span class="item-tag">${escapeHtml(item.type)}</span>
