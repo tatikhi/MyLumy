@@ -483,7 +483,7 @@
         .dot-red { background-color: #E74C3C; }
         .dot-gray { background-color: var(--icon-inactive); }
 
-        /* MODALS С ПЛАВНОЙ АНИМАЦИЕЙ И ВЕРХНИМ ВЫРАВНИВАНИЕМ */
+        /* MODALS С FLEX-СТРУКТУРОЙ И ФИКСИРОВАННЫМ НИЖНИМ ФУТЕРОМ */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -513,13 +513,12 @@
             width: 100%;
             max-width: 460px;
             max-height: 85vh;
-            overflow-y: auto;
-            padding: 28px 24px 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 24px 20px 16px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-            touch-action: pan-y;
             position: relative;
             transform: translateY(20px) scale(0.97);
             opacity: 0;
@@ -529,6 +528,27 @@
         .modal-overlay.active-modal .modal-card {
             transform: translateY(0) scale(1);
             opacity: 1;
+        }
+
+        /* ОБЛАСТЬ ПРОКРУТКИ ВНУТРИ МОДАЛКИ */
+        .modal-body-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 4px;
+            padding-left: 2px;
+        }
+
+        /* ФИКСИРОВАННЫЙ НИЖНИЙ ФУТЕР В МОДАЛКЕ */
+        .modal-footer-pinned {
+            flex-shrink: 0;
+            background: var(--surface);
+            padding-top: 12px;
+            padding-bottom: calc(4px + env(safe-area-inset-bottom));
+            margin-top: 8px;
+            border-top: 1px solid var(--border-color);
+            z-index: 10;
         }
 
         /* СПЕЦИАЛЬНОЕ ЦЕНТРИРОВАНИЕ ДЛЯ АЛЕРТОВ (В СРЕДНЕЙ ТРЕТИ ЭКРАНА) */
@@ -542,7 +562,7 @@
                 padding: 12px 12px 30px;
             }
             .modal-card {
-                padding: 20px 16px 14px;
+                padding: 18px 14px 12px;
                 border-radius: 26px;
                 max-height: 90vh;
             }
@@ -561,7 +581,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
         }
 
         .modal-title-wrapper {
@@ -830,23 +851,6 @@
             background: var(--bg-main);
         }
 
-        /* ФИКСИРОВАННАЯ КНОПКА "ЗАКРЫТЬ" ВНИЗУ */
-        .sticky-close-footer {
-            position: sticky;
-            bottom: 0;
-            background: var(--surface);
-            padding-top: 10px;
-            padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            margin-top: 12px;
-            border-top: 1px solid var(--border-color);
-            z-index: 10;
-        }
-
-        .sticky-close-footer .btn-secondary {
-            margin-top: 0;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
-        }
-
         .btn-action {
             width: 100%;
             padding: 16px 20px;
@@ -920,7 +924,7 @@
             gap: 10px;
             margin-bottom: 12px;
             padding-right: 2px;
-            padding-bottom: 40px;
+            padding-bottom: 20px;
         }
 
         /* ГАРМОШКА КАТЕГОРИЙ С ПЛАВНЫМ CSS-ПЕРЕХОДОМ И ДИНАМИЧЕСКОЙ ВЫСОТОЙ */
@@ -1037,7 +1041,7 @@
             transform: rotate(90deg);
         }
 
-        /* ПЛАВНОЕ ПОПОВЕР МЕНЮ С CSS-АНИМАЦИЕЙ (БЕЗ СКАЧКОВ СКРОЛЛА) */
+        /* ПЛАВНОЕ ПОПОВЕР МЕНЮ С CSS-АНИМАЦИЕЙ */
         .popover-actions-menu {
             max-height: 0;
             opacity: 0;
@@ -1122,30 +1126,12 @@
             display: block;
         }
 
-        /* ПЛАВНОЕ РАСКРЫТИЕ ФОРМЫ ЗАПОЛНЕНИЯ */
+        /* ФОРМА (ПО УМОЛЧАНИЮ СКРЫТА) */
         #productFormContainer {
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease;
+            display: none;
         }
-
         #productFormContainer.open {
-            max-height: 1200px;
-            opacity: 1;
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-        }
-
-        .form-sticky-footer {
-            position: sticky;
-            bottom: 0;
-            background: var(--surface);
-            padding-top: 16px;
-            padding-bottom: calc(4px + env(safe-area-inset-bottom));
-            margin-top: 18px;
-            border-top: 1px solid var(--border-color);
-            z-index: 10;
+            display: block;
         }
 
         /* УВЕДОМЛЕНИЯ (TOAST) - В СРЕДНЕЙ ТРЕТИ ЭКРАНА */
@@ -1214,154 +1200,158 @@
         <div class="routine-list" id="routineContainer"></div>
     </div>
 
-    <!-- Модальное окно "Моя коллекция" -->
+    <!-- Модальное окно "Моя коллекция" (с разделением на скролл-область и фиксированный футер) -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card" id="settingsModalCard">
+            <!-- ШАПКА МОДАЛКИ -->
             <div class="modal-header-row">
-                <div class="modal-title brand-font">моя коллекция</div>
+                <div class="modal-title brand-font" id="mainModalTitle">моя коллекция</div>
                 <button type="button" class="modal-close-icon" id="btnHeaderClose" aria-label="Закрыть">✕</button>
             </div>
             
-            <div class="product-manage-list" id="manageList"></div>
+            <!-- СРЕДНЯЯ ПРОКРУЧИВАЕМАЯ ОБЛАСТЬ -->
+            <div class="modal-body-scrollable" id="modalScrollBody">
+                <div class="product-manage-list" id="manageList"></div>
 
-            <button type="button" class="btn-add-toggle brand-font" id="btnAddToggle">+ добавить средство</button>
-            <button type="button" class="btn-scan-dashed brand-font" id="btnScanBarcode">сканировать штрихкод</button>
-            
-            <div id="scannerWrapper" style="display: none; margin-bottom: 16px;">
-                <div id="barcodeReader" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
-                <button type="button" class="btn-secondary brand-font" id="btnCancelScanner">отмена</button>
-            </div>
-
-            <div id="productFormContainer">
-                <div id="scannerNoticeBanner" class="scanner-notice-banner" style="display: none;">
-                    В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.
+                <button type="button" class="btn-add-toggle brand-font" id="btnAddToggle">+ добавить средство</button>
+                <button type="button" class="btn-scan-dashed brand-font" id="btnScanBarcode">сканировать штрихкод</button>
+                
+                <div id="scannerWrapper" style="display: none; margin-bottom: 16px;">
+                    <div id="barcodeReader" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
+                    <button type="button" class="btn-secondary brand-font" id="btnCancelScanner">отмена</button>
                 </div>
 
-                <div class="modal-title brand-font" id="formModalTitle" style="font-size: 14px; margin-top: 8px; margin-bottom: 12px;">новое средство</div>
-                <input type="hidden" id="editProductId" value="">
-
-                <!-- ГЛАВНЫЙ БЛОК -->
-                <div class="form-section">
-                    <div class="form-section-title brand-font">о средстве</div>
-                    
-                    <div class="form-group">
-                        <label for="pName">Название</label>
-                        <input type="text" id="pName" class="input-control" placeholder="" autocomplete="off">
-                        <!-- ВЫПАДАЮЩИЙ СПИСОК ПОДСКАЗОК (АВТОКОМПЛИТ A+B) -->
-                        <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+                <div id="productFormContainer">
+                    <div id="scannerNoticeBanner" class="scanner-notice-banner" style="display: none;">
+                        В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.
                     </div>
 
-                    <div class="form-group">
-                        <label>Тип / Этап ухода</label>
-                        <div class="type-picker-grid" id="typePicker">
-                            <button type="button" class="picker-btn" data-type="Очищение">Очищение</button>
-                            <button type="button" class="picker-btn" data-type="Тонизирование">Тонизирование</button>
-                            <button type="button" class="picker-btn" data-type="Активы">Активы</button>
-                            <button type="button" class="picker-btn" data-type="Уход за глазами">Уход за глазами</button>
-                            <button type="button" class="picker-btn" data-type="Питание / Увлажнение">Питание / Увлажнение</button>
-                        </div>
-                    </div>
+                    <input type="hidden" id="editProductId" value="">
 
-                    <div class="form-group" style="margin-top: 12px;">
-                        <label>Время суток</label>
-                        <div class="picker-group" id="todPicker">
-                            <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
-                            <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Частота применения</label>
-                        <input type="hidden" id="pFreqType" value="daily">
-                        <div class="picker-group" id="freqPicker">
-                            <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
-                            <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
-                        </div>
-                        <div id="daysGroup" style="display: none; margin-top: 10px;">
-                            <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
-                            <div class="days-picker" id="daysPicker">
-                                <button type="button" class="day-chip" data-day="1">Пн</button>
-                                <button type="button" class="day-chip" data-day="2">Вт</button>
-                                <button type="button" class="day-chip" data-day="3">Ср</button>
-                                <button type="button" class="day-chip" data-day="4">Чт</button>
-                                <button type="button" class="day-chip" data-day="5">Пт</button>
-                                <button type="button" class="day-chip" data-day="6">Сб</button>
-                                <button type="button" class="day-chip" data-day="0">Вс</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- АККОРДЕОН: ПАУЗЫ -->
-                <div class="form-section">
-                    <button type="button" class="accordion-toggle-btn" id="btnTogglePauseAccordion">
-                        <span>Указать паузы (до/после)</span>
-                        <span id="pauseAccordionArrow">▼</span>
-                    </button>
-                    <div class="accordion-content" id="pauseAccordionContent">
-                        <div id="pauseOptionsContainer" style="background: var(--surface); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 8px;">
-                            <div style="margin-bottom: 10px;">
-                                <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ДО</label>
-                                <div class="picker-group" id="pauseBeforePicker">
-                                    <button type="button" class="picker-btn" data-mins="5">5 мин</button>
-                                    <button type="button" class="picker-btn" data-mins="10">10 мин</button>
-                                    <button type="button" class="picker-btn" data-mins="15">15 мин</button>
-                                    <button type="button" class="picker-btn" data-mins="20">20 мин</button>
-                                </div>
-                            </div>
-                            <div>
-                                <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ПОСЛЕ</label>
-                                <div class="picker-group" id="pauseAfterPicker">
-                                    <button type="button" class="picker-btn" data-mins="5">5 мин</button>
-                                    <button type="button" class="picker-btn" data-mins="10">10 мин</button>
-                                    <button type="button" class="picker-btn" data-mins="15">15 мин</button>
-                                    <button type="button" class="picker-btn" data-mins="20">20 мин</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- АККОРДЕОН: СРОКИ И PAO -->
-                <div class="form-section">
-                    <button type="button" class="accordion-toggle-btn" id="btnToggleExpiryAccordion">
-                        <span>Указать сроки годности и PAO</span>
-                        <span id="expiryAccordionArrow">▼</span>
-                    </button>
-                    <div class="accordion-content" id="expiryAccordionContent">
-                        <div class="form-group" style="margin-top: 8px;">
-                            <label for="pOpenDate">Дата начала использования</label>
-                            <input type="text" placeholder="Выбрать дату" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" id="pOpenDate" class="input-control">
+                    <!-- ГЛАВНЫЙ БЛОК -->
+                    <div class="form-section">
+                        <div class="form-section-title brand-font">о средстве</div>
+                        
+                        <div class="form-group">
+                            <label for="pName">Название</label>
+                            <input type="text" id="pName" class="input-control" placeholder="" autocomplete="off">
+                            <!-- ВЫПАДАЮЩИЙ СПИСОК ПОДСКАЗОК (АВТОКОМПЛИТ A+B) -->
+                            <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                         </div>
 
                         <div class="form-group">
-                            <label>Срок после вскрытия (PAO)</label>
-                            <div class="pao-picker" id="paoPicker">
-                                <button type="button" class="pao-chip" data-months="3">3M</button>
-                                <button type="button" class="pao-chip" data-months="6">6M</button>
-                                <button type="button" class="pao-chip" data-months="12">12M</button>
-                                <button type="button" class="pao-chip" data-months="24">24M</button>
+                            <label>Тип / Этап ухода</label>
+                            <div class="type-picker-grid" id="typePicker">
+                                <button type="button" class="picker-btn" data-type="Очищение">Очищение</button>
+                                <button type="button" class="picker-btn" data-type="Тонизирование">Тонизирование</button>
+                                <button type="button" class="picker-btn" data-type="Активы">Активы</button>
+                                <button type="button" class="picker-btn" data-type="Уход за глазами">Уход за глазами</button>
+                                <button type="button" class="picker-btn" data-type="Питание / Увлажнение">Питание / Увлажнение</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>Время суток</label>
+                            <div class="picker-group" id="todPicker">
+                                <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
+                                <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Частота применения</label>
+                            <input type="hidden" id="pFreqType" value="daily">
+                            <div class="picker-group" id="freqPicker">
+                                <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
+                                <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
+                            </div>
+                            <div id="daysGroup" style="display: none; margin-top: 10px;">
+                                <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
+                                <div class="days-picker" id="daysPicker">
+                                    <button type="button" class="day-chip" data-day="1">Пн</button>
+                                    <button type="button" class="day-chip" data-day="2">Вт</button>
+                                    <button type="button" class="day-chip" data-day="3">Ср</button>
+                                    <button type="button" class="day-chip" data-day="4">Чт</button>
+                                    <button type="button" class="day-chip" data-day="5">Пт</button>
+                                    <button type="button" class="day-chip" data-day="6">Сб</button>
+                                    <button type="button" class="day-chip" data-day="0">Вс</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- АККОРДЕОН: ПАУЗЫ -->
+                    <div class="form-section">
+                        <button type="button" class="accordion-toggle-btn" id="btnTogglePauseAccordion">
+                            <span>Указать паузы (до/после)</span>
+                            <span id="pauseAccordionArrow">▼</span>
+                        </button>
+                        <div class="accordion-content" id="pauseAccordionContent">
+                            <div id="pauseOptionsContainer" style="background: var(--surface); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 8px;">
+                                <div style="margin-bottom: 10px;">
+                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ДО</label>
+                                    <div class="picker-group" id="pauseBeforePicker">
+                                        <button type="button" class="picker-btn" data-mins="5">5 мин</button>
+                                        <button type="button" class="picker-btn" data-mins="10">10 мин</button>
+                                        <button type="button" class="picker-btn" data-mins="15">15 мин</button>
+                                        <button type="button" class="picker-btn" data-mins="20">20 мин</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ПОСЛЕ</label>
+                                    <div class="picker-group" id="pauseAfterPicker">
+                                        <button type="button" class="picker-btn" data-mins="5">5 мин</button>
+                                        <button type="button" class="picker-btn" data-mins="10">10 мин</button>
+                                        <button type="button" class="picker-btn" data-mins="15">15 мин</button>
+                                        <button type="button" class="picker-btn" data-mins="20">20 мин</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- АККОРДЕОН: СРОКИ И PAO -->
+                    <div class="form-section">
+                        <button type="button" class="accordion-toggle-btn" id="btnToggleExpiryAccordion">
+                            <span>Указать сроки годности и PAO</span>
+                            <span id="expiryAccordionArrow">▼</span>
+                        </button>
+                        <div class="accordion-content" id="expiryAccordionContent">
+                            <div class="form-group" style="margin-top: 8px;">
+                                <label for="pOpenDate">Дата начала использования</label>
+                                <input type="text" placeholder="Выбрать дату" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" id="pOpenDate" class="input-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Срок после вскрытия (PAO)</label>
+                                <div class="pao-picker" id="paoPicker">
+                                    <button type="button" class="pao-chip" data-months="3">3M</button>
+                                    <button type="button" class="pao-chip" data-months="6">6M</button>
+                                    <button type="button" class="pao-chip" data-months="12">12M</button>
+                                    <button type="button" class="pao-chip" data-months="24">24M</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="form-sticky-footer">
-                    <button type="button" class="btn-action brand-font" id="btnSaveProduct">сохранить средство</button>
-                    <button type="button" class="btn-secondary brand-font" id="btnCancelProduct">отмена</button>
-                </div>
             </div>
 
-            <!-- ФИКСИРОВАННАЯ КНОПКА ЗАКРЫТЬ ВНИЗУ ОСНОВНОГО ЭКРАНА КОЛЛЕКЦИИ -->
-            <div class="sticky-close-footer" id="mainModalFooter">
-                <button type="button" class="btn-secondary brand-font" id="btnCloseSettings">закрыть</button>
+            <!-- ФИКСИРОВАННЫЙ НИЖНИЙ ФУТЕР (КНОПКИ ВСЕГДА ДОСТУПНЫ БЕЗ СКРОЛЛА) -->
+            <div class="modal-footer-pinned" id="pinnedModalFooter">
+                <div id="listFooterButtons">
+                    <button type="button" class="btn-secondary brand-font" id="btnCloseSettings" style="margin-top: 0;">закрыть</button>
+                </div>
+                <div id="formFooterButtons" style="display: none; flex-direction: column; gap: 8px;">
+                    <button type="button" class="btn-action brand-font" id="btnSaveProduct">сохранить средство</button>
+                    <button type="button" class="btn-secondary brand-font" id="btnCancelProduct" style="margin-top: 0;">отмена</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Модальное окно "Настройки приложения" -->
     <div class="modal-overlay" id="appSettingsModal">
-        <div class="modal-card" style="max-width: 400px;">
+        <div class="modal-card" style="max-width: 400px; max-height: 85vh;">
             <div class="modal-header-row">
                 <div class="modal-title-wrapper">
                     <svg class="title-settings-icon" viewBox="0 0 24 24">
@@ -1373,45 +1363,51 @@
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
             </div>
 
-            <div class="form-section" style="margin-bottom: 14px;">
-                <div class="version-row">
-                    <span class="version-text brand-font">версия v1.7.0</span>
-                    <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
-                </div>
-            </div>
-
-            <div class="form-section" style="margin-bottom: 14px;">
-                <div class="form-section-title brand-font">перенос и бэкап</div>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button type="button" class="btn-secondary brand-font" id="btnCopyShareLink">скопировать ссылку переноса</button>
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn-secondary brand-font" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
-                        <button type="button" class="btn-secondary brand-font" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
+            <div class="modal-body-scrollable">
+                <div class="form-section" style="margin-bottom: 14px;">
+                    <div class="version-row">
+                        <span class="version-text brand-font">версия v1.7.1</span>
+                        <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
-                    <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+                </div>
+
+                <div class="form-section" style="margin-bottom: 14px;">
+                    <div class="form-section-title brand-font">перенос и бэкап</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button type="button" class="btn-secondary brand-font" id="btnCopyShareLink">скопировать ссылку переноса</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="btn-secondary brand-font" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
+                            <button type="button" class="btn-secondary brand-font" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
+                        </div>
+                        <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="form-section" style="margin-bottom: 18px;">
+                    <div class="form-section-title brand-font">тема оформления</div>
+                    <div style="display: flex; gap: 6px; width: 100%;" id="themeRow">
+                        <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
+                        <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
+                        <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #8B789D; border-color: #8B789D;" title="Lavender"></button>
+                        <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #3A4D39; border-color: #3A4D39;" title="Sage"></button>
+                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; background: #242A3B; border-color: #242A3B;" title="Midnight"></button>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-section" style="margin-bottom: 18px;">
-                <div class="form-section-title brand-font">тема оформления</div>
-                <div style="display: flex; gap: 6px; width: 100%;" id="themeRow">
-                    <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
-                    <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
-                    <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #8B789D; border-color: #8B789D;" title="Lavender"></button>
-                    <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #3A4D39; border-color: #3A4D39;" title="Sage"></button>
-                    <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; background: #242A3B; border-color: #242A3B;" title="Midnight"></button>
-                </div>
+            <div class="modal-footer-pinned">
+                <button type="button" class="btn-secondary brand-font" id="btnCloseAppSettings" style="margin-top: 0;">закрыть</button>
             </div>
-
-            <button type="button" class="btn-secondary brand-font" id="btnCloseAppSettings">закрыть</button>
         </div>
     </div>
 
     <!-- Кастомное модальное окно уведомлений / алертов (в средней трети экрана) -->
     <div class="modal-overlay alert-overlay" id="customAlertModal">
-        <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
+        <div class="modal-card" style="max-width: 320px; max-height: 50vh; text-align: center; padding: 24px;">
             <div class="modal-title" id="customAlertText" style="font-size: 15px; margin-bottom: 18px;">Сообщение</div>
-            <button type="button" class="btn-action brand-font" id="btnAlertOk" style="padding: 12px;">ок</button>
+            <div class="modal-footer-pinned" style="background: transparent; border-top: none; padding-top: 0; margin-top: 0;">
+                <button type="button" class="btn-action brand-font" id="btnAlertOk" style="padding: 12px;">ок</button>
+            </div>
         </div>
     </div>
 
@@ -1419,7 +1415,7 @@
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.7.0';
+        const APP_VERSION = '1.7.1';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -1982,18 +1978,23 @@
             stopBarcodeScanner();
             closeAllPopovers();
             const container = document.getElementById('productFormContainer');
+            
             document.getElementById('manageList').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
-            document.getElementById('mainModalFooter').style.display = 'none'; 
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
+
+            // Переключаем футеры: скрываем закрыть, показываем сохранить/отмена
+            document.getElementById('listFooterButtons').style.display = 'none';
+            document.getElementById('formFooterButtons').style.display = 'flex';
+            document.getElementById('mainModalTitle').innerText = 'новое средство';
 
             container.classList.add('open');
 
             // Сбрасываем скролл модалки на самый верх (в верхнюю треть экрана устройства)
-            const modalCard = document.getElementById('settingsModalCard');
-            if (modalCard) {
-                modalCard.scrollTop = 0;
+            const scrollBody = document.getElementById('modalScrollBody');
+            if (scrollBody) {
+                scrollBody.scrollTop = 0;
             }
 
             setTimeout(() => {
@@ -2001,22 +2002,25 @@
                 if (pNameInput) {
                     pNameInput.focus();
                 }
-            }, 200);
+            }, 100);
         }
 
         function hideForm() {
             const container = document.getElementById('productFormContainer');
             container.classList.remove('open');
             
-            setTimeout(() => {
-                document.getElementById('manageList').style.display = 'flex';
-                document.getElementById('btnAddToggle').style.display = 'block';
-                document.getElementById('btnScanBarcode').style.display = 'block';
-                document.getElementById('mainModalFooter').style.display = 'block';
-                document.getElementById('scannerNoticeBanner').style.display = 'none';
-                closeAutocomplete();
-                resetForm();
-            }, 300);
+            document.getElementById('manageList').style.display = 'flex';
+            document.getElementById('btnAddToggle').style.display = 'block';
+            document.getElementById('btnScanBarcode').style.display = 'block';
+            document.getElementById('scannerNoticeBanner').style.display = 'none';
+
+            // Возвращаем футер списка
+            document.getElementById('listFooterButtons').style.display = 'block';
+            document.getElementById('formFooterButtons').style.display = 'none';
+            document.getElementById('mainModalTitle').innerText = 'моя коллекция';
+
+            closeAutocomplete();
+            resetForm();
         }
 
         /* ПЛАВНОЕ ОТКРЫТИЕ И ЗАКРЫТИЕ КАТЕГОРИЙ С ДИНАМИЧЕСКОЙ ВЫСОТОЙ */
@@ -2054,7 +2058,7 @@
             }
         }
 
-        /* ТАП НА СРЕДСТВО (БЕЗ СКАЧКОВ И УЛЕТАНИЯ НАВЕРХ) */
+        /* ТАП НА СРЕДСТВО */
         function toggleProductPopover(e, id) {
             if (e) e.stopPropagation();
             const targetId = Number(id);
@@ -2071,7 +2075,16 @@
                 popoverEl.classList.add('open');
                 if (itemEl) itemEl.classList.add('active-item');
                 activePopoverProductId = targetId;
-                // Убран принудительный scrollIntoView, чтобы строка средства оставалась на месте
+
+                // Аккуратный скролл, если поповер упирается в низ
+                setTimeout(() => {
+                    const scrollBody = document.getElementById('modalScrollBody');
+                    const rect = popoverEl.getBoundingClientRect();
+                    const bodyRect = scrollBody.getBoundingClientRect();
+                    if (rect.bottom > bodyRect.bottom) {
+                        scrollBody.scrollBy({ top: rect.bottom - bodyRect.bottom + 16, behavior: 'smooth' });
+                    }
+                }, 100);
             }
         }
 
@@ -2175,10 +2188,9 @@
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
 
-            // Сбрасываем скролл модалки на самый верх, чтобы камера открывалась в верхней трети экрана
-            const modalCard = document.getElementById('settingsModalCard');
-            if (modalCard) {
-                modalCard.scrollTop = 0;
+            const scrollBody = document.getElementById('modalScrollBody');
+            if (scrollBody) {
+                scrollBody.scrollTop = 0;
             }
 
             if (!html5QrCodeScanner) {
@@ -2613,7 +2625,7 @@
                 chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day));
             });
 
-            document.getElementById('formModalTitle').innerText = 'редактировать средство';
+            document.getElementById('mainModalTitle').innerText = 'редактировать средство';
         }
 
         function resetForm() {
@@ -2646,7 +2658,7 @@
             document.getElementById('expiryAccordionContent').classList.remove('open');
             document.getElementById('expiryAccordionArrow').innerText = '▼';
 
-            document.getElementById('formModalTitle').innerText = 'новое средство';
+            document.getElementById('mainModalTitle').innerText = 'моя коллекция';
         }
 
         function renderManageList() {
@@ -2755,10 +2767,7 @@
             document.getElementById('btnAddToggle').addEventListener('click', () => showForm(false));
             document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
             document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
-            document.getElementById('btnCancelProduct').addEventListener('click', () => {
-                stopBarcodeScanner();
-                hideForm();
-            });
+            document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
             document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => {
