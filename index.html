@@ -531,6 +531,11 @@
             opacity: 1;
         }
 
+        /* СПЕЦИАЛЬНОЕ ЦЕНТРИРОВАНИЕ ДЛЯ АЛЕРТОВ (В СРЕДНЕЙ ТРЕТИ ЭКРАНА) */
+        .modal-overlay.alert-overlay {
+            align-items: center !important;
+        }
+
         /* КОМПАКТНАЯ МОБИЛЬНАЯ ЭРГОНОМИКА */
         @media (max-width: 480px) {
             .modal-overlay {
@@ -1032,7 +1037,7 @@
             transform: rotate(90deg);
         }
 
-        /* ПЛАВНОЕ ПОПОВЕР МЕНЮ С CSS-АНИМАЦИЕЙ */
+        /* ПЛАВНОЕ ПОПОВЕР МЕНЮ С CSS-АНИМАЦИЕЙ (БЕЗ СКАЧКОВ СКРОЛЛА) */
         .popover-actions-menu {
             max-height: 0;
             opacity: 0;
@@ -1143,10 +1148,10 @@
             z-index: 10;
         }
 
-        /* УВЕДОМЛЕНИЯ (TOAST) - СТРОГО ПО ЦЕНТРУ ЭКРАНА */
+        /* УВЕДОМЛЕНИЯ (TOAST) - В СРЕДНЕЙ ТРЕТИ ЭКРАНА */
         .toast-notification {
             position: fixed;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.9);
             width: 90%;
@@ -1370,7 +1375,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.6.9</span>
+                    <span class="version-text brand-font">версия v1.7.0</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                 </div>
             </div>
@@ -1402,19 +1407,19 @@
         </div>
     </div>
 
-    <!-- Кастомное модальное окно уведомлений / алертов -->
-    <div class="modal-overlay" id="customAlertModal">
+    <!-- Кастомное модальное окно уведомлений / алертов (в средней трети экрана) -->
+    <div class="modal-overlay alert-overlay" id="customAlertModal">
         <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
             <div class="modal-title" id="customAlertText" style="font-size: 15px; margin-bottom: 18px;">Сообщение</div>
             <button type="button" class="btn-action brand-font" id="btnAlertOk" style="padding: 12px;">ок</button>
         </div>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ TOAST (ПО ЦЕНТРУ ЭКРАНА) -->
+    <!-- ВСПЛЫВАЮЩИЙ TOAST (В СРЕДНЕЙ ТРЕТИ ЭКРАНА) -->
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.6.9';
+        const APP_VERSION = '1.7.0';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -2049,6 +2054,7 @@
             }
         }
 
+        /* ТАП НА СРЕДСТВО (БЕЗ СКАЧКОВ И УЛЕТАНИЯ НАВЕРХ) */
         function toggleProductPopover(e, id) {
             if (e) e.stopPropagation();
             const targetId = Number(id);
@@ -2065,12 +2071,7 @@
                 popoverEl.classList.add('open');
                 if (itemEl) itemEl.classList.add('active-item');
                 activePopoverProductId = targetId;
-
-                setTimeout(() => {
-                    if (popoverEl) {
-                        popoverEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                }, 140);
+                // Убран принудительный scrollIntoView, чтобы строка средства оставалась на месте
             }
         }
 
@@ -2284,7 +2285,6 @@
             closeModalElement(modal, () => {
                 if (window.alertTarget) {
                     window.alertTarget.focus();
-                    window.alertTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     window.alertTarget = null;
                 }
             });
