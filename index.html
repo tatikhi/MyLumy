@@ -27,7 +27,6 @@
             --shadow-soft: 0 16px 40px rgba(196, 154, 130, 0.08);
             --icon-inactive: #D0C6BE;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --swipe-del-bg: #E5A399;
         }
 
         /* 2. Eucalyptus & Mint */
@@ -43,7 +42,6 @@
             --shadow-soft: 0 16px 40px rgba(91, 138, 130, 0.08);
             --icon-inactive: #B8C9C5;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --swipe-del-bg: #D48C85;
         }
 
         /* 3. Blush Lavender */
@@ -59,7 +57,6 @@
             --shadow-soft: 0 16px 40px rgba(139, 120, 157, 0.08);
             --icon-inactive: #CBBFCF;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --swipe-del-bg: #D898A6;
         }
 
         /* 4. Sage & Spa */
@@ -75,7 +72,6 @@
             --shadow-soft: 0 16px 40px rgba(58, 77, 57, 0.08);
             --icon-inactive: #B5C2B6;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --swipe-del-bg: #C88D83;
         }
 
         /* 5. Midnight Calm */
@@ -91,7 +87,6 @@
             --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
             --icon-inactive: #525E7A;
             --item-bg: rgba(36, 42, 59, 0.65);
-            --swipe-del-bg: #904A4A;
         }
 
         * {
@@ -140,7 +135,6 @@
             font-style: normal;
         }
 
-        /* УВЕЛИЧЕННЫЙ И ВЫРАЗИТЕЛЬНЫЙ ЛОГОТИП */
         .logo {
             font-family: 'Montserrat', sans-serif;
             font-size: 20px;
@@ -165,7 +159,6 @@
             white-space: nowrap;
         }
 
-        /* ИСПРАВЛЕННАЯ ИКОНКА НАСТРОЕК */
         .btn-icon-settings {
             background: var(--surface);
             border: 1px solid var(--border-color);
@@ -182,7 +175,7 @@
             flex-shrink: 0;
         }
 
-        .btn-icon-settings svg {
+        .btn-icon-settings svg, .title-settings-icon {
             width: 18px;
             height: 18px;
             stroke: var(--text-primary);
@@ -193,7 +186,6 @@
             transition: stroke 0.3s ease;
         }
 
-        /* КАРТОЧКА КАЛЕНДАРЯ */
         .streak-card {
             background: var(--surface);
             border-radius: 24px;
@@ -514,6 +506,12 @@
             margin-bottom: 22px;
         }
 
+        .modal-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .modal-close-icon {
             background: var(--bg-main);
             border: 1px solid var(--border-color);
@@ -775,7 +773,7 @@
             flex-direction: column;
             gap: 10px;
             margin-bottom: 18px;
-            max-height: 230px;
+            max-height: 250px;
             overflow-y: auto;
             padding-right: 4px;
             overscroll-behavior: contain;
@@ -795,40 +793,12 @@
             border-radius: 10px;
         }
 
-        /* ПАСТЕЛЬНЫЙ ФОН И SVG-КОРЗИНА ДЛЯ СВАЙПА */
-        .swipe-wrapper {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            background: var(--swipe-del-bg);
-        }
-
-        .swipe-background-delete {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            width: 80px;
+        .product-wrapper-block {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #FFFFFF;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.15s ease;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .swipe-background-delete svg {
-            width: 18px;
-            height: 18px;
-            stroke: #FFFFFF;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        /* ЧИСТАЯ КЛИКАБЕЛЬНАЯ ПЛАШКА СРЕДСТВА В КОЛЛЕКЦИИ */
         .manage-item {
             display: flex;
             justify-content: space-between;
@@ -837,16 +807,14 @@
             border-radius: 16px;
             background: var(--bg-main);
             font-size: 13px;
-            position: relative;
-            z-index: 2;
-            will-change: transform;
             border: 1px solid var(--border-color);
             cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
 
-        .manage-item:active {
+        .manage-item:active, .manage-item.active-item {
             background: var(--accent-light);
+            border-color: var(--accent-main);
         }
 
         .manage-info {
@@ -857,79 +825,62 @@
 
         .manage-chevron {
             color: var(--text-secondary);
-            font-size: 16px;
-            opacity: 0.6;
+            font-size: 14px;
+            transition: transform 0.2s ease;
         }
 
-        /* ЭЛЕГАНТНЫЙ BOTTOM SHEET МЕНЮ */
-        .bottom-sheet-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(6px);
+        .manage-item.active-item .manage-chevron {
+            transform: rotate(90deg);
+        }
+
+        /* ПОПО ВЕР МЕНЮ ПОД КАРТОЧКОЙ */
+        .popover-actions-menu {
             display: none;
-            justify-content: center;
-            align-items: flex-end;
-            z-index: 1100;
-        }
-
-        .bottom-sheet-card {
             background: var(--surface);
-            border-top-left-radius: 28px;
-            border-top-right-radius: 28px;
-            width: 100%;
-            max-width: 480px;
-            padding: 24px 20px;
-            padding-bottom: calc(24px + env(safe-area-inset-bottom));
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
             border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .bottom-sheet-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .bottom-sheet-btn {
-            width: 100%;
-            padding: 15px;
             border-radius: 16px;
-            border: 1px solid var(--border-color);
+            padding: 6px;
+            gap: 6px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            animation: fadeInDown 0.2s ease-out;
+        }
+
+        .popover-actions-menu.open {
+            display: flex;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .popover-btn {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: none;
             background: var(--bg-main);
             color: var(--text-primary);
             font-family: 'Montserrat', sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             text-transform: lowercase;
             cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
+            transition: background-color 0.2s ease;
         }
 
-        .bottom-sheet-btn:active {
+        .popover-btn:active {
             background: var(--accent-light);
         }
 
-        .bottom-sheet-btn.danger {
+        .popover-btn.danger {
             color: #E74C3C;
-            border-color: rgba(231, 76, 60, 0.2);
-            background: rgba(231, 76, 60, 0.04);
+            background: rgba(231, 76, 60, 0.05);
+        }
+
+        .popover-btn.danger:active {
+            background: rgba(231, 76, 60, 0.12);
         }
 
         .accordion-toggle-btn {
@@ -1057,8 +1008,8 @@
                     <div class="form-group" style="margin-top: 12px;">
                         <label>Время суток</label>
                         <div class="picker-group" id="todPicker">
-                            <button type="button" class="picker-btn" data-tod="morning">Утро</button>
-                            <button type="button" class="picker-btn" data-tod="evening">Вечер</button>
+                            <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
+                            <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
                         </div>
                     </div>
 
@@ -1152,7 +1103,13 @@
     <div class="modal-overlay" id="appSettingsModal">
         <div class="modal-card" style="max-width: 400px;">
             <div class="modal-header-row">
-                <div class="modal-title brand-font">настройки</div>
+                <div class="modal-title-wrapper">
+                    <svg class="title-settings-icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    <div class="modal-title brand-font">настройки</div>
+                </div>
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
             </div>
 
@@ -1184,16 +1141,6 @@
         </div>
     </div>
 
-    <!-- BOTTOM SHEET МЕНЮ ДЛЯ СРЕДСТВА -->
-    <div class="bottom-sheet-overlay" id="productBottomSheet">
-        <div class="bottom-sheet-card">
-            <div class="bottom-sheet-title" id="bottomSheetProductName">Название средства</div>
-            <button type="button" class="bottom-sheet-btn" id="btnBsEdit">редактировать</button>
-            <button type="button" class="bottom-sheet-btn danger" id="btnBsDelete">удалить</button>
-            <button type="button" class="btn-secondary brand-font" id="btnBsClose" style="margin-top: 4px;">отмена</button>
-        </div>
-    </div>
-
     <!-- Кастомное модальное окно валидации -->
     <div class="modal-overlay" id="customAlertModal">
         <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
@@ -1203,7 +1150,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.71.0';
+        const APP_VERSION = '2.72.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1309,7 +1256,7 @@
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
         let currentScannedBarcode = null;
-        let activeSelectedProductId = null;
+        let activePopoverProductId = null;
 
         let currentTOD = getInitialTOD();
 
@@ -1674,6 +1621,7 @@
 
         function closeSettings() {
             stopBarcodeScanner();
+            closeAllPopovers();
             document.body.classList.remove('modal-open');
             document.getElementById('settingsModal').style.display = 'none';
             resetForm();
@@ -1690,9 +1638,9 @@
             document.getElementById('appSettingsModal').style.display = 'none';
         }
 
-        /* АВТОМАТИЧЕСКИЙ ФОКУС И ПЛАВНЫЙ СКРОЛЛ К ПОЛЮ НАЗВАНИЯ */
         function showForm(showNotice = false) {
             stopBarcodeScanner();
+            closeAllPopovers();
             document.getElementById('productFormContainer').style.display = 'block';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
@@ -1715,18 +1663,29 @@
             resetForm();
         }
 
-        function openProductBottomSheet(id) {
-            const item = products.find(p => p.id === Number(id));
-            if (!item) return;
+        function toggleProductPopover(e, id) {
+            if (e) e.stopPropagation();
+            const targetId = Number(id);
+            const popoverEl = document.getElementById(`popover-${targetId}`);
+            const itemEl = document.getElementById(`manage-item-${targetId}`);
+            
+            if (activePopoverProductId && activePopoverProductId !== targetId) {
+                closeAllPopovers();
+            }
 
-            activeSelectedProductId = Number(id);
-            document.getElementById('bottomSheetProductName').innerText = item.name;
-            document.getElementById('productBottomSheet').style.display = 'flex';
+            if (popoverEl && popoverEl.classList.contains('open')) {
+                closeAllPopovers();
+            } else if (popoverEl) {
+                popoverEl.classList.add('open');
+                if (itemEl) itemEl.classList.add('active-item');
+                activePopoverProductId = targetId;
+            }
         }
 
-        function closeProductBottomSheet() {
-            document.getElementById('productBottomSheet').style.display = 'none';
-            activeSelectedProductId = null;
+        function closeAllPopovers() {
+            document.querySelectorAll('.popover-actions-menu').forEach(p => p.classList.remove('open'));
+            document.querySelectorAll('.manage-item').forEach(i => i.classList.remove('active-item'));
+            activePopoverProductId = null;
         }
 
         function isGarbageName(name) {
@@ -2088,6 +2047,7 @@
         }
 
         function editProduct(id) {
+            closeAllPopovers();
             const targetId = Number(id);
             const item = products.find(p => p.id === targetId);
             if (!item) return;
@@ -2160,7 +2120,9 @@
             document.getElementById('pName').value = '';
             
             document.querySelectorAll('#typePicker .picker-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.remove('active'));
+            
+            /* ПО УМОЛЧАНИЮ УТРО И ВЕЧЕР ВКЛЮЧЕНЫ */
+            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.add('active'));
 
             document.getElementById('pFreqType').value = 'daily';
             document.querySelectorAll('#freqPicker .picker-btn').forEach(btn => {
@@ -2194,19 +2156,17 @@
             products.forEach((p) => {
                 const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths, p.id);
                 htmlBuffer.push(`
-                    <div class="swipe-wrapper">
-                        <div class="swipe-background-delete">
-                            <svg viewBox="0 0 24 24">
-                                <polyline points="3 6 5 6 21 6"></polyline>
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            </svg>
-                        </div>
-                        <div class="manage-item" data-id="${p.id}" onclick="openProductBottomSheet(${p.id})">
+                    <div class="product-wrapper-block">
+                        <div class="manage-item" id="manage-item-${p.id}" onclick="toggleProductPopover(event, ${p.id})">
                             <div class="manage-info">
                                 ${dotsHtml}
                                 <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
                             </div>
                             <div class="manage-chevron">›</div>
+                        </div>
+                        <div class="popover-actions-menu" id="popover-${p.id}">
+                            <button type="button" class="popover-btn" onclick="editProduct(${p.id})">редактировать</button>
+                            <button type="button" class="popover-btn danger" onclick="deleteProduct(${p.id})">удалить</button>
                         </div>
                     </div>
                 `);
@@ -2215,6 +2175,7 @@
         }
 
         function deleteProduct(id) {
+            closeAllPopovers();
             const targetId = Number(id);
             products = products.filter(p => p.id !== targetId);
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
@@ -2231,54 +2192,6 @@
                 renderRoutine();
             }
         }
-
-        let touchStartX = 0;
-        let activeSwipeItem = null;
-        let activeSwipeBg = null;
-
-        document.addEventListener('touchstart', (e) => {
-            const item = e.target.closest('.manage-item');
-            if (!item) return;
-            touchStartX = e.touches[0].clientX;
-            activeSwipeItem = item;
-            const wrapper = item.closest('.swipe-wrapper');
-            activeSwipeBg = wrapper ? wrapper.querySelector('.swipe-background-delete') : null;
-            item.style.transition = 'none';
-        });
-
-        document.addEventListener('touchmove', (e) => {
-            if (!activeSwipeItem) return;
-            const currentX = e.touches[0].clientX;
-            const diffX = currentX - touchStartX;
-            if (diffX < 0) {
-                const shift = Math.max(diffX, -90);
-                activeSwipeItem.style.transform = `translateX(${shift}px)`;
-                if (activeSwipeBg) {
-                    activeSwipeBg.style.opacity = Math.min(Math.abs(shift) / 70, 1);
-                }
-            }
-        });
-
-        document.addEventListener('touchend', (e) => {
-            if (!activeSwipeItem) return;
-            const currentX = e.changedTouches[0].clientX;
-            const diffX = currentX - touchStartX;
-            activeSwipeItem.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if (diffX < -70) {
-                const id = activeSwipeItem.getAttribute('data-id');
-                activeSwipeItem.style.transform = 'translateX(-100%)';
-                activeSwipeItem.style.opacity = '0';
-                if (activeSwipeBg) activeSwipeBg.style.opacity = '1';
-                setTimeout(() => {
-                    deleteProduct(id);
-                }, 300);
-            } else {
-                activeSwipeItem.style.transform = 'translateX(0)';
-                if (activeSwipeBg) activeSwipeBg.style.opacity = '0';
-            }
-            activeSwipeItem = null;
-            activeSwipeBg = null;
-        });
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('hiddenDateInput').addEventListener('change', (e) => {
@@ -2318,25 +2231,6 @@
                 hideForm();
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
-
-            document.getElementById('btnBsEdit').addEventListener('click', () => {
-                const pid = activeSelectedProductId;
-                closeProductBottomSheet();
-                if (pid) editProduct(pid);
-            });
-
-            document.getElementById('btnBsDelete').addEventListener('click', () => {
-                const pid = activeSelectedProductId;
-                closeProductBottomSheet();
-                if (pid) deleteProduct(pid);
-            });
-
-            document.getElementById('btnBsClose').addEventListener('click', closeProductBottomSheet);
-            document.getElementById('productBottomSheet').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('productBottomSheet')) {
-                    closeProductBottomSheet();
-                }
-            });
 
             document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => {
                 toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow');
@@ -2390,6 +2284,13 @@
                 }
             });
 
+            /* КЛИК ПО ЛЮБОЙ СВОБОДНОЙ ОБЛАСТИ СНИМАЕТ ПОПОВЕР МЕНЮ */
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.product-wrapper-block')) {
+                    closeAllPopovers();
+                }
+            });
+
             document.getElementById('btnMorning').addEventListener('click', () => {
                 const selected = localStorage.getItem('cb_selected_date');
                 const logicalToday = getLogicalTodayStr();
@@ -2433,11 +2334,7 @@
 
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    const bs = document.getElementById('productBottomSheet');
-                    if (bs && bs.style.display === 'flex') {
-                        closeProductBottomSheet();
-                        return;
-                    }
+                    closeAllPopovers();
 
                     const modal = document.getElementById('settingsModal');
                     if (modal && modal.style.display === 'flex') closeSettings();
