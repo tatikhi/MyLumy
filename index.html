@@ -927,7 +927,7 @@
             padding-bottom: 20px;
         }
 
-        /* ГАРМОШКА КАТЕГОРИЙ С ПЛАВНЫМ CSS-ПЕРЕХОДОМ И ДИНАМИЧЕСКОЙ ВЫСОТОЙ */
+        /* ГАРМОШКА КАТЕГОРИЙ С ЗАПАСОМ ВЫСОТЫ ДЛЯ ПОПОВЕРОВ */
         .category-group-block {
             display: flex;
             flex-direction: column;
@@ -997,6 +997,7 @@
 
         .category-items-container.open {
             opacity: 1;
+            max-height: 2500px !important; /* Гарантирует, что поповер никогда не обрежется */
             padding-top: 4px;
             padding-bottom: 8px;
         }
@@ -1041,7 +1042,7 @@
             transform: rotate(90deg);
         }
 
-        /* ПЛАВНОЕ ПОПОВЕР МЕНЮ С CSS-АНИМАЦИЕЙ */
+        /* ПОПОВЕР МЕНЮ КНОПОК РЕДАКТИРОВАТЬ / УДАЛИТЬ */
         .popover-actions-menu {
             max-height: 0;
             opacity: 0;
@@ -1200,7 +1201,7 @@
         <div class="routine-list" id="routineContainer"></div>
     </div>
 
-    <!-- Модальное окно "Моя коллекция" (с разделением на скролл-область и фиксированный футер) -->
+    <!-- Модальное окно "Моя коллекция" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card" id="settingsModalCard">
             <!-- ШАПКА МОДАЛКИ -->
@@ -1366,7 +1367,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text brand-font">версия v1.7.1</span>
+                        <span class="version-text brand-font">версия v1.7.2</span>
                         <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1415,7 +1416,7 @@
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.7.1';
+        const APP_VERSION = '1.7.2';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -1590,7 +1591,7 @@
             "Тоник успокаивающий", "Кислотный тоник", "Эссенция с муцином", 
             "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", 
             "Сыворотка с витамином C", "Сыворотка с ретинолом", "Крем для век", 
-            "Увлажняющий крем", "Питательный крем", "Восстанавливающий бальзам", 
+            "Увлажняющий крем", "Питательный крем", "Востанавливающий бальзам", 
             "Солнцезащитный крем SPF 50", "Маска увлажняющая", "Глиняная маска"
         ];
 
@@ -1984,25 +1985,22 @@
             document.getElementById('btnScanBarcode').style.display = 'none';
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
 
-            // Переключаем футеры: скрываем закрыть, показываем сохранить/отмена
             document.getElementById('listFooterButtons').style.display = 'none';
             document.getElementById('formFooterButtons').style.display = 'flex';
             document.getElementById('mainModalTitle').innerText = 'новое средство';
 
             container.classList.add('open');
 
-            // Сбрасываем скролл модалки на самый верх (в верхнюю треть экрана устройства)
             const scrollBody = document.getElementById('modalScrollBody');
             if (scrollBody) {
                 scrollBody.scrollTop = 0;
             }
 
-            setTimeout(() => {
-                const pNameInput = document.getElementById('pName');
-                if (pNameInput) {
-                    pNameInput.focus();
-                }
-            }, 100);
+            // Синхронный фокус для мгновенного вызова клавиатуры
+            const pNameInput = document.getElementById('pName');
+            if (pNameInput) {
+                pNameInput.focus();
+            }
         }
 
         function hideForm() {
@@ -2014,7 +2012,6 @@
             document.getElementById('btnScanBarcode').style.display = 'block';
             document.getElementById('scannerNoticeBanner').style.display = 'none';
 
-            // Возвращаем футер списка
             document.getElementById('listFooterButtons').style.display = 'block';
             document.getElementById('formFooterButtons').style.display = 'none';
             document.getElementById('mainModalTitle').innerText = 'моя коллекция';
@@ -2023,7 +2020,6 @@
             resetForm();
         }
 
-        /* ПЛАВНОЕ ОТКРЫТИЕ И ЗАКРЫТИЕ КАТЕГОРИЙ С ДИНАМИЧЕСКОЙ ВЫСОТОЙ */
         function toggleCategoryAccordion(catIndex) {
             closeAllPopovers();
             const headerBtn = document.getElementById(`cat-header-${catIndex}`);
@@ -2033,10 +2029,8 @@
 
             const isOpen = container.classList.contains('open');
 
-            // Закрываем все остальные категории плавно
             document.querySelectorAll('.category-items-container').forEach((el, idx) => {
                 if (idx !== catIndex && el.classList.contains('open')) {
-                    el.style.maxHeight = '0px';
                     el.classList.remove('open');
                     const hb = document.getElementById(`cat-header-${idx}`);
                     if (hb) hb.classList.remove('open');
@@ -2044,13 +2038,11 @@
             });
 
             if (isOpen) {
-                container.style.maxHeight = '0px';
                 container.classList.remove('open');
                 headerBtn.classList.remove('open');
             } else {
                 container.classList.add('open');
                 headerBtn.classList.add('open');
-                container.style.maxHeight = container.scrollHeight + 'px';
 
                 setTimeout(() => {
                     headerBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2058,7 +2050,6 @@
             }
         }
 
-        /* ТАП НА СРЕДСТВО */
         function toggleProductPopover(e, id) {
             if (e) e.stopPropagation();
             const targetId = Number(id);
@@ -2292,14 +2283,18 @@
             window.alertTarget = targetElement;
         }
 
+        // Синхронный фокус при закрытии алерта для гарантированного вызова клавиатуры
         document.getElementById('btnAlertOk').addEventListener('click', () => {
             const modal = document.getElementById('customAlertModal');
-            closeModalElement(modal, () => {
-                if (window.alertTarget) {
-                    window.alertTarget.focus();
-                    window.alertTarget = null;
-                }
-            });
+            modal.classList.remove('active-modal');
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+
+            const target = window.alertTarget;
+            window.alertTarget = null;
+            if (target) {
+                target.focus();
+            }
         });
 
         function toggleAccordion(contentId, arrowId) {
@@ -2672,7 +2667,6 @@
                 const shouldAutoExpand = (autoExpandCategoryName === catName);
                 const openHeaderClass = shouldAutoExpand ? 'open' : '';
                 const openContainerClass = shouldAutoExpand ? 'open' : '';
-                const initialMaxHeight = shouldAutoExpand ? '1000px' : '0px';
 
                 let catItemsHtml = '';
                 if (count === 0) {
@@ -2704,7 +2698,7 @@
                             <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${count})</span></span>
                             <span class="category-chevron">▼</span>
                         </button>
-                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}" style="max-height: ${initialMaxHeight};">
+                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}">
                             ${catItemsHtml}
                         </div>
                     </div>
