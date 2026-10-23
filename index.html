@@ -126,7 +126,7 @@
             width: 100%;
             max-width: 480px;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             margin-bottom: 20px;
         }
@@ -136,6 +136,17 @@
             font-weight: 500;
             letter-spacing: 0.18em;
             text-transform: lowercase;
+            font-style: normal;
+        }
+
+        /* Единый строгий стиль для ключевых надписей */
+        .uniform-brand-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: lowercase;
+            color: var(--text-primary);
             font-style: normal;
         }
 
@@ -168,13 +179,7 @@
         .streak-card-title {
             background: transparent;
             border: none;
-            color: var(--text-primary);
             padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.18em;
-            text-transform: lowercase;
             box-shadow: none;
         }
 
@@ -308,18 +313,12 @@
             border-radius: 20px;
             border: 1px solid var(--border-color);
             background: var(--surface);
-            color: var(--text-primary);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.18em;
-            text-transform: lowercase;
-            cursor: pointer;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            cursor: pointer;
             transition: all 0.25s ease;
         }
 
@@ -1166,13 +1165,14 @@
 </head>
 <body>
 
+    <!-- ЛОГОТИП В ЛЕВОМ ВЕРХНЕМ УГЛУ -->
     <div class="header-bar">
         <div class="logo">myspa</div>
     </div>
 
     <!-- Интерактивный календарь -->
     <div class="streak-card" id="streakCard">
-        <div class="streak-card-title">мои ритуалы</div>
+        <div class="streak-card-title uniform-brand-title">мои ритуалы</div>
         <div class="date-chip" id="currentDateChip">
             <span id="dateChipText"></span>
             <input type="date" id="hiddenDateInput">
@@ -1189,10 +1189,10 @@
 
         <div class="routine-list" id="routineContainer"></div>
 
-        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ (ВЫРОВНЕНЫ ПО ШИРИНЕ ПЛАШЕК) -->
+        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ С ЕДИНЫМ СТИЛЕМ И ШИРИНОЙ -->
         <div class="main-card-actions">
-            <button type="button" class="btn-main-action brand-font" id="btnOpenSettings">моя коллекция</button>
-            <button type="button" class="btn-main-action brand-font" id="btnOpenAppSettings">
+            <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">моя коллекция</button>
+            <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -1207,7 +1207,7 @@
         <div class="modal-card" id="settingsModalCard">
             <!-- ШАПКА МОДАЛКИ -->
             <div class="modal-header-row">
-                <div class="modal-title brand-font" id="mainModalTitle">моя коллекция</div>
+                <div class="modal-title uniform-brand-title" id="mainModalTitle" style="font-size: 15px; font-weight: 600;">моя коллекция</div>
                 <button type="button" class="modal-close-icon" id="btnHeaderClose" aria-label="Закрыть">✕</button>
             </div>
             
@@ -1215,12 +1215,12 @@
             <div class="modal-body-scrollable" id="modalScrollBody">
                 <div class="product-manage-list" id="manageList"></div>
 
-                <button type="button" class="btn-add-toggle brand-font" id="btnAddToggle">+ добавить средство</button>
-                <button type="button" class="btn-scan-dashed brand-font" id="btnScanBarcode">сканировать штрихкод</button>
+                <button type="button" class="btn-add-toggle uniform-brand-title" id="btnAddToggle">+ добавить средство</button>
+                <button type="button" class="btn-scan-dashed uniform-brand-title" id="btnScanBarcode">сканировать штрихкод</button>
                 
                 <div id="scannerWrapper" style="display: none; margin-bottom: 16px;">
                     <div id="barcodeReader" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
-                    <button type="button" class="btn-secondary brand-font" id="btnCancelScanner">отмена</button>
+                    <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelScanner">отмена</button>
                 </div>
 
                 <div id="productFormContainer">
@@ -1232,7 +1232,7 @@
 
                     <!-- ГЛАВНЫЙ БЛОК -->
                     <div class="form-section">
-                        <div class="form-section-title brand-font">о средстве</div>
+                        <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">о средстве</div>
                         
                         <div class="form-group">
                             <label for="pName">Название</label>
@@ -1265,7 +1265,7 @@
                             <input type="hidden" id="pFreqType" value="daily">
                             <div class="picker-group" id="freqPicker">
                                 <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
-                                <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
+                                <button type="button" class="picker-btn active" data-freq="custom">По дням недели</button>
                             </div>
                             <div id="daysGroup" style="display: none; margin-top: 10px;">
                                 <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
@@ -1338,14 +1338,14 @@
                 </div>
             </div>
 
-            <!-- ФИКСИРОВАННЫЙ НИЖНИЙ ФУТЕР (КНОПКИ ВСЕГДА ДОСТУПНЫ БЕЗ СКРОЛЛА) -->
+            <!-- ФИКСИРОВАННЫЙ НИЖНИЙ ФУТЕР -->
             <div class="modal-footer-pinned" id="pinnedModalFooter">
                 <div id="listFooterButtons">
-                    <button type="button" class="btn-secondary brand-font" id="btnCloseSettings" style="margin-top: 0;">закрыть</button>
+                    <button type="button" class="btn-secondary uniform-brand-title" id="btnCloseSettings" style="margin-top: 0;">закрыть</button>
                 </div>
                 <div id="formFooterButtons" style="display: none; flex-direction: column; gap: 8px;">
-                    <button type="button" class="btn-action brand-font" id="btnSaveProduct">сохранить средство</button>
-                    <button type="button" class="btn-secondary brand-font" id="btnCancelProduct" style="margin-top: 0;">отмена</button>
+                    <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct" style="font-weight: 600;">сохранить средство</button>
+                    <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">отмена</button>
                 </div>
             </div>
         </div>
@@ -1356,11 +1356,11 @@
         <div class="modal-card" style="max-width: 400px; max-height: 85vh;">
             <div class="modal-header-row">
                 <div class="modal-title-wrapper">
-                    <svg class="title-settings-icon" viewBox="0 0 24 24">
+                    <svg class="title-settings-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: var(--text-primary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
-                    <div class="modal-title brand-font">настройки</div>
+                    <div class="modal-title uniform-brand-title" style="font-size: 15px; font-weight: 600;">настройки</div>
                 </div>
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
             </div>
@@ -1368,25 +1368,25 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text brand-font">версия v1.7.3</span>
-                        <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
+                        <span class="version-text uniform-brand-title">версия v1.7.4</span>
+                        <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
 
                 <div class="form-section" style="margin-bottom: 14px;">
-                    <div class="form-section-title brand-font">перенос и бэкап</div>
+                    <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">перенос и бэкап</div>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <button type="button" class="btn-secondary brand-font" id="btnCopyShareLink">скопировать ссылку переноса</button>
+                        <button type="button" class="btn-secondary uniform-brand-title" id="btnCopyShareLink">скопировать ссылку переноса</button>
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="btn-secondary brand-font" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
-                            <button type="button" class="btn-secondary brand-font" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
+                            <button type="button" class="btn-secondary uniform-brand-title" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
+                            <button type="button" class="btn-secondary uniform-brand-title" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
                         </div>
                         <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
                     </div>
                 </div>
 
                 <div class="form-section" style="margin-bottom: 18px;">
-                    <div class="form-section-title brand-font">тема оформления</div>
+                    <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">тема оформления</div>
                     <div style="display: flex; gap: 6px; width: 100%;" id="themeRow">
                         <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
                         <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
@@ -1398,26 +1398,26 @@
             </div>
 
             <div class="modal-footer-pinned">
-                <button type="button" class="btn-secondary brand-font" id="btnCloseAppSettings" style="margin-top: 0;">закрыть</button>
+                <button type="button" class="btn-secondary uniform-brand-title" id="btnCloseAppSettings" style="margin-top: 0;">закрыть</button>
             </div>
         </div>
     </div>
 
-    <!-- Кастомное модальное окно уведомлений / алертов (в средней трети экрана) -->
+    <!-- Кастомное модальное окно уведомлений / алертов -->
     <div class="modal-overlay alert-overlay" id="customAlertModal">
         <div class="modal-card" style="max-width: 320px; max-height: 50vh; text-align: center; padding: 24px;">
             <div class="modal-title" id="customAlertText" style="font-size: 15px; margin-bottom: 18px;">Сообщение</div>
             <div class="modal-footer-pinned" style="background: transparent; border-top: none; padding-top: 0; margin-top: 0;">
-                <button type="button" class="btn-action brand-font" id="btnAlertOk" style="padding: 12px;">ок</button>
+                <button type="button" class="btn-action uniform-brand-title" id="btnAlertOk" style="padding: 12px; font-weight: 600;">ок</button>
             </div>
         </div>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ TOAST (В СРЕДНЕЙ ТРЕТИ ЭКРАНА) -->
-    <div class="toast-notification brand-font" id="toastNotification"></div>
+    <!-- ВСПЛЫВАЮЩИЙ TOAST -->
+    <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.7.3';
+        const APP_VERSION = '1.7.4';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
