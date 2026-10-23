@@ -27,6 +27,7 @@
             --shadow-soft: 0 16px 40px rgba(196, 154, 130, 0.08);
             --icon-inactive: #D0C6BE;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --scroll-thumb: rgba(196, 154, 130, 0.4);
         }
 
         /* 2. Eucalyptus & Mint */
@@ -42,6 +43,7 @@
             --shadow-soft: 0 16px 40px rgba(91, 138, 130, 0.08);
             --icon-inactive: #B8C9C5;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --scroll-thumb: rgba(91, 138, 130, 0.4);
         }
 
         /* 3. Blush Lavender */
@@ -57,6 +59,7 @@
             --shadow-soft: 0 16px 40px rgba(139, 120, 157, 0.08);
             --icon-inactive: #CBBFCF;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --scroll-thumb: rgba(139, 120, 157, 0.4);
         }
 
         /* 4. Sage & Spa */
@@ -72,6 +75,7 @@
             --shadow-soft: 0 16px 40px rgba(58, 77, 57, 0.08);
             --icon-inactive: #B5C2B6;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --scroll-thumb: rgba(74, 97, 72, 0.4);
         }
 
         /* 5. Midnight Calm */
@@ -87,6 +91,7 @@
             --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
             --icon-inactive: #525E7A;
             --item-bg: rgba(36, 42, 59, 0.65);
+            --scroll-thumb: rgba(212, 163, 115, 0.4);
         }
 
         * {
@@ -465,7 +470,7 @@
         .dot-red { background-color: #E74C3C; }
         .dot-gray { background-color: var(--icon-inactive); }
 
-        /* MODALSС ПЛАВНОЙ АНИМАЦИЕЙ */
+        /* MODALS С ПЛАВНОЙ АНИМАЦИЕЙ */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -627,7 +632,7 @@
             outline: none;
         }
 
-        /* УМНЫЙ ВЫПАДАЮЩИЙ СПИСОК АВТОКОМПЛИТА */
+        /* УМНЫЙ ВЫПАДАЮЩИЙ СПИСОК АВТОКОМПЛИТА С ПЛАВНОСТЬЮ */
         .autocomplete-dropdown {
             position: absolute;
             top: 100%;
@@ -637,27 +642,26 @@
             border: 1px solid var(--border-color);
             border-radius: 14px;
             margin-top: 4px;
-            max-height: 180px;
+            max-height: 0;
+            opacity: 0;
             overflow-y: auto;
             z-index: 100;
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            display: none;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
         }
 
         .autocomplete-dropdown.open {
-            display: block;
+            max-height: 180px;
+            opacity: 1;
         }
 
         .autocomplete-item {
-            padding: 10px 14px;
-            font-size: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
             color: var(--text-primary);
             cursor: pointer;
             border-bottom: 1px solid var(--border-color);
             transition: background 0.15s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .autocomplete-item:last-child {
@@ -666,12 +670,6 @@
 
         .autocomplete-item:active, .autocomplete-item:hover {
             background: var(--accent-light);
-        }
-
-        .autocomplete-tag {
-            font-size: 10px;
-            color: var(--text-secondary);
-            font-style: italic;
         }
 
         .picker-group {
@@ -859,28 +857,32 @@
             background: var(--accent-light);
         }
 
+        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ПОСТОЯННОЙ И ЧЕТКОЙ ПЛАШКОЙ СКРОЛЛА */
         .product-manage-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 18px;
             max-height: 250px;
-            overflow-y: auto;
-            padding-right: 4px;
+            overflow-y: scroll;
+            padding-right: 8px;
             overscroll-behavior: contain;
             touch-action: pan-y;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scroll-thumb) var(--bg-main);
         }
 
         .product-manage-list::-webkit-scrollbar {
-            width: 3px;
+            width: 6px;
         }
 
         .product-manage-list::-webkit-scrollbar-track {
             background: var(--bg-main);
+            border-radius: 10px;
         }
 
         .product-manage-list::-webkit-scrollbar-thumb {
-            background: var(--icon-inactive);
+            background: var(--scroll-thumb);
             border-radius: 10px;
         }
 
@@ -1009,6 +1011,21 @@
             display: block;
         }
 
+        /* ПЛАВНОЕ РАСКРЫТИЕ ФОРМЫ ЗАПОЛНЕНИЯ */
+        #productFormContainer {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease;
+        }
+
+        #productFormContainer.open {
+            max-height: 1200px;
+            opacity: 1;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+
         .form-sticky-footer {
             position: sticky;
             bottom: 0;
@@ -1018,6 +1035,31 @@
             margin-top: 18px;
             border-top: 1px solid var(--border-color);
             z-index: 10;
+        }
+
+        /* УВЕДОМЛЕНИЕ ОБ ОБНОВЛЕНИИ (TOAST) */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(30px);
+            background: var(--surface);
+            border: 1px solid var(--accent-main);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast-notification.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
@@ -1030,7 +1072,7 @@
             <button type="button" class="btn-icon-settings" id="btnOpenAppSettings" aria-label="Настройки">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                 </svg>
             </button>
         </div>
@@ -1074,7 +1116,7 @@
                 <button type="button" class="btn-secondary brand-font" id="btnCancelScanner">отмена</button>
             </div>
 
-            <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
+            <div id="productFormContainer">
                 <div id="scannerNoticeBanner" class="scanner-notice-banner" style="display: none;">
                     В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.
                 </div>
@@ -1214,7 +1256,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.2.0</span>
+                    <span class="version-text brand-font">версия v1.3.0</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate">проверить обновление</button>
                 </div>
             </div>
@@ -1254,8 +1296,11 @@
         </div>
     </div>
 
+    <!-- ВСПЛЫВАЮЩИЙ TOAST ОБ ОБНОВЛЕНИИ -->
+    <div class="toast-notification brand-font" id="toastNotification">обновление успешно установлено</div>
+
     <script>
-        const APP_VERSION = '1.2.0';
+        const APP_VERSION = '1.3.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1264,10 +1309,6 @@
                 localStorage.removeItem('cb_is_tomorrow_plan');
                 localStorage.removeItem('cb_tomorrow_rest');
                 localStorage.removeItem('cb_viewing_tomorrow');
-                if (!sessionStorage.getItem('cb_reloaded')) {
-                    sessionStorage.setItem('cb_reloaded', 'true');
-                    window.location.reload(true);
-                }
             }
         } catch (e) {
             console.error('Version check error:', e);
@@ -1372,7 +1413,7 @@
         let html5QrCodeScanner = null;
         let isScannerBusy = false;
 
-        /* БАЗОВЫЙ СПРАВОЧНИК ПОПУЛЯРНЫХ СРЕДСТВ ДЛЯ БЫСТРОГО АВТОКОМПЛИТА (А) */
+        /* БАЗОВЫЙ СПРАВОЧНИК ПОПУЛЯРНЫХ СРЕДСТВ */
         const localProductDictionary = [
             "Пенка для умывания", "Гель для умывания", "Гидрофильное масло", 
             "Мицеллярная вода", "Энзимная пудра", "Тонер увлажняющий", 
@@ -1775,13 +1816,16 @@
             closeModalElement(modal);
         }
 
+        /* ПЛАВНЫЙ ПОКАЗ ФОРМЫ ЗАПОЛНЕНИЯ СРЕСТВА */
         function showForm(showNotice = false) {
             stopBarcodeScanner();
             closeAllPopovers();
-            document.getElementById('productFormContainer').style.display = 'block';
+            const container = document.getElementById('productFormContainer');
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
+
+            container.classList.add('open');
 
             setTimeout(() => {
                 const pNameInput = document.getElementById('pName');
@@ -1789,16 +1833,20 @@
                     pNameInput.focus();
                     pNameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-            }, 120);
+            }, 180);
         }
 
         function hideForm() {
-            document.getElementById('productFormContainer').style.display = 'none';
-            document.getElementById('btnAddToggle').style.display = 'block';
-            document.getElementById('btnScanBarcode').style.display = 'block';
-            document.getElementById('scannerNoticeBanner').style.display = 'none';
-            closeAutocomplete();
-            resetForm();
+            const container = document.getElementById('productFormContainer');
+            container.classList.remove('open');
+            
+            setTimeout(() => {
+                document.getElementById('btnAddToggle').style.display = 'block';
+                document.getElementById('btnScanBarcode').style.display = 'block';
+                document.getElementById('scannerNoticeBanner').style.display = 'none';
+                closeAutocomplete();
+                resetForm();
+            }, 300);
         }
 
         function toggleProductPopover(e, id) {
@@ -1826,12 +1874,14 @@
             activePopoverProductId = null;
         }
 
-        /* ЛОГИКА АВТОКОМПЛИТА (A+B) */
+        /* ЛОГИКА АВТОКОМПЛИТА С ЧИСТЫМ ТЕКСТОМ И ПЛАВНОСТЬЮ */
         function closeAutocomplete() {
             const dropdown = document.getElementById('autocompleteDropdown');
             if (dropdown) {
                 dropdown.classList.remove('open');
-                dropdown.innerHTML = '';
+                setTimeout(() => {
+                    dropdown.innerHTML = '';
+                }, 200);
             }
         }
 
@@ -1846,14 +1896,12 @@
 
         function handleNameInput(query) {
             const cleanQuery = query.trim().toLowerCase();
-            const dropdown = document.getElementById('autocompleteDropdown');
 
             if (cleanQuery.length < 2) {
                 closeAutocomplete();
                 return;
             }
 
-            // 1. Вариант A: Локальный поиск по справочнику + сохраняемым средствам
             const userProducts = products.map(p => p.name);
             const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
             
@@ -1863,7 +1911,6 @@
 
             renderAutocompleteResults(matchedLocal, []);
 
-            // 2. Вариант B: Фоновый поиск через Open Beauty Facts API
             clearTimeout(autocompleteDebounceTimer);
             autocompleteDebounceTimer = setTimeout(async () => {
                 try {
@@ -1887,27 +1934,16 @@
             const dropdown = document.getElementById('autocompleteDropdown');
             if (!dropdown) return;
 
-            const allItems = [];
+            const combined = Array.from(new Set([...localItems, ...onlineItems]));
 
-            localItems.forEach(item => {
-                allItems.push({ name: item, tag: 'из базы/коллекции' });
-            });
-
-            onlineItems.forEach(item => {
-                if (!localItems.includes(item)) {
-                    allItems.push({ name: item, tag: 'онлайн' });
-                }
-            });
-
-            if (allItems.length === 0) {
+            if (combined.length === 0) {
                 closeAutocomplete();
                 return;
             }
 
-            dropdown.innerHTML = allItems.map(i => `
-                <div class="autocomplete-item" onclick="selectAutocompleteItem('${escapeHtml(i.name)}')">
-                    <span>${escapeHtml(i.name)}</span>
-                    <span class="autocomplete-tag">${i.tag}</span>
+            dropdown.innerHTML = combined.map(name => `
+                <div class="autocomplete-item" onclick="selectAutocompleteItem('${escapeHtml(name)}')">
+                    ${escapeHtml(name)}
                 </div>
             `).join('');
 
@@ -2172,10 +2208,21 @@
             document.body.removeChild(ta);
         }
 
+        /* ОБРАБОТКА КНОПКИ ПРОВЕРКИ ОБНОВЛЕНИЯ И ПОКАЗА ПЛАШКИ */
         function forceAppUpdate() {
-            if (confirm('Проверить и обновить MySpa?\n\nВсе ваши средства, история и архив сохранятся.')) {
-                const cleanUrl = window.location.origin + window.location.pathname;
-                window.location.href = cleanUrl + '?reload=' + Date.now();
+            const savedVersion = localStorage.getItem('cb_app_version');
+            const hasNewUpdate = (savedVersion !== APP_VERSION);
+
+            if (hasNewUpdate) {
+                const toast = document.getElementById('toastNotification');
+                toast.classList.add('visible');
+                
+                setTimeout(() => {
+                    toast.classList.remove('visible');
+                    closeAppSettings();
+                }, 2000);
+            } else {
+                closeAppSettings();
             }
         }
 
