@@ -116,6 +116,12 @@
             margin-bottom: 16px;
         }
 
+        .header-right-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .brand-font {
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
@@ -146,6 +152,29 @@
             gap: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             white-space: nowrap;
+        }
+
+        .btn-icon-settings {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .btn-icon-settings svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-primary);
+            transition: fill 0.3s ease;
         }
 
         .streak-card {
@@ -337,6 +366,18 @@
             gap: 4px;
             align-items: center;
             flex-shrink: 0;
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .expiry-dots.clickable {
+            cursor: pointer;
+            background: rgba(0,0,0,0.03);
+            transition: background-color 0.2s;
+        }
+
+        .expiry-dots.clickable:active {
+            background: var(--accent-light);
         }
 
         .dot {
@@ -348,6 +389,7 @@
         .dot-green { background-color: #2ECC71; }
         .dot-orange { background-color: #E67E22; }
         .dot-red { background-color: #E74C3C; }
+        .dot-gray { background-color: #BDC3C7; }
 
         .btn-action {
             width: 100%;
@@ -687,57 +729,6 @@
             font-weight: bold;
         }
 
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 0;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--border-color);
-            transition: .3s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: var(--surface);
-            transition: .3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        input:checked + .slider {
-            background-color: var(--accent-main);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
         .accordion-toggle-btn {
             width: 100%;
             padding: 10px 14px;
@@ -784,7 +775,14 @@
 
     <div class="header-bar">
         <div class="logo">myspa</div>
-        <button type="button" class="btn-settings brand-font" id="btnOpenSettings">моя коллекция</button>
+        <div class="header-right-group">
+            <button type="button" class="btn-settings brand-font" id="btnOpenSettings">моя коллекция</button>
+            <button type="button" class="btn-icon-settings" id="btnOpenAppSettings" aria-label="Настройки">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+            </button>
+        </div>
     </div>
 
     <!-- Интерактивный календарь (с архивом с даты установки) -->
@@ -810,7 +808,7 @@
         <button type="button" class="btn-action" id="btnCompleteRoutine"></button>
     </div>
 
-    <!-- Модальное окно "моя коллекция" -->
+    <!-- Модальное окно "Моя коллекция" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card" id="settingsModalCard">
             <div class="modal-header-row">
@@ -836,7 +834,7 @@
                 <div class="modal-title" id="formModalTitle" style="font-size: 15px; margin-top: 12px;">Новое средство</div>
                 <input type="hidden" id="editProductId" value="">
 
-                <!-- МИНИМАЛИСТИЧНЫЙ ГЛАВНЫЙ БЛОК -->
+                <!-- ГЛАВНЫЙ БЛОК -->
                 <div class="form-section">
                     <div class="form-section-title brand-font">О средстве</div>
                     
@@ -886,21 +884,14 @@
                     </div>
                 </div>
 
-                <!-- ДОП. ОПЦИЯ: ПАУЗЫ (АККОРДЕОН) -->
+                <!-- АККОРДЕОН: ПАУЗЫ -->
                 <div class="form-section">
                     <button type="button" class="accordion-toggle-btn" id="btnTogglePauseAccordion">
-                        <span>⏱️ Указать паузы (до/после)</span>
+                        <span>Указать паузы (до/после)</span>
                         <span id="pauseAccordionArrow">▼</span>
                     </button>
                     <div class="accordion-content" id="pauseAccordionContent">
-                        <div class="toggle-container" style="margin-bottom: 8px;">
-                            <label for="pPauseToggle" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600;">Включить паузы</label>
-                            <label class="switch">
-                                <input type="checkbox" id="pPauseToggle">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div id="pauseOptionsContainer" style="display: none; background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div id="pauseOptionsContainer" style="background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 8px;">
                             <div style="margin-bottom: 10px;">
                                 <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ДО</label>
                                 <div class="picker-group" id="pauseBeforePicker">
@@ -923,10 +914,10 @@
                     </div>
                 </div>
 
-                <!-- ДОП. ОПЦИЯ: СРОКИ И PAO (АККОРДЕОН) -->
+                <!-- АККОРДЕОН: СРОКИ И PAO -->
                 <div class="form-section">
                     <button type="button" class="accordion-toggle-btn" id="btnToggleExpiryAccordion">
-                        <span>📅 Указать сроки годности и PAO</span>
+                        <span>Указать сроки годности и PAO</span>
                         <span id="expiryAccordionArrow">▼</span>
                     </button>
                     <div class="accordion-content" id="expiryAccordionContent">
@@ -944,11 +935,6 @@
                                 <button type="button" class="pao-chip" data-months="24">24M</button>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="pExpDate">Окончание срока годности</label>
-                            <input type="date" id="pExpDate" class="input-control">
-                        </div>
                     </div>
                 </div>
 
@@ -958,7 +944,17 @@
                 </div>
             </div>
 
-            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 16px 0;">
+            <button type="button" class="btn-secondary" id="btnCloseSettings">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно "Настройки приложения" (Отдельная кнопка ⚙️) -->
+    <div class="modal-overlay" id="appSettingsModal">
+        <div class="modal-card" style="max-width: 400px;">
+            <div class="modal-header-row">
+                <div class="modal-title brand-font">настройки</div>
+                <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
+            </div>
 
             <div class="form-section" style="margin-bottom: 12px;">
                 <div class="form-section-title brand-font" style="margin-bottom: 8px;">Перенос и бэкап</div>
@@ -973,7 +969,7 @@
                 </div>
             </div>
 
-            <div class="form-section" style="margin-bottom: 12px;">
+            <div class="form-section" style="margin-bottom: 16px;">
                 <div class="form-section-title brand-font" style="margin-bottom: 8px;">Тема оформления</div>
                 <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
                     <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; height: 36px; border-radius: 8px; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
@@ -984,7 +980,7 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-secondary" id="btnCloseSettings">Закрыть</button>
+            <button type="button" class="btn-secondary" id="btnCloseAppSettings">Закрыть</button>
         </div>
     </div>
 
@@ -997,7 +993,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.62.0';
+        const APP_VERSION = '2.63.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1130,19 +1126,6 @@
             return selectedDateStr > getLogicalTodayStr();
         }
 
-        function isEveningCompletedToday() {
-            const logicalToday = getLogicalTodayStr();
-            if (localStorage.getItem('cb_selected_date')) {
-                const selected = localStorage.getItem('cb_selected_date');
-                if (selected < logicalToday) return true;
-                if (selected === logicalToday) {
-                    return localStorage.getItem('cb_evening_completed') === logicalToday;
-                }
-                return false;
-            }
-            return localStorage.getItem('cb_evening_completed') === logicalToday;
-        }
-
         function isArchiveMode() {
             const selected = localStorage.getItem('cb_selected_date');
             const logicalToday = getLogicalTodayStr();
@@ -1204,28 +1187,6 @@
             document.querySelectorAll('.pao-chip').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-months') == months);
             });
-            calculateExpiryFromPAO();
-        }
-
-        function calculateExpiryFromPAO() {
-            const openDateInput = document.getElementById('pOpenDate');
-            if (!openDateInput.value) {
-                openDateInput.value = getLocalTodayStr(new Date());
-                openDateInput.type = 'date';
-            }
-
-            if (selectedPAOMonths) {
-                const parts = openDateInput.value.split('-');
-                const year = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1;
-                const day = parseInt(parts[2], 10);
-
-                const targetDate = new Date(year, month + Number(selectedPAOMonths), day);
-                if (targetDate.getDate() !== day) {
-                    targetDate.setDate(0);
-                }
-                document.getElementById('pExpDate').value = getLocalTodayStr(targetDate);
-            }
         }
 
         function getActiveProgressDetails(item) {
@@ -1369,15 +1330,15 @@
                 } else {
                     const htmlBuffer = [];
                     activeProducts.forEach((item, index) => {
-                        const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
+                        const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
                         let pauseHtmlBefore = '';
                         let pauseHtmlAfter = '';
                         const activeProgressHtml = getActiveProgressHtml(item);
 
-                        if (item.hasPause && item.pauseBefore) {
+                        if (item.pauseBefore) {
                             pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
                         }
-                        if (item.hasPause && item.pauseAfter) {
+                        if (item.pauseAfter) {
                             pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
                         }
 
@@ -1394,7 +1355,7 @@
                                     </div>
                                     <div class="item-right-group">
                                         ${activeProgressHtml}
-                                        <div class="expiry-dots">${dotsHtml}</div>
+                                        ${dotsHtml}
                                     </div>
                                 </div>
                                 ${pauseHtmlAfter}
@@ -1429,7 +1390,7 @@
                 } else {
                     const htmlBuffer = [];
                     activeProducts.forEach((item, index) => {
-                        const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
+                        const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
                         const activeProgressHtml = getActiveProgressHtml(item);
                         htmlBuffer.push(`
                             <div class="routine-item" style="opacity: 0.85;">
@@ -1443,7 +1404,7 @@
                                     </div>
                                     <div class="item-right-group">
                                         ${activeProgressHtml}
-                                        <div class="expiry-dots">${dotsHtml}</div>
+                                        ${dotsHtml}
                                     </div>
                                 </div>
                             </div>
@@ -1478,15 +1439,15 @@
 
                 const htmlBuffer = [];
                 activeProducts.forEach((item, index) => {
-                    const dotsHtml = calcExpiryDots(item.openDate, item.expDate);
+                    const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
                     let pauseHtmlBefore = '';
                     let pauseHtmlAfter = '';
                     const activeProgressHtml = getActiveProgressHtml(item);
 
-                    if (item.hasPause && item.pauseBefore) {
+                    if (item.pauseBefore) {
                         pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
                     }
-                    if (item.hasPause && item.pauseAfter) {
+                    if (item.pauseAfter) {
                         pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
                     }
 
@@ -1503,7 +1464,7 @@
                                 </div>
                                 <div class="item-right-group">
                                     ${activeProgressHtml}
-                                    <div class="expiry-dots">${dotsHtml}</div>
+                                    ${dotsHtml}
                                 </div>
                             </div>
                             ${pauseHtmlAfter}
@@ -1514,29 +1475,56 @@
             }
         }
 
-        function calcExpiryDots(openDateStr, expDateStr) {
-            if (!expDateStr) return '<div class="dot dot-green"></div><div class="dot dot-green"></div><div class="dot dot-green"></div>';
+        // РАСЧЕТ И ОТРЕСОВКА КРУЖОЧКОВ PAO
+        function calcExpiryDots(openDateStr, paoMonths, productId) {
+            // Если PAO НЕ указан — возвращаем 3 серых КЛИКАБЕЛЬНЫХ кружочка
+            if (!paoMonths) {
+                return `<div class="expiry-dots clickable" onclick="openProductForPAO(${productId})" title="Указать PAO">
+                    <div class="dot dot-gray"></div>
+                    <div class="dot dot-gray"></div>
+                    <div class="dot dot-gray"></div>
+                </div>`;
+            }
+
+            // Если PAO указан — рассчитываем даты и показываем НЕКЛИКАБЕЛЬНЫЕ цветные кружочки
+            const openDate = openDateStr ? new Date(openDateStr) : new Date();
+            const expDate = new Date(openDate);
+            expDate.setMonth(expDate.getMonth() + Number(paoMonths));
 
             const now = new Date();
-            const expDate = new Date(expDateStr);
-            const openDate = openDateStr ? new Date(openDateStr) : new Date(now.getFullYear(), 0, 1);
-
             const totalDuration = expDate - openDate;
             const remainingDuration = expDate - now;
 
+            let dotsInner = '';
             if (totalDuration <= 0 || remainingDuration <= 0) {
-                return '<div class="dot dot-red"></div>';
-            }
-
-            const ratio = remainingDuration / totalDuration;
-
-            if (ratio > 0.3) {
-                return '<div class="dot dot-green"></div><div class="dot dot-green"></div><div class="dot dot-green"></div>';
-            } else if (ratio >= 0.1) {
-                return '<div class="dot dot-orange"></div><div class="dot dot-orange"></div>';
+                dotsInner = '<div class="dot dot-red"></div>';
             } else {
-                return '<div class="dot dot-red"></div>';
+                const ratio = remainingDuration / totalDuration;
+                if (ratio > 0.3) {
+                    dotsInner = '<div class="dot dot-green"></div><div class="dot dot-green"></div><div class="dot dot-green"></div>';
+                } else if (ratio >= 0.1) {
+                    dotsInner = '<div class="dot dot-orange"></div><div class="dot dot-orange"></div>';
+                } else {
+                    dotsInner = '<div class="dot dot-red"></div>';
+                }
             }
+
+            return `<div class="expiry-dots">${dotsInner}</div>`;
+        }
+
+        // Клик по серым кружочкам — сразу к добавлению PAO
+        function openProductForPAO(productId) {
+            openSettings();
+            editProduct(productId);
+            // Автоматически разворачиваем аккордеон сроков
+            document.getElementById('expiryAccordionContent').classList.add('open');
+            document.getElementById('expiryAccordionArrow').innerText = '▲';
+            
+            // Фокусируемся на пикере PAO
+            setTimeout(() => {
+                const paoEl = document.getElementById('paoPicker');
+                if (paoEl) paoEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         }
 
         function completeRoutine() {
@@ -1603,6 +1591,16 @@
             document.getElementById('settingsModal').style.display = 'none';
             resetForm();
             renderRoutine();
+        }
+
+        function openAppSettings() {
+            document.body.classList.add('modal-open');
+            document.getElementById('appSettingsModal').style.display = 'flex';
+        }
+
+        function closeAppSettings() {
+            document.body.classList.remove('modal-open');
+            document.getElementById('appSettingsModal').style.display = 'none';
         }
 
         function showForm(showNotice = false) {
@@ -1702,22 +1700,25 @@
             isScannerBusy = false;
         }
 
-        function togglePauseInputs() {
-            const checked = document.getElementById('pPauseToggle').checked;
-            document.getElementById('pauseOptionsContainer').style.display = checked ? 'block' : 'none';
-        }
-
         function applyPauseBefore(mins) {
-            selectedPauseBeforeVal = mins;
+            if (selectedPauseBeforeVal === mins) {
+                selectedPauseBeforeVal = null;
+            } else {
+                selectedPauseBeforeVal = mins;
+            }
             document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-mins') == mins);
+                btn.classList.toggle('active', btn.getAttribute('data-mins') == selectedPauseBeforeVal);
             });
         }
 
         function applyPauseAfter(mins) {
-            selectedPauseAfterVal = mins;
+            if (selectedPauseAfterVal === mins) {
+                selectedPauseAfterVal = null;
+            } else {
+                selectedPauseAfterVal = mins;
+            }
             document.querySelectorAll('#pauseAfterPicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-mins') == mins);
+                btn.classList.toggle('active', btn.getAttribute('data-mins') == selectedPauseAfterVal);
             });
         }
 
@@ -1736,7 +1737,7 @@
             }
         });
 
-        // ------------------ УПРАВЛЕНИЕ АККОРДЕОНАМИ (ФОРМА) ------------------
+        // ------------------ УПРАВЛЕНИЕ АККОРДЕОНАМИ ------------------
         function toggleAccordion(contentId, arrowId) {
             const content = document.getElementById(contentId);
             const arrow = document.getElementById(arrowId);
@@ -1751,7 +1752,7 @@
             }
         }
 
-        // ------------------ ЛОГИКА ЭКСПОРТА / ИМПОРТА / ПЕРЕНОСА / ОБНОВЛЕНИЯ ------------------
+        // ------------------ ЛОГИКА ЭКСПОРТА / ИМПОРТА / ПЕРЕНОСА ------------------
         function toBase64(str) {
             return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => 
                 String.fromCharCode('0x' + p1)
@@ -1932,12 +1933,9 @@
             }
 
             const freqType = document.getElementById('pFreqType').value;
-            const hasPause = document.getElementById('pPauseToggle').checked;
             const openDateEl = document.getElementById('pOpenDate');
             
-            // Если дата вскрытия не заполнена пользователем, подставляется сегодняшнее число
             const openDate = (openDateEl.value) ? openDateEl.value : getLocalTodayStr();
-            const expDate = document.getElementById('pExpDate').value;
             const editId = document.getElementById('editProductId').value;
 
             let days = [];
@@ -1954,12 +1952,10 @@
                 tods,
                 freqType,
                 days,
-                hasPause,
-                pauseBefore: hasPause ? selectedPauseBeforeVal : null,
-                pauseAfter: hasPause ? selectedPauseAfterVal : null,
+                pauseBefore: selectedPauseBeforeVal,
+                pauseAfter: selectedPauseAfterVal,
                 openDate,
-                paoMonths: selectedPAOMonths,
-                expDate
+                paoMonths: selectedPAOMonths
             };
 
             if (currentScannedBarcode && !editId) {
@@ -2008,10 +2004,8 @@
             });
             document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
 
-            // Если у редактируемого средства были паузы — автоматически раскрываем аккордеон пауз
-            document.getElementById('pPauseToggle').checked = Boolean(item.hasPause);
-            togglePauseInputs();
-            if (item.hasPause) {
+            // Если были указаны паузы — раскрываем аккордеон пауз
+            if (item.pauseBefore || item.pauseAfter) {
                 document.getElementById('pauseAccordionContent').classList.add('open');
                 document.getElementById('pauseAccordionArrow').innerText = '▲';
             }
@@ -2028,7 +2022,6 @@
                 openDateEl.value = getLocalTodayStr();
                 openDateEl.type = 'date';
             }
-            document.getElementById('pExpDate').value = item.expDate || '';
 
             if (item.paoMonths) {
                 applyPAO(item.paoMonths);
@@ -2037,8 +2030,8 @@
                 selectedPAOMonths = null;
             }
 
-            // Если были указаны спец. сроки — раскрываем аккордеон сроков
-            if (item.expDate || item.paoMonths) {
+            // Если был указан PAO — раскрываем аккордеон сроков
+            if (item.paoMonths) {
                 document.getElementById('expiryAccordionContent').classList.add('open');
                 document.getElementById('expiryAccordionArrow').innerText = '▲';
             }
@@ -2068,18 +2061,14 @@
             });
             document.getElementById('daysGroup').style.display = 'none';
 
-            document.getElementById('pPauseToggle').checked = false;
             document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(b => b.classList.remove('active'));
             
-            // Автоматическая подстановка сегодняшней даты в свернутый блок
             const openDateEl = document.getElementById('pOpenDate');
             openDateEl.value = getLocalTodayStr();
             openDateEl.type = 'date';
-            document.getElementById('pExpDate').value = '';
             document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
-            togglePauseInputs();
 
-            // Сворачиваем аккордеоны при сбросе
+            // Сворачиваем аккордеоны
             document.getElementById('pauseAccordionContent').classList.remove('open');
             document.getElementById('pauseAccordionArrow').innerText = '▼';
             document.getElementById('expiryAccordionContent').classList.remove('open');
@@ -2097,13 +2086,13 @@
 
             const htmlBuffer = [];
             products.forEach((p) => {
-                const dotsHtml = calcExpiryDots(p.openDate, p.expDate);
+                const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths, p.id);
                 htmlBuffer.push(`
                     <div class="swipe-wrapper">
                         <div class="swipe-background-delete">🗑️</div>
                         <div class="manage-item" data-id="${p.id}">
                             <div class="manage-info">
-                                <div class="expiry-dots">${dotsHtml}</div>
+                                ${dotsHtml}
                                 <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
                             </div>
                             <div class="manage-actions">
@@ -2209,6 +2198,11 @@
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
             document.getElementById('btnHeaderClose').addEventListener('click', closeSettings);
 
+            // Открытие настроек приложения (шестеренка ⚙️)
+            document.getElementById('btnOpenAppSettings').addEventListener('click', openAppSettings);
+            document.getElementById('btnCloseAppSettings').addEventListener('click', closeAppSettings);
+            document.getElementById('btnAppHeaderClose').addEventListener('click', closeAppSettings);
+
             document.getElementById('btnAddToggle').addEventListener('click', () => showForm(false));
             document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
             document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
@@ -2218,7 +2212,7 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Переключение аккордеонов формы
+            // Переключение аккордеонов
             document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => {
                 toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow');
             });
@@ -2292,8 +2286,6 @@
                 switchTOD('evening');
             });
 
-            document.getElementById('pPauseToggle').addEventListener('change', togglePauseInputs);
-
             document.getElementById('pauseBeforePicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) applyPauseBefore(btn.getAttribute('data-mins'));
@@ -2331,9 +2323,11 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('settingsModal');
-                    if (modal && modal.style.display === 'flex') {
-                        closeSettings();
-                    }
+                    if (modal && modal.style.display === 'flex') closeSettings();
+
+                    const appModal = document.getElementById('appSettingsModal');
+                    if (appModal && appModal.style.display === 'flex') closeAppSettings();
+
                     const alertModal = document.getElementById('customAlertModal');
                     if (alertModal && alertModal.style.display === 'flex') {
                         alertModal.style.display = 'none';
