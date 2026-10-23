@@ -182,7 +182,7 @@
             transition: fill 0.3s ease;
         }
 
-        /* СТИЛЬНАЯ ВОЗДУШНАЯ КАРТОЧКА И КНОПКА КАЛЕНДАРЯ */
+        /* ВОЗДУШНАЯ КАРТОЧКА И КНОПКА КАЛЕНДАРЯ */
         .streak-card {
             background: var(--surface);
             border-radius: 24px;
@@ -306,7 +306,6 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-            margin-bottom: 28px;
         }
 
         .routine-item {
@@ -316,7 +315,7 @@
             padding: 16px 18px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px; /* Добавлено больше воздуха */
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.015);
             backdrop-filter: blur(8px);
         }
@@ -371,30 +370,65 @@
             flex-shrink: 0;
         }
 
+        /* ЧИП СТАТУСА АКТИВОВ (БЕЗ ИКОНКИ ДНК) */
         .active-progress-chip {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            font-family: 'Montserrat', sans-serif;
             font-size: 10px;
-            font-weight: 600;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: lowercase;
             color: var(--accent-main);
             background: var(--accent-light);
-            padding: 4px 8px;
-            border-radius: 10px;
+            padding: 5px 10px;
+            border-radius: 12px;
             white-space: nowrap;
         }
 
+        /* МЯГКИЙ КРУЖОК-ЧЕКБОКС ДЛЯ АКТИВОВ */
+        .active-toggle-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-main);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: transparent;
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-left: 2px;
+        }
+
+        .active-toggle-circle.completed {
+            background: var(--accent-main);
+            color: #FFFFFF;
+            border-color: var(--accent-main);
+            box-shadow: 0 2px 8px rgba(196, 154, 130, 0.25);
+        }
+
+        /* ПАУЗЫ (БЕЗ ИКОНОК И С ДОПОЛНИТЕЛЬНЫМ ВОЗДУХОМ) */
         .pause-inline-chip {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            font-size: 11px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
             font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: lowercase;
             color: var(--accent-main);
             background: var(--accent-light);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 10px;
             align-self: flex-start;
+            margin-top: 2px;
+            margin-bottom: 2px;
         }
 
         .expiry-dots {
@@ -426,30 +460,6 @@
         .dot-orange { background-color: #E67E22; }
         .dot-red { background-color: #E74C3C; }
         .dot-gray { background-color: var(--icon-inactive); }
-
-        /* ИЗЯЩНАЯ ВОЗДУШНАЯ КНОПКА С ШРИФТОМ БРЕНДА */
-        .btn-action {
-            width: 100%;
-            padding: 16px 20px;
-            border-radius: 20px;
-            border: 1px solid var(--accent-main);
-            background: transparent;
-            color: var(--text-primary);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.18em;
-            text-transform: lowercase;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            transition: all 0.25s ease;
-        }
-
-        .btn-action:hover, .btn-action:active {
-            background: var(--accent-light);
-            border-color: var(--accent-main);
-            transform: translateY(-1px);
-        }
 
         /* MODALS */
         .modal-overlay {
@@ -682,6 +692,29 @@
             background: var(--bg-main);
         }
 
+        .btn-action {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-main);
+            background: transparent;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: lowercase;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            transition: all 0.25s ease;
+        }
+
+        .btn-action:hover, .btn-action:active {
+            background: var(--accent-light);
+            border-color: var(--accent-main);
+            transform: translateY(-1px);
+        }
+
         .btn-add-toggle {
             width: 100%;
             padding: 14px;
@@ -867,8 +900,6 @@
         <div id="noticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;"></div>
 
         <div class="routine-list" id="routineContainer"></div>
-
-        <button type="button" class="btn-action brand-font" id="btnCompleteRoutine"></button>
     </div>
 
     <!-- Модальное окно "Моя коллекция" -->
@@ -1056,7 +1087,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.66.0';
+        const APP_VERSION = '2.67.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1192,10 +1223,8 @@
         function isArchiveMode() {
             const selected = localStorage.getItem('cb_selected_date');
             const logicalToday = getLogicalTodayStr();
-            if (!selected) {
-                return localStorage.getItem('cb_evening_completed') === logicalToday;
-            }
-            return selected < logicalToday || (selected === logicalToday && localStorage.getItem('cb_evening_completed') === logicalToday);
+            if (!selected) return false;
+            return selected < logicalToday;
         }
 
         function renderCurrentDateChip() {
@@ -1205,9 +1234,9 @@
             
             let chipText = formatted;
             if (isFuturePlan()) {
-                chipText += " (План)";
+                chipText += " (план)";
             } else if (isArchiveMode()) {
-                chipText += " (Архив)";
+                chipText += " (архив)";
             }
             document.getElementById('dateChipText').innerText = chipText;
 
@@ -1348,10 +1377,31 @@
             }
         }
 
+        /* ТЕКСТ СТАТУСА АКТИВОВ (БЕЗ ИКОНКИ 🧬) */
         function getActiveProgressHtml(item) {
             if (item.type !== 'Активы') return '';
             const { week, step, totalSteps } = getActiveProgressDetails(item);
-            return `<div class="active-progress-chip">🧬 Нед ${week}, шаг ${step}/${totalSteps}</div>`;
+            return `<div class="active-progress-chip">нед ${week}, шаг ${step}/${totalSteps}</div>`;
+        }
+
+        function toggleActiveProduct(productId) {
+            const routineDateStr = getLocalTodayStr(getRoutineDateObj());
+            
+            if (!productProgress[productId]) {
+                productProgress[productId] = { dates: [] };
+            }
+
+            const dates = productProgress[productId].dates;
+            const index = dates.indexOf(routineDateStr);
+
+            if (index > -1) {
+                dates.splice(index, 1);
+            } else {
+                dates.push(routineDateStr);
+            }
+
+            localStorage.setItem('cb_product_progress', JSON.stringify(productProgress));
+            renderRoutine();
         }
 
         function getActiveProductsForCurrentView() {
@@ -1380,157 +1430,74 @@
             const inArchive = isArchiveMode();
             const banner = document.getElementById('noticeBanner');
             const container = document.getElementById('routineContainer');
-            const btnAction = document.getElementById('btnCompleteRoutine');
 
             const formatIndex = (idx) => String(idx + 1).padStart(2, '0') + '.';
+            const routineDateStr = getLocalTodayStr(getRoutineDateObj());
 
             if (isFuture) {
                 banner.style.display = 'block';
-                banner.innerText = "Это план на выбранный день!";
-
-                const activeProducts = getActiveProductsForCurrentView();
-                if (activeProducts.length === 0) {
-                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">В этот день отдых</div>`;
-                } else {
-                    const htmlBuffer = [];
-                    activeProducts.forEach((item, index) => {
-                        const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
-                        let pauseHtmlBefore = '';
-                        let pauseHtmlAfter = '';
-                        const activeProgressHtml = getActiveProgressHtml(item);
-
-                        if (item.pauseBefore) {
-                            pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
-                        }
-                        if (item.pauseAfter) {
-                            pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
-                        }
-
-                        htmlBuffer.push(`
-                            <div class="routine-item">
-                                ${pauseHtmlBefore}
-                                <div class="routine-item-main">
-                                    <div class="item-left">
-                                        <div class="item-num">${formatIndex(index)}</div>
-                                        <div class="item-details">
-                                            <span class="item-name">${escapeHtml(item.name)}</span>
-                                            <span class="item-tag">${escapeHtml(item.type)}</span>
-                                        </div>
-                                    </div>
-                                    <div class="item-right-group">
-                                        ${activeProgressHtml}
-                                        ${dotsHtml}
-                                    </div>
-                                </div>
-                                ${pauseHtmlAfter}
-                            </div>
-                        `);
-                    });
-                    container.innerHTML = htmlBuffer.join('');
-                }
-
-                btnAction.innerText = 'вернуться к текущему дню';
-                btnAction.style.opacity = '1';
-                btnAction.style.pointerEvents = 'auto';
-                return;
-            }
-
-            if (inArchive && !isFuture) {
+                banner.innerText = "Это план на выбранный день";
+            } else if (inArchive) {
                 banner.style.display = 'block';
                 const routineDate = getRoutineDateObj();
                 const dateStr = routineDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
-                
-                if (routineDate.toDateString() === new Date().toDateString()) {
-                    banner.innerHTML = "Это все на сегодня!<br>До встречи завтра!";
-                } else {
-                    banner.innerText = `Архив ухода за ${dateStr}`;
-                }
-
-                const activeProducts = getActiveProductsForCurrentView();
-                if (activeProducts.length === 0) {
-                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">В этот день был отдых</div>`;
-                } else {
-                    const htmlBuffer = [];
-                    activeProducts.forEach((item, index) => {
-                        const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
-                        const activeProgressHtml = getActiveProgressHtml(item);
-                        htmlBuffer.push(`
-                            <div class="routine-item" style="opacity: 0.85;">
-                                <div class="routine-item-main">
-                                    <div class="item-left">
-                                        <div class="item-num" style="color: var(--text-secondary);">✓</div>
-                                        <div class="item-details">
-                                            <span class="item-name">${escapeHtml(item.name)}</span>
-                                            <span class="item-tag">${escapeHtml(item.type)}</span>
-                                        </div>
-                                    </div>
-                                    <div class="item-right-group">
-                                        ${activeProgressHtml}
-                                        ${dotsHtml}
-                                    </div>
-                                </div>
-                            </div>
-                        `);
-                    });
-                    container.innerHTML = htmlBuffer.join('');
-                }
-
-                btnAction.innerText = 'день завершен (архив)';
-                btnAction.style.opacity = '0.6';
-                btnAction.style.pointerEvents = 'none';
-                return;
+                banner.innerText = `Архив ухода за ${dateStr}`;
             } else {
-                btnAction.style.opacity = '1';
-                btnAction.style.pointerEvents = 'auto';
+                banner.style.display = 'none';
             }
 
             const activeProducts = getActiveProductsForCurrentView();
 
             if (activeProducts.length === 0) {
-                banner.style.display = 'none';
-                container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">Отдых</div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 32px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">Отдых</div>`;
+                return;
+            }
 
-                btnAction.innerText = 'добавить средство в мою коллекцию';
-            } else {
-                banner.style.display = 'none';
-                btnAction.innerText = 'завершить уход';
+            const htmlBuffer = [];
+            activeProducts.forEach((item, index) => {
+                const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
+                let pauseHtmlBefore = '';
+                let pauseHtmlAfter = '';
+                const activeProgressHtml = getActiveProgressHtml(item);
 
-                const htmlBuffer = [];
-                activeProducts.forEach((item, index) => {
-                    const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
-                    let pauseHtmlBefore = '';
-                    let pauseHtmlAfter = '';
-                    const activeProgressHtml = getActiveProgressHtml(item);
+                /* ТЕКСТ ПАУЗ (БЕЗ ИКОНКИ ⏱️) */
+                if (item.pauseBefore) {
+                    pauseHtmlBefore = `<div class="pause-inline-chip">пауза до: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
+                }
+                if (item.pauseAfter) {
+                    pauseHtmlAfter = `<div class="pause-inline-chip">пауза после: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
+                }
 
-                    if (item.pauseBefore) {
-                        pauseHtmlBefore = `<div class="pause-inline-chip">⏱️ Пауза ДО: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
-                    }
-                    if (item.pauseAfter) {
-                        pauseHtmlAfter = `<div class="pause-inline-chip">⏱️ Пауза ПОСЛЕ: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
-                    }
+                let toggleCircleHtml = '';
+                if (item.type === 'Активы') {
+                    const isCompleted = productProgress[item.id] && Array.isArray(productProgress[item.id].dates) && productProgress[item.id].dates.includes(routineDateStr);
+                    const completedClass = isCompleted ? 'completed' : '';
+                    const checkMark = isCompleted ? '✓' : '';
+                    toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" onclick="toggleActiveProduct(${item.id})" title="Отметить нанесение">${checkMark}</div>`;
+                }
 
-                    htmlBuffer.push(`
-                        <div class="routine-item">
-                            ${pauseHtmlBefore}
-                            <div class="routine-item-main">
-                                <div class="item-left">
-                                    <div class="item-num">${formatIndex(index)}</div>
-                                    <div class="item-details">
-                                        <span class="item-name">${escapeHtml(item.name)}</span>
-                                        <span class="item-tag">${escapeHtml(item.type)}</span>
-                                    </div>
-                                </div>
-                                <div class="item-right-group">
-                                    ${activeProgressHtml}
-                                    ${dotsHtml}
+                htmlBuffer.push(`
+                    <div class="routine-item">
+                        ${pauseHtmlBefore}
+                        <div class="routine-item-main">
+                            <div class="item-left">
+                                <div class="item-num">${formatIndex(index)}</div>
+                                <div class="item-details">
+                                    <span class="item-name">${escapeHtml(item.name)}</span>
+                                    <span class="item-tag">${escapeHtml(item.type)}</span>
                                 </div>
                             </div>
-                            ${pauseHtmlAfter}
+                            <div class="item-right-group">
+                                ${activeProgressHtml}
+                                ${dotsHtml}
+                                ${toggleCircleHtml}
+                            </div>
                         </div>
-                    `);
-                });
-                container.innerHTML = htmlBuffer.join('');
-            }
+                        ${pauseHtmlAfter}
+                    </div>
+                `);
+            });
+            container.innerHTML = htmlBuffer.join('');
         }
 
         function calcExpiryDots(openDateStr, paoMonths, productId) {
@@ -1577,52 +1544,6 @@
                 const paoEl = document.getElementById('paoPicker');
                 if (paoEl) paoEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 100);
-        }
-
-        function completeRoutine() {
-            const routineDate = getRoutineDateObj();
-            const routineDateStr = getLocalTodayStr(routineDate);
-            const todaysActiveProducts = getActiveProductsForCurrentView().filter(p => p.type === 'Активы');
-
-            todaysActiveProducts.forEach(p => {
-                if (!productProgress[p.id]) {
-                    productProgress[p.id] = { dates: [] };
-                }
-                if (!productProgress[p.id].dates.includes(routineDateStr)) {
-                    productProgress[p.id].dates.push(routineDateStr);
-                }
-            });
-            localStorage.setItem('cb_product_progress', JSON.stringify(productProgress));
-
-            if (!completedLog[routineDateStr]) {
-                completedLog[routineDateStr] = {};
-            }
-            completedLog[routineDateStr][currentTOD] = true;
-            localStorage.setItem('cb_completed_log', JSON.stringify(completedLog));
-
-            if (currentTOD === 'morning') {
-                switchTOD('evening');
-            } else {
-                localStorage.setItem('cb_evening_completed', getLogicalTodayStr());
-                renderRoutine();
-            }
-        }
-
-        function handleActionButton() {
-            const btnAction = document.getElementById('btnCompleteRoutine');
-            const text = btnAction.innerText.trim();
-
-            if (isFuturePlan()) {
-                localStorage.removeItem('cb_selected_date');
-                switchTOD(getInitialTOD());
-                return;
-            }
-
-            if (text.toLowerCase().includes('добавить средство')) {
-                openSettings();
-            } else {
-                completeRoutine();
-            }
         }
 
         function openSettings() {
@@ -2301,8 +2222,6 @@
                     document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
                 }
             });
-
-            document.getElementById('btnCompleteRoutine').addEventListener('click', handleActionButton);
 
             document.getElementById('customAlertModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('customAlertModal')) {
