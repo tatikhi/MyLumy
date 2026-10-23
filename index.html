@@ -134,17 +134,17 @@
         .brand-font {
             font-family: 'Montserrat', sans-serif;
             font-weight: 500;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.15em;
             text-transform: lowercase;
             font-style: normal;
         }
 
-        /* Абсолютно единый стиль для всех ключевых надписей */
+        /* Единый увеличенный стиль шрифта под размер даты календаря (12px) */
         .uniform-brand-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.18em;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
             text-transform: lowercase;
             color: var(--text-primary);
             font-style: normal;
@@ -195,7 +195,7 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.15em;
             text-transform: lowercase;
             cursor: pointer;
             position: relative;
@@ -253,11 +253,12 @@
             padding: 5px;
             margin-bottom: 24px;
             border: 1px solid var(--border-color);
+            gap: 4px;
         }
 
         .tod-btn {
             flex: 1;
-            padding: 12px 8px;
+            padding: 12px 10px;
             text-align: center;
             border-radius: 16px;
             cursor: pointer;
@@ -266,30 +267,23 @@
             background: transparent;
             transition: all 0.25s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 4px;
+            gap: 2px;
         }
 
         .tod-btn.brand-font {
-            font-size: 11px;
-            letter-spacing: 0.18em;
-            font-weight: 500;
-            line-height: 1.2;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         .tod-btn.active {
             background: var(--surface);
             color: var(--text-primary);
             box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-        }
-
-        @media (min-width: 440px) {
-            .tod-btn {
-                flex-wrap: nowrap;
-                white-space: nowrap;
-            }
         }
 
         .routine-list {
@@ -327,17 +321,16 @@
             transform: translateY(-1px);
         }
 
-        /* ИДЕАЛЬНОЕ ЦЕНТРИРОВАНИЕ ТЕКСТА БЕЗ УЧЕТА ИКОНКИ ЧЕРЕЗ СИММЕТРИЧНУЮ СЕТКУ */
-        .btn-settings-layout {
-            display: grid;
-            grid-template-columns: 18px 1fr 18px;
-            gap: 8px;
+        /* КОНТЕЙНЕР ДЛЯ ИКОНКИ И СЛОВА РЯДОМ, СОХРАНЯЮЩИЙ ИДЕАЛЬНЫЙ ЦЕНТР ТЕКСТА */
+        .btn-settings-inner {
+            display: inline-flex;
             align-items: center;
-            padding: 14px 20px;
+            gap: 8px;
+            position: relative;
+            padding-right: 26px;
         }
 
-        .btn-settings-layout svg {
-            justify-self: start;
+        .btn-settings-inner svg {
             width: 18px;
             height: 18px;
             stroke: var(--text-primary);
@@ -345,16 +338,8 @@
             stroke-width: 1.8;
             stroke-linecap: round;
             stroke-linejoin: round;
+            flex-shrink: 0;
             transition: stroke 0.3s ease;
-        }
-
-        .btn-settings-layout .btn-text {
-            justify-self: center;
-            text-align: center;
-        }
-
-        .btn-settings-layout .btn-spacer {
-            width: 18px;
         }
 
         .routine-item {
@@ -494,9 +479,10 @@
             border-radius: 50%;
         }
 
-        .dot-green { background-color: #2ECC71; }
-        .dot-orange { background-color: #E67E22; }
-        .dot-red { background-color: #E74C3C; }
+        /* МАТОВЫЕ, ПРИГЛУШЕННЫЕ И СПОКОЙНЫЕ ОТТЕНКИ PAO (В СТИЛЕ SPA / NORDIC) */
+        .dot-green { background-color: #8CA38F; }
+        .dot-orange { background-color: #C89B7B; }
+        .dot-red { background-color: #BA7673; }
         .dot-gray { background-color: var(--icon-inactive); }
 
         /* MODALS С FLEX-СТРУКТУРОЙ И ФИКСИРОВАННЫМ НИЖНИМ ФУТЕРОМ */
@@ -854,9 +840,9 @@
             background: var(--surface);
             color: var(--text-primary);
             font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
             text-transform: lowercase;
             cursor: pointer;
             margin-top: 8px;
@@ -877,7 +863,7 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.15em;
             text-transform: lowercase;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
@@ -1092,9 +1078,9 @@
             background: var(--bg-main);
             color: var(--text-primary);
             font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
             text-transform: lowercase;
             cursor: pointer;
             transition: background-color 0.2s ease;
@@ -1207,16 +1193,17 @@
 
         <div class="routine-list" id="routineContainer"></div>
 
-        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ С ТОЧНЫМ ЦЕНТРИРОВАНИЕМ ТЕКСТА -->
+        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ С РЯДОМ СТОЯЩЕЙ ИКОНКОЙ И ТОЧНЫМ ЦЕНТРОМ ТЕКСТА -->
         <div class="main-card-actions">
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">моя коллекция</button>
-            <button type="button" class="btn-main-action uniform-brand-title btn-settings-layout" id="btnOpenAppSettings">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-                <span class="btn-text">мои настройки</span>
-                <span class="btn-spacer"></span>
+            <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
+                <span class="btn-settings-inner">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    мои настройки
+                </span>
             </button>
         </div>
     </div>
@@ -1377,7 +1364,7 @@
                 <div class="modal-title-wrapper">
                     <svg class="title-settings-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: var(--text-primary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;">
                         <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
                     <div class="modal-title uniform-brand-title" style="font-size: 15px; font-weight: 600;">настройки</div>
                 </div>
@@ -1387,7 +1374,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.7.6</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.1</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1436,7 +1423,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.7.6';
+        const APP_VERSION = '1.2.1';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
