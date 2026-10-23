@@ -452,7 +452,7 @@
             padding: 4px;
             border-radius: 12px;
             margin-left: 2px;
-            pointer-events: none; /* Запрет случайных кликов */
+            pointer-events: none;
         }
 
         .dot {
@@ -496,8 +496,7 @@
             max-width: 460px;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 28px 24px;
-            padding-bottom: calc(28px + env(safe-area-inset-bottom));
+            padding: 28px 24px 16px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
             overscroll-behavior: contain;
@@ -771,7 +770,7 @@
             padding: 14px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
-            background: transparent;
+            background: var(--surface);
             color: var(--text-primary);
             font-family: 'Montserrat', sans-serif;
             font-size: 11px;
@@ -785,6 +784,23 @@
 
         .btn-secondary:active {
             background: var(--bg-main);
+        }
+
+        /* ФИКСИРОВАННАЯ КНОПКА "ЗАКРЫТЬ" ВНИЗУ */
+        .sticky-close-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--surface);
+            padding-top: 10px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            margin-top: 12px;
+            border-top: 1px solid var(--border-color);
+            z-index: 10;
+        }
+
+        .sticky-close-footer .btn-secondary {
+            margin-top: 0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
         }
 
         .btn-action {
@@ -853,36 +869,14 @@
             background: var(--accent-light);
         }
 
-        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ПОСТОЯННОЙ И ЧЕТКОЙ ПЛАШКОЙ СКРОЛЛА */
+        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ДОПОЛНИТЕЛЬНЫМ ЗАПАСОМ СНИЗУ */
         .product-manage-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 18px;
-            max-height: 340px;
-            overflow-y: scroll;
-            padding-right: 6px;
-            padding-bottom: 70px;
-            overscroll-behavior: contain;
-            touch-action: pan-y;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scrollbar-color: var(--scroll-thumb) var(--scroll-track);
-        }
-
-        .product-manage-list::-webkit-scrollbar {
-            width: 6px;
-            display: block !important;
-        }
-
-        .product-manage-list::-webkit-scrollbar-track {
-            background: var(--scroll-track);
-            border-radius: 10px;
-        }
-
-        .product-manage-list::-webkit-scrollbar-thumb {
-            background: var(--scroll-thumb);
-            border-radius: 10px;
+            margin-bottom: 12px;
+            padding-right: 2px;
+            padding-bottom: 100px; /* Запас чтобы элементы последней категории не перекрывались */
         }
 
         /* ГАРМОШКА КАТЕГОРИЙ В МОЕЙ КОЛЛЕКЦИИ */
@@ -950,10 +944,10 @@
         }
 
         .category-items-container.open {
-            max-height: 800px;
+            max-height: 1000px;
             opacity: 1;
             padding-top: 4px;
-            padding-bottom: 4px;
+            padding-bottom: 8px;
         }
 
         .product-wrapper-block {
@@ -1308,7 +1302,10 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-secondary brand-font" id="btnCloseSettings">закрыть</button>
+            <!-- ФИКСИРОВАННАЯ КНОПКА ЗАКРЫТЬ ВНИЗУ ОCНОВНОГО ЭКРАНА КОЛЛЕКЦИИ -->
+            <div class="sticky-close-footer" id="mainModalFooter">
+                <button type="button" class="btn-secondary brand-font" id="btnCloseSettings">закрыть</button>
+            </div>
         </div>
     </div>
 
@@ -1328,8 +1325,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.6.0</span>
-                    <!-- ГАРАНТИРОВАННАЯ ПРИВЯЗКА КНОПКИ ОБНОВЛЕНИЯ ЧЕРЕЗ ONCLICK -->
+                    <span class="version-text brand-font">версия v1.6.1</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                 </div>
             </div>
@@ -1373,7 +1369,7 @@
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.6.0';
+        const APP_VERSION = '1.6.1';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1887,22 +1883,27 @@
             closeModalElement(modal);
         }
 
-        /* ПЛАВНЫЙ ПОКАЗ ФОРМЫ ЗАПОЛНЕНИЯ СРЕДСТВА */
+        /* ПЛАВНЫЙ ПОКАЗ ФОРМЫ С ВЫСОКИМ ПОЗИЦИОНИРОВАНИЕМ ПОЛЯ НАЗВАНИЯ */
         function showForm(showNotice = false) {
             stopBarcodeScanner();
             closeAllPopovers();
             const container = document.getElementById('productFormContainer');
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
+            document.getElementById('mainModalFooter').style.display = 'none'; /* Скрываем нижнюю кнопку закрыть при открытой форме */
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
 
             container.classList.add('open');
 
+            /* Автоматический плавный скролл формы повыше к центру экрана */
             setTimeout(() => {
+                const titleEl = document.getElementById('formModalTitle');
+                if (titleEl) {
+                    titleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
                 const pNameInput = document.getElementById('pName');
                 if (pNameInput) {
                     pNameInput.focus();
-                    pNameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }, 180);
         }
@@ -1914,6 +1915,7 @@
             setTimeout(() => {
                 document.getElementById('btnAddToggle').style.display = 'block';
                 document.getElementById('btnScanBarcode').style.display = 'block';
+                document.getElementById('mainModalFooter').style.display = 'block';
                 document.getElementById('scannerNoticeBanner').style.display = 'none';
                 closeAutocomplete();
                 resetForm();
@@ -1936,6 +1938,11 @@
             } else {
                 container.classList.add('open');
                 headerBtn.classList.add('open');
+
+                /* Мягкая докрутка при раскрытии последней категории, чтобы всё помещалось */
+                setTimeout(() => {
+                    headerBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 150);
             }
         }
 
