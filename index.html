@@ -1325,7 +1325,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.6.1</span>
+                    <span class="version-text brand-font">версия v1.6.2</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                 </div>
             </div>
@@ -1369,9 +1369,33 @@
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.6.1';
-        try {
-            const savedVersion = localStorage.getItem('cb_app_version');
+        const APP_VERSION = '1.6.2';
+        const savedVersion = localStorage.getItem('cb_app_version');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Проверяем, произошла ли сейчас принудительная перезагрузка через кнопку обновления
+            const urlParams = new URLSearchParams(window.location.search);
+            const isForceUpdate = urlParams.has('v_force');
+
+            if (isForceUpdate) {
+                const toast = document.getElementById('toastNotification');
+                
+                if (savedVersion !== APP_VERSION) {
+                    toast.innerText = `обновление успешно завершено. текущая версия v${APP_VERSION}`;
+                } else {
+                    toast.innerText = `у вас установлена актуальная версия v${APP_VERSION}`;
+                }
+                
+                toast.classList.add('visible');
+                setTimeout(() => {
+                    toast.classList.remove('visible');
+                }, 3000);
+
+                // Очищаем адресную строку от технического параметра, чтобы всё было красиво
+                history.replaceState(null, null, window.location.pathname + window.location.hash);
+            }
+
+            // 2. Только теперь фиксируем новую версию в памяти
             if (savedVersion !== APP_VERSION) {
                 localStorage.setItem('cb_app_version', APP_VERSION);
                 localStorage.removeItem('cb_view_date_offset');
@@ -1379,9 +1403,9 @@
                 localStorage.removeItem('cb_tomorrow_rest');
                 localStorage.removeItem('cb_viewing_tomorrow');
             }
-        } catch (e) {
-            console.error('Version check error:', e);
-        }
+            
+            checkUrlImport();
+        });
 
         let installDate = localStorage.getItem('cb_install_date');
         if (!installDate) {
@@ -1890,7 +1914,7 @@
             const container = document.getElementById('productFormContainer');
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
-            document.getElementById('mainModalFooter').style.display = 'none'; /* Скрываем нижнюю кнопку закрыть при открытой форме */
+            document.getElementById('mainModalFooter').style.display = 'none'; 
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
 
             container.classList.add('open');
@@ -1939,7 +1963,7 @@
                 container.classList.add('open');
                 headerBtn.classList.add('open');
 
-                /* Мягкая докрутка при раскрытии последней категории, чтобы всё помещалось */
+                /* Мягкая докрутка при раскрытии категории, чтобы всё помещалось */
                 setTimeout(() => {
                     headerBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }, 150);
@@ -2312,36 +2336,24 @@
             document.body.removeChild(ta);
         }
 
-        /* ИСПРАВЛЕННАЯ ФУНКЦИЯ ПРОВЕРКИ ОБНОВЛЕНИЯ */
+        /* 
+           ИСПРАВЛЕННАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ:
+           1. Сразу показывает плашку "Поиск обновлений...".
+           2. Моментально перезагружает страницу с параметром ?v_force
+           (Проверка и сравнение версий теперь произойдут ПОСЛЕ перезагрузки при старте DOM).
+        */
         function forceAppUpdate() {
-            const savedVersion = localStorage.getItem('cb_app_version');
             const toast = document.getElementById('toastNotification');
-
-            if (savedVersion !== APP_VERSION) {
-                toast.innerText = 'обновление успешно установлено';
-            } else {
-                toast.innerText = `у вас актуальная версия v${APP_VERSION}`;
-            }
-
+            toast.innerText = 'поиск обновлений...';
             toast.classList.add('visible');
-            localStorage.setItem('cb_app_version', APP_VERSION);
-
+            
             setTimeout(() => {
-                toast.classList.remove('visible');
-                closeAppSettings();
-
-                setTimeout(() => {
-                    const cleanUrl = window.location.origin + window.location.pathname + '?v_force=' + Date.now();
-                    window.location.href = cleanUrl;
-                }, 300);
-            }, 1800);
+                const cleanUrl = window.location.origin + window.location.pathname + '?v_force=' + Date.now() + window.location.hash;
+                window.location.href = cleanUrl;
+            }, 300);
         }
 
         function checkUrlImport() {
-            if (window.location.search && (window.location.search.includes('reload=') || window.location.search.includes('v_force='))) {
-                history.replaceState(null, null, window.location.pathname + window.location.hash);
-            }
-
             if (window.location.hash && window.location.hash.startsWith('#import=')) {
                 const rawHash = window.location.hash.substring(8);
                 if (!rawHash) return;
@@ -2789,7 +2801,6 @@
             });
 
             switchTOD(currentTOD);
-            checkUrlImport();
         });
     </script>
 </body>
