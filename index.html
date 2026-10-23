@@ -465,21 +465,27 @@
         .dot-red { background-color: #E74C3C; }
         .dot-gray { background-color: var(--icon-inactive); }
 
-        /* MODALS */
+        /* MODALSС ПЛАВНОЙ АНИМАЦИЕЙ */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0);
+            backdrop-filter: blur(0px);
             display: none;
             justify-content: center;
             align-items: center;
             padding: 16px;
             z-index: 1000;
             overscroll-behavior: contain;
+            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        .modal-overlay.active-modal {
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
         }
 
         .modal-card {
@@ -497,6 +503,14 @@
             -webkit-overflow-scrolling: touch;
             touch-action: pan-y;
             position: relative;
+            transform: translateY(20px) scale(0.97);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+
+        .modal-overlay.active-modal .modal-card {
+            transform: translateY(0) scale(1);
+            opacity: 1;
         }
 
         .modal-header-row {
@@ -586,6 +600,7 @@
 
         .form-group {
             margin-bottom: 14px;
+            position: relative;
         }
 
         .form-group:last-child {
@@ -610,6 +625,53 @@
             color: var(--text-primary);
             font-size: 13px;
             outline: none;
+        }
+
+        /* УМНЫЙ ВЫПАДАЮЩИЙ СПИСОК АВТОКОМПЛИТА */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            margin-top: 4px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .autocomplete-dropdown.open {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.15s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:active, .autocomplete-item:hover {
+            background: var(--accent-light);
+        }
+
+        .autocomplete-tag {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
         .picker-group {
@@ -1026,7 +1088,9 @@
                     
                     <div class="form-group">
                         <label for="pName">Название</label>
-                        <input type="text" id="pName" class="input-control" placeholder="">
+                        <input type="text" id="pName" class="input-control" placeholder="" autocomplete="off">
+                        <!-- ВЫПАДАЮЩИЙ СПИСОК ПОДСКАЗОК (АВТОКОМПЛИТ A+B) -->
+                        <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                     </div>
 
                     <div class="form-group">
@@ -1148,10 +1212,9 @@
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
             </div>
 
-            <!-- ОТДЕЛЬНЫЙ БЛОК С ВЕРСИЕЙ И КНОПКОЙ "ПРОВЕРИТЬ ОБНОВЛЕНИЕ" -->
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.1.0</span>
+                    <span class="version-text brand-font">версия v1.2.0</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate">проверить обновление</button>
                 </div>
             </div>
@@ -1192,7 +1255,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '1.1.0';
+        const APP_VERSION = '1.2.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1308,6 +1371,19 @@
         
         let html5QrCodeScanner = null;
         let isScannerBusy = false;
+
+        /* БАЗОВЫЙ СПРАВОЧНИК ПОПУЛЯРНЫХ СРЕДСТВ ДЛЯ БЫСТРОГО АВТОКОМПЛИТА (А) */
+        const localProductDictionary = [
+            "Пенка для умывания", "Гель для умывания", "Гидрофильное масло", 
+            "Мицеллярная вода", "Энзимная пудра", "Тонер увлажняющий", 
+            "Тоник успокаивающий", "Кислотный тоник", "Эссенция с муцином", 
+            "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", 
+            "Сыворотка с витамином C", "Сыворотка с ретинолом", "Крем для век", 
+            "Увлажняющий крем", "Питательный крем", "Восстанавливающий бальзам", 
+            "Солнцезащитный крем SPF 50", "Маска увлажняющая", "Глиняная маска"
+        ];
+
+        let autocompleteDebounceTimer = null;
 
         function getRoutineDateObj() {
             const selectedDateStr = localStorage.getItem('cb_selected_date');
@@ -1650,12 +1726,29 @@
             }, 100);
         }
 
+        /* ПЛАВНОЕ ОТКРЫТИЕ И ЗАКРЫТИЕ МОДАЛЬНЫХ ОКНО */
+        function openModalElement(modalEl) {
+            modalEl.style.display = 'flex';
+            document.body.classList.add('modal-open');
+            requestAnimationFrame(() => {
+                modalEl.classList.add('active-modal');
+            });
+        }
+
+        function closeModalElement(modalEl, onClosed) {
+            modalEl.classList.remove('active-modal');
+            setTimeout(() => {
+                modalEl.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                if (onClosed) onClosed();
+            }, 300);
+        }
+
         function openSettings() {
             renderManageList();
             hideForm();
-            document.body.classList.add('modal-open');
             const modal = document.getElementById('settingsModal');
-            modal.style.display = 'flex';
+            openModalElement(modal);
             
             const firstFocusable = modal.querySelector('button, input, select');
             if (firstFocusable) firstFocusable.focus();
@@ -1664,20 +1757,22 @@
         function closeSettings() {
             stopBarcodeScanner();
             closeAllPopovers();
-            document.body.classList.remove('modal-open');
-            document.getElementById('settingsModal').style.display = 'none';
-            resetForm();
-            renderRoutine();
+            closeAutocomplete();
+            const modal = document.getElementById('settingsModal');
+            closeModalElement(modal, () => {
+                resetForm();
+                renderRoutine();
+            });
         }
 
         function openAppSettings() {
-            document.body.classList.add('modal-open');
-            document.getElementById('appSettingsModal').style.display = 'flex';
+            const modal = document.getElementById('appSettingsModal');
+            openModalElement(modal);
         }
 
         function closeAppSettings() {
-            document.body.classList.remove('modal-open');
-            document.getElementById('appSettingsModal').style.display = 'none';
+            const modal = document.getElementById('appSettingsModal');
+            closeModalElement(modal);
         }
 
         function showForm(showNotice = false) {
@@ -1702,6 +1797,7 @@
             document.getElementById('btnAddToggle').style.display = 'block';
             document.getElementById('btnScanBarcode').style.display = 'block';
             document.getElementById('scannerNoticeBanner').style.display = 'none';
+            closeAutocomplete();
             resetForm();
         }
 
@@ -1728,6 +1824,94 @@
             document.querySelectorAll('.popover-actions-menu').forEach(p => p.classList.remove('open'));
             document.querySelectorAll('.manage-item').forEach(i => i.classList.remove('active-item'));
             activePopoverProductId = null;
+        }
+
+        /* ЛОГИКА АВТОКОМПЛИТА (A+B) */
+        function closeAutocomplete() {
+            const dropdown = document.getElementById('autocompleteDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('open');
+                dropdown.innerHTML = '';
+            }
+        }
+
+        function selectAutocompleteItem(val) {
+            const input = document.getElementById('pName');
+            if (input) {
+                input.value = val;
+                input.blur();
+            }
+            closeAutocomplete();
+        }
+
+        function handleNameInput(query) {
+            const cleanQuery = query.trim().toLowerCase();
+            const dropdown = document.getElementById('autocompleteDropdown');
+
+            if (cleanQuery.length < 2) {
+                closeAutocomplete();
+                return;
+            }
+
+            // 1. Вариант A: Локальный поиск по справочнику + сохраняемым средствам
+            const userProducts = products.map(p => p.name);
+            const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
+            
+            const matchedLocal = combinedLocal.filter(item => 
+                item.toLowerCase().includes(cleanQuery)
+            ).slice(0, 5);
+
+            renderAutocompleteResults(matchedLocal, []);
+
+            // 2. Вариант B: Фоновый поиск через Open Beauty Facts API
+            clearTimeout(autocompleteDebounceTimer);
+            autocompleteDebounceTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`https://world.openbeautyfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=5`);
+                    const data = await res.json();
+                    if (data && data.products && Array.isArray(data.products)) {
+                        const onlineNames = data.products
+                            .map(p => p.product_name || p.brands || '')
+                            .filter(name => name.length > 2 && !isGarbageName(name));
+                        
+                        const uniqueOnline = Array.from(new Set(onlineNames)).slice(0, 4);
+                        renderAutocompleteResults(matchedLocal, uniqueOnline);
+                    }
+                } catch (e) {
+                    console.log('Online autocomplete error:', e);
+                }
+            }, 300);
+        }
+
+        function renderAutocompleteResults(localItems, onlineItems) {
+            const dropdown = document.getElementById('autocompleteDropdown');
+            if (!dropdown) return;
+
+            const allItems = [];
+
+            localItems.forEach(item => {
+                allItems.push({ name: item, tag: 'из базы/коллекции' });
+            });
+
+            onlineItems.forEach(item => {
+                if (!localItems.includes(item)) {
+                    allItems.push({ name: item, tag: 'онлайн' });
+                }
+            });
+
+            if (allItems.length === 0) {
+                closeAutocomplete();
+                return;
+            }
+
+            dropdown.innerHTML = allItems.map(i => `
+                <div class="autocomplete-item" onclick="selectAutocompleteItem('${escapeHtml(i.name)}')">
+                    <span>${escapeHtml(i.name)}</span>
+                    <span class="autocomplete-tag">${i.tag}</span>
+                </div>
+            `).join('');
+
+            dropdown.classList.add('open');
         }
 
         function isGarbageName(name) {
@@ -1837,17 +2021,20 @@
 
         function showCustomAlert(msg, targetElement) {
             document.getElementById('customAlertText').innerText = msg;
-            document.getElementById('customAlertModal').style.display = 'flex';
+            const modal = document.getElementById('customAlertModal');
+            openModalElement(modal);
             window.alertTarget = targetElement;
         }
 
         document.getElementById('btnAlertOk').addEventListener('click', () => {
-            document.getElementById('customAlertModal').style.display = 'none';
-            if (window.alertTarget) {
-                window.alertTarget.focus();
-                window.alertTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                window.alertTarget = null;
-            }
+            const modal = document.getElementById('customAlertModal');
+            closeModalElement(modal, () => {
+                if (window.alertTarget) {
+                    window.alertTarget.focus();
+                    window.alertTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    window.alertTarget = null;
+                }
+            });
         });
 
         function toggleAccordion(contentId, arrowId) {
@@ -2294,15 +2481,24 @@
             });
             document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
 
-            /* ЗАКРЫТИЕ КЛАВИАТУРЫ ПРИ НАЖАТИИ ENTER */
-            document.getElementById('pName').addEventListener('keydown', (e) => {
+            /* ОБРАБОТЧИК ВВОДА В НАЗВАНИЕ ДЛЯ АВТОКОМПЛИТА */
+            const pNameInput = document.getElementById('pName');
+            pNameInput.addEventListener('input', (e) => {
+                handleNameInput(e.target.value);
+            });
+
+            pNameInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.target.blur();
+                    closeAutocomplete();
                 }
             });
 
-            /* ЗАКРЫТИЕ КЛАВИАТУРЫ ПРИ КЛИКЕ ПО ФОНУ ФОРМЫ */
+            /* ЗАКРЫТИЕ КЛАВИАТУРЫ И АВТОКОМПЛИТА ПРИ КЛИКЕ ПО ФОНУ */
             document.getElementById('productFormContainer').addEventListener('click', (e) => {
+                if (!e.target.closest('.form-group')) {
+                    closeAutocomplete();
+                }
                 if (!e.target.closest('input, select, textarea, button')) {
                     const activeInput = document.activeElement;
                     if (activeInput && activeInput.tagName === 'INPUT') {
@@ -2339,7 +2535,7 @@
 
             document.getElementById('customAlertModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('customAlertModal')) {
-                    document.getElementById('customAlertModal').style.display = 'none';
+                    closeModalElement(document.getElementById('customAlertModal'));
                 }
             });
 
@@ -2394,6 +2590,7 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     closeAllPopovers();
+                    closeAutocomplete();
 
                     const modal = document.getElementById('settingsModal');
                     if (modal && modal.style.display === 'flex') closeSettings();
@@ -2403,7 +2600,7 @@
 
                     const alertModal = document.getElementById('customAlertModal');
                     if (alertModal && alertModal.style.display === 'flex') {
-                        alertModal.style.display = 'none';
+                        closeModalElement(alertModal);
                     }
                 }
             });
