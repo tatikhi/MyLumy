@@ -555,6 +555,35 @@
             font-style: normal;
         }
 
+        .version-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .version-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .btn-update-inline {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-update-inline:active {
+            background: var(--accent-light);
+            border-color: var(--accent-main);
+        }
+
         .form-group {
             margin-bottom: 14px;
         }
@@ -826,32 +855,38 @@
         .manage-chevron {
             color: var(--text-secondary);
             font-size: 14px;
-            transition: transform 0.2s ease;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .manage-item.active-item .manage-chevron {
             transform: rotate(90deg);
         }
 
-        /* ПОПО ВЕР МЕНЮ ПОД КАРТОЧКОЙ */
+        /* ПЛАВНОЕ ПОПОВЕР МЕНЮ С CSS-АНИМАЦИЕЙ */
         .popover-actions-menu {
-            display: none;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            display: flex;
             background: var(--surface);
-            border: 1px solid var(--border-color);
+            border: 0px solid var(--border-color);
             border-radius: 16px;
-            padding: 6px;
+            padding: 0 6px;
             gap: 6px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            animation: fadeInDown 0.2s ease-out;
+            box-shadow: none;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.25s ease, 
+                        padding 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        border-width 0.2s ease,
+                        box-shadow 0.25s ease;
         }
 
         .popover-actions-menu.open {
-            display: flex;
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
+            max-height: 60px;
+            opacity: 1;
+            padding: 6px;
+            border-width: 1px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
         }
 
         .popover-btn {
@@ -1113,6 +1148,14 @@
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
             </div>
 
+            <!-- ОТДЕЛЬНЫЙ БЛОК С ВЕРСИЕЙ И КНОПКОЙ "ПРОВЕРИТЬ ОБНОВЛЕНИЕ" -->
+            <div class="form-section" style="margin-bottom: 14px;">
+                <div class="version-row">
+                    <span class="version-text brand-font">версия v1.1.0</span>
+                    <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate">проверить обновление</button>
+                </div>
+            </div>
+
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="form-section-title brand-font">перенос и бэкап</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -1121,7 +1164,6 @@
                         <button type="button" class="btn-secondary brand-font" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
                         <button type="button" class="btn-secondary brand-font" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
                     </div>
-                    <button type="button" class="btn-secondary brand-font" id="btnForceUpdate" style="margin-top: 0;">обновить myspa</button>
                     <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
                 </div>
             </div>
@@ -1150,7 +1192,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.72.0';
+        const APP_VERSION = '1.1.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -2251,6 +2293,23 @@
                 }
             });
             document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
+
+            /* ЗАКРЫТИЕ КЛАВИАТУРЫ ПРИ НАЖАТИИ ENTER */
+            document.getElementById('pName').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.target.blur();
+                }
+            });
+
+            /* ЗАКРЫТИЕ КЛАВИАТУРЫ ПРИ КЛИКЕ ПО ФОНУ ФОРМЫ */
+            document.getElementById('productFormContainer').addEventListener('click', (e) => {
+                if (!e.target.closest('input, select, textarea, button')) {
+                    const activeInput = document.activeElement;
+                    if (activeInput && activeInput.tagName === 'INPUT') {
+                        activeInput.blur();
+                    }
+                }
+            });
 
             document.getElementById('typePicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
