@@ -300,7 +300,7 @@
 
         .tod-btn {
             flex: 1;
-            padding: 14px 6px;
+            padding: 12px 8px;
             text-align: center;
             border-radius: 16px;
             cursor: pointer;
@@ -308,19 +308,33 @@
             border: none;
             background: transparent;
             transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
-        /* Адаптация фирменного шрифта специально для переключателя */
+        /* Размер шрифта 11px как у "моя коллекция" и "мои ритуалы" */
         .tod-btn.brand-font {
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            font-weight: 500;
+            line-height: 1.2;
         }
 
         .tod-btn.active {
             background: var(--surface);
             color: var(--text-primary);
             box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+        }
+
+        /* Адаптация для планшетов и широких экранов */
+        @media (min-width: 440px) {
+            .tod-btn {
+                flex-wrap: nowrap;
+                white-space: nowrap;
+            }
         }
 
         .routine-list {
@@ -1163,8 +1177,8 @@
 
     <div class="main-card">
         <div class="tod-switch">
-            <button type="button" class="tod-btn brand-font" id="btnMorning">утренний уход</button>
-            <button type="button" class="tod-btn brand-font" id="btnEvening">вечерний уход</button>
+            <button type="button" class="tod-btn brand-font" id="btnMorning"><span>утренний</span> <span>уход</span></button>
+            <button type="button" class="tod-btn brand-font" id="btnEvening"><span>вечерний</span> <span>уход</span></button>
         </div>
 
         <div id="noticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;"></div>
