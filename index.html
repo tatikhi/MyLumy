@@ -2228,7 +2228,7 @@
             document.body.removeChild(ta);
         }
 
-        /* ОБРАБОТКА КНОПКИ ПРОВЕРКИ ОБНОВЛЕНИЯ И ПОКАЗА ПЛАШКИ ПО ЦЕНТРУ */
+        /* ОБРАБОТКА КНОПКИ ПРОВЕРКИ ОБНОВЛЕНИЯ И ПРИНУДИТЕЛЬНЫЙ СБРОС КЭША ДЛЯ ЯРЛЫКОВ */
         function forceAppUpdate() {
             const savedVersion = localStorage.getItem('cb_app_version');
             const toast = document.getElementById('toastNotification');
@@ -2240,15 +2240,22 @@
             }
 
             toast.classList.add('visible');
-            
+            localStorage.setItem('cb_app_version', APP_VERSION);
+
             setTimeout(() => {
                 toast.classList.remove('visible');
                 closeAppSettings();
-            }, 2000);
+
+                /* Гарантированный сброс мобильного кэша PWA / ярлыка через динамический URL */
+                setTimeout(() => {
+                    const cleanUrl = window.location.origin + window.location.pathname + '?v_force=' + Date.now();
+                    window.location.href = cleanUrl;
+                }, 300);
+            }, 1800);
         }
 
         function checkUrlImport() {
-            if (window.location.search && window.location.search.includes('reload=')) {
+            if (window.location.search && (window.location.search.includes('reload=') || window.location.search.includes('v_force='))) {
                 history.replaceState(null, null, window.location.pathname + window.location.hash);
             }
 
