@@ -317,7 +317,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative; /* Для абсолютного позиционирования иконки */
             cursor: pointer;
             transition: all 0.25s ease;
         }
@@ -328,7 +327,17 @@
             transform: translateY(-1px);
         }
 
-        .btn-main-action svg {
+        /* ИДЕАЛЬНОЕ ЦЕНТРИРОВАНИЕ ТЕКСТА БЕЗ УЧЕТА ИКОНКИ ЧЕРЕЗ СИММЕТРИЧНУЮ СЕТКУ */
+        .btn-settings-layout {
+            display: grid;
+            grid-template-columns: 18px 1fr 18px;
+            gap: 8px;
+            align-items: center;
+            padding: 14px 20px;
+        }
+
+        .btn-settings-layout svg {
+            justify-self: start;
             width: 18px;
             height: 18px;
             stroke: var(--text-primary);
@@ -336,9 +345,16 @@
             stroke-width: 1.8;
             stroke-linecap: round;
             stroke-linejoin: round;
-            position: absolute;
-            left: 20px;
             transition: stroke 0.3s ease;
+        }
+
+        .btn-settings-layout .btn-text {
+            justify-self: center;
+            text-align: center;
+        }
+
+        .btn-settings-layout .btn-spacer {
+            width: 18px;
         }
 
         .routine-item {
@@ -1191,15 +1207,16 @@
 
         <div class="routine-list" id="routineContainer"></div>
 
-        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ С СОВЕРШЕННО СТРОГИМ ЦЕНТРИРОВАНИЕМ -->
+        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ С ТОЧНЫМ ЦЕНТРИРОВАНИЕМ ТЕКСТА -->
         <div class="main-card-actions">
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">моя коллекция</button>
-            <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
+            <button type="button" class="btn-main-action uniform-brand-title btn-settings-layout" id="btnOpenAppSettings">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                 </svg>
-                мои настройки
+                <span class="btn-text">мои настройки</span>
+                <span class="btn-spacer"></span>
             </button>
         </div>
     </div>
@@ -1267,7 +1284,7 @@
                             <input type="hidden" id="pFreqType" value="daily">
                             <div class="picker-group" id="freqPicker">
                                 <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
-                                <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
+                                <button type="button" class="picker-btn active" data-freq="custom">По дням недели</button>
                             </div>
                             <div id="daysGroup" style="display: none; margin-top: 10px;">
                                 <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
@@ -1370,7 +1387,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.7.5</span>
+                        <span class="version-text uniform-brand-title">версия v1.7.6</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1419,7 +1436,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.7.5';
+        const APP_VERSION = '1.7.6';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
