@@ -27,7 +27,8 @@
             --shadow-soft: 0 16px 40px rgba(196, 154, 130, 0.08);
             --icon-inactive: #D0C6BE;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --scroll-thumb: rgba(196, 154, 130, 0.4);
+            --scroll-thumb: rgba(196, 154, 130, 0.6);
+            --scroll-track: rgba(196, 154, 130, 0.12);
         }
 
         /* 2. Eucalyptus & Mint */
@@ -43,7 +44,8 @@
             --shadow-soft: 0 16px 40px rgba(91, 138, 130, 0.08);
             --icon-inactive: #B8C9C5;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --scroll-thumb: rgba(91, 138, 130, 0.4);
+            --scroll-thumb: rgba(91, 138, 130, 0.6);
+            --scroll-track: rgba(91, 138, 130, 0.12);
         }
 
         /* 3. Blush Lavender */
@@ -59,7 +61,8 @@
             --shadow-soft: 0 16px 40px rgba(139, 120, 157, 0.08);
             --icon-inactive: #CBBFCF;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --scroll-thumb: rgba(139, 120, 157, 0.4);
+            --scroll-thumb: rgba(139, 120, 157, 0.6);
+            --scroll-track: rgba(139, 120, 157, 0.12);
         }
 
         /* 4. Sage & Spa */
@@ -75,7 +78,8 @@
             --shadow-soft: 0 16px 40px rgba(58, 77, 57, 0.08);
             --icon-inactive: #B5C2B6;
             --item-bg: rgba(255, 255, 255, 0.65);
-            --scroll-thumb: rgba(74, 97, 72, 0.4);
+            --scroll-thumb: rgba(74, 97, 72, 0.6);
+            --scroll-track: rgba(74, 97, 72, 0.12);
         }
 
         /* 5. Midnight Calm */
@@ -91,7 +95,8 @@
             --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
             --icon-inactive: #525E7A;
             --item-bg: rgba(36, 42, 59, 0.65);
-            --scroll-thumb: rgba(212, 163, 115, 0.4);
+            --scroll-thumb: rgba(212, 163, 115, 0.6);
+            --scroll-track: rgba(212, 163, 115, 0.12);
         }
 
         * {
@@ -857,27 +862,31 @@
             background: var(--accent-light);
         }
 
-        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ПОСТОЯННОЙ И ЧЕТКОЙ ПЛАШКОЙ СКРОЛЛА */
+        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ПОСТОЯННОЙ И ЧЕТКОЙ ПЛАШКОЙ СКРОЛЛА ДЛЯ МОБИЛЬНЫХ И ДЕСКТОПОВ */
         .product-manage-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 18px;
-            max-height: 250px;
+            max-height: 280px;
             overflow-y: scroll;
-            padding-right: 8px;
+            padding-right: 10px;
+            padding-bottom: 70px; /* Отступ снизу для полной видимости плашки у последнего элемента */
             overscroll-behavior: contain;
             touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
-            scrollbar-color: var(--scroll-thumb) var(--bg-main);
+            scrollbar-color: var(--scroll-thumb) var(--scroll-track);
         }
 
+        /* КAСТОМНЫЙ СКРОЛЛБАР ДЛЯ WEBKIT (IOS SAFARI, ANDROID CHROME) */
         .product-manage-list::-webkit-scrollbar {
             width: 6px;
+            display: block !important;
         }
 
         .product-manage-list::-webkit-scrollbar-track {
-            background: var(--bg-main);
+            background: var(--scroll-track);
             border-radius: 10px;
         }
 
@@ -1037,31 +1046,31 @@
             z-index: 10;
         }
 
-        /* УВЕДОМЛЕНИЕ ОБ ОБНОВЛЕНИИ (TOAST) */
+        /* ВСПЛЫВАЮЩИЙ TOAST СТРОГО ПО ЦЕНТРУ ЭКРАНА С ЭСТЕТИЧНОЙ АНИМАЦИЕЙ */
         .toast-notification {
             position: fixed;
-            bottom: 24px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%) translateY(30px);
+            transform: translate(-50%, -50%) scale(0.9);
             background: var(--surface);
             border: 1px solid var(--accent-main);
             color: var(--text-primary);
-            padding: 12px 20px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 16px 28px;
+            border-radius: 24px;
+            font-size: 13px;
             font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
             opacity: 0;
             pointer-events: none;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            z-index: 2000;
+            z-index: 3000;
             text-align: center;
             white-space: nowrap;
         }
 
         .toast-notification.visible {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translate(-50%, -50%) scale(1);
         }
     </style>
 </head>
@@ -1258,7 +1267,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.4.0</span>
+                    <span class="version-text brand-font">версия v1.5.0</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate">проверить обновление</button>
                 </div>
             </div>
@@ -1298,11 +1307,11 @@
         </div>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ TOAST ОБ ОБНОВЛЕНИИ -->
+    <!-- ВСПЛЫВАЮЩИЙ TOAST СТРОГО ПО ЦЕНТРУ ЭКРАНА -->
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.4.0';
+        const APP_VERSION = '1.5.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1851,7 +1860,7 @@
             }, 300);
         }
 
-        /* АВТОСКРОЛЛ ДЛЯ ПОПОВЕРА, ЧТОБЫ ПЛАШКА "УДАЛИТЬ/РЕДАКТИРОВАТЬ" ВСЕГДА БЫЛА ВИДНА */
+        /* АВТОСКРОЛЛ ДЛЯ ПОПОВЕРА: ГАРАНТИРУЕТ ПОЛНУЮ ВИДИМОСТЬ ПЛАШКИ "УДАЛИТЬ/РЕДАКТИРОВАТЬ" */
         function toggleProductPopover(e, id) {
             if (e) e.stopPropagation();
             const targetId = Number(id);
@@ -1870,12 +1879,12 @@
                 if (itemEl) itemEl.classList.add('active-item');
                 activePopoverProductId = targetId;
 
-                /* МЯГКАЯ ДОКРУТКА СПИСКА, ЧТОБЫ МЕНЮ ПОМЕСТИЛОСЬ */
+                /* МЯГКАЯ ДОКРУТКА СУПЕР-ТОЧНО В КОНЕЦ ПОПОВЕРА */
                 setTimeout(() => {
-                    if (wrapperEl) {
-                        wrapperEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    if (popoverEl) {
+                        popoverEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
-                }, 120);
+                }, 140);
             }
         }
 
@@ -2219,7 +2228,7 @@
             document.body.removeChild(ta);
         }
 
-        /* ОБРАБОТКА КНОПКИ ПРОВЕРКИ ОБНОВЛЕНИЯ И ПОКАЗА ПЛАШКИ */
+        /* ОБРАБОТКА КНОПКИ ПРОВЕРКИ ОБНОВЛЕНИЯ И ПОКАЗА ПЛАШКИ ПО ЦЕНТРУ */
         function forceAppUpdate() {
             const savedVersion = localStorage.getItem('cb_app_version');
             const toast = document.getElementById('toastNotification');
