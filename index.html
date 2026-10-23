@@ -734,12 +734,35 @@
             letter-spacing: 0.15em;
             text-transform: lowercase;
             cursor: pointer;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
             transition: opacity 0.2s;
         }
 
         .btn-add-toggle:active {
             opacity: 0.8;
+        }
+
+        /* КНОПКА СКАНИРОВАНИЯ В СТИЛЕ ДОБАВЛЕНИЯ СРЕДСТВА С ПРОЗРАЧНЫМ ФОНОМ */
+        .btn-scan-dashed {
+            width: 100%;
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px dashed var(--accent-main);
+            background: transparent;
+            color: var(--accent-main);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: opacity 0.2s, background-color 0.2s;
+        }
+
+        .btn-scan-dashed:active {
+            opacity: 0.8;
+            background: var(--accent-light);
         }
 
         .product-manage-list {
@@ -919,7 +942,7 @@
             <div class="product-manage-list" id="manageList"></div>
 
             <button type="button" class="btn-add-toggle brand-font" id="btnAddToggle">+ добавить средство</button>
-            <button type="button" class="btn-secondary brand-font" id="btnScanBarcode" style="margin-bottom: 16px;">📷 сканировать штрихкод</button>
+            <button type="button" class="btn-scan-dashed brand-font" id="btnScanBarcode">сканировать штрихкод</button>
             
             <div id="scannerWrapper" style="display: none; margin-bottom: 16px;">
                 <div id="barcodeReader" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
@@ -1093,7 +1116,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.69.0';
+        const APP_VERSION = '2.70.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1582,12 +1605,14 @@
             stopBarcodeScanner();
             document.getElementById('productFormContainer').style.display = 'block';
             document.getElementById('btnAddToggle').style.display = 'none';
+            document.getElementById('btnScanBarcode').style.display = 'none';
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
         }
 
         function hideForm() {
             document.getElementById('productFormContainer').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'block';
+            document.getElementById('btnScanBarcode').style.display = 'block';
             document.getElementById('scannerNoticeBanner').style.display = 'none';
             resetForm();
         }
