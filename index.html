@@ -27,6 +27,7 @@
             --shadow-soft: 0 16px 40px rgba(196, 154, 130, 0.08);
             --icon-inactive: #D0C6BE;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --swipe-del-bg: #E5A399;
         }
 
         /* 2. Eucalyptus & Mint */
@@ -42,6 +43,7 @@
             --shadow-soft: 0 16px 40px rgba(91, 138, 130, 0.08);
             --icon-inactive: #B8C9C5;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --swipe-del-bg: #D48C85;
         }
 
         /* 3. Blush Lavender */
@@ -57,6 +59,7 @@
             --shadow-soft: 0 16px 40px rgba(139, 120, 157, 0.08);
             --icon-inactive: #CBBFCF;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --swipe-del-bg: #D898A6;
         }
 
         /* 4. Sage & Spa */
@@ -72,6 +75,7 @@
             --shadow-soft: 0 16px 40px rgba(58, 77, 57, 0.08);
             --icon-inactive: #B5C2B6;
             --item-bg: rgba(255, 255, 255, 0.65);
+            --swipe-del-bg: #C88D83;
         }
 
         /* 5. Midnight Calm */
@@ -87,6 +91,7 @@
             --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
             --icon-inactive: #525E7A;
             --item-bg: rgba(36, 42, 59, 0.65);
+            --swipe-del-bg: #904A4A;
         }
 
         * {
@@ -135,11 +140,12 @@
             font-style: normal;
         }
 
+        /* УВЕЛИЧЕННЫЙ И ВЫРАЗИТЕЛЬНЫЙ ЛОГОТИП */
         .logo {
             font-family: 'Montserrat', sans-serif;
-            font-size: 17px;
+            font-size: 20px;
             font-weight: 600;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.35em;
             text-transform: lowercase;
             color: var(--text-primary);
         }
@@ -159,12 +165,13 @@
             white-space: nowrap;
         }
 
+        /* ИСПРАВЛЕННАЯ ИКОНКА НАСТРОЕК */
         .btn-icon-settings {
             background: var(--surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -176,10 +183,14 @@
         }
 
         .btn-icon-settings svg {
-            width: 17px;
-            height: 17px;
-            fill: var(--text-primary);
-            transition: fill 0.3s ease;
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-primary);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s ease;
         }
 
         /* КАРТОЧКА КАЛЕНДАРЯ */
@@ -200,7 +211,6 @@
             gap: 10px;
         }
 
-        /* ЗАГОЛОВОК "МОИ РИТУАЛЫ" (БЕЗ РАМКИ И ФОНА) */
         .streak-card-title {
             background: transparent;
             border: none;
@@ -214,7 +224,6 @@
             box-shadow: none;
         }
 
-        /* КНОПКА ДАТЫ С РАМКОЙ КАК РАНЕЕ У "МОИ РИТУАЛЫ" */
         .date-chip {
             display: inline-flex;
             align-items: center;
@@ -375,7 +384,6 @@
             flex-shrink: 0;
         }
 
-        /* ЧИП СТАТУСА АКТИВОВ */
         .active-progress-chip {
             display: inline-flex;
             align-items: center;
@@ -391,7 +399,6 @@
             white-space: nowrap;
         }
 
-        /* МЯГКИЙ КРУЖОК-ЧЕКБОКС С ПРОЗРАЧНЫМ ФОНОМ И ГАЛОЧКОЙ В ТОН ТЕМЕ */
         .active-toggle-circle {
             width: 22px;
             height: 22px;
@@ -418,7 +425,6 @@
             box-shadow: 0 2px 8px rgba(196, 154, 130, 0.25);
         }
 
-        /* ПАУЗЫ */
         .pause-inline-chip {
             display: inline-flex;
             align-items: center;
@@ -742,7 +748,6 @@
             opacity: 0.8;
         }
 
-        /* КНОПКА СКАНИРОВАНИЯ В СТИЛЕ ДОБАВЛЕНИЯ СРЕДСТВА С ПРОЗРАЧНЫМ ФОНОМ */
         .btn-scan-dashed {
             width: 100%;
             padding: 14px;
@@ -790,11 +795,12 @@
             border-radius: 10px;
         }
 
+        /* ПАСТЕЛЬНЫЙ ФОН И SVG-КОРЗИНА ДЛЯ СВАЙПА */
         .swipe-wrapper {
             position: relative;
             border-radius: 16px;
             overflow: hidden;
-            background: #E74C3C;
+            background: var(--swipe-del-bg);
         }
 
         .swipe-background-delete {
@@ -802,17 +808,27 @@
             top: 0;
             bottom: 0;
             right: 0;
-            width: 90px;
+            width: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
-            font-size: 16px;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.15s ease;
         }
 
+        .swipe-background-delete svg {
+            width: 18px;
+            height: 18px;
+            stroke: #FFFFFF;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ЧИСТАЯ КЛИКАБЕЛЬНАЯ ПЛАШКА СРЕДСТВА В КОЛЛЕКЦИИ */
         .manage-item {
             display: flex;
             justify-content: space-between;
@@ -825,6 +841,12 @@
             z-index: 2;
             will-change: transform;
             border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .manage-item:active {
+            background: var(--accent-light);
         }
 
         .manage-info {
@@ -833,26 +855,81 @@
             gap: 12px;
         }
 
-        .manage-actions {
+        .manage-chevron {
+            color: var(--text-secondary);
+            font-size: 16px;
+            opacity: 0.6;
+        }
+
+        /* ЭЛЕГАНТНЫЙ BOTTOM SHEET МЕНЮ */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1100;
+        }
+
+        .bottom-sheet-card {
+            background: var(--surface);
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            width: 100%;
+            max-width: 480px;
+            padding: 24px 20px;
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
             display: flex;
-            gap: 8px;
-            align-items: center;
+            flex-direction: column;
+            gap: 12px;
+            animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .manage-edit, .manage-del {
-            position: relative;
-            cursor: pointer;
-            border: none;
-            background: transparent;
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .bottom-sheet-title {
             font-size: 13px;
-            padding: 6px 8px;
-            opacity: 0.7;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 8px;
         }
 
-        .manage-del {
+        .bottom-sheet-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .bottom-sheet-btn:active {
+            background: var(--accent-light);
+        }
+
+        .bottom-sheet-btn.danger {
             color: #E74C3C;
-            font-weight: bold;
-            opacity: 1;
+            border-color: rgba(231, 76, 60, 0.2);
+            background: rgba(231, 76, 60, 0.04);
         }
 
         .accordion-toggle-btn {
@@ -904,7 +981,8 @@
             <button type="button" class="btn-settings brand-font" id="btnOpenSettings">моя коллекция</button>
             <button type="button" class="btn-icon-settings" id="btnOpenAppSettings" aria-label="Настройки">
                 <svg viewBox="0 0 24 24">
-                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                 </svg>
             </button>
         </div>
@@ -925,7 +1003,6 @@
             <button type="button" class="tod-btn" id="btnEvening">Вечерний уход</button>
         </div>
 
-        <!-- Плашка для уведомлений / архива -->
         <div id="noticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;"></div>
 
         <div class="routine-list" id="routineContainer"></div>
@@ -1082,12 +1159,12 @@
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="form-section-title brand-font">перенос и бэкап</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button type="button" class="btn-secondary brand-font" id="btnCopyShareLink">🔗 скопировать ссылку переноса</button>
+                    <button type="button" class="btn-secondary brand-font" id="btnCopyShareLink">скопировать ссылку переноса</button>
                     <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn-secondary brand-font" id="btnExportJson" style="flex: 1; margin-top: 0;">📥 скачать (.json)</button>
-                        <button type="button" class="btn-secondary brand-font" id="btnImportJson" style="flex: 1; margin-top: 0;">📤 загрузить</button>
+                        <button type="button" class="btn-secondary brand-font" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
+                        <button type="button" class="btn-secondary brand-font" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
                     </div>
-                    <button type="button" class="btn-secondary brand-font" id="btnForceUpdate" style="margin-top: 0;">🔄 обновить myspa</button>
+                    <button type="button" class="btn-secondary brand-font" id="btnForceUpdate" style="margin-top: 0;">обновить myspa</button>
                     <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
                 </div>
             </div>
@@ -1107,6 +1184,16 @@
         </div>
     </div>
 
+    <!-- BOTTOM SHEET МЕНЮ ДЛЯ СРЕДСТВА -->
+    <div class="bottom-sheet-overlay" id="productBottomSheet">
+        <div class="bottom-sheet-card">
+            <div class="bottom-sheet-title" id="bottomSheetProductName">Название средства</div>
+            <button type="button" class="bottom-sheet-btn" id="btnBsEdit">редактировать</button>
+            <button type="button" class="bottom-sheet-btn danger" id="btnBsDelete">удалить</button>
+            <button type="button" class="btn-secondary brand-font" id="btnBsClose" style="margin-top: 4px;">отмена</button>
+        </div>
+    </div>
+
     <!-- Кастомное модальное окно валидации -->
     <div class="modal-overlay" id="customAlertModal">
         <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
@@ -1116,7 +1203,7 @@
     </div>
 
     <script>
-        const APP_VERSION = '2.70.0';
+        const APP_VERSION = '2.71.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1222,6 +1309,7 @@
         let products = JSON.parse(localStorage.getItem('cb_custom_products')) || [];
         let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
         let currentScannedBarcode = null;
+        let activeSelectedProductId = null;
 
         let currentTOD = getInitialTOD();
 
@@ -1528,7 +1616,7 @@
 
         function calcExpiryDots(openDateStr, paoMonths, productId) {
             if (!paoMonths) {
-                return `<div class="expiry-dots clickable" onclick="openProductForPAO(${productId})" title="Указать PAO">
+                return `<div class="expiry-dots clickable" onclick="openProductForPAO(event, ${productId})" title="Указать PAO">
                     <div class="dot dot-gray"></div>
                     <div class="dot dot-gray"></div>
                     <div class="dot dot-gray"></div>
@@ -1560,7 +1648,8 @@
             return `<div class="expiry-dots">${dotsInner}</div>`;
         }
 
-        function openProductForPAO(productId) {
+        function openProductForPAO(e, productId) {
+            if (e) e.stopPropagation();
             openSettings();
             editProduct(productId);
             document.getElementById('expiryAccordionContent').classList.add('open');
@@ -1601,12 +1690,21 @@
             document.getElementById('appSettingsModal').style.display = 'none';
         }
 
+        /* АВТОМАТИЧЕСКИЙ ФОКУС И ПЛАВНЫЙ СКРОЛЛ К ПОЛЮ НАЗВАНИЯ */
         function showForm(showNotice = false) {
             stopBarcodeScanner();
             document.getElementById('productFormContainer').style.display = 'block';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
             document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
+
+            setTimeout(() => {
+                const pNameInput = document.getElementById('pName');
+                if (pNameInput) {
+                    pNameInput.focus();
+                    pNameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 120);
         }
 
         function hideForm() {
@@ -1615,6 +1713,20 @@
             document.getElementById('btnScanBarcode').style.display = 'block';
             document.getElementById('scannerNoticeBanner').style.display = 'none';
             resetForm();
+        }
+
+        function openProductBottomSheet(id) {
+            const item = products.find(p => p.id === Number(id));
+            if (!item) return;
+
+            activeSelectedProductId = Number(id);
+            document.getElementById('bottomSheetProductName').innerText = item.name;
+            document.getElementById('productBottomSheet').style.display = 'flex';
+        }
+
+        function closeProductBottomSheet() {
+            document.getElementById('productBottomSheet').style.display = 'none';
+            activeSelectedProductId = null;
         }
 
         function isGarbageName(name) {
@@ -1843,7 +1955,7 @@
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(fullUrl).then(() => {
-                        showCustomAlert('🔗 Ссылка скопирована!');
+                        showCustomAlert('Ссылка скопирована!');
                     }).catch(() => {
                         fallbackCopyText(fullUrl);
                     });
@@ -1851,7 +1963,7 @@
                     fallbackCopyText(fullUrl);
                 }
             } catch(e) {
-                showCustomAlert('Воспользуйтесь кнопкой "скачать (.json)".');
+                showCustomAlert('Воспользуйтесь кнопкой "скачать архив".');
             }
         }
 
@@ -1865,7 +1977,7 @@
             ta.select();
             try {
                 document.execCommand('copy');
-                showCustomAlert('🔗 Ссылка скопирована!');
+                showCustomAlert('Ссылка скопирована!');
             } catch(err) {
                 showCustomAlert('Ошибка копирования ссылки');
             }
@@ -2083,16 +2195,18 @@
                 const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths, p.id);
                 htmlBuffer.push(`
                     <div class="swipe-wrapper">
-                        <div class="swipe-background-delete">🗑️</div>
-                        <div class="manage-item" data-id="${p.id}">
+                        <div class="swipe-background-delete">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </div>
+                        <div class="manage-item" data-id="${p.id}" onclick="openProductBottomSheet(${p.id})">
                             <div class="manage-info">
                                 ${dotsHtml}
                                 <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
                             </div>
-                            <div class="manage-actions">
-                                <button type="button" class="manage-edit" data-action="edit" data-id="${p.id}" aria-label="Редактировать">✏️</button>
-                                <button type="button" class="manage-del" data-action="delete" data-id="${p.id}" aria-label="Удалить">✕</button>
-                            </div>
+                            <div class="manage-chevron">›</div>
                         </div>
                     </div>
                 `);
@@ -2205,6 +2319,25 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
+            document.getElementById('btnBsEdit').addEventListener('click', () => {
+                const pid = activeSelectedProductId;
+                closeProductBottomSheet();
+                if (pid) editProduct(pid);
+            });
+
+            document.getElementById('btnBsDelete').addEventListener('click', () => {
+                const pid = activeSelectedProductId;
+                closeProductBottomSheet();
+                if (pid) deleteProduct(pid);
+            });
+
+            document.getElementById('btnBsClose').addEventListener('click', closeProductBottomSheet);
+            document.getElementById('productBottomSheet').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('productBottomSheet')) {
+                    closeProductBottomSheet();
+                }
+            });
+
             document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => {
                 toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow');
             });
@@ -2298,19 +2431,14 @@
                 }
             });
 
-            document.getElementById('manageList').addEventListener('click', (e) => {
-                const btn = e.target.closest('button');
-                if (!btn) return;
-                
-                const action = btn.getAttribute('data-action');
-                const id = btn.getAttribute('data-id');
-
-                if (action === 'edit' && id) editProduct(id);
-                if (action === 'delete' && id) deleteProduct(id);
-            });
-
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
+                    const bs = document.getElementById('productBottomSheet');
+                    if (bs && bs.style.display === 'flex') {
+                        closeProductBottomSheet();
+                        return;
+                    }
+
                     const modal = document.getElementById('settingsModal');
                     if (modal && modal.style.display === 'flex') closeSettings();
 
