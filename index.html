@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Защита от агрессивного кэширования браузером -->
+    <!-- Защита от кэширования -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -130,7 +130,7 @@
         .brand-font {
             font-family: 'Montserrat', sans-serif;
             font-weight: 500;
-            letter-spacing: 0.22em;
+            letter-spacing: 0.18em;
             text-transform: lowercase;
             font-style: normal;
         }
@@ -234,8 +234,7 @@
             text-align: center;
         }
 
-        /* ------------------ ОБНОВЛЕННАЯ НИЖНЯЯ ЧАСТЬ ------------------ */
-
+        /* MAIN CARD */
         .main-card {
             background: var(--surface);
             border-radius: 32px;
@@ -282,7 +281,6 @@
             margin-bottom: 28px;
         }
 
-        /* Легкие, "воздушные" карточки средств */
         .routine-item {
             background: var(--item-bg);
             border: 1px solid var(--border-color);
@@ -308,7 +306,6 @@
             gap: 14px;
         }
 
-        /* Легкий минималистичный текстовый маркер вместо тяжелой плашки */
         .item-num {
             font-family: 'Montserrat', sans-serif;
             font-size: 12px;
@@ -402,37 +399,39 @@
         .dot-red { background-color: #E74C3C; }
         .dot-gray { background-color: var(--icon-inactive); }
 
-        /* Спокойная матовая главная кнопка */
+        /* ИЗЯЩНАЯ ВОЗДУШНАЯ КНОПКА С ШРИФТОМ БРЕНДА */
         .btn-action {
             width: 100%;
-            padding: 16px;
+            padding: 16px 20px;
             border-radius: 20px;
-            border: none;
-            background: var(--accent-main);
-            color: #FFF;
-            font-size: 14px;
+            border: 1px solid var(--accent-main);
+            background: transparent;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.18em;
+            text-transform: lowercase;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-            transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            transition: all 0.25s ease;
         }
 
-        .btn-action:active {
-            transform: scale(0.985);
-            opacity: 0.9;
+        .btn-action:hover, .btn-action:active {
+            background: var(--accent-light);
+            border-color: var(--accent-main);
+            transform: translateY(-1px);
         }
 
-        /* ------------------------------------------------------------- */
-
+        /* MODALS */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -443,14 +442,14 @@
 
         .modal-card {
             background: var(--surface);
-            border-radius: 28px;
+            border-radius: 32px;
             width: 100%;
             max-width: 460px;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 24px;
-            padding-bottom: calc(24px + env(safe-area-inset-bottom));
-            box-shadow: 0 24px 48px rgba(0,0,0,0.12);
+            padding: 28px 24px;
+            padding-bottom: calc(28px + env(safe-area-inset-bottom));
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
@@ -462,7 +461,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 22px;
         }
 
         .modal-close-icon {
@@ -475,36 +474,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
             line-height: 1;
+            transition: all 0.2s;
+        }
+
+        .modal-close-icon:active {
+            background: var(--accent-light);
         }
 
         .modal-title {
-            font-size: 17px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 600;
             color: var(--text-primary);
         }
 
         .form-section {
             background: var(--bg-main);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 16px;
-            margin-bottom: 14px;
+            border-radius: 20px;
+            padding: 18px 16px;
+            margin-bottom: 16px;
         }
 
         .form-section-title {
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 11px;
+            font-weight: 600;
             color: var(--accent-main);
-            margin-bottom: 12px;
-            letter-spacing: 0.12em;
+            margin-bottom: 14px;
+            letter-spacing: 0.18em;
             font-style: normal;
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .form-group:last-child {
@@ -513,20 +517,21 @@
 
         .form-group label {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
         }
 
         .input-control {
             width: 100%;
-            padding: 11px 14px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
         }
 
@@ -537,12 +542,12 @@
 
         .picker-btn {
             flex: 1;
-            padding: 9px 10px;
+            padding: 10px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             color: var(--text-secondary);
             text-align: center;
@@ -554,6 +559,11 @@
             color: #FFF;
             border-color: var(--accent-main);
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        #themeRow .picker-btn {
+            border-radius: 12px;
+            height: 38px;
         }
 
         #themeRow .picker-btn.active {
@@ -578,7 +588,7 @@
 
         .day-chip {
             flex: 1;
-            padding: 7px 0;
+            padding: 8px 0;
             border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--surface);
@@ -605,7 +615,7 @@
 
         .pao-chip {
             flex: 1;
-            padding: 8px 6px;
+            padding: 9px 6px;
             border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--surface);
@@ -625,36 +635,52 @@
 
         .btn-secondary {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             background: transparent;
             color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: lowercase;
             cursor: pointer;
             margin-top: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:active {
+            background: var(--bg-main);
         }
 
         .btn-add-toggle {
             width: 100%;
-            padding: 13px;
-            border-radius: 16px;
+            padding: 14px;
+            border-radius: 18px;
             border: 1px dashed var(--accent-main);
             background: var(--accent-light);
             color: var(--accent-main);
-            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
             font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
             cursor: pointer;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-add-toggle:active {
+            opacity: 0.8;
         }
 
         .product-manage-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-            max-height: 220px;
+            gap: 10px;
+            margin-bottom: 18px;
+            max-height: 230px;
             overflow-y: auto;
             padding-right: 4px;
             overscroll-behavior: contain;
@@ -662,22 +688,21 @@
         }
 
         .product-manage-list::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
 
         .product-manage-list::-webkit-scrollbar-track {
             background: var(--bg-main);
-            border-radius: 10px;
         }
 
         .product-manage-list::-webkit-scrollbar-thumb {
-            background: var(--accent-main);
+            background: var(--icon-inactive);
             border-radius: 10px;
         }
 
         .swipe-wrapper {
             position: relative;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             background: #E74C3C;
         }
@@ -692,7 +717,7 @@
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
-            font-size: 18px;
+            font-size: 16px;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.15s ease;
@@ -702,19 +727,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 14px;
-            border-radius: 12px;
+            padding: 14px 16px;
+            border-radius: 16px;
             background: var(--bg-main);
             font-size: 13px;
             position: relative;
             z-index: 2;
             will-change: transform;
+            border: 1px solid var(--border-color);
         }
 
         .manage-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .manage-actions {
@@ -728,24 +754,26 @@
             cursor: pointer;
             border: none;
             background: transparent;
-            font-size: 14px;
+            font-size: 13px;
             padding: 6px 8px;
+            opacity: 0.7;
         }
 
         .manage-del {
             color: #E74C3C;
             font-weight: bold;
+            opacity: 1;
         }
 
         .accordion-toggle-btn {
             width: 100%;
-            padding: 11px 14px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -759,7 +787,7 @@
 
         .accordion-content {
             display: none;
-            padding-top: 6px;
+            padding-top: 8px;
         }
 
         .accordion-content.open {
@@ -770,9 +798,9 @@
             position: sticky;
             bottom: 0;
             background: var(--surface);
-            padding-top: 14px;
+            padding-top: 16px;
             padding-bottom: calc(4px + env(safe-area-inset-bottom));
-            margin-top: 16px;
+            margin-top: 18px;
             border-top: 1px solid var(--border-color);
             z-index: 10;
         }
@@ -812,7 +840,7 @@
 
         <div class="routine-list" id="routineContainer"></div>
 
-        <button type="button" class="btn-action" id="btnCompleteRoutine"></button>
+        <button type="button" class="btn-action brand-font" id="btnCompleteRoutine"></button>
     </div>
 
     <!-- Модальное окно "Моя коллекция" -->
@@ -826,11 +854,11 @@
             <div class="product-manage-list" id="manageList"></div>
 
             <button type="button" class="btn-add-toggle brand-font" id="btnAddToggle">+ добавить средство</button>
-            <button type="button" class="btn-secondary" id="btnScanBarcode" style="margin-bottom: 16px;">📷 Сканировать штрихкод</button>
+            <button type="button" class="btn-secondary brand-font" id="btnScanBarcode" style="margin-bottom: 16px;">📷 сканировать штрихкод</button>
             
             <div id="scannerWrapper" style="display: none; margin-bottom: 16px;">
-                <div id="barcodeReader" style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
-                <button type="button" class="btn-secondary" id="btnCancelScanner">Отмена</button>
+                <div id="barcodeReader" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
+                <button type="button" class="btn-secondary brand-font" id="btnCancelScanner">отмена</button>
             </div>
 
             <div id="productFormContainer" style="display: none; border-top: 1px solid var(--border-color); padding-top: 16px;">
@@ -838,12 +866,12 @@
                     В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.
                 </div>
 
-                <div class="modal-title" id="formModalTitle" style="font-size: 15px; margin-top: 12px;">Новое средство</div>
+                <div class="modal-title brand-font" id="formModalTitle" style="font-size: 14px; margin-top: 8px; margin-bottom: 12px;">новое средство</div>
                 <input type="hidden" id="editProductId" value="">
 
                 <!-- ГЛАВНЫЙ БЛОК -->
                 <div class="form-section">
-                    <div class="form-section-title brand-font">О средстве</div>
+                    <div class="form-section-title brand-font">о средстве</div>
                     
                     <div class="form-group">
                         <label for="pName">Название</label>
@@ -946,16 +974,16 @@
                 </div>
 
                 <div class="form-sticky-footer">
-                    <button type="button" class="btn-action brand-font" id="btnSaveProduct">Сохранить средство</button>
-                    <button type="button" class="btn-secondary" id="btnCancelProduct">Отмена</button>
+                    <button type="button" class="btn-action brand-font" id="btnSaveProduct">сохранить средство</button>
+                    <button type="button" class="btn-secondary brand-font" id="btnCancelProduct">отмена</button>
                 </div>
             </div>
 
-            <button type="button" class="btn-secondary" id="btnCloseSettings">Закрыть</button>
+            <button type="button" class="btn-secondary brand-font" id="btnCloseSettings">закрыть</button>
         </div>
     </div>
 
-    <!-- Модальное окно "Настройки приложения" (Отдельная кнопка ⚙️) -->
+    <!-- Модальное окно "Настройки приложения" -->
     <div class="modal-overlay" id="appSettingsModal">
         <div class="modal-card" style="max-width: 400px;">
             <div class="modal-header-row">
@@ -963,44 +991,44 @@
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
             </div>
 
-            <div class="form-section" style="margin-bottom: 12px;">
-                <div class="form-section-title brand-font" style="margin-bottom: 8px;">Перенос и бэкап</div>
+            <div class="form-section" style="margin-bottom: 14px;">
+                <div class="form-section-title brand-font">перенос и бэкап</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button type="button" class="btn-secondary" id="btnCopyShareLink">🔗 Скопировать ссылку для переноса</button>
+                    <button type="button" class="btn-secondary brand-font" id="btnCopyShareLink">🔗 скопировать ссылку переноса</button>
                     <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn-secondary" id="btnExportJson" style="flex: 1; margin-top: 0;">📥 Скачать файл (.json)</button>
-                        <button type="button" class="btn-secondary" id="btnImportJson" style="flex: 1; margin-top: 0;">📤 Загрузить файл</button>
+                        <button type="button" class="btn-secondary brand-font" id="btnExportJson" style="flex: 1; margin-top: 0;">📥 скачать (.json)</button>
+                        <button type="button" class="btn-secondary brand-font" id="btnImportJson" style="flex: 1; margin-top: 0;">📤 загрузить</button>
                     </div>
-                    <button type="button" class="btn-secondary" id="btnForceUpdate" style="margin-top: 0;">🔄 Проверить и обновить MySpa</button>
+                    <button type="button" class="btn-secondary brand-font" id="btnForceUpdate" style="margin-top: 0;">🔄 обновить myspa</button>
                     <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
                 </div>
             </div>
 
-            <div class="form-section" style="margin-bottom: 16px;">
-                <div class="form-section-title brand-font" style="margin-bottom: 8px;">Тема оформления</div>
-                <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
-                    <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; height: 36px; border-radius: 8px; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
-                    <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; height: 36px; border-radius: 8px; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
-                    <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; height: 36px; border-radius: 8px; background: #8B789D; border-color: #8B789D;" title="Lavender"></button>
-                    <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; height: 36px; border-radius: 8px; background: #3A4D39; border-color: #3A4D39;" title="Sage"></button>
-                    <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; height: 36px; border-radius: 8px; background: #242A3B; border-color: #242A3B;" title="Midnight"></button>
+            <div class="form-section" style="margin-bottom: 18px;">
+                <div class="form-section-title brand-font">тема оформления</div>
+                <div style="display: flex; gap: 6px; width: 100%;" id="themeRow">
+                    <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
+                    <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
+                    <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #8B789D; border-color: #8B789D;" title="Lavender"></button>
+                    <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #3A4D39; border-color: #3A4D39;" title="Sage"></button>
+                    <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; background: #242A3B; border-color: #242A3B;" title="Midnight"></button>
                 </div>
             </div>
 
-            <button type="button" class="btn-secondary" id="btnCloseAppSettings">Закрыть</button>
+            <button type="button" class="btn-secondary brand-font" id="btnCloseAppSettings">закрыть</button>
         </div>
     </div>
 
-    <!-- Кастомное модальное окно для валидации -->
+    <!-- Кастомное модальное окно валидации -->
     <div class="modal-overlay" id="customAlertModal">
         <div class="modal-card" style="max-width: 320px; text-align: center; padding: 24px;">
-            <div class="modal-title" id="customAlertText" style="font-size: 16px; margin-bottom: 16px;">Введите название</div>
-            <button type="button" class="btn-action" id="btnAlertOk" style="padding: 12px;">ОК</button>
+            <div class="modal-title" id="customAlertText" style="font-size: 15px; margin-bottom: 18px;">Введите название</div>
+            <button type="button" class="btn-action brand-font" id="btnAlertOk" style="padding: 12px;">ок</button>
         </div>
     </div>
 
     <script>
-        const APP_VERSION = '2.64.0';
+        const APP_VERSION = '2.65.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1326,17 +1354,15 @@
             const container = document.getElementById('routineContainer');
             const btnAction = document.getElementById('btnCompleteRoutine');
 
-            // Форматирование минималистичного текстового маркера (01., 02., 03.)
             const formatIndex = (idx) => String(idx + 1).padStart(2, '0') + '.';
 
-            // Режим просмотра БУДУЩИХ ДНЕЙ
             if (isFuture) {
                 banner.style.display = 'block';
                 banner.innerText = "Это план на выбранный день!";
 
                 const activeProducts = getActiveProductsForCurrentView();
                 if (activeProducts.length === 0) {
-                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 14px; font-weight: 500; letter-spacing: 0.3px;">В этот день отдых</div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">В этот день отдых</div>`;
                 } else {
                     const htmlBuffer = [];
                     activeProducts.forEach((item, index) => {
@@ -1375,14 +1401,12 @@
                     container.innerHTML = htmlBuffer.join('');
                 }
 
-                btnAction.innerText = 'Вернуться к актуальному дню';
-                btnAction.classList.remove('brand-font');
+                btnAction.innerText = 'вернуться к текущему дню';
                 btnAction.style.opacity = '1';
                 btnAction.style.pointerEvents = 'auto';
                 return;
             }
 
-            // Режим АРХИВА (прошедшие дни)
             if (inArchive && !isFuture) {
                 banner.style.display = 'block';
                 const routineDate = getRoutineDateObj();
@@ -1396,7 +1420,7 @@
 
                 const activeProducts = getActiveProductsForCurrentView();
                 if (activeProducts.length === 0) {
-                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 14px; font-weight: 500; letter-spacing: 0.3px;">В этот день был отдых</div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">В этот день был отдых</div>`;
                 } else {
                     const htmlBuffer = [];
                     activeProducts.forEach((item, index) => {
@@ -1423,8 +1447,7 @@
                     container.innerHTML = htmlBuffer.join('');
                 }
 
-                btnAction.innerText = 'День завершен (Архив)';
-                btnAction.classList.remove('brand-font');
+                btnAction.innerText = 'день завершен (архив)';
                 btnAction.style.opacity = '0.6';
                 btnAction.style.pointerEvents = 'none';
                 return;
@@ -1433,19 +1456,16 @@
                 btnAction.style.pointerEvents = 'auto';
             }
 
-            // Обычный режим ТЕКУЩЕГО ДНЯ
             const activeProducts = getActiveProductsForCurrentView();
 
             if (activeProducts.length === 0) {
                 banner.style.display = 'none';
-                container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 14px; font-weight: 500; letter-spacing: 0.3px;">Отдых</div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 24px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">Отдых</div>`;
 
                 btnAction.innerText = 'добавить средство в мою коллекцию';
-                btnAction.classList.add('brand-font');
             } else {
                 banner.style.display = 'none';
-                btnAction.innerText = 'Завершить уход';
-                btnAction.classList.remove('brand-font');
+                btnAction.innerText = 'завершить уход';
 
                 const htmlBuffer = [];
                 activeProducts.forEach((item, index) => {
@@ -1485,9 +1505,7 @@
             }
         }
 
-        // РАСЧЕТ И ОТРЕСОВКА КРУЖОЧКОВ PAO
         function calcExpiryDots(openDateStr, paoMonths, productId) {
-            // Если PAO НЕ указан — возвращаем 3 серых КЛИКАБЕЛЬНЫХ кружочка
             if (!paoMonths) {
                 return `<div class="expiry-dots clickable" onclick="openProductForPAO(${productId})" title="Указать PAO">
                     <div class="dot dot-gray"></div>
@@ -1496,7 +1514,6 @@
                 </div>`;
             }
 
-            // Если PAO указан — рассчитываем даты и показываем НЕКЛИКАБЕЛЬНЫЕ цветные кружочки
             const openDate = openDateStr ? new Date(openDateStr) : new Date();
             const expDate = new Date(openDate);
             expDate.setMonth(expDate.getMonth() + Number(paoMonths));
@@ -1522,15 +1539,12 @@
             return `<div class="expiry-dots">${dotsInner}</div>`;
         }
 
-        // Клик по серым кружочкам — сразу к добавлению PAO
         function openProductForPAO(productId) {
             openSettings();
             editProduct(productId);
-            // Автоматически разворачиваем аккордеон сроков
             document.getElementById('expiryAccordionContent').classList.add('open');
             document.getElementById('expiryAccordionArrow').innerText = '▲';
             
-            // Фокусируемся на пикере PAO
             setTimeout(() => {
                 const paoEl = document.getElementById('paoPicker');
                 if (paoEl) paoEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1568,7 +1582,6 @@
 
         function handleActionButton() {
             const btnAction = document.getElementById('btnCompleteRoutine');
-            const hasBrandFont = btnAction.classList.contains('brand-font');
             const text = btnAction.innerText.trim();
 
             if (isFuturePlan()) {
@@ -1577,7 +1590,7 @@
                 return;
             }
 
-            if (hasBrandFont || text.toLowerCase().includes('добавить средство')) {
+            if (text.toLowerCase().includes('добавить средство')) {
                 openSettings();
             } else {
                 completeRoutine();
@@ -1747,7 +1760,6 @@
             }
         });
 
-        // ------------------ УПРАВЛЕНИЕ АККОРДЕОНАМИ ------------------
         function toggleAccordion(contentId, arrowId) {
             const content = document.getElementById(contentId);
             const arrow = document.getElementById(arrowId);
@@ -1762,7 +1774,6 @@
             }
         }
 
-        // ------------------ ЛОГИКА ЭКСПОРТА / ИМПОРТА / ПЕРЕНОСА ------------------
         function toBase64(str) {
             return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => 
                 String.fromCharCode('0x' + p1)
@@ -1855,7 +1866,7 @@
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(fullUrl).then(() => {
-                        showCustomAlert('🔗 Ссылка скопирована! Отправьте её на второй девайс или открывайте в ярлыке.');
+                        showCustomAlert('🔗 Ссылка скопирована!');
                     }).catch(() => {
                         fallbackCopyText(fullUrl);
                     });
@@ -1863,7 +1874,7 @@
                     fallbackCopyText(fullUrl);
                 }
             } catch(e) {
-                showCustomAlert('Данные слишком объемны для ссылки. Воспользуйтесь кнопкой "Скачать файл (.json)".');
+                showCustomAlert('Воспользуйтесь кнопкой "скачать (.json)".');
             }
         }
 
@@ -1877,7 +1888,7 @@
             ta.select();
             try {
                 document.execCommand('copy');
-                showCustomAlert('🔗 Ссылка скопирована в буфер обмена!');
+                showCustomAlert('🔗 Ссылка скопирована!');
             } catch(err) {
                 showCustomAlert('Ошибка копирования ссылки');
             }
@@ -2014,7 +2025,6 @@
             });
             document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
 
-            // Если были указаны паузы — раскрываем аккордеон пауз
             if (item.pauseBefore || item.pauseAfter) {
                 document.getElementById('pauseAccordionContent').classList.add('open');
                 document.getElementById('pauseAccordionArrow').innerText = '▲';
@@ -2023,7 +2033,6 @@
             applyPauseBefore(item.pauseBefore || null);
             applyPauseAfter(item.pauseAfter || null);
 
-            // Редактирование сроков
             const openDateEl = document.getElementById('pOpenDate');
             if (item.openDate) {
                 openDateEl.value = item.openDate;
@@ -2040,7 +2049,6 @@
                 selectedPAOMonths = null;
             }
 
-            // Если был указан PAO — раскрываем аккордеон сроков
             if (item.paoMonths) {
                 document.getElementById('expiryAccordionContent').classList.add('open');
                 document.getElementById('expiryAccordionArrow').innerText = '▲';
@@ -2051,7 +2059,7 @@
                 chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day));
             });
 
-            document.getElementById('formModalTitle').innerText = '✏️ Редактировать средство';
+            document.getElementById('formModalTitle').innerText = 'редактировать средство';
         }
 
         function resetForm() {
@@ -2078,13 +2086,12 @@
             openDateEl.type = 'date';
             document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
 
-            // Сворачиваем аккордеоны
             document.getElementById('pauseAccordionContent').classList.remove('open');
             document.getElementById('pauseAccordionArrow').innerText = '▼';
             document.getElementById('expiryAccordionContent').classList.remove('open');
             document.getElementById('expiryAccordionArrow').innerText = '▼';
 
-            document.getElementById('formModalTitle').innerText = 'Новое средство';
+            document.getElementById('formModalTitle').innerText = 'новое средство';
         }
 
         function renderManageList() {
@@ -2208,7 +2215,6 @@
             document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
             document.getElementById('btnHeaderClose').addEventListener('click', closeSettings);
 
-            // Открытие настроек приложения (шестеренка ⚙️)
             document.getElementById('btnOpenAppSettings').addEventListener('click', openAppSettings);
             document.getElementById('btnCloseAppSettings').addEventListener('click', closeAppSettings);
             document.getElementById('btnAppHeaderClose').addEventListener('click', closeAppSettings);
@@ -2222,7 +2228,6 @@
             });
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            // Переключение аккордеонов
             document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => {
                 toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow');
             });
@@ -2230,7 +2235,6 @@
                 toggleAccordion('expiryAccordionContent', 'expiryAccordionArrow');
             });
 
-            // Обработчики переноса, бэкапа и обновления
             document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
             document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
             document.getElementById('btnImportJson').addEventListener('click', () => {
