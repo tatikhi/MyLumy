@@ -452,16 +452,7 @@
             padding: 4px;
             border-radius: 12px;
             margin-left: 2px;
-        }
-
-        .expiry-dots.clickable {
-            cursor: pointer;
-            background: rgba(0,0,0,0.02);
-            transition: background-color 0.2s;
-        }
-
-        .expiry-dots.clickable:active {
-            background: var(--accent-light);
+            pointer-events: none; /* Запрет случайных кликов */
         }
 
         .dot {
@@ -862,16 +853,16 @@
             background: var(--accent-light);
         }
 
-        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ПОСТОЯННОЙ И ЧЕТКОЙ ПЛАШКОЙ СКРОЛЛА ДЛЯ МОБИЛЬНЫХ И ДЕСКТОПОВ */
+        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ПОСТОЯННОЙ И ЧЕТКОЙ ПЛАШКОЙ СКРОЛЛА */
         .product-manage-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 18px;
-            max-height: 280px;
+            max-height: 340px;
             overflow-y: scroll;
-            padding-right: 10px;
-            padding-bottom: 70px; /* Отступ снизу для полной видимости плашки у последнего элемента */
+            padding-right: 6px;
+            padding-bottom: 70px;
             overscroll-behavior: contain;
             touch-action: pan-y;
             -webkit-overflow-scrolling: touch;
@@ -879,7 +870,6 @@
             scrollbar-color: var(--scroll-thumb) var(--scroll-track);
         }
 
-        /* КAСТОМНЫЙ СКРОЛЛБАР ДЛЯ WEBKIT (IOS SAFARI, ANDROID CHROME) */
         .product-manage-list::-webkit-scrollbar {
             width: 6px;
             display: block !important;
@@ -895,6 +885,77 @@
             border-radius: 10px;
         }
 
+        /* ГАРМОШКА КАТЕГОРИЙ В МОЕЙ КОЛЛЕКЦИИ */
+        .category-group-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .category-header-btn {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .category-header-btn:active, .category-header-btn.open {
+            background: var(--accent-light);
+            border-color: var(--accent-main);
+        }
+
+        .category-title-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: lowercase;
+        }
+
+        .category-count-badge {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .category-chevron {
+            color: var(--text-secondary);
+            font-size: 12px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .category-header-btn.open .category-chevron {
+            transform: rotate(180deg);
+        }
+
+        .category-items-container {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-left: 8px;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .category-items-container.open {
+            max-height: 800px;
+            opacity: 1;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
         .product-wrapper-block {
             display: flex;
             flex-direction: column;
@@ -905,9 +966,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 16px;
-            border-radius: 16px;
-            background: var(--bg-main);
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: var(--surface);
             font-size: 13px;
             border: 1px solid var(--border-color);
             cursor: pointer;
@@ -922,7 +983,7 @@
         .manage-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .manage-chevron {
@@ -943,7 +1004,7 @@
             display: flex;
             background: var(--surface);
             border: 0px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 14px;
             padding: 0 6px;
             gap: 6px;
             box-shadow: none;
@@ -1267,7 +1328,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.5.0</span>
+                    <span class="version-text brand-font">версия v1.6.0</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate">проверить обновление</button>
                 </div>
             </div>
@@ -1311,7 +1372,7 @@
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.5.0';
+        const APP_VERSION = '1.6.0';
         try {
             const savedVersion = localStorage.getItem('cb_app_version');
             if (savedVersion !== APP_VERSION) {
@@ -1402,6 +1463,14 @@
         let completedLog = JSON.parse(localStorage.getItem('cb_completed_log')) || {};
         let productProgress = JSON.parse(localStorage.getItem('cb_product_progress')) || {};
 
+        const CATEGORIES = [
+            "Очищение",
+            "Тонизирование",
+            "Активы",
+            "Уход за глазами",
+            "Питание / Увлажнение"
+        ];
+
         const typeOrder = {
             "Очищение": 1,
             "Тонизирование": 2,
@@ -1414,6 +1483,7 @@
         let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
         let currentScannedBarcode = null;
         let activePopoverProductId = null;
+        let autoExpandCategoryName = null; /* Авто-открытие категории при сохранении */
 
         let currentTOD = getInitialTOD();
 
@@ -1731,9 +1801,10 @@
             container.innerHTML = htmlBuffer.join('');
         }
 
+        /* ЧИСТЫЕ ИНДИКАТОРЫ ТОЧЕК PAO (БЕЗ ONCLICK) */
         function calcExpiryDots(openDateStr, paoMonths, productId) {
             if (!paoMonths) {
-                return `<div class="expiry-dots clickable" onclick="openProductForPAO(event, ${productId})" title="Указать PAO">
+                return `<div class="expiry-dots" title="PAO не указан">
                     <div class="dot dot-gray"></div>
                     <div class="dot dot-gray"></div>
                     <div class="dot dot-gray"></div>
@@ -1763,19 +1834,6 @@
             }
 
             return `<div class="expiry-dots">${dotsInner}</div>`;
-        }
-
-        function openProductForPAO(e, productId) {
-            if (e) e.stopPropagation();
-            openSettings();
-            editProduct(productId);
-            document.getElementById('expiryAccordionContent').classList.add('open');
-            document.getElementById('expiryAccordionArrow').innerText = '▲';
-            
-            setTimeout(() => {
-                const paoEl = document.getElementById('paoPicker');
-                if (paoEl) paoEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
         }
 
         /* ПЛАВНОЕ ОТКРЫТИЕ И ЗАКРЫТИЕ МОДАЛЬНЫХ ОКНО */
@@ -1810,6 +1868,7 @@
             stopBarcodeScanner();
             closeAllPopovers();
             closeAutocomplete();
+            autoExpandCategoryName = null;
             const modal = document.getElementById('settingsModal');
             closeModalElement(modal, () => {
                 resetForm();
@@ -1860,13 +1919,31 @@
             }, 300);
         }
 
+        /* УПРАВЛЕНИЕ ГАРМОШКОЙ КАТЕГОРИЙ В МОЕЙ КОЛЛЕКЦИИ */
+        function toggleCategoryAccordion(catIndex) {
+            closeAllPopovers();
+            const headerBtn = document.getElementById(`cat-header-${catIndex}`);
+            const container = document.getElementById(`cat-container-${catIndex}`);
+
+            if (!container || !headerBtn) return;
+
+            const isOpen = container.classList.contains('open');
+
+            if (isOpen) {
+                container.classList.remove('open');
+                headerBtn.classList.remove('open');
+            } else {
+                container.classList.add('open');
+                headerBtn.classList.add('open');
+            }
+        }
+
         /* АВТОСКРОЛЛ ДЛЯ ПОПОВЕРА: ГАРАНТИРУЕТ ПОЛНУЮ ВИДИМОСТЬ ПЛАШКИ "УДАЛИТЬ/РЕДАКТИРОВАТЬ" */
         function toggleProductPopover(e, id) {
             if (e) e.stopPropagation();
             const targetId = Number(id);
             const popoverEl = document.getElementById(`popover-${targetId}`);
             const itemEl = document.getElementById(`manage-item-${targetId}`);
-            const wrapperEl = itemEl ? itemEl.closest('.product-wrapper-block') : null;
             
             if (activePopoverProductId && activePopoverProductId !== targetId) {
                 closeAllPopovers();
@@ -1879,7 +1956,6 @@
                 if (itemEl) itemEl.classList.add('active-item');
                 activePopoverProductId = targetId;
 
-                /* МЯГКАЯ ДОКРУТКА СУПЕР-ТОЧНО В КОНЕЦ ПОПОВЕРА */
                 setTimeout(() => {
                     if (popoverEl) {
                         popoverEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2246,7 +2322,6 @@
                 toast.classList.remove('visible');
                 closeAppSettings();
 
-                /* Гарантированный сброс мобильного кэша PWA / ярлыка через динамический URL */
                 setTimeout(() => {
                     const cleanUrl = window.location.origin + window.location.pathname + '?v_force=' + Date.now();
                     window.location.href = cleanUrl;
@@ -2343,6 +2418,9 @@
             } else {
                 products.push(productData);
             }
+
+            /* Запоминаем категорию сохраненного средства для ее автоматического раскрытия */
+            autoExpandCategoryName = type;
 
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
             renderManageList();
@@ -2449,33 +2527,59 @@
             document.getElementById('formModalTitle').innerText = 'новое средство';
         }
 
+        /* ОТРИСОВКА МОЕЙ КОЛЛЕКЦИИ, РАЗБИТОЙ ПО ГАРМОШКАМ ЕТАПОВ */
         function renderManageList() {
             const container = document.getElementById('manageList');
-            if (products.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-
             const htmlBuffer = [];
-            products.forEach((p) => {
-                const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths, p.id);
-                htmlBuffer.push(`
-                    <div class="product-wrapper-block">
-                        <div class="manage-item" id="manage-item-${p.id}" onclick="toggleProductPopover(event, ${p.id})">
-                            <div class="manage-info">
-                                ${dotsHtml}
-                                <span><b>${escapeHtml(p.name)}</b> <span style="font-size: 11px; color: var(--text-secondary);">(${escapeHtml(p.type)})</span></span>
+
+            CATEGORIES.forEach((catName, catIndex) => {
+                const catProducts = products.filter(p => p.type === catName);
+                const count = catProducts.length;
+
+                /* Категория должна открыться только если туда только что сохранилось средство */
+                const shouldAutoExpand = (autoExpandCategoryName === catName);
+                const openHeaderClass = shouldAutoExpand ? 'open' : '';
+                const openContainerClass = shouldAutoExpand ? 'open' : '';
+
+                let catItemsHtml = '';
+                if (count === 0) {
+                    catItemsHtml = `<div style="font-size: 11px; color: var(--text-secondary); padding: 8px 12px;">нет средств в категории</div>`;
+                } else {
+                    catItemsHtml = catProducts.map(p => {
+                        const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths, p.id);
+                        return `
+                            <div class="product-wrapper-block">
+                                <div class="manage-item" id="manage-item-${p.id}" onclick="toggleProductPopover(event, ${p.id})">
+                                    <div class="manage-info">
+                                        ${dotsHtml}
+                                        <span><b>${escapeHtml(p.name)}</b></span>
+                                    </div>
+                                    <div class="manage-chevron">›</div>
+                                </div>
+                                <div class="popover-actions-menu" id="popover-${p.id}">
+                                    <button type="button" class="popover-btn" onclick="editProduct(${p.id})">редактировать</button>
+                                    <button type="button" class="popover-btn danger" onclick="deleteProduct(${p.id})">удалить</button>
+                                </div>
                             </div>
-                            <div class="manage-chevron">›</div>
-                        </div>
-                        <div class="popover-actions-menu" id="popover-${p.id}">
-                            <button type="button" class="popover-btn" onclick="editProduct(${p.id})">редактировать</button>
-                            <button type="button" class="popover-btn danger" onclick="deleteProduct(${p.id})">удалить</button>
+                        `;
+                    }).join('');
+                }
+
+                htmlBuffer.push(`
+                    <div class="category-group-block">
+                        <button type="button" class="category-header-btn ${openHeaderClass}" id="cat-header-${catIndex}" onclick="toggleCategoryAccordion(${catIndex})">
+                            <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${count})</span></span>
+                            <span class="category-chevron">▼</span>
+                        </button>
+                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}">
+                            ${catItemsHtml}
                         </div>
                     </div>
                 `);
             });
+
             container.innerHTML = htmlBuffer.join('');
+            autoExpandCategoryName = null; /* Сбрасываем триггер */
         }
 
         function deleteProduct(id) {
