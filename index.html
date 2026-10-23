@@ -1329,7 +1329,8 @@
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
                     <span class="version-text brand-font">версия v1.6.0</span>
-                    <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate">проверить обновление</button>
+                    <!-- ГАРАНТИРОВАННАЯ ПРИВЯЗКА КНОПКИ ОБНОВЛЕНИЯ ЧЕРЕЗ ONCLICK -->
+                    <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                 </div>
             </div>
 
@@ -1483,7 +1484,7 @@
         let barcodeCache = JSON.parse(localStorage.getItem('cb_barcode_cache')) || {};
         let currentScannedBarcode = null;
         let activePopoverProductId = null;
-        let autoExpandCategoryName = null; /* Авто-открытие категории при сохранении */
+        let autoExpandCategoryName = null;
 
         let currentTOD = getInitialTOD();
 
@@ -2304,7 +2305,7 @@
             document.body.removeChild(ta);
         }
 
-        /* ОБРАБОТКА КНОПКИ ПРОВЕРКИ ОБНОВЛЕНИЯ И ПРИНУДИТЕЛЬНЫЙ СБРОС КЭША ДЛЯ ЯРЛЫКОВ */
+        /* ИСПРАВЛЕННАЯ ФУНКЦИЯ ПРОВЕРКИ ОБНОВЛЕНИЯ */
         function forceAppUpdate() {
             const savedVersion = localStorage.getItem('cb_app_version');
             const toast = document.getElementById('toastNotification');
@@ -2419,7 +2420,6 @@
                 products.push(productData);
             }
 
-            /* Запоминаем категорию сохраненного средства для ее автоматического раскрытия */
             autoExpandCategoryName = type;
 
             localStorage.setItem('cb_custom_products', JSON.stringify(products));
@@ -2503,7 +2503,6 @@
             
             document.querySelectorAll('#typePicker .picker-btn').forEach(btn => btn.classList.remove('active'));
             
-            /* ПО УМОЛЧАНИЮ УТРО И ВЕЧЕР ВКЛЮЧЕНЫ */
             document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.add('active'));
 
             document.getElementById('pFreqType').value = 'daily';
@@ -2527,7 +2526,7 @@
             document.getElementById('formModalTitle').innerText = 'новое средство';
         }
 
-        /* ОТРИСОВКА МОЕЙ КОЛЛЕКЦИИ, РАЗБИТОЙ ПО ГАРМОШКАМ ЕТАПОВ */
+        /* ОТРИСОВКА МОЕЙ КОЛЛЕКЦИИ, РАЗБИТОЙ ПО ГАРМОШКАМ ЭТАПОВ */
         function renderManageList() {
             const container = document.getElementById('manageList');
             const htmlBuffer = [];
@@ -2536,7 +2535,6 @@
                 const catProducts = products.filter(p => p.type === catName);
                 const count = catProducts.length;
 
-                /* Категория должна открыться только если туда только что сохранилось средство */
                 const shouldAutoExpand = (autoExpandCategoryName === catName);
                 const openHeaderClass = shouldAutoExpand ? 'open' : '';
                 const openContainerClass = shouldAutoExpand ? 'open' : '';
@@ -2579,7 +2577,7 @@
             });
 
             container.innerHTML = htmlBuffer.join('');
-            autoExpandCategoryName = null; /* Сбрасываем триггер */
+            autoExpandCategoryName = null;
         }
 
         function deleteProduct(id) {
@@ -2658,7 +2656,6 @@
                     e.target.value = '';
                 }
             });
-            document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
 
             /* ОБРАБОТЧИК ВВОДА В НАЗВАНИЕ ДЛЯ АВТОКОМПЛИТА */
             const pNameInput = document.getElementById('pName');
