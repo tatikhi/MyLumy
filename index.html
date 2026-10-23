@@ -126,15 +126,9 @@
             width: 100%;
             max-width: 480px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-bottom: 20px;
-        }
-
-        .header-right-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .brand-font {
@@ -152,48 +146,6 @@
             letter-spacing: 0.35em;
             text-transform: lowercase;
             color: var(--text-primary);
-        }
-
-        .btn-settings {
-            background: var(--surface);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            white-space: nowrap;
-        }
-
-        .btn-icon-settings {
-            background: var(--surface);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            padding: 0;
-            flex-shrink: 0;
-        }
-
-        .btn-icon-settings svg, .title-settings-icon {
-            width: 18px;
-            height: 18px;
-            stroke: var(--text-primary);
-            fill: none;
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: stroke 0.3s ease;
         }
 
         .streak-card {
@@ -339,6 +291,53 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* БЛОК КНОПОК НИЖЕ СХЕМ (ВЫРОВНЕНЫ ПО ШИРИНЕ ПЛАШЕК) */
+        .main-card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-main-action {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: lowercase;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-main-action:hover, .btn-main-action:active {
+            background: var(--accent-light);
+            border-color: var(--accent-main);
+            transform: translateY(-1px);
+        }
+
+        .btn-main-action svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-primary);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s ease;
         }
 
         .routine-item {
@@ -927,7 +926,7 @@
             padding-bottom: 20px;
         }
 
-        /* ГАРМОШКА КАТЕГОРИЙ С ЗАПАСОМ ВЫСОТЫ ДЛЯ ПОПОВЕРОВ */
+        /* ГАРМОШКА КАТЕГОРИЙ С ПЛАВНЫМ CSS-ПЕРЕХОДОМ ПО ДИНАМИЧЕСКОЙ ВЫСОТЕ */
         .category-group-block {
             display: flex;
             flex-direction: column;
@@ -997,7 +996,6 @@
 
         .category-items-container.open {
             opacity: 1;
-            max-height: 2500px !important; /* Гарантирует, что поповер никогда не обрежется */
             padding-top: 4px;
             padding-bottom: 8px;
         }
@@ -1170,15 +1168,6 @@
 
     <div class="header-bar">
         <div class="logo">myspa</div>
-        <div class="header-right-group">
-            <button type="button" class="btn-settings brand-font" id="btnOpenSettings">моя коллекция</button>
-            <button type="button" class="btn-icon-settings" id="btnOpenAppSettings" aria-label="Настройки">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-            </button>
-        </div>
     </div>
 
     <!-- Интерактивный календарь -->
@@ -1199,6 +1188,18 @@
         <div id="noticeBanner" class="scanner-notice-banner" style="display: none; margin-bottom: 16px;"></div>
 
         <div class="routine-list" id="routineContainer"></div>
+
+        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ (ВЫРОВНЕНЫ ПО ШИРИНЕ ПЛАШЕК) -->
+        <div class="main-card-actions">
+            <button type="button" class="btn-main-action brand-font" id="btnOpenSettings">моя коллекция</button>
+            <button type="button" class="btn-main-action brand-font" id="btnOpenAppSettings">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                мои настройки
+            </button>
+        </div>
     </div>
 
     <!-- Модальное окно "Моя коллекция" -->
@@ -1367,7 +1368,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text brand-font">версия v1.7.2</span>
+                        <span class="version-text brand-font">версия v1.7.3</span>
                         <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1416,7 +1417,7 @@
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.7.2';
+        const APP_VERSION = '1.7.3';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -1541,10 +1542,11 @@
             return getLocalTodayStr(d);
         }
 
+        /* ТОЧНАЯ ПРИВЯЗКА К ВРЕМЕНИ ДЕВАЙСА (УТРО: 03:00 - 17:59, ВЕЧЕР: 18:00 - 02:59) */
         function getInitialTOD() {
             const now = new Date();
             const h = now.getHours();
-            if (h >= 3 && h < 15) {
+            if (h >= 3 && h < 18) {
                 return 'morning';
             } else {
                 return 'evening';
@@ -1591,7 +1593,7 @@
             "Тоник успокаивающий", "Кислотный тоник", "Эссенция с муцином", 
             "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", 
             "Сыворотка с витамином C", "Сыворотка с ретинолом", "Крем для век", 
-            "Увлажняющий крем", "Питательный крем", "Востанавливающий бальзам", 
+            "Увлажняющий крем", "Питательный крем", "Восстанавливающий бальзам", 
             "Солнцезащитный крем SPF 50", "Маска увлажняющая", "Глиняная маска"
         ];
 
@@ -1996,7 +1998,6 @@
                 scrollBody.scrollTop = 0;
             }
 
-            // Синхронный фокус для мгновенного вызова клавиатуры
             const pNameInput = document.getElementById('pName');
             if (pNameInput) {
                 pNameInput.focus();
@@ -2020,6 +2021,7 @@
             resetForm();
         }
 
+        /* ТОЧНЫЙ РАСЧЕТ scrollHeight ДЛЯ ИДЕАЛЬНО ПЛАВНОЙ АНИМАЦИИ КАТЕГОРИЙ */
         function toggleCategoryAccordion(catIndex) {
             closeAllPopovers();
             const headerBtn = document.getElementById(`cat-header-${catIndex}`);
@@ -2031,6 +2033,7 @@
 
             document.querySelectorAll('.category-items-container').forEach((el, idx) => {
                 if (idx !== catIndex && el.classList.contains('open')) {
+                    el.style.maxHeight = '0px';
                     el.classList.remove('open');
                     const hb = document.getElementById(`cat-header-${idx}`);
                     if (hb) hb.classList.remove('open');
@@ -2038,11 +2041,13 @@
             });
 
             if (isOpen) {
+                container.style.maxHeight = '0px';
                 container.classList.remove('open');
                 headerBtn.classList.remove('open');
             } else {
                 container.classList.add('open');
                 headerBtn.classList.add('open');
+                container.style.maxHeight = container.scrollHeight + 'px';
 
                 setTimeout(() => {
                     headerBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2055,6 +2060,7 @@
             const targetId = Number(id);
             const popoverEl = document.getElementById(`popover-${targetId}`);
             const itemEl = document.getElementById(`manage-item-${targetId}`);
+            const container = popoverEl ? popoverEl.closest('.category-items-container') : null;
             
             if (activePopoverProductId && activePopoverProductId !== targetId) {
                 closeAllPopovers();
@@ -2062,12 +2068,19 @@
 
             if (popoverEl && popoverEl.classList.contains('open')) {
                 closeAllPopovers();
+                if (container) {
+                    container.style.maxHeight = (container.scrollHeight - popoverEl.scrollHeight) + 'px';
+                }
             } else if (popoverEl) {
                 popoverEl.classList.add('open');
                 if (itemEl) itemEl.classList.add('active-item');
                 activePopoverProductId = targetId;
 
-                // Аккуратный скролл, если поповер упирается в низ
+                // Динамически увеличиваем max-height контейнера, чтобы поповер никогда не обрезался
+                if (container) {
+                    container.style.maxHeight = (container.scrollHeight + popoverEl.scrollHeight + 20) + 'px';
+                }
+
                 setTimeout(() => {
                     const scrollBody = document.getElementById('modalScrollBody');
                     const rect = popoverEl.getBoundingClientRect();
@@ -2080,7 +2093,15 @@
         }
 
         function closeAllPopovers() {
-            document.querySelectorAll('.popover-actions-menu').forEach(p => p.classList.remove('open'));
+            document.querySelectorAll('.popover-actions-menu').forEach(p => {
+                if (p.classList.contains('open')) {
+                    const container = p.closest('.category-items-container');
+                    if (container) {
+                        container.style.maxHeight = (container.scrollHeight - p.scrollHeight) + 'px';
+                    }
+                }
+                p.classList.remove('open');
+            });
             document.querySelectorAll('.manage-item').forEach(i => i.classList.remove('active-item'));
             activePopoverProductId = null;
         }
@@ -2283,7 +2304,6 @@
             window.alertTarget = targetElement;
         }
 
-        // Синхронный фокус при закрытии алерта для гарантированного вызова клавиатуры
         document.getElementById('btnAlertOk').addEventListener('click', () => {
             const modal = document.getElementById('customAlertModal');
             modal.classList.remove('active-modal');
@@ -2698,7 +2718,7 @@
                             <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${count})</span></span>
                             <span class="category-chevron">▼</span>
                         </button>
-                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}">
+                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}" style="${shouldAutoExpand ? 'max-height: 2000px;' : ''}">
                             ${catItemsHtml}
                         </div>
                     </div>
