@@ -494,7 +494,7 @@
             backdrop-filter: blur(0px);
             display: none;
             justify-content: center;
-            align-items: flex-start; /* Фиксация в верхней части экрана устройства */
+            align-items: flex-start;
             padding: 24px 16px 40px;
             z-index: 1000;
             overflow-y: auto;
@@ -531,7 +531,7 @@
             opacity: 1;
         }
 
-        /* КОМПАКТНАЯ МОБИЛЬНАЯ ЭРГОНОМИКА (iPhone SE и др.) */
+        /* КОМПАКТНАЯ МОБИЛЬНАЯ ЭРГОНОМИКА */
         @media (max-width: 480px) {
             .modal-overlay {
                 padding: 12px 12px 30px;
@@ -908,7 +908,7 @@
             background: var(--accent-light);
         }
 
-        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" С ДОПОЛНИТЕЛЬНЫМ ЗАПАСОМ СНИЗУ */
+        /* СПИСОК "МОЯ КОЛЛЕКЦИЯ" */
         .product-manage-list {
             display: flex;
             flex-direction: column;
@@ -918,7 +918,7 @@
             padding-bottom: 40px;
         }
 
-        /* ГАРМОШКА КАТЕГОРИЙ С ПЛАВНЫМ CSS-ПЕРЕХОДОМ */
+        /* ГАРМОШКА КАТЕГОРИЙ С ПЛАВНЫМ CSS-ПЕРЕХОДОМ И ДИНАМИЧЕСКОЙ ВЫСОТОЙ */
         .category-group-block {
             display: flex;
             flex-direction: column;
@@ -987,7 +987,6 @@
         }
 
         .category-items-container.open {
-            max-height: 1000px;
             opacity: 1;
             padding-top: 4px;
             padding-bottom: 8px;
@@ -1144,23 +1143,23 @@
             z-index: 10;
         }
 
-        /* АДАПТИВНАЯ ПЛАШКА УВЕДОМЛЕНИЙ - РАСПОЛОЖЕНИЕ ПОД ДАТОЙ */
+        /* УВЕДОМЛЕНИЯ (TOAST) - СТРОГО ПО ЦЕНТРУ ЭКРАНА */
         .toast-notification {
             position: fixed;
-            top: 150px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%) scale(0.9);
+            transform: translate(-50%, -50%) scale(0.9);
             width: 90%;
             max-width: 360px;
             background: var(--surface);
             border: 1px solid var(--accent-main);
             color: var(--text-primary);
-            padding: 16px 20px;
+            padding: 18px 22px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             line-height: 1.4;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
             opacity: 0;
             pointer-events: none;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
@@ -1171,7 +1170,7 @@
 
         .toast-notification.visible {
             opacity: 1;
-            transform: translateX(-50%) scale(1);
+            transform: translate(-50%, -50%) scale(1);
         }
     </style>
 </head>
@@ -1371,7 +1370,7 @@
 
             <div class="form-section" style="margin-bottom: 14px;">
                 <div class="version-row">
-                    <span class="version-text brand-font">версия v1.6.7</span>
+                    <span class="version-text brand-font">версия v1.6.9</span>
                     <button type="button" class="btn-update-inline brand-font" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                 </div>
             </div>
@@ -1411,11 +1410,11 @@
         </div>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ TOAST (С АДАПТИВНОЙ ВЫСОТОЙ) -->
+    <!-- ВСПЛЫВАЮЩИЙ TOAST (ПО ЦЕНТРУ ЭКРАНА) -->
     <div class="toast-notification brand-font" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.6.7';
+        const APP_VERSION = '1.6.9';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -1942,6 +1941,7 @@
         }
 
         function openSettings() {
+            document.getElementById('manageList').style.display = 'flex';
             renderManageList();
             hideForm();
             const modal = document.getElementById('settingsModal');
@@ -1977,6 +1977,7 @@
             stopBarcodeScanner();
             closeAllPopovers();
             const container = document.getElementById('productFormContainer');
+            document.getElementById('manageList').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
             document.getElementById('mainModalFooter').style.display = 'none'; 
@@ -1984,7 +1985,7 @@
 
             container.classList.add('open');
 
-            // Сбрасываем скролл карточки модального окна на самый верх для размещения в верхней трети экрана
+            // Сбрасываем скролл модалки на самый верх (в верхнюю треть экрана устройства)
             const modalCard = document.getElementById('settingsModalCard');
             if (modalCard) {
                 modalCard.scrollTop = 0;
@@ -2003,6 +2004,7 @@
             container.classList.remove('open');
             
             setTimeout(() => {
+                document.getElementById('manageList').style.display = 'flex';
                 document.getElementById('btnAddToggle').style.display = 'block';
                 document.getElementById('btnScanBarcode').style.display = 'block';
                 document.getElementById('mainModalFooter').style.display = 'block';
@@ -2012,6 +2014,7 @@
             }, 300);
         }
 
+        /* ПЛАВНОЕ ОТКРЫТИЕ И ЗАКРЫТИЕ КАТЕГОРИЙ С ДИНАМИЧЕСКОЙ ВЫСОТОЙ */
         function toggleCategoryAccordion(catIndex) {
             closeAllPopovers();
             const headerBtn = document.getElementById(`cat-header-${catIndex}`);
@@ -2021,12 +2024,24 @@
 
             const isOpen = container.classList.contains('open');
 
+            // Закрываем все остальные категории плавно
+            document.querySelectorAll('.category-items-container').forEach((el, idx) => {
+                if (idx !== catIndex && el.classList.contains('open')) {
+                    el.style.maxHeight = '0px';
+                    el.classList.remove('open');
+                    const hb = document.getElementById(`cat-header-${idx}`);
+                    if (hb) hb.classList.remove('open');
+                }
+            });
+
             if (isOpen) {
+                container.style.maxHeight = '0px';
                 container.classList.remove('open');
                 headerBtn.classList.remove('open');
             } else {
                 container.classList.add('open');
                 headerBtn.classList.add('open');
+                container.style.maxHeight = container.scrollHeight + 'px';
 
                 setTimeout(() => {
                     headerBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2155,6 +2170,8 @@
 
             const scannerWrapper = document.getElementById('scannerWrapper');
             scannerWrapper.style.display = 'block';
+            document.getElementById('manageList').style.display = 'none';
+            document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
 
             // Сбрасываем скролл модалки на самый верх, чтобы камера открывалась в верхней трети экрана
@@ -2227,6 +2244,8 @@
                 }
             }
             scannerWrapper.style.display = 'none';
+            document.getElementById('manageList').style.display = 'flex';
+            document.getElementById('btnAddToggle').style.display = 'block';
             document.getElementById('btnScanBarcode').style.display = 'block';
             isScannerBusy = false;
         }
@@ -2641,6 +2660,7 @@
                 const shouldAutoExpand = (autoExpandCategoryName === catName);
                 const openHeaderClass = shouldAutoExpand ? 'open' : '';
                 const openContainerClass = shouldAutoExpand ? 'open' : '';
+                const initialMaxHeight = shouldAutoExpand ? '1000px' : '0px';
 
                 let catItemsHtml = '';
                 if (count === 0) {
@@ -2672,7 +2692,7 @@
                             <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${count})</span></span>
                             <span class="category-chevron">▼</span>
                         </button>
-                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}">
+                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}" style="max-height: ${initialMaxHeight};">
                             ${catItemsHtml}
                         </div>
                     </div>
