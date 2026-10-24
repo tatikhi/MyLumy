@@ -550,7 +550,6 @@
             opacity: 0.6;
         }
 
-        /* ИСПРАВЛЕНИЕ 2: ГАРАНТИРОВАННОЕ ОТОБРАЖЕНИЕ ЗАЧЕРКНУТЫХ ДНЕЙ НА ВСЕХ УСТРОЙСТВАХ И ПЛАНШЕТАХ */
         .cal-day-cell.disabled {
             opacity: 0.3 !important;
             color: var(--text-secondary) !important;
@@ -711,9 +710,14 @@
             border-radius: 14px; margin-top: 4px; max-height: 0; opacity: 0;
             overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
             transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+            display: none;
         }
 
-        .autocomplete-dropdown.open { max-height: 180px; opacity: 1; }
+        .autocomplete-dropdown.open {
+            display: block;
+            max-height: 180px;
+            opacity: 1;
+        }
 
         .autocomplete-item {
             padding: 12px 16px; font-size: 13px; color: var(--text-primary);
@@ -837,23 +841,32 @@
 
         .category-header-btn.open .category-chevron { transform: rotate(180deg); }
 
-        /* ИСПРАВЛЕНИЕ 3: ПЛАВНОЕ ВЫПАДЕНИЕ И СКРЫТИЕ СПИСКА СРЕДСТВ В КАТЕГОРИЯХ */
+        /* ИДЕАЛЬНО ПЛАВНОЕ ВЫПАДЕНИЕ ЧЕРЕЗ CSS GRID */
         .category-items-container {
-            max-height: 0;
+            display: grid;
+            grid-template-rows: 0fr;
             opacity: 0;
+            transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .category-items-container.open {
+            grid-template-rows: 1fr;
+            opacity: 1;
+        }
+
+        .category-items-inner {
             overflow: hidden;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            padding-left: 8px;
+            padding-left: 0;
             padding-top: 0;
             padding-bottom: 0;
-            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            transition: padding 0.3s ease;
         }
 
-        .category-items-container.open {
-            max-height: 800px;
-            opacity: 1;
+        .category-items-container.open .category-items-inner {
+            padding-left: 8px;
             padding-top: 4px;
             padding-bottom: 8px;
         }
@@ -1177,7 +1190,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.19</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.21</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1215,7 +1228,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.19';
+        const APP_VERSION = '1.2.21';
 
         const safeStorage = {
             getItem(key) {
@@ -1281,14 +1294,8 @@
             "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
-        /* ИСПРАВЛЕНИЕ 4: ПРОВЕРКА ВСЕХ СРЕДСТВ СО СЛОВАМИ "ГЛАЗ" / "ВЕК" В САМОМ НАЧАЛЕ */
+        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ: СОВЕТЫ ЕСТЬ ТОЛЬКО У АКТИВОВ ИЛИ СРЕДСТВ С НЕОБЯЗАТЕЛЬНЫМ ЕЖЕДНЕВНЫМ ПРИМЕНЕНИЕМ */
         const SMART_PRESETS = [
-            {
-                keywords: ['патч', 'patch', 'глаз', 'век', 'eye'],
-                type: 'Уход за глазами',
-                tods: ['morning'],
-                freqType: 'daily'
-            },
             {
                 keywords: ['ретинол', 'retinol', 'адапален', 'adapalene', 'третиноин', 'tretinoin'],
                 type: 'Активы',
@@ -1319,13 +1326,13 @@
                 reason: 'Витамин C наносится утром и требует 10 минут для впитывания.'
             },
             {
-                keywords: ['spf', 'спф', 'солнц', 'sunscreen'],
-                type: 'Питание / Увлажнение',
+                keywords: ['микроиглам', 'микроигольчат', 'кофеин', 'caffeine'],
+                type: 'Уход за глазами',
                 tods: ['morning'],
                 freqType: 'daily',
-                pauseBefore: 5,
-                pauseAfter: 15,
-                reason: 'SPF-фильтрам нужно 15 минут для образования защитной пленки перед выходом или макияжем.'
+                pauseBefore: 0,
+                pauseAfter: 10,
+                reason: 'Патчи с активными компонентами (кофеин/микроигольчатые) требуют времени для полноценного проникновения сыворотки.'
             },
             {
                 keywords: ['маск', 'mask'],
@@ -1338,31 +1345,50 @@
                 reason: 'Маски рекомендуется применять по графику (Пн и Чт).'
             },
             {
+                keywords: ['spf', 'спф', 'солнц', 'sunscreen'],
+                type: 'Питание / Увлажнение',
+                tods: ['morning'],
+                freqType: 'daily',
+                pauseBefore: 5,
+                pauseAfter: 15,
+                reason: 'SPF-фильтрам нужно 15 минут для образования защитной пленки перед выходом или макияжем.'
+            },
+            {
+                keywords: ['патч', 'patch', 'сыворотка для век', 'сыворотка вокруг глаз', 'крем для век', 'крем вокруг глаз', 'гель для век', 'гель вокруг глаз', 'eye cream', 'eye patch', 'eye serum'],
+                type: 'Уход за глазами',
+                tods: ['morning', 'evening'],
+                freqType: 'daily'
+                // Базовые патчи и кремы для век ежедневные и без активных предупреждений -> нет reason (совет не появляется)
+            },
+            {
                 keywords: ['сыворотк', 'serum', 'ампул', 'бустер'],
                 type: 'Активы',
                 tods: ['morning', 'evening'],
                 freqType: 'daily',
                 pauseBefore: 0,
                 pauseAfter: 10,
-                reason: 'Сывороткам требуется 10 минут для полноценного проникновения активных компонентов.'
+                reason: 'Сывороткам с активными компонентами требуется 10 минут для полноценного проникновения.'
             },
             {
                 keywords: ['увлажнят', 'увлажняющий', 'питательный', 'восстанавливающий', 'крем', 'moisturizer', 'эмульсия', 'флюид'],
                 type: 'Питание / Увлажнение',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
+                // Базовый крем -> нет reason
             },
             {
                 keywords: ['пенк', 'гель для умыв', 'гидрофильн', 'мицелляр', 'foam', 'очищающ'],
                 type: 'Очищение',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
+                // Базовое очищение -> нет reason
             },
             {
                 keywords: ['тонер', 'тоник', 'эссенци', 'toner'],
                 type: 'Тонизирование',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
+                // Базовое тонизирование -> нет reason
             }
         ];
 
@@ -1772,10 +1798,10 @@
             if (dropdown) {
                 dropdown.classList.remove('open');
                 dropdown.innerHTML = '';
+                dropdown.style.display = 'none';
             }
         }
 
-        /* ИСПРАВЛЕНИЕ 1: СМЫКАНИЕ И ОЧИСТКА ВЫПАДАЮЩЕГО СПИСКА ПРИ КЛИКЕ НА ВАРИАНТ */
         function selectAutocompleteItem(val) {
             closeAutocomplete();
             const input = document.getElementById('pName');
@@ -1912,6 +1938,7 @@
                 </div>
             `).join('');
 
+            dropdown.style.display = 'block';
             dropdown.classList.add('open');
         }
 
@@ -2246,7 +2273,9 @@
                             <span class="category-chevron">${chevronSvg}</span>
                         </button>
                         <div class="category-items-container" id="cat-container-${catIndex}">
-                            ${catItemsHtml || '<div style="font-size: 11px; color: var(--text-secondary); padding: 8px 12px;">нет средств</div>'}
+                            <div class="category-items-inner">
+                                ${catItemsHtml || '<div style="font-size: 11px; color: var(--text-secondary); padding: 8px 12px;">нет средств</div>'}
+                            </div>
                         </div>
                     </div>
                 `);
