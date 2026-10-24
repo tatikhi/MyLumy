@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
-            --bg-main: #F4ECE4;
+            --bg-main: #EFE3D8;
             --surface: #FFFFFF;
             --text-primary: #4A3E3D;
             --text-secondary: #7A6B69;
@@ -28,7 +28,7 @@
         }
 
         body[data-theme="mint"] {
-            --bg-main: #E4EFEA;
+            --bg-main: #D5EBE3;
             --surface: #FFFFFF;
             --text-primary: #2A3B37;
             --text-secondary: #56726D;
@@ -44,7 +44,7 @@
         }
 
         body[data-theme="lavender"] {
-            --bg-main: #EFE6F3;
+            --bg-main: #E5D6ED;
             --surface: #FFFFFF;
             --text-primary: #3B3342;
             --text-secondary: #6B6075;
@@ -60,7 +60,7 @@
         }
 
         body[data-theme="sage"] {
-            --bg-main: #E6EFE6;
+            --bg-main: #D6E8D6;
             --surface: #FFFFFF;
             --text-primary: #2C3A2E;
             --text-secondary: #4F5E51;
@@ -1150,7 +1150,7 @@
                                     <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
                                 </div>
                                 <div id="daysGroup" style="display: none; margin-top: 10px;">
-                                    <label style="font-size: 13.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит галочку в план):</label>
+                                    <label style="font-size: 13.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит в расписание):</label>
                                     <div class="days-picker" id="daysPicker">
                                         <button type="button" class="day-chip" data-day="1">Пн</button>
                                         <button type="button" class="day-chip" data-day="2">Вт</button>
@@ -1212,7 +1212,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">MySpa версия v.1.2.0</span>
+                        <span class="version-text uniform-brand-title">MySpa версия v.1.2.1</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1233,7 +1233,7 @@
                         <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #C49A82; border-color: #C49A82;" title="Nude"></button>
                         <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #5B8A82; border-color: #5B8A82;" title="Mint"></button>
                         <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #8B789D; border-color: #8B789D;" title="Lavender"></button>
-                        <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #3A4D39; border-color: #3A4D39;" title="Sage"></button>
+                        <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #4A6148; border-color: #4A6148;" title="Sage"></button>
                         <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; background: #242A3B; border-color: #242A3B;" title="Midnight"></button>
                     </div>
                 </div>
@@ -1248,7 +1248,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = 'v.1.2.0';
+        const APP_VERSION = 'v.1.2.1';
 
         function triggerHaptic(pattern = 15) {
             if (navigator.vibrate) {
@@ -1737,6 +1737,29 @@
             return isToday && isCurrentTOD;
         }
 
+        function getMondayOfWeek(d) {
+            const date = new Date(d);
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(date.setDate(diff));
+        }
+
+        function calcActiveWeekNumber(openDateStr, routineDateObj) {
+            if (!openDateStr) return 1;
+            const parts = openDateStr.split('-');
+            const openObj = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12, 0, 0);
+            
+            const startMon = getMondayOfWeek(openObj);
+            startMon.setHours(0, 0, 0, 0);
+
+            const routineMon = getMondayOfWeek(routineDateObj);
+            routineMon.setHours(0, 0, 0, 0);
+
+            const diffTime = routineMon - startMon;
+            const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+            return Math.max(1, diffWeeks + 1);
+        }
+
         function renderRoutine() {
             renderCurrentDateChip();
             const container = document.getElementById('routineContainer');
@@ -1749,7 +1772,8 @@
             }
 
             const htmlBuffer = [];
-            const routineDateStr = getLocalTodayStr(getRoutineDateObj());
+            const routineDateObj = getRoutineDateObj();
+            const routineDateStr = getLocalTodayStr(routineDateObj);
             const isTimerActive = isTimerAllowedForCurrentView();
 
             activeProducts.forEach((item, index) => {
@@ -1758,7 +1782,11 @@
                 let toggleCircleHtml = '';
                 let weekStepHtml = '';
 
-                if (item.freqType === 'custom') {
+                if (item.type === 'Активы') {
+                    const currentWeekNum = calcActiveWeekNumber(item.openDate, routineDateObj);
+                    const calendarSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+                    weekStepHtml = `<span class="item-week-step">${calendarSvg} неделя ${currentWeekNum}</span>`;
+                } else if (item.freqType === 'custom') {
                     const isCompleted = productProgress[item.id] && Array.isArray(productProgress[item.id].dates) && productProgress[item.id].dates.includes(routineDateStr);
                     const completedClass = isCompleted ? 'completed' : '';
                     const checkIcon = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
