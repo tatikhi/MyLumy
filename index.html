@@ -548,14 +548,12 @@
             opacity: 1;
         }
 
-        /* ПРИГЛУШЕННЫЕ ПРОШЛЫЕ И БУДУЩИЕ ДНИ */
         .cal-day-cell.archive-day,
         .cal-day-cell.future-day {
             color: var(--text-secondary);
             opacity: 0.6;
         }
 
-        /* НЕДОСТУПНЫЕ ДНИ (РАНЕЕ ДНЯ УСТАНОВКИ / 90 ДНЕЙ) */
         .cal-day-cell.disabled {
             opacity: 0.2;
             color: var(--text-secondary);
@@ -1180,7 +1178,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.15</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.16</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1218,7 +1216,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.15';
+        const APP_VERSION = '1.2.16';
 
         const safeStorage = {
             getItem(key) {
@@ -1271,7 +1269,7 @@
             "Отшелушивающий тоник", "Эссенция с муцином", "Эссенция с галактомисисом", "Софтнер", 
             "Мист для лица", "Лосьон увлажняющий",
             "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", "Сыворотка с витамином C", 
-            "Сыворотка с ретинолом", "Сыворотка с пептидами", "Сыворотка с бакучиолом", 
+            "Сыворотка с витамином с", "Сыворотка с ретинолом", "Сыворотка с пептидами", "Сыворотка с бакучиолом", 
             "Сыворотка с центеллой", "Сыворотка с азелаиновой кислотой", "Сыворотка с салициловой кислотой", 
             "Сыворотка с гликолевой кислотой", "Пилинг-сыворотка", "Ампульная сыворотка", "Бустер для лица",
             "Крем для век", "Крем вокруг глаз", "Гель для кожи вокруг глаз", "Сыворотка для век",
@@ -1322,7 +1320,7 @@
                 reason: 'Кислотам требуется 15 минут работы при низком pH до нанесения следующего ухода.'
             },
             {
-                keywords: ['витамин c', 'vitamin c', 'ascorbic'],
+                keywords: ['витамин c', 'витамин с', 'витаминов с', 'vitamin c', 'ascorbic', 'аскорбинов'],
                 type: 'Активы',
                 tods: ['morning'],
                 freqType: 'daily',
@@ -1370,8 +1368,11 @@
 
         function detectSmartPreset(productName) {
             if (!productName || productName.trim().length < 2) return null;
-            const clean = productName.toLowerCase().trim();
-            return SMART_PRESETS.find(p => p.keywords.some(kw => clean.includes(kw))) || null;
+            const clean = productName.toLowerCase().trim().replace(/с/g, 'c');
+            return SMART_PRESETS.find(p => p.keywords.some(kw => {
+                const normKw = kw.toLowerCase().replace(/с/g, 'c');
+                return clean.includes(normKw);
+            })) || null;
         }
 
         class RoutineTimerEngine {
@@ -1863,7 +1864,7 @@
             }
 
             dropdown.innerHTML = combined.map(name => `
-                <div class="autocomplete-item" onclick="selectAutocompleteItem('${escapeHtml(name)}')">
+                <div class="autocomplete-item" onpointerdown="event.preventDefault(); selectAutocompleteItem('${escapeHtml(name)}')">
                     ${escapeHtml(name)}
                 </div>
             `).join('');
@@ -1874,14 +1875,23 @@
         document.getElementById('btnApplyPreset').addEventListener('click', () => {
             if (!currentDetectedPreset) return;
 
-            if (currentDetectedPreset.pauseBefore) applyPauseBefore(currentDetectedPreset.pauseBefore);
-            if (currentDetectedPreset.pauseAfter) applyPauseAfter(currentDetectedPreset.pauseAfter);
+            if (currentDetectedPreset.pauseBefore !== undefined && currentDetectedPreset.pauseBefore !== null) {
+                applyPauseBefore(currentDetectedPreset.pauseBefore);
+            }
+            if (currentDetectedPreset.pauseAfter !== undefined && currentDetectedPreset.pauseAfter !== null) {
+                applyPauseAfter(currentDetectedPreset.pauseAfter);
+            }
             
-            document.getElementById('pFreqType').value = 'custom';
+            const targetFreq = currentDetectedPreset.freqType || 'daily';
+            document.getElementById('pFreqType').value = targetFreq;
             document.querySelectorAll('#freqPicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.freq === 'custom');
+                b.classList.toggle('active', b.dataset.freq === targetFreq);
             });
-            document.getElementById('daysGroup').style.display = 'block';
+            document.getElementById('daysGroup').style.display = (targetFreq === 'custom') ? 'block' : 'none';
+
+            if (targetFreq === 'custom') {
+                document.querySelectorAll('.day-chip').forEach(chip => chip.classList.add('active'));
+            }
 
             const content = document.getElementById('advancedAccordionContent');
             if (!content.classList.contains('open')) content.classList.add('open');
@@ -1895,7 +1905,7 @@
                 }, 100);
             }
 
-            showToast('Установлен режим с графиком! Выберите дни применения и паузы.');
+            showToast('Рекомендуемые паузы и график успешно применены!');
         });
 
         async function startBarcodeScanner() {
@@ -1964,14 +1974,14 @@
         function applyPauseBefore(mins) {
             selectedPauseBeforeVal = (selectedPauseBeforeVal === mins) ? null : mins;
             document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.mins == selectedPauseBeforeVal);
+                b.classList.toggle('active', Number(b.dataset.mins) === Number(selectedPauseBeforeVal));
             });
         }
 
         function applyPauseAfter(mins) {
             selectedPauseAfterVal = (selectedPauseAfterVal === mins) ? null : mins;
             document.querySelectorAll('#pauseAfterPicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.mins == selectedPauseAfterVal);
+                b.classList.toggle('active', Number(b.dataset.mins) === Number(selectedPauseAfterVal));
             });
         }
 
@@ -2046,8 +2056,8 @@
             });
             document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
 
-            applyPauseBefore(item.pauseBefore || null);
-            applyPauseAfter(item.pauseAfter || null);
+            applyPauseBefore(item.pauseBefore !== null && item.pauseBefore !== undefined ? item.pauseBefore : null);
+            applyPauseAfter(item.pauseAfter !== null && item.pauseAfter !== undefined ? item.pauseAfter : null);
 
             const openDateEl = document.getElementById('pOpenDate');
             openDateEl.value = item.openDate || getLocalTodayStr();
@@ -2233,8 +2243,8 @@
                     tods: Array.isArray(p.tods) ? p.tods : ['morning'],
                     freqType: String(p.freqType || 'daily'),
                     days: Array.isArray(p.days) ? p.days : [],
-                    pauseBefore: p.pauseBefore ? Number(p.pauseBefore) : null,
-                    pauseAfter: p.pauseAfter ? Number(p.pauseAfter) : null,
+                    pauseBefore: p.pauseBefore !== null && p.pauseBefore !== undefined ? Number(p.pauseBefore) : null,
+                    pauseAfter: p.pauseAfter !== null && p.pauseAfter !== undefined ? Number(p.pauseAfter) : null,
                     openDate: String(p.openDate || getLocalTodayStr()),
                     paoMonths: p.paoMonths ? String(p.paoMonths) : null
                 }));
@@ -2405,12 +2415,12 @@
 
             document.getElementById('pauseBeforePicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
-                if (btn) applyPauseBefore(btn.dataset.mins);
+                if (btn) applyPauseBefore(Number(btn.dataset.mins));
             });
 
             document.getElementById('pauseAfterPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
-                if (btn) applyPauseAfter(btn.dataset.mins);
+                if (btn) applyPauseAfter(Number(btn.dataset.mins));
             });
 
             document.getElementById('btnOpenSettings').addEventListener('click', () => {
