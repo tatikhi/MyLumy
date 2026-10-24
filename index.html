@@ -9,7 +9,7 @@
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
-    <!-- Подключаем шрифт Montserrat для премиального скандинавского стиля -->
+    <!-- Подключаем шрифт Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- Подключаем библиотеку сканирования штрихкодов Html5-Qrcode -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
@@ -208,17 +208,6 @@
             background: var(--accent-light);
             border-color: var(--accent-main);
             transform: translateY(-1px);
-        }
-
-        #hiddenDateInput {
-            position: absolute;
-            opacity: 0;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            border: none;
         }
 
         .scanner-notice-banner {
@@ -479,6 +468,81 @@
         .dot-orange { background-color: rgb(240, 170, 80); }
         .dot-red { background-color: rgb(205, 92, 92); }
         .dot-gray { background-color: var(--icon-inactive); }
+
+        /* ВСТРОЕННЫЙ КАСТОМНЫЙ КАЛЕНДАРЬ */
+        .custom-calendar-modal {
+            max-width: 340px !important;
+            padding: 20px 16px !important;
+        }
+
+        .cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .cal-month-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: lowercase;
+        }
+
+        .cal-nav-btn {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+
+        .cal-day-name {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding-bottom: 6px;
+        }
+
+        .cal-day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cal-day-cell:hover, .cal-day-cell:active {
+            background: var(--accent-light);
+        }
+
+        .cal-day-cell.selected {
+            background: var(--accent-main);
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .cal-day-cell.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
 
         .modal-overlay {
             position: fixed;
@@ -1117,7 +1181,7 @@
             display: block;
         }
 
-        /* УВЕДОМЛЕНИЯ (TOAST) — МАКСИМАЛЬНЫЙ Z-INDEX ДЛЯ ПЕРЕКРЫТИЯ КАЛЕНДАРЯ И МОДАЛОК */
+        /* УВЕДОМЛЕНИЯ (TOAST) — МАКСИМАЛЬНЫЙ Z-INDEX ДЛЯ ПЕРЕКРЫТИЯ ЛЮБЫХ МОДАЛОК */
         .toast-notification {
             position: fixed;
             top: 50%;
@@ -1137,7 +1201,7 @@
             opacity: 0;
             pointer-events: none;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            z-index: 9999;
+            z-index: 10000;
             text-align: center;
             word-wrap: break-word;
         }
@@ -1160,7 +1224,6 @@
         <div class="streak-card-title uniform-brand-title">мои ритуалы</div>
         <div class="date-chip" id="currentDateChip">
             <span id="dateChipText"></span>
-            <input type="date" id="hiddenDateInput">
         </div>
     </div>
 
@@ -1186,6 +1249,21 @@
                     мои настройки
                 </span>
             </button>
+        </div>
+    </div>
+
+    <!-- Модальное окно Встроенного Календаря -->
+    <div class="modal-overlay" id="customCalendarModal">
+        <div class="modal-card custom-calendar-modal">
+            <div class="cal-header">
+                <button type="button" class="cal-nav-btn" id="calPrevMonth">◄</button>
+                <div class="cal-month-title" id="calMonthTitle"></div>
+                <button type="button" class="cal-nav-btn" id="calNextMonth">►</button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div style="margin-top: 16px;">
+                <button type="button" class="btn-secondary uniform-brand-title" id="btnCloseCal">закрыть</button>
+            </div>
         </div>
     </div>
 
@@ -1348,7 +1426,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.10</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.11</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1383,11 +1461,11 @@
         </div>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ TOAST ПОВЕРХ ВСЕХ ЭЛЕМЕНТОВ (Z-INDEX 9999) -->
+    <!-- ВСПЛЫВАЮЩИЙ TOAST ПОВЕРХ ВСЕХ ЭЛЕМЕНТОВ (Z-INDEX 10000) -->
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.10';
+        const APP_VERSION = '1.2.11';
 
         const safeStorage = {
             getItem(key) {
@@ -1624,10 +1702,80 @@
                 chipText += " (архив)";
             }
             document.getElementById('dateChipText').innerText = chipText;
+        }
 
-            const hiddenInput = document.getElementById('hiddenDateInput');
-            hiddenInput.min = getMinAvailableDateStr();
-            hiddenInput.value = getLocalTodayStr(routineDate);
+        /* ПЕРЕМЕННЫЕ ВСТРОЕННОГО КАЛЕНДАРЯ */
+        let calCurrentViewDate = new Date();
+
+        function openCustomCalendar() {
+            calCurrentViewDate = getRoutineDateObj();
+            renderCustomCalendar();
+            openModalElement(document.getElementById('customCalendarModal'));
+        }
+
+        function closeCustomCalendar() {
+            closeModalElement(document.getElementById('customCalendarModal'));
+        }
+
+        function renderCustomCalendar() {
+            const year = calCurrentViewDate.getFullYear();
+            const month = calCurrentViewDate.getMonth();
+
+            const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+            document.getElementById('calMonthTitle').innerText = `${monthNames[month]} ${year}`;
+
+            const grid = document.getElementById('calGrid');
+            grid.innerHTML = '';
+
+            const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+            dayNames.forEach(dn => {
+                grid.innerHTML += `<div class="cal-day-name">${dn}</div>`;
+            });
+
+            const firstDay = new Date(year, month, 1);
+            let startDay = firstDay.getDay() - 1;
+            if (startDay === -1) startDay = 6;
+
+            for (let i = 0; i < startDay; i++) {
+                grid.innerHTML += `<div></div>`;
+            }
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const minAllowedStr = getMinAvailableDateStr();
+            const selectedDateStr = safeStorage.getItem('cb_selected_date') || getLogicalTodayStr();
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const curDateObj = new Date(year, month, d, 12, 0, 0);
+                const curStr = getLocalTodayStr(curDateObj);
+
+                const isSelected = (curStr === selectedDateStr);
+                const isDisabled = (curStr < minAllowedStr);
+
+                const cell = document.createElement('div');
+                cell.className = `cal-day-cell ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`;
+                cell.innerText = d;
+
+                cell.addEventListener('click', () => {
+                    if (isDisabled) {
+                        const parts = minAllowedStr.split('-');
+                        const minDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                        const formattedMinDate = minDateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                        showToast(`Просмотр архива доступен от ${formattedMinDate}`);
+                        return;
+                    }
+
+                    if (curStr === getLogicalTodayStr()) {
+                        safeStorage.removeItem('cb_selected_date');
+                        switchTOD(getInitialTOD());
+                    } else {
+                        safeStorage.setItem('cb_selected_date', curStr);
+                        switchTOD('morning');
+                    }
+                    closeCustomCalendar();
+                });
+
+                grid.appendChild(cell);
+            }
         }
 
         function setTheme(theme) {
@@ -2726,31 +2874,18 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const hiddenDateInput = document.getElementById('hiddenDateInput');
+            /* Открытие кастомного календаря при клике на чип даты */
+            document.getElementById('currentDateChip').addEventListener('click', openCustomCalendar);
+            document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
 
-            hiddenDateInput.addEventListener('change', (e) => {
-                const val = e.target.value;
-                if (!val) return;
-                
-                const minAllowedDateStr = getMinAvailableDateStr();
-                if (val < minAllowedDateStr) {
-                    const parts = minAllowedDateStr.split('-');
-                    const minDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-                    const formattedMinDate = minDateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                    
-                    showToast(`Просмотр архива доступен от ${formattedMinDate}`);
-                    renderRoutine();
-                    return;
-                }
+            document.getElementById('calPrevMonth').addEventListener('click', () => {
+                calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() - 1);
+                renderCustomCalendar();
+            });
 
-                const logicalToday = getLogicalTodayStr();
-                if (val === logicalToday) {
-                    safeStorage.removeItem('cb_selected_date');
-                    switchTOD(getInitialTOD());
-                } else {
-                    safeStorage.setItem('cb_selected_date', val);
-                    switchTOD('morning');
-                }
+            document.getElementById('calNextMonth').addEventListener('click', () => {
+                calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() + 1);
+                renderCustomCalendar();
             });
 
             document.getElementById('themeRow').addEventListener('click', (e) => {
@@ -2900,6 +3035,9 @@
 
                     const appModal = document.getElementById('appSettingsModal');
                     if (appModal && appModal.style.display === 'flex') closeAppSettings();
+
+                    const calModal = document.getElementById('customCalendarModal');
+                    if (calModal && calModal.style.display === 'flex') closeCustomCalendar();
                 }
             });
 
