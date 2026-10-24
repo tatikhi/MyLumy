@@ -293,7 +293,7 @@
             margin-bottom: 24px;
         }
 
-        /* БЛОК КНОПОК НИЖЕ СХЕМ */
+        /* БЛОК КНОПОК НИЖЕ СХЕМ (ВСЕГДА РОВНО ДВЕ КНОПКИ) */
         .main-card-actions {
             display: flex;
             flex-direction: column;
@@ -321,7 +321,7 @@
             transform: translateY(-1px);
         }
 
-        /* КОНТЕЙНЕР ДЛЯ ИКОНКИ И СЛОВА РЯДОМ, СОХРАНЯЮЩИЙ ИДЕАЛЬНЫЙ ЦЕНТР ТЕКСТА */
+        /* КОНТЕЙНЕР ДЛЯ ИКОНКИ И СЛОВА РЯДОМ */
         .btn-settings-inner {
             display: inline-flex;
             align-items: center;
@@ -553,7 +553,7 @@
             z-index: 10;
         }
 
-        /* СПЕЦИАЛЬНОЕ ЦЕНТРИРОВАНИЕ ДЛЯ АЛЕРТОВ (В СРЕДНЕЙ ТРЕТИ ЭКРАНА) */
+        /* СПЕЦИАЛЬНОЕ ЦЕНТРИРОВАНИЕ ДЛЯ АЛЕРТОВ */
         .modal-overlay.alert-overlay {
             align-items: center !important;
         }
@@ -694,7 +694,7 @@
             outline: none;
         }
 
-        /* УМНЫЙ ВЫПАДАЮЩИЙ СПИСОК АВТОКОМПЛИТА С ПЛАВНОСТЬЮ */
+        /* УМНЫЙ ВЫПАДАЮЩИЙ СПИСОК АВТОКОМПЛИТА */
         .autocomplete-dropdown {
             position: absolute;
             top: 100%;
@@ -929,7 +929,7 @@
             padding-bottom: 20px;
         }
 
-        /* ГАРМОШКА КАТЕГОРИЙ С ПЛАВНЫМ CSS-ПЕРЕХОДОМ ПО ДИНАМИЧЕСКОЙ ВЫСОТЕ */
+        /* ГАРМОШКА КАТЕГОРИЙ */
         .category-group-block {
             display: flex;
             flex-direction: column;
@@ -1128,7 +1128,6 @@
             display: block;
         }
 
-        /* ФОРМА (ПО УМОЛЧАНИЮ СКРЫТА) */
         #productFormContainer {
             display: none;
         }
@@ -1136,7 +1135,7 @@
             display: block;
         }
 
-        /* УВЕДОМЛЕНИЯ (TOAST) - В СРЕДНЕЙ ТРЕТИ ЭКРАНА */
+        /* УВЕДОМЛЕНИЯ (TOAST) */
         .toast-notification {
             position: fixed;
             top: 40%;
@@ -1193,7 +1192,7 @@
 
         <div class="routine-list" id="routineContainer"></div>
 
-        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ С РЯДОМ СТОЯЩЕЙ ИКОНКОЙ И ТОЧНЫМ ЦЕНТРОМ ТЕКСТА -->
+        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ: ВСЕГДА РОВНО ДВЕ КНОПКИ -->
         <div class="main-card-actions">
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">моя коллекция</button>
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
@@ -1231,7 +1230,7 @@
 
                 <div id="productFormContainer">
                     <div id="scannerNoticeBanner" class="scanner-notice-banner" style="display: none;">
-                        В базе нет точного описания. Введите название вручную. Оно сохранится для будущих сканирований.
+                        В глобальной базе нет точного описания. Пожалуйста, введите название вручную, и оно сохранится в вашей персональной базе данных для дальнейшего использования!
                     </div>
 
                     <input type="hidden" id="editProductId" value="">
@@ -1243,7 +1242,7 @@
                         <div class="form-group">
                             <label for="pName">Название</label>
                             <input type="text" id="pName" class="input-control" placeholder="" autocomplete="off">
-                            <!-- ВЫПАДАЮЩИЙ СПИСОК ПОДСКАЗОК (АВТОКОМПЛИТ A+B) -->
+                            <!-- ВЫПАДАЮЩИЙ СПИСОК ПОДСКАЗОК -->
                             <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                         </div>
 
@@ -1374,7 +1373,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.2</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.3</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1423,7 +1422,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.2';
+        const APP_VERSION = '1.2.3';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -1548,7 +1547,6 @@
             return getLocalTodayStr(d);
         }
 
-        /* ТОЧНАЯ ПРИВЯЗКА К ВРЕМЕНИ ДЕВАЙСА (УТРО: 03:00 - 17:59, ВЕЧЕР: 18:00 - 02:59) */
         function getInitialTOD() {
             const now = new Date();
             const h = now.getHours();
@@ -1643,7 +1641,13 @@
             document.getElementById('dateChipText').innerText = chipText;
 
             const hiddenInput = document.getElementById('hiddenDateInput');
-            hiddenInput.min = safeStorage.getItem('cb_install_date') || getLocalTodayStr();
+            // Ограничиваем нативный календарь снизу днем установки приложения
+            let instDate = safeStorage.getItem('cb_install_date');
+            if (!instDate) {
+                instDate = getLocalTodayStr();
+                safeStorage.setItem('cb_install_date', instDate);
+            }
+            hiddenInput.min = instDate;
             hiddenInput.value = getLocalTodayStr(routineDate);
         }
 
@@ -2027,7 +2031,6 @@
             resetForm();
         }
 
-        /* ТОЧНЫЙ РАСЧЕТ scrollHeight ДЛЯ ИДЕАЛЬНО ПЛАВНОЙ АНИМАЦИИ КАТЕГОРИЙ */
         function toggleCategoryAccordion(catIndex) {
             closeAllPopovers();
             const headerBtn = document.getElementById(`cat-header-${catIndex}`);
@@ -2082,7 +2085,6 @@
                 if (itemEl) itemEl.classList.add('active-item');
                 activePopoverProductId = targetId;
 
-                // Динамически увеличиваем max-height контейнера, чтобы поповер никогда не обрезался
                 if (container) {
                     container.style.maxHeight = (container.scrollHeight + popoverEl.scrollHeight + 20) + 'px';
                 }
@@ -2658,7 +2660,6 @@
             document.getElementById('pName').value = '';
             
             document.querySelectorAll('#typePicker .picker-btn').forEach(btn => btn.classList.remove('active'));
-            
             document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.add('active'));
 
             document.getElementById('pFreqType').value = 'daily';
@@ -2758,8 +2759,16 @@
             document.getElementById('hiddenDateInput').addEventListener('change', (e) => {
                 const val = e.target.value;
                 if (!val) return;
-                const logicalToday = getLogicalTodayStr();
                 
+                // Проверяем ограничение снизу днем установки приложения
+                const instDate = safeStorage.getItem('cb_install_date') || getLocalTodayStr();
+                if (val < instDate) {
+                    showCustomAlert('Просмотр ритуалов доступен только начиная с даты установки приложения.');
+                    renderRoutine();
+                    return;
+                }
+
+                const logicalToday = getLogicalTodayStr();
                 if (val === logicalToday) {
                     safeStorage.removeItem('cb_selected_date');
                     switchTOD(getInitialTOD());
