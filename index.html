@@ -133,7 +133,6 @@
             margin-bottom: 20px;
         }
 
-        /* УВЕЛИЧЕННЫЕ И ПОПЛОТНЕВШИЕ ФИРМЕННЫЕ ШРИФТЫ */
         .brand-font {
             font-family: 'Montserrat', sans-serif;
             font-weight: 500;
@@ -152,11 +151,12 @@
             font-style: normal;
         }
 
+        /* УВЕЛИЧЕННЫЙ, УТОЛЩЕННЫЙ И РАЗРЯЖЕННЫЙ ЛОГОТИП */
         .logo {
             font-family: 'Montserrat', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
             text-transform: lowercase;
             color: var(--text-primary);
         }
@@ -1009,7 +1009,7 @@
         </div>
     </div>
 
-    <!-- Кастомный Календарь -->
+    <!-- Кастомный Календарь (Главный или для PAO) -->
     <div class="modal-overlay" id="customCalendarModal">
         <div class="modal-card custom-calendar-modal">
             <div class="cal-header">
@@ -1050,6 +1050,7 @@
 
                 <div id="productFormContainer">
                     <input type="hidden" id="editProductId" value="">
+                    <input type="hidden" id="pOpenDate" value="">
 
                     <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
                         <div id="smartPresetText" style="font-size: 13px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
@@ -1101,12 +1102,8 @@
                             <button type="button" class="pao-chip" data-months="12">12M</button>
                             <button type="button" class="pao-chip" data-months="24">24M</button>
                         </div>
-                        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
-                            <span>Открыто: <b id="pOpenDateLabel">Сегодня</b></span>
-                            <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline;">Изменить дату</button>
-                        </div>
-                        <div id="openDateContainer" style="display: none; margin-top: 8px;">
-                            <input type="date" id="pOpenDate" class="input-control">
+                        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: flex-end;">
+                            <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 12px;">изменить дату вскрытия</button>
                         </div>
                     </div>
 
@@ -1193,7 +1190,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.24</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.25</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1231,7 +1228,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.24';
+        const APP_VERSION = '1.2.25';
 
         const safeStorage = {
             getItem(key) {
@@ -1505,6 +1502,7 @@
         let isScannerBusy = false;
         let autocompleteDebounceTimer = null;
         let calCurrentViewDate = new Date();
+        let calendarTargetMode = 'routine'; // 'routine' или 'pao'
 
         const CATEGORIES = ["Очищение", "Тонизирование", "Активы", "Уход за глазами", "Питание / Увлажнение"];
         const typeOrder = { "Очищение": 1, "Тонизирование": 2, "Активы": 3, "Уход за глазами": 4, "Питание / Увлажнение": 5 };
@@ -1546,8 +1544,15 @@
             document.getElementById('dateChipText').innerText = chipText;
         }
 
-        function openCustomCalendar() {
-            calCurrentViewDate = getRoutineDateObj();
+        function openCustomCalendar(mode = 'routine') {
+            calendarTargetMode = mode;
+            if (calendarTargetMode === 'pao') {
+                const currentOpenDate = document.getElementById('pOpenDate').value || getLocalTodayStr();
+                const parts = currentOpenDate.split('-');
+                calCurrentViewDate = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
+            } else {
+                calCurrentViewDate = getRoutineDateObj();
+            }
             renderCustomCalendar();
             openModalElement(document.getElementById('customCalendarModal'));
         }
@@ -1575,15 +1580,21 @@
             for (let i = 0; i < startDay; i++) grid.innerHTML += `<div></div>`;
 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const selectedDateStr = safeStorage.getItem('cb_selected_date') || getLocalTodayStr();
             const todayStr = getLocalTodayStr();
             const allowedMinStr = getLocalTodayStr(getAllowedStartDateObj());
+
+            let activeSelectedStr = '';
+            if (calendarTargetMode === 'pao') {
+                activeSelectedStr = document.getElementById('pOpenDate').value || todayStr;
+            } else {
+                activeSelectedStr = safeStorage.getItem('cb_selected_date') || todayStr;
+            }
 
             for (let d = 1; d <= daysInMonth; d++) {
                 const curDateObj = new Date(year, month, d, 12, 0, 0);
                 const curStr = getLocalTodayStr(curDateObj);
-                const isSelected = (curStr === selectedDateStr);
-                const isDisabled = (curStr < allowedMinStr);
+                const isSelected = (curStr === activeSelectedStr);
+                const isDisabled = (calendarTargetMode === 'routine' && curStr < allowedMinStr) || (calendarTargetMode === 'pao' && curStr > todayStr);
                 const isPast = (curStr < todayStr);
                 const isFuture = (curStr > todayStr);
 
@@ -1605,13 +1616,19 @@
                 if (!isDisabled) {
                     cell.addEventListener('click', (e) => {
                         e.preventDefault();
-                        if (curStr === getLocalTodayStr()) {
-                            safeStorage.removeItem('cb_selected_date');
+                        if (calendarTargetMode === 'pao') {
+                            document.getElementById('pOpenDate').value = curStr;
+                            closeCustomCalendar();
+                            showToast("Дата вскрытия сохранена");
                         } else {
-                            safeStorage.setItem('cb_selected_date', curStr);
+                            if (curStr === getLocalTodayStr()) {
+                                safeStorage.removeItem('cb_selected_date');
+                            } else {
+                                safeStorage.setItem('cb_selected_date', curStr);
+                            }
+                            switchTOD(currentTOD);
+                            closeCustomCalendar();
                         }
-                        switchTOD(currentTOD);
-                        closeCustomCalendar();
                     });
                 }
 
@@ -2066,8 +2083,7 @@
             if (tods.length === 0) return showToast('Выберите время суток');
 
             const freqType = document.getElementById('pFreqType').value;
-            const openDateEl = document.getElementById('pOpenDate');
-            const openDate = openDateEl.value || getLocalTodayStr();
+            const openDate = document.getElementById('pOpenDate').value || getLocalTodayStr();
             const editId = document.getElementById('editProductId').value;
 
             let days = [];
@@ -2129,8 +2145,7 @@
             setPauseBefore(item.pauseBefore !== null && item.pauseBefore !== undefined ? item.pauseBefore : null);
             setPauseAfter(item.pauseAfter !== null && item.pauseAfter !== undefined ? item.pauseAfter : null);
 
-            const openDateEl = document.getElementById('pOpenDate');
-            openDateEl.value = item.openDate || getLocalTodayStr();
+            document.getElementById('pOpenDate').value = item.openDate || getLocalTodayStr();
 
             if (item.paoMonths) applyPAO(item.paoMonths);
             else {
@@ -2239,7 +2254,6 @@
             });
 
             document.getElementById('pOpenDate').value = getLocalTodayStr();
-            document.getElementById('openDateContainer').style.display = 'none';
             document.getElementById('smartPresetBanner').style.display = 'none';
         }
 
@@ -2436,7 +2450,7 @@
             setTheme(safeStorage.getItem('cb_theme') || 'nude');
             checkUrlImport();
 
-            document.getElementById('currentDateChip').addEventListener('click', openCustomCalendar);
+            document.getElementById('currentDateChip').addEventListener('click', () => openCustomCalendar('routine'));
             document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
             document.getElementById('calPrevMonth').addEventListener('click', () => {
                 calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() - 1);
@@ -2457,8 +2471,7 @@
             });
 
             document.getElementById('btnToggleOpenDate').addEventListener('click', () => {
-                const el = document.getElementById('openDateContainer');
-                el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+                openCustomCalendar('pao');
             });
 
             document.getElementById('typePicker').addEventListener('click', (e) => {
