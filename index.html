@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Защита от кэширования -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
-    <!-- Подключаем шрифт Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Подключаем библиотеку сканирования штрихкодов Html5-Qrcode -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
             /* 1. Nude & Silk (по умолчанию) */
             --bg-main: #F9F6F0;
             --surface: #FFFFFF;
             --text-primary: #4A3E3D;
-            --text-secondary: #968583;
+            --text-secondary: #7A6B69; /* Повышен контраст для читаемости */
             --accent-main: #C49A82;
             --accent-grad: #B0836B;
             --accent-light: #F4ECE6;
@@ -31,12 +28,11 @@
             --scroll-track: rgba(196, 154, 130, 0.12);
         }
 
-        /* 2. Eucalyptus & Mint */
         body[data-theme="mint"] {
             --bg-main: #F2F6F5;
             --surface: #FFFFFF;
             --text-primary: #2A3B37;
-            --text-secondary: #6B8782;
+            --text-secondary: #56726D;
             --accent-main: #5B8A82;
             --accent-grad: #48756D;
             --accent-light: #E7F0EE;
@@ -48,12 +44,11 @@
             --scroll-track: rgba(91, 138, 130, 0.12);
         }
 
-        /* 3. Blush Lavender */
         body[data-theme="lavender"] {
             --bg-main: #F7F5F9;
             --surface: #FFFFFF;
             --text-primary: #3B3342;
-            --text-secondary: #83788C;
+            --text-secondary: #6B6075;
             --accent-main: #8B789D;
             --accent-grad: #756287;
             --accent-light: #EFECF3;
@@ -65,12 +60,11 @@
             --scroll-track: rgba(139, 120, 157, 0.12);
         }
 
-        /* 4. Sage & Spa */
         body[data-theme="sage"] {
             --bg-main: #F4F6F4;
             --surface: #FFFFFF;
             --text-primary: #2C3A2E;
-            --text-secondary: #607062;
+            --text-secondary: #4F5E51;
             --accent-main: #4A6148;
             --accent-grad: #3A4D39;
             --accent-light: #ECEFEA;
@@ -82,12 +76,11 @@
             --scroll-track: rgba(74, 97, 72, 0.12);
         }
 
-        /* 5. Midnight Calm */
         body[data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
             --text-primary: #F0F3F9;
-            --text-secondary: #A6B4C9;
+            --text-secondary: #8E9DB5;
             --accent-main: #D4A373;
             --accent-grad: #B58455;
             --accent-light: #2D354A;
@@ -312,7 +305,6 @@
             align-items: center;
             gap: 8px;
             position: relative;
-            padding-right: 26px;
         }
 
         .btn-settings-inner svg {
@@ -377,9 +369,9 @@
         }
 
         .item-tag {
-            font-size: 11px;
+            font-size: 12px; /* Увеличен размер с 11px */
             color: var(--text-secondary);
-            font-weight: 400;
+            font-weight: 500;
         }
 
         .item-right-group {
@@ -393,7 +385,7 @@
             display: inline-flex;
             align-items: center;
             font-family: 'Montserrat', sans-serif;
-            font-size: 10px;
+            font-size: 11px; /* Увеличен с 10px */
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: lowercase;
@@ -405,8 +397,8 @@
         }
 
         .active-toggle-circle {
-            width: 22px;
-            height: 22px;
+            width: 28px; /* Увеличен тач-таргет */
+            height: 28px;
             border-radius: 50%;
             border: 1px solid var(--accent-main);
             background: transparent;
@@ -416,7 +408,7 @@
             cursor: pointer;
             transition: all 0.25s ease;
             color: var(--accent-main);
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
             line-height: 1;
             flex-shrink: 0;
@@ -434,7 +426,7 @@
             display: inline-flex;
             align-items: center;
             font-family: 'Montserrat', sans-serif;
-            font-size: 10px;
+            font-size: 11px; /* Увеличен с 10px */
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: lowercase;
@@ -469,7 +461,6 @@
         .dot-red { background-color: rgb(205, 92, 92); }
         .dot-gray { background-color: var(--icon-inactive); }
 
-        /* ВСТРОЕННЫЙ КАСТОМНЫЙ КАЛЕНДАРЬ */
         .custom-calendar-modal {
             max-width: 340px !important;
             padding: 20px 16px !important;
@@ -512,7 +503,7 @@
         }
 
         .cal-day-name {
-            font-size: 10px;
+            font-size: 11px; /* Увеличен с 10px */
             font-weight: 600;
             color: var(--text-secondary);
             padding-bottom: 6px;
@@ -625,7 +616,7 @@
             }
             .input-control {
                 padding: 10px 14px !important;
-                font-size: 12px !important;
+                font-size: 13px !important;
             }
         }
 
@@ -678,7 +669,7 @@
         }
 
         .form-section-title {
-            font-size: 11px;
+            font-size: 12px; /* Увеличен с 11px */
             font-weight: 600;
             color: var(--accent-main);
             margin-bottom: 14px;
@@ -704,7 +695,7 @@
             color: var(--text-primary);
             padding: 6px 12px;
             border-radius: 12px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -726,7 +717,7 @@
 
         .form-group label {
             display: block;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-secondary);
             margin-bottom: 8px;
@@ -840,7 +831,7 @@
             border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--surface);
-            font-size: 11px;
+            font-size: 12px; /* Увеличен с 11px */
             font-weight: 600;
             cursor: pointer;
             color: var(--text-secondary);
@@ -1014,7 +1005,7 @@
         }
 
         .category-count-badge {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-secondary);
             font-weight: 500;
         }
@@ -1181,7 +1172,6 @@
             display: block;
         }
 
-        /* УВЕДОМЛЕНИЯ (TOAST) — МАКСИМАЛЬНЫЙ Z-INDEX ДЛЯ ПЕРЕКРЫТИЯ ЛЮБЫХ МОДАЛОК */
         .toast-notification {
             position: fixed;
             top: 50%;
@@ -1214,12 +1204,10 @@
 </head>
 <body>
 
-    <!-- ЛОГОТИП В ЛЕВОМ ВЕРХНЕМ УГЛУ -->
     <div class="header-bar">
         <div class="logo">myspa</div>
     </div>
 
-    <!-- Интерактивный календарь -->
     <div class="streak-card" id="streakCard">
         <div class="streak-card-title uniform-brand-title">мои ритуалы</div>
         <div class="date-chip" id="currentDateChip">
@@ -1237,7 +1225,6 @@
 
         <div class="routine-list" id="routineContainer"></div>
 
-        <!-- КНОПКИ УПРАВЛЕНИЯ НИЖЕ СХЕМ -->
         <div class="main-card-actions">
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">моя коллекция</button>
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
@@ -1288,7 +1275,7 @@
 
                 <div id="productFormContainer">
                     <div id="scannerNoticeBanner" class="scanner-notice-banner" style="display: none;">
-                        В глобальной базе нет точного описания. Пожалуйста, введите название вручную, и оно сохранится в вашей персональной базе данных для дальнейшего использования!
+                        В глобальной базе нет точного описания. Пожалуйста, введите название вручную, и оно сохранится в вашей персональной базе данных!
                     </div>
 
                     <input type="hidden" id="editProductId" value="">
@@ -1427,7 +1414,7 @@
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
                         <span class="version-text uniform-brand-title">версия v1.2.12</span>
-                        <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
+                        <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
 
@@ -1461,7 +1448,6 @@
         </div>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ TOAST ПОВЕРХ ВСЕХ ЭЛЕМЕНТОВ (Z-INDEX 10000) -->
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
@@ -1472,7 +1458,7 @@
                 try {
                     return localStorage.getItem(key);
                 } catch (e) {
-                    console.warn('LocalStorage getItem error:', e);
+                    console.warn('LocalStorage error:', e);
                     return null;
                 }
             },
@@ -1480,17 +1466,35 @@
                 try {
                     localStorage.setItem(key, value);
                 } catch (e) {
-                    console.warn('LocalStorage setItem error:', e);
+                    console.warn('LocalStorage error:', e);
                 }
             },
             removeItem(key) {
                 try {
                     localStorage.removeItem(key);
                 } catch (e) {
-                    console.warn('LocalStorage removeItem error:', e);
+                    console.warn('LocalStorage error:', e);
                 }
             }
         };
+
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return '';
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        /* Точное вычисление даты добавления месяцев (устранение бага с краем месяца) */
+        function addMonthsSafely(dateObj, months) {
+            const d = new Date(dateObj);
+            const currentDay = d.getDate();
+            d.setMonth(d.getMonth() + Number(months));
+            if (d.getDate() !== currentDay) {
+                d.setDate(0);
+            }
+            return d;
+        }
 
         const savedVersion = safeStorage.getItem('cb_app_version');
 
@@ -1500,18 +1504,13 @@
 
             if (isForceUpdate) {
                 const toast = document.getElementById('toastNotification');
-                
                 if (savedVersion !== APP_VERSION) {
                     toast.innerText = `обновление успешно завершено. текущая версия v${APP_VERSION}`;
                 } else {
                     toast.innerText = `у вас установлена актуальная версия v${APP_VERSION}`;
                 }
-                
                 toast.classList.add('visible');
-                setTimeout(() => {
-                    toast.classList.remove('visible');
-                }, 3000);
-
+                setTimeout(() => toast.classList.remove('visible'), 3000);
                 history.replaceState(null, null, window.location.pathname + window.location.hash);
             }
 
@@ -1576,17 +1575,10 @@
                     safeStorage.setItem('cb_product_progress', JSON.stringify(progressData));
                 }
             } catch (err) {
-                console.error('Error cleaning old logs:', err);
+                console.error('Error cleaning logs:', err);
             }
         }
         cleanOldLogs();
-
-        function escapeHtml(str) {
-            if (typeof str !== 'string') return '';
-            return str.replace(/[&<>"']/g, function(m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-            });
-        }
 
         function getLocalTodayStr(d = new Date()) {
             const year = d.getFullYear();
@@ -1596,18 +1588,12 @@
         }
 
         function getLogicalTodayStr() {
-            const d = new Date();
-            return getLocalTodayStr(d);
+            return getLocalTodayStr(new Date());
         }
 
         function getInitialTOD() {
-            const now = new Date();
-            const h = now.getHours();
-            if (h >= 3 && h < 18) {
-                return 'morning';
-            } else {
-                return 'evening';
-            }
+            const h = new Date().getHours();
+            return (h >= 3 && h < 18) ? 'morning' : 'evening';
         }
 
         let completedLog = JSON.parse(safeStorage.getItem('cb_completed_log') || '{}');
@@ -1662,8 +1648,7 @@
                 const parts = selectedDateStr.split('-');
                 return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             }
-            const logicalTodayStr = getLogicalTodayStr();
-            const parts = logicalTodayStr.split('-');
+            const parts = getLogicalTodayStr().split('-');
             return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
         }
 
@@ -1675,9 +1660,8 @@
 
         function isArchiveMode() {
             const selected = safeStorage.getItem('cb_selected_date');
-            const logicalToday = getLogicalTodayStr();
             if (!selected) return false;
-            return selected < logicalToday;
+            return selected < getLogicalTodayStr();
         }
 
         function getMinAvailableDateStr() {
@@ -1685,26 +1669,20 @@
             const ninetyDaysAgo = new Date(today);
             ninetyDaysAgo.setDate(today.getDate() - 90);
             const ninetyDaysAgoStr = getLocalTodayStr(ninetyDaysAgo);
-
             const instDate = getNormalizedInstallDate();
             return instDate > ninetyDaysAgoStr ? instDate : ninetyDaysAgoStr;
         }
 
         function renderCurrentDateChip() {
             const routineDate = getRoutineDateObj();
-            const options = { day: 'numeric', month: 'long' };
-            let formatted = routineDate.toLocaleDateString('ru-RU', options);
+            let chipText = routineDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
             
-            let chipText = formatted;
-            if (isFuturePlan()) {
-                chipText += " (план)";
-            } else if (isArchiveMode()) {
-                chipText += " (архив)";
-            }
+            if (isFuturePlan()) chipText += " (план)";
+            else if (isArchiveMode()) chipText += " (архив)";
+            
             document.getElementById('dateChipText').innerText = chipText;
         }
 
-        /* ПЕРЕМЕННЫЕ ВСТРОЕННОГО КАЛЕНДАРЯ */
         let calCurrentViewDate = new Date();
 
         function openCustomCalendar() {
@@ -1720,7 +1698,6 @@
         function renderCustomCalendar() {
             const year = calCurrentViewDate.getFullYear();
             const month = calCurrentViewDate.getMonth();
-
             const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
             document.getElementById('calMonthTitle').innerText = `${monthNames[month]} ${year}`;
 
@@ -1728,17 +1705,13 @@
             grid.innerHTML = '';
 
             const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-            dayNames.forEach(dn => {
-                grid.innerHTML += `<div class="cal-day-name">${dn}</div>`;
-            });
+            dayNames.forEach(dn => grid.innerHTML += `<div class="cal-day-name">${dn}</div>`);
 
             const firstDay = new Date(year, month, 1);
             let startDay = firstDay.getDay() - 1;
             if (startDay === -1) startDay = 6;
 
-            for (let i = 0; i < startDay; i++) {
-                grid.innerHTML += `<div></div>`;
-            }
+            for (let i = 0; i < startDay; i++) grid.innerHTML += `<div></div>`;
 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const minAllowedStr = getMinAvailableDateStr();
@@ -1747,36 +1720,42 @@
             for (let d = 1; d <= daysInMonth; d++) {
                 const curDateObj = new Date(year, month, d, 12, 0, 0);
                 const curStr = getLocalTodayStr(curDateObj);
-
                 const isSelected = (curStr === selectedDateStr);
                 const isDisabled = (curStr < minAllowedStr);
 
                 const cell = document.createElement('div');
                 cell.className = `cal-day-cell ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`;
                 cell.innerText = d;
-
-                cell.addEventListener('click', () => {
-                    if (isDisabled) {
-                        const parts = minAllowedStr.split('-');
-                        const minDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-                        const formattedMinDate = minDateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                        showToast(`Просмотр архива доступен от ${formattedMinDate}`);
-                        return;
-                    }
-
-                    if (curStr === getLogicalTodayStr()) {
-                        safeStorage.removeItem('cb_selected_date');
-                        switchTOD(getInitialTOD());
-                    } else {
-                        safeStorage.setItem('cb_selected_date', curStr);
-                        switchTOD('morning');
-                    }
-                    closeCustomCalendar();
-                });
+                cell.dataset.date = curStr;
+                cell.dataset.disabled = isDisabled;
 
                 grid.appendChild(cell);
             }
         }
+
+        /* Делегирование кликов для календаря */
+        document.getElementById('calGrid').addEventListener('click', (e) => {
+            const cell = e.target.closest('.cal-day-cell');
+            if (!cell) return;
+
+            if (cell.dataset.disabled === 'true') {
+                const parts = getMinAvailableDateStr().split('-');
+                const minDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                const formattedMinDate = minDateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                showToast(`Просмотр архива доступен от ${formattedMinDate}`);
+                return;
+            }
+
+            const curStr = cell.dataset.date;
+            if (curStr === getLogicalTodayStr()) {
+                safeStorage.removeItem('cb_selected_date');
+                switchTOD(getInitialTOD());
+            } else {
+                safeStorage.setItem('cb_selected_date', curStr);
+                switchTOD('morning');
+            }
+            closeCustomCalendar();
+        });
 
         function setTheme(theme) {
             let activeTheme = theme;
@@ -1884,17 +1863,9 @@
                         }
 
                         if (isCompleted) {
-                            if (stepNum < Z) {
-                                currentStep = stepNum + 1;
-                            } else {
-                                currentStep = 1;
-                            }
+                            currentStep = (stepNum < Z) ? stepNum + 1 : 1;
                         } else {
-                            if (stepNum === Z) {
-                                currentStep = 1;
-                            } else {
-                                currentStep = stepNum;
-                            }
+                            currentStep = (stepNum === Z) ? 1 : stepNum;
                         }
                     }
 
@@ -1905,7 +1876,7 @@
 
                 return { week: currentWeek > 1 ? currentWeek - 1 : 1, step: currentStep, totalSteps: Z };
             } catch (e) {
-                console.error("Error in getActiveProgressDetails:", e);
+                console.error("Error calculating active progress:", e);
                 return { week: 1, step: 1, totalSteps: 1 };
             }
         }
@@ -1943,7 +1914,6 @@
             let activeProducts = products.filter(p => {
                 const tads = Array.isArray(p.tods) ? p.tods : [];
                 const matchTOD = tads.includes(currentTOD);
-                
                 let matchDay = true;
                 if (p.freqType === 'custom') {
                     matchDay = Array.isArray(p.days) && p.days.includes(targetDayOfWeek);
@@ -1982,29 +1952,22 @@
 
             if (activeProducts.length === 0) {
                 const emptyText = products.length === 0 ? "Добавить средства в мою коллекцию" : "Отдых";
-                container.innerHTML = `<div style="text-align: center; padding: 32px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500; letter-spacing: 0.3px;">${emptyText}</div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 32px 0; color: var(--text-secondary); font-size: 13px; font-weight: 500;">${emptyText}</div>`;
                 return;
             }
 
             const htmlBuffer = [];
             activeProducts.forEach((item, index) => {
-                const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths, item.id);
-                let pauseHtmlBefore = '';
-                let pauseHtmlAfter = '';
+                const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths);
+                let pauseHtmlBefore = item.pauseBefore ? `<div class="pause-inline-chip">пауза до: ${escapeHtml(String(item.pauseBefore))} мин</div>` : '';
+                let pauseHtmlAfter = item.pauseAfter ? `<div class="pause-inline-chip">пауза после: ${escapeHtml(String(item.pauseAfter))} мин</div>` : '';
                 const activeProgressHtml = getActiveProgressHtml(item);
-
-                if (item.pauseBefore) {
-                    pauseHtmlBefore = `<div class="pause-inline-chip">пауза до: ${escapeHtml(String(item.pauseBefore))} мин</div>`;
-                }
-                if (item.pauseAfter) {
-                    pauseHtmlAfter = `<div class="pause-inline-chip">пауза после: ${escapeHtml(String(item.pauseAfter))} мин</div>`;
-                }
 
                 let toggleCircleHtml = '';
                 if (item.type === 'Активы') {
                     const isCompleted = productProgress[item.id] && Array.isArray(productProgress[item.id].dates) && productProgress[item.id].dates.includes(routineDateStr);
                     const completedClass = isCompleted ? 'completed' : '';
-                    toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" onclick="toggleActiveProduct(${item.id})" title="Отметить нанесение">✓</div>`;
+                    toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" data-action="toggle-active" data-id="${item.id}" title="Отметить нанесение">✓</div>`;
                 }
 
                 htmlBuffer.push(`
@@ -2031,7 +1994,8 @@
             container.innerHTML = htmlBuffer.join('');
         }
 
-        function calcExpiryDots(openDateStr, paoMonths, productId) {
+        /* Безопасный расчет срока годности PAO */
+        function calcExpiryDots(openDateStr, paoMonths) {
             if (!paoMonths) {
                 return `<div class="expiry-dots" title="PAO не указан">
                     <div class="dot dot-gray"></div>
@@ -2041,8 +2005,7 @@
             }
 
             const openDate = openDateStr ? new Date(openDateStr) : new Date();
-            const expDate = new Date(openDate);
-            expDate.setMonth(expDate.getMonth() + Number(paoMonths));
+            const expDate = addMonthsSafely(openDate, paoMonths);
 
             const now = new Date();
             const totalDuration = expDate - openDate;
@@ -2065,12 +2028,19 @@
             return `<div class="expiry-dots">${dotsInner}</div>`;
         }
 
+        /* Делегирование событий списка ухода */
+        document.getElementById('routineContainer').addEventListener('click', (e) => {
+            const toggleBtn = e.target.closest('[data-action="toggle-active"]');
+            if (toggleBtn) {
+                const id = Number(toggleBtn.dataset.id);
+                if (id) toggleActiveProduct(id);
+            }
+        });
+
         function openModalElement(modalEl) {
             modalEl.style.display = 'flex';
             document.body.classList.add('modal-open');
-            requestAnimationFrame(() => {
-                modalEl.classList.add('active-modal');
-            });
+            requestAnimationFrame(() => modalEl.classList.add('active-modal'));
         }
 
         function closeModalElement(modalEl, onClosed) {
@@ -2086,11 +2056,7 @@
             document.getElementById('manageList').style.display = 'flex';
             renderManageList();
             hideForm();
-            const modal = document.getElementById('settingsModal');
-            openModalElement(modal);
-            
-            const firstFocusable = modal.querySelector('button, input, select');
-            if (firstFocusable) firstFocusable.focus();
+            openModalElement(document.getElementById('settingsModal'));
         }
 
         function closeSettings() {
@@ -2098,21 +2064,18 @@
             closeAllPopovers();
             closeAutocomplete();
             autoExpandCategoryName = null;
-            const modal = document.getElementById('settingsModal');
-            closeModalElement(modal, () => {
+            closeModalElement(document.getElementById('settingsModal'), () => {
                 resetForm();
                 renderRoutine();
             });
         }
 
         function openAppSettings() {
-            const modal = document.getElementById('appSettingsModal');
-            openModalElement(modal);
+            openModalElement(document.getElementById('appSettingsModal'));
         }
 
         function closeAppSettings() {
-            const modal = document.getElementById('appSettingsModal');
-            closeModalElement(modal);
+            closeModalElement(document.getElementById('appSettingsModal'));
         }
 
         function showForm(showNotice = false) {
@@ -2132,14 +2095,10 @@
             container.classList.add('open');
 
             const scrollBody = document.getElementById('modalScrollBody');
-            if (scrollBody) {
-                scrollBody.scrollTop = 0;
-            }
+            if (scrollBody) scrollBody.scrollTop = 0;
 
             const pNameInput = document.getElementById('pName');
-            if (pNameInput) {
-                pNameInput.focus();
-            }
+            if (pNameInput) pNameInput.focus();
         }
 
         function hideForm() {
@@ -2192,9 +2151,7 @@
             }
         }
 
-        function toggleProductPopover(e, id) {
-            if (e) e.stopPropagation();
-            const targetId = Number(id);
+        function toggleProductPopover(targetId) {
             const popoverEl = document.getElementById(`popover-${targetId}`);
             const itemEl = document.getElementById(`manage-item-${targetId}`);
             const container = popoverEl ? popoverEl.closest('.category-items-container') : null;
@@ -2216,26 +2173,11 @@
                 if (container) {
                     container.style.maxHeight = (container.scrollHeight + popoverEl.scrollHeight + 20) + 'px';
                 }
-
-                setTimeout(() => {
-                    const scrollBody = document.getElementById('modalScrollBody');
-                    const rect = popoverEl.getBoundingClientRect();
-                    const bodyRect = scrollBody.getBoundingClientRect();
-                    if (rect.bottom > bodyRect.bottom) {
-                        scrollBody.scrollBy({ top: rect.bottom - bodyRect.bottom + 16, behavior: 'smooth' });
-                    }
-                }, 100);
             }
         }
 
         function closeAllPopovers() {
             document.querySelectorAll('.popover-actions-menu').forEach(p => {
-                if (p.classList.contains('open')) {
-                    const container = p.closest('.category-items-container');
-                    if (container) {
-                        container.style.maxHeight = (container.scrollHeight - p.scrollHeight) + 'px';
-                    }
-                }
                 p.classList.remove('open');
             });
             document.querySelectorAll('.manage-item').forEach(i => i.classList.remove('active-item'));
@@ -2246,9 +2188,7 @@
             const dropdown = document.getElementById('autocompleteDropdown');
             if (dropdown) {
                 dropdown.classList.remove('open');
-                setTimeout(() => {
-                    dropdown.innerHTML = '';
-                }, 200);
+                setTimeout(() => dropdown.innerHTML = '', 200);
             }
         }
 
@@ -2271,10 +2211,7 @@
 
             const userProducts = products.map(p => p.name);
             const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
-            
-            const matchedLocal = combinedLocal.filter(item => 
-                item.toLowerCase().includes(cleanQuery)
-            ).slice(0, 5);
+            const matchedLocal = combinedLocal.filter(item => item.toLowerCase().includes(cleanQuery)).slice(0, 5);
 
             renderAutocompleteResults(matchedLocal, []);
 
@@ -2292,7 +2229,7 @@
                         renderAutocompleteResults(matchedLocal, uniqueOnline);
                     }
                 } catch (e) {
-                    console.log('Online autocomplete error:', e);
+                    console.warn('Online autocomplete offline/error:', e);
                 }
             }, 300);
         }
@@ -2309,7 +2246,7 @@
             }
 
             dropdown.innerHTML = combined.map(name => `
-                <div class="autocomplete-item" onclick="selectAutocompleteItem('${escapeHtml(name)}')">
+                <div class="autocomplete-item" data-action="select-autocomplete" data-value="${escapeHtml(name)}">
                     ${escapeHtml(name)}
                 </div>
             `).join('');
@@ -2317,17 +2254,28 @@
             dropdown.classList.add('open');
         }
 
+        document.getElementById('autocompleteDropdown').addEventListener('click', (e) => {
+            const item = e.target.closest('[data-action="select-autocomplete"]');
+            if (item) {
+                selectAutocompleteItem(item.dataset.value);
+            }
+        });
+
         function isGarbageName(name) {
             if (!name) return true;
             const clean = name.trim().toLowerCase();
-            if (/^\d+$/.test(clean)) return true;
-            if (/^\[.*\]$/.test(clean)) return true;
-            if (clean === 'товар' || clean === 'product' || clean === 'item' || clean.length < 2) return true;
+            if (/^\d+$/.test(clean) || /^\[.*\]$/.test(clean) || clean === 'товар' || clean === 'product' || clean.length < 2) return true;
             return false;
         }
 
         async function startBarcodeScanner() {
             if (isScannerBusy) return;
+            
+            if (typeof Html5Qrcode === 'undefined') {
+                showToast("Библиотека сканера не загружена. Проверьте интернет-соединение.");
+                return;
+            }
+
             isScannerBusy = true;
 
             const scannerWrapper = document.getElementById('scannerWrapper');
@@ -2335,11 +2283,6 @@
             document.getElementById('manageList').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('btnScanBarcode').style.display = 'none';
-
-            const scrollBody = document.getElementById('modalScrollBody');
-            if (scrollBody) {
-                scrollBody.scrollTop = 0;
-            }
 
             if (!html5QrCodeScanner) {
                 html5QrCodeScanner = new Html5Qrcode("barcodeReader");
@@ -2363,7 +2306,7 @@
                         }
 
                         try {
-                            const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${decodedText}.json`);
+                            const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${encodeURIComponent(decodedText)}.json`);
                             const data = await res.json();
                             if (data && data.status === 1 && data.product) {
                                 const prod = data.product;
@@ -2378,16 +2321,16 @@
                                 }
                             }
                         } catch (err) {
-                            console.log('API fetch error, falling back to manual:', err);
+                            console.warn('API fetch failed:', err);
                         }
 
                         showForm(true);
                         document.getElementById('pName').value = '';
                     },
-                    (errorMessage) => {}
+                    () => {}
                 );
             } catch (err) {
-                console.error("Camera start error:", err);
+                console.error("Camera error:", err);
                 showToast("Не удалось запустить камеру. Проверьте разрешения браузера.");
                 stopBarcodeScanner();
             } finally {
@@ -2396,15 +2339,14 @@
         }
 
         async function stopBarcodeScanner() {
-            const scannerWrapper = document.getElementById('scannerWrapper');
             if (html5QrCodeScanner) {
                 try {
                     await html5QrCodeScanner.stop();
                 } catch (e) {
-                    console.log('Scanner stop warning:', e);
+                    console.warn('Scanner stop:', e);
                 }
             }
-            scannerWrapper.style.display = 'none';
+            document.getElementById('scannerWrapper').style.display = 'none';
             document.getElementById('manageList').style.display = 'flex';
             document.getElementById('btnAddToggle').style.display = 'block';
             document.getElementById('btnScanBarcode').style.display = 'block';
@@ -2412,22 +2354,14 @@
         }
 
         function applyPauseBefore(mins) {
-            if (selectedPauseBeforeVal === mins) {
-                selectedPauseBeforeVal = null;
-            } else {
-                selectedPauseBeforeVal = mins;
-            }
+            selectedPauseBeforeVal = (selectedPauseBeforeVal === mins) ? null : mins;
             document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-mins') == selectedPauseBeforeVal);
             });
         }
 
         function applyPauseAfter(mins) {
-            if (selectedPauseAfterVal === mins) {
-                selectedPauseAfterVal = null;
-            } else {
-                selectedPauseAfterVal = mins;
-            }
+            selectedPauseAfterVal = (selectedPauseAfterVal === mins) ? null : mins;
             document.querySelectorAll('#pauseAfterPicker .picker-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-mins') == selectedPauseAfterVal);
             });
@@ -2437,23 +2371,15 @@
             const toast = document.getElementById('toastNotification');
             toast.innerText = msg;
             toast.classList.add('visible');
-            setTimeout(() => {
-                toast.classList.remove('visible');
-            }, duration);
+            setTimeout(() => toast.classList.remove('visible'), duration);
         }
 
         function toggleAccordion(contentId, arrowId) {
             const content = document.getElementById(contentId);
             const arrow = document.getElementById(arrowId);
             const isOpen = content.classList.contains('open');
-            
-            if (isOpen) {
-                content.classList.remove('open');
-                arrow.innerText = '▼';
-            } else {
-                content.classList.add('open');
-                arrow.innerText = '▲';
-            }
+            content.classList.toggle('open', !isOpen);
+            arrow.innerText = isOpen ? '▼' : '▲';
         }
 
         function toBase64(str) {
@@ -2481,12 +2407,8 @@
         }
 
         function applyImportData(data) {
-            if (!data || typeof data !== 'object') {
-                showToast('Неверный формат данных.');
-                return false;
-            }
-            if (!Array.isArray(data.products)) {
-                showToast('Ошибка: файл поврежден или не содержит список средств.');
+            if (!data || typeof data !== 'object' || !Array.isArray(data.products)) {
+                showToast('Ошибка: неверный формат файла.');
                 return false;
             }
             
@@ -2497,32 +2419,21 @@
                 if (data.productProgress && typeof data.productProgress === 'object') {
                     safeStorage.setItem('cb_product_progress', JSON.stringify(data.productProgress));
                     productProgress = data.productProgress;
-                } else {
-                    productProgress = {};
-                    safeStorage.setItem('cb_product_progress', JSON.stringify({}));
                 }
 
                 if (data.completedLog && typeof data.completedLog === 'object') {
                     safeStorage.setItem('cb_completed_log', JSON.stringify(data.completedLog));
                     completedLog = data.completedLog;
-                } else {
-                    completedLog = {};
-                    safeStorage.setItem('cb_completed_log', JSON.stringify({}));
                 }
 
-                if (data.theme && typeof data.theme === 'string') {
-                    setTheme(data.theme);
-                }
-
-                if (data.installDate && typeof data.installDate === 'string') {
-                    safeStorage.setItem('cb_install_date', data.installDate.substring(0, 10));
-                }
+                if (data.theme) setTheme(data.theme);
+                if (data.installDate) safeStorage.setItem('cb_install_date', data.installDate.substring(0, 10));
                 
                 renderManageList();
                 switchTOD(currentTOD);
                 return true;
             } catch (err) {
-                showToast('Ошибка при применении данных.');
+                showToast('Ошибка при импорте данных.');
                 return false;
             }
         }
@@ -2547,13 +2458,11 @@
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (confirm('Импортировать коллекцию и архив из файла? Все текущие данные будут обновлены.')) {
-                        if (applyImportData(data)) {
-                            showToast('Данные успешно импортированы!');
-                        }
+                    if (confirm('Импортировать коллекцию? Все текущие данные будут обновлены.')) {
+                        if (applyImportData(data)) showToast('Данные импортированы!');
                     }
                 } catch (err) {
-                    showToast('Ошибка чтения файла резервной копии.');
+                    showToast('Ошибка чтения файла.');
                 }
             };
             reader.readAsText(file);
@@ -2564,14 +2473,11 @@
                 const data = getBackupData();
                 const jsonStr = JSON.stringify(data);
                 const encoded = toBase64(jsonStr);
-                const fullUrl = window.location.origin + window.location.pathname + '#import=' + encoded;
+                const fullUrl = `${window.location.origin}${window.location.pathname}#import=${encoded}`;
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(fullUrl).then(() => {
-                        showToast('Ссылка скопирована!');
-                    }).catch(() => {
-                        fallbackCopyText(fullUrl);
-                    });
+                    navigator.clipboard.writeText(fullUrl).then(() => showToast('Ссылка скопирована!'))
+                    .catch(() => fallbackCopyText(fullUrl));
                 } else {
                     fallbackCopyText(fullUrl);
                 }
@@ -2598,13 +2504,9 @@
         }
 
         function forceAppUpdate() {
-            const toast = document.getElementById('toastNotification');
-            toast.innerText = 'поиск обновлений...';
-            toast.classList.add('visible');
-            
+            showToast('поиск обновлений...');
             setTimeout(() => {
-                const cleanUrl = window.location.origin + window.location.pathname + '?v_force=' + Date.now() + window.location.hash;
-                window.location.href = cleanUrl;
+                window.location.href = `${window.location.origin}${window.location.pathname}?v_force=${Date.now()}${window.location.hash}`;
             }, 300);
         }
 
@@ -2616,15 +2518,13 @@
                     const jsonStr = fromBase64(rawHash);
                     const data = JSON.parse(jsonStr);
                     setTimeout(() => {
-                        if (confirm('Найдена ссылка с данными ухода MySpa!\n\nИмпортировать коллекцию и архив на этот девайс?')) {
-                            if (applyImportData(data)) {
-                                showToast('Коллекция и архив успешно перенесены!');
-                            }
+                        if (confirm('Импортировать найденные данные ухода MySpa?')) {
+                            if (applyImportData(data)) showToast('Данные успешно импортированы!');
                         }
                         history.replaceState(null, null, window.location.pathname);
                     }, 400);
                 } catch (err) {
-                    console.error('Import from URL failed', err);
+                    console.error('Import URL error', err);
                     showToast('Ошибка импорта из ссылки.');
                 }
             }
@@ -2632,7 +2532,6 @@
 
         function saveProduct() {
             const name = document.getElementById('pName').value.trim();
-            
             const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
             const type = activeTypeBtn ? activeTypeBtn.getAttribute('data-type') : null;
 
@@ -2643,8 +2542,7 @@
 
             if (!name) {
                 showToast('Введите название');
-                const inputEl = document.getElementById('pName');
-                if (inputEl) inputEl.focus();
+                document.getElementById('pName').focus();
                 return;
             }
 
@@ -2660,7 +2558,6 @@
 
             const freqType = document.getElementById('pFreqType').value;
             const openDateEl = document.getElementById('pOpenDate');
-            
             const openDate = (openDateEl.value) ? openDateEl.value : getLocalTodayStr();
             const editId = document.getElementById('editProductId').value;
 
@@ -2698,7 +2595,6 @@
             }
 
             autoExpandCategoryName = type;
-
             safeStorage.setItem('cb_custom_products', JSON.stringify(products));
             renderManageList();
             hideForm();
@@ -2707,8 +2603,7 @@
 
         function editProduct(id) {
             closeAllPopovers();
-            const targetId = Number(id);
-            const item = products.find(p => p.id === targetId);
+            const item = products.find(p => p.id === Number(id));
             if (!item) return;
 
             showForm(false);
@@ -2722,8 +2617,7 @@
 
             const itemTods = item.tods || [];
             document.querySelectorAll('#todPicker .picker-btn').forEach(btn => {
-                const tod = btn.getAttribute('data-tod');
-                btn.classList.toggle('active', itemTods.includes(tod));
+                btn.classList.toggle('active', itemTods.includes(btn.getAttribute('data-tod')));
             });
 
             const freq = item.freqType || 'daily';
@@ -2742,24 +2636,16 @@
             applyPauseAfter(item.pauseAfter || null);
 
             const openDateEl = document.getElementById('pOpenDate');
-            if (item.openDate) {
-                openDateEl.value = item.openDate;
-                openDateEl.type = 'date';
-            } else {
-                openDateEl.value = getLocalTodayStr();
-                openDateEl.type = 'date';
-            }
+            openDateEl.value = item.openDate || getLocalTodayStr();
+            openDateEl.type = 'date';
 
             if (item.paoMonths) {
                 applyPAO(item.paoMonths);
+                document.getElementById('expiryAccordionContent').classList.add('open');
+                document.getElementById('expiryAccordionArrow').innerText = '▲';
             } else {
                 document.querySelectorAll('.pao-chip').forEach(c => c.classList.remove('active'));
                 selectedPAOMonths = null;
-            }
-
-            if (item.paoMonths) {
-                document.getElementById('expiryAccordionContent').classList.add('open');
-                document.getElementById('expiryAccordionArrow').innerText = '▲';
             }
 
             document.querySelectorAll('.day-chip').forEach(chip => {
@@ -2786,7 +2672,6 @@
                 btn.classList.toggle('active', btn.getAttribute('data-freq') === 'daily');
             });
             document.getElementById('daysGroup').style.display = 'none';
-
             document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(b => b.classList.remove('active'));
             
             const openDateEl = document.getElementById('pOpenDate');
@@ -2809,20 +2694,17 @@
             CATEGORIES.forEach((catName, catIndex) => {
                 const catProducts = products.filter(p => p.type === catName);
                 const count = catProducts.length;
-
                 const shouldAutoExpand = (autoExpandCategoryName === catName);
-                const openHeaderClass = shouldAutoExpand ? 'open' : '';
-                const openContainerClass = shouldAutoExpand ? 'open' : '';
 
                 let catItemsHtml = '';
                 if (count === 0) {
                     catItemsHtml = `<div style="font-size: 11px; color: var(--text-secondary); padding: 8px 12px;">нет средств в категории</div>`;
                 } else {
                     catItemsHtml = catProducts.map(p => {
-                        const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths, p.id);
+                        const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths);
                         return `
                             <div class="product-wrapper-block">
-                                <div class="manage-item" id="manage-item-${p.id}" onclick="toggleProductPopover(event, ${p.id})">
+                                <div class="manage-item" id="manage-item-${p.id}" data-action="toggle-popover" data-id="${p.id}">
                                     <div class="manage-info">
                                         ${dotsHtml}
                                         <span><b>${escapeHtml(p.name)}</b></span>
@@ -2830,8 +2712,8 @@
                                     <div class="manage-chevron">›</div>
                                 </div>
                                 <div class="popover-actions-menu" id="popover-${p.id}">
-                                    <button type="button" class="popover-btn" onclick="editProduct(${p.id})">редактировать</button>
-                                    <button type="button" class="popover-btn danger" onclick="deleteProduct(${p.id})">удалить</button>
+                                    <button type="button" class="popover-btn" data-action="edit-product" data-id="${p.id}">редактировать</button>
+                                    <button type="button" class="popover-btn danger" data-action="delete-product" data-id="${p.id}">удалить</button>
                                 </div>
                             </div>
                         `;
@@ -2840,11 +2722,11 @@
 
                 htmlBuffer.push(`
                     <div class="category-group-block">
-                        <button type="button" class="category-header-btn ${openHeaderClass}" id="cat-header-${catIndex}" onclick="toggleCategoryAccordion(${catIndex})">
+                        <button type="button" class="category-header-btn ${shouldAutoExpand ? 'open' : ''}" id="cat-header-${catIndex}" data-action="toggle-category" data-index="${catIndex}">
                             <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${count})</span></span>
                             <span class="category-chevron">▼</span>
                         </button>
-                        <div class="category-items-container ${openContainerClass}" id="cat-container-${catIndex}" style="${shouldAutoExpand ? 'max-height: 2000px;' : ''}">
+                        <div class="category-items-container ${shouldAutoExpand ? 'open' : ''}" id="cat-container-${catIndex}" style="${shouldAutoExpand ? 'max-height: 2000px;' : ''}">
                             ${catItemsHtml}
                         </div>
                     </div>
@@ -2854,6 +2736,25 @@
             container.innerHTML = htmlBuffer.join('');
             autoExpandCategoryName = null;
         }
+
+        /* Делегирование событий списка управления продуктами */
+        document.getElementById('manageList').addEventListener('click', (e) => {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+
+            const action = target.dataset.action;
+            const id = Number(target.dataset.id);
+
+            if (action === 'toggle-category') {
+                toggleCategoryAccordion(Number(target.dataset.index));
+            } else if (action === 'toggle-popover') {
+                toggleProductPopover(id);
+            } else if (action === 'edit-product') {
+                editProduct(id);
+            } else if (action === 'delete-product') {
+                deleteProduct(id);
+            }
+        });
 
         function deleteProduct(id) {
             closeAllPopovers();
@@ -2875,7 +2776,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            /* Открытие кастомного календаря при клике на чип даты */
             document.getElementById('currentDateChip').addEventListener('click', openCustomCalendar);
             document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
 
@@ -2891,9 +2791,7 @@
 
             document.getElementById('themeRow').addEventListener('click', (e) => {
                 const themeBtn = e.target.closest('[data-theme]');
-                if (themeBtn) {
-                    setTheme(themeBtn.getAttribute('data-theme'));
-                }
+                if (themeBtn) setTheme(themeBtn.getAttribute('data-theme'));
             });
 
             document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
@@ -2910,18 +2808,13 @@
             document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
             document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => {
-                toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow');
-            });
-            document.getElementById('btnToggleExpiryAccordion').addEventListener('click', () => {
-                toggleAccordion('expiryAccordionContent', 'expiryAccordionArrow');
-            });
+            document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow'));
+            document.getElementById('btnToggleExpiryAccordion').addEventListener('click', () => toggleAccordion('expiryAccordionContent', 'expiryAccordionArrow'));
 
             document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
             document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
-            document.getElementById('btnImportJson').addEventListener('click', () => {
-                document.getElementById('jsonFileInput').click();
-            });
+            document.getElementById('btnImportJson').addEventListener('click', () => document.getElementById('jsonFileInput').click());
+            
             document.getElementById('jsonFileInput').addEventListener('change', (e) => {
                 if (e.target.files && e.target.files[0]) {
                     importJsonFile(e.target.files[0]);
@@ -2929,11 +2822,10 @@
                 }
             });
 
-            const pNameInput = document.getElementById('pName');
-            pNameInput.addEventListener('input', (e) => {
-                handleNameInput(e.target.value);
-            });
+            document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
 
+            const pNameInput = document.getElementById('pName');
+            pNameInput.addEventListener('input', (e) => handleNameInput(e.target.value));
             pNameInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.target.blur();
@@ -2942,15 +2834,7 @@
             });
 
             document.getElementById('productFormContainer').addEventListener('click', (e) => {
-                if (!e.target.closest('.form-group')) {
-                    closeAutocomplete();
-                }
-                if (!e.target.closest('input, select, textarea, button')) {
-                    const activeInput = document.activeElement;
-                    if (activeInput && activeInput.tagName === 'INPUT') {
-                        activeInput.blur();
-                    }
-                }
+                if (!e.target.closest('.form-group')) closeAutocomplete();
             });
 
             document.getElementById('typePicker').addEventListener('click', (e) => {
@@ -2963,9 +2847,7 @@
 
             document.getElementById('todPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
-                if (btn) {
-                    btn.classList.toggle('active');
-                }
+                if (btn) btn.classList.toggle('active');
             });
 
             document.getElementById('freqPicker').addEventListener('click', (e) => {
@@ -2980,24 +2862,18 @@
             });
 
             document.addEventListener('click', (e) => {
-                if (!e.target.closest('.product-wrapper-block')) {
-                    closeAllPopovers();
-                }
+                if (!e.target.closest('.product-wrapper-block')) closeAllPopovers();
             });
 
             document.getElementById('btnMorning').addEventListener('click', () => {
-                const selected = safeStorage.getItem('cb_selected_date');
-                const logicalToday = getLogicalTodayStr();
-                if (!selected || selected === logicalToday) {
+                if (safeStorage.getItem('cb_selected_date') === getLogicalTodayStr()) {
                     safeStorage.removeItem('cb_selected_date');
                 }
                 switchTOD('morning');
             });
 
             document.getElementById('btnEvening').addEventListener('click', () => {
-                const selected = safeStorage.getItem('cb_selected_date');
-                const logicalToday = getLogicalTodayStr();
-                if (!selected || selected === logicalToday) {
+                if (safeStorage.getItem('cb_selected_date') === getLogicalTodayStr()) {
                     safeStorage.removeItem('cb_selected_date');
                 }
                 switchTOD('evening');
@@ -3030,13 +2906,10 @@
                 if (e.key === 'Escape') {
                     closeAllPopovers();
                     closeAutocomplete();
-
                     const modal = document.getElementById('settingsModal');
                     if (modal && modal.style.display === 'flex') closeSettings();
-
                     const appModal = document.getElementById('appSettingsModal');
                     if (appModal && appModal.style.display === 'flex') closeAppSettings();
-
                     const calModal = document.getElementById('customCalendarModal');
                     if (calModal && calModal.style.display === 'flex') closeCustomCalendar();
                 }
