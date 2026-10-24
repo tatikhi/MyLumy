@@ -12,7 +12,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
-            /* 1. Nude & Silk (по умолчанию) */
             --bg-main: #F9F6F0;
             --surface: #FFFFFF;
             --text-primary: #4A3E3D;
@@ -111,8 +110,18 @@
             padding: 24px 16px 40px;
         }
 
-        body.modal-open {
-            overflow: hidden;
+        body.modal-open { overflow: hidden; }
+
+        .svg-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vertical-align: middle;
         }
 
         .header-bar {
@@ -201,19 +210,6 @@
             background: var(--accent-light);
             border-color: var(--accent-main);
             transform: translateY(-1px);
-        }
-
-        .scanner-notice-banner {
-            background: var(--accent-light);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 14px 16px;
-            border-radius: 16px;
-            font-size: 13px;
-            font-weight: 500;
-            line-height: 1.5;
-            margin-bottom: 18px;
-            text-align: center;
         }
 
         .main-card {
@@ -307,18 +303,6 @@
             position: relative;
         }
 
-        .btn-settings-inner svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--text-primary);
-            fill: none;
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            flex-shrink: 0;
-            transition: stroke 0.3s ease;
-        }
-
         .routine-item {
             background: var(--item-bg);
             border: 1px solid var(--border-color);
@@ -393,11 +377,7 @@
             cursor: pointer;
             transition: all 0.25s ease;
             color: var(--accent-main);
-            font-size: 12px;
-            font-weight: bold;
-            line-height: 1;
             flex-shrink: 0;
-            margin-left: 2px;
         }
 
         .active-toggle-circle.completed {
@@ -407,43 +387,52 @@
             box-shadow: 0 2px 8px rgba(196, 154, 130, 0.25);
         }
 
-        .pause-step-card {
-            background: var(--accent-light);
-            border: 1px dashed var(--accent-main);
-            border-radius: 16px;
-            padding: 10px 14px;
+        /* МИНИМАЛИСТИЧНЫЙ КАПСУЛЬНЫЙ ТАЙМЕР */
+        .pause-step-container {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin: -4px 0;
+            justify-content: center;
+            margin: -2px 0;
         }
 
-        .pause-step-info {
-            font-size: 12px;
-            color: var(--text-primary);
-            font-weight: 500;
-            display: flex;
+        .btn-pause-timer {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .btn-timer-trigger {
             background: var(--surface);
-            border: 1px solid var(--accent-main);
-            color: var(--accent-main);
-            padding: 6px 12px;
-            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
 
-        .btn-timer-trigger:active {
+        .btn-pause-timer:hover:not(.running):not(.completed) {
+            border-color: var(--accent-main);
+            color: var(--accent-main);
+            background: var(--accent-light);
+        }
+
+        /* Запущенный таймер (окрашивание в цвет темы + замена текста) */
+        .btn-pause-timer.running {
             background: var(--accent-main);
             color: #FFFFFF;
+            border-color: var(--accent-main);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            pointer-events: none; /* Защита от случайного сброса */
+        }
+
+        .btn-pause-timer.running .svg-icon {
+            stroke: #FFFFFF;
+        }
+
+        .btn-pause-timer.completed {
+            background: var(--accent-light);
+            color: var(--accent-main);
+            border-color: var(--accent-main);
+            pointer-events: none;
         }
 
         .expiry-dots {
@@ -499,7 +488,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 12px;
         }
 
         .cal-grid {
@@ -527,7 +515,7 @@
             transition: all 0.2s ease;
         }
 
-        .cal-day-cell:hover, .cal-day-cell:active {
+        .cal-day-cell:hover:not(.disabled), .cal-day-cell:active:not(.disabled) {
             background: var(--accent-light);
         }
 
@@ -538,8 +526,9 @@
         }
 
         .cal-day-cell.disabled {
-            opacity: 0.3;
+            opacity: 0.25;
             cursor: not-allowed;
+            pointer-events: none;
         }
 
         .modal-overlay {
@@ -628,7 +617,7 @@
             width: 32px; height: 32px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; cursor: pointer; line-height: 1; transition: all 0.2s;
+            cursor: pointer; transition: all 0.2s;
         }
 
         .modal-close-icon:active { background: var(--accent-light); }
@@ -678,7 +667,8 @@
             position: absolute; right: 8px;
             background: var(--accent-light); border: 1px solid var(--border-color);
             color: var(--accent-main); border-radius: 10px; padding: 6px 8px;
-            font-size: 11px; font-weight: 700; cursor: pointer; letter-spacing: 1px; transition: all 0.2s ease;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
         }
 
         .btn-inline-scan:active { background: var(--accent-main); color: #FFFFFF; }
@@ -737,7 +727,11 @@
             border-radius: 18px; padding: 14px; margin-bottom: 14px;
         }
 
-        .pao-title { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .pao-title {
+            font-size: 12px; font-weight: 600; color: var(--text-primary);
+            margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+        }
+
         .pao-picker { display: flex; gap: 6px; flex-wrap: wrap; }
 
         .pao-chip {
@@ -792,7 +786,15 @@
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
         .category-title-text { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: lowercase; }
         .category-count-badge { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
-        .category-chevron { color: var(--text-secondary); font-size: 12px; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .category-chevron {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .category-header-btn.open .category-chevron { transform: rotate(180deg); }
 
         .category-items-container {
@@ -802,7 +804,12 @@
         }
 
         .category-items-container.open { opacity: 1; padding-top: 4px; padding-bottom: 8px; }
-        .product-wrapper-block { display: flex; flex-direction: column; gap: 6px; }
+        
+        .product-wrapper-block {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
         .manage-item {
             display: flex; justify-content: space-between; align-items: center;
@@ -813,17 +820,44 @@
 
         .manage-item:active, .manage-item.active-item { background: var(--accent-light); border-color: var(--accent-main); }
         .manage-info { display: flex; align-items: center; gap: 10px; }
-        .manage-chevron { color: var(--text-secondary); font-size: 14px; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .manage-chevron {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .manage-item.active-item .manage-chevron { transform: rotate(90deg); }
 
         .popover-actions-menu {
-            max-height: 0; opacity: 0; overflow: hidden; display: flex;
-            background: var(--surface); border: 0px solid var(--border-color);
-            border-radius: 14px; padding: 0 6px; gap: 6px;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, padding 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            display: flex;
+            background: var(--surface);
+            border: 0px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0 6px;
+            gap: 6px;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.25s ease, 
+                        padding 0.3s ease,
+                        margin 0.3s ease,
+                        border-width 0.2s ease,
+                        box-shadow 0.25s ease;
         }
 
-        .popover-actions-menu.open { max-height: 60px; opacity: 1; padding: 6px; border-width: 1px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .popover-actions-menu.open {
+            max-height: 54px;
+            opacity: 1;
+            padding: 6px;
+            margin-top: 2px;
+            margin-bottom: 4px;
+            border-width: 1px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+        }
 
         .popover-btn {
             flex: 1; padding: 10px 14px; border-radius: 12px; border: none;
@@ -889,7 +923,7 @@
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">моя коллекция</button>
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
                 <span class="btn-settings-inner">
-                    <svg viewBox="0 0 24 24">
+                    <svg class="svg-icon" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                     </svg>
@@ -903,9 +937,13 @@
     <div class="modal-overlay" id="customCalendarModal">
         <div class="modal-card custom-calendar-modal">
             <div class="cal-header">
-                <button type="button" class="cal-nav-btn" id="calPrevMonth">◄</button>
+                <button type="button" class="cal-nav-btn" id="calPrevMonth">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
                 <div class="cal-month-title" id="calMonthTitle"></div>
-                <button type="button" class="cal-nav-btn" id="calNextMonth">►</button>
+                <button type="button" class="cal-nav-btn" id="calNextMonth">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
             </div>
             <div class="cal-grid" id="calGrid"></div>
             <div style="margin-top: 16px;">
@@ -919,7 +957,9 @@
         <div class="modal-card" id="settingsModalCard">
             <div class="modal-header-row">
                 <div class="modal-title uniform-brand-title" id="mainModalTitle" style="font-size: 15px; font-weight: 600;">моя коллекция</div>
-                <button type="button" class="modal-close-icon" id="btnHeaderClose" aria-label="Закрыть">✕</button>
+                <button type="button" class="modal-close-icon" id="btnHeaderClose" aria-label="Закрыть">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
             
             <div class="modal-body-scrollable" id="modalScrollBody">
@@ -935,7 +975,6 @@
                 <div id="productFormContainer">
                     <input type="hidden" id="editProductId" value="">
 
-                    <!-- ИНТЕЛЛЕКТУАЛЬНАЯ ПЛАШКА-ПОДСКАЗКА -->
                     <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
                         <div id="smartPresetText" style="font-size: 12px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
                         <button type="button" id="btnApplyPreset" class="btn-update-inline uniform-brand-title" style="width: 100%;">применить рекомендуемые паузы</button>
@@ -948,7 +987,9 @@
                             <label for="pName">Название средства</label>
                             <div class="input-with-icon-wrapper">
                                 <input type="text" id="pName" class="input-control input-control-with-btn" placeholder="Например: Сыворотка с ретинолом" autocomplete="off">
-                                <button type="button" class="btn-inline-scan" id="btnScanBarcode" title="Сканировать штрихкод">║█║</button>
+                                <button type="button" class="btn-inline-scan" id="btnScanBarcode" title="Сканировать штрихкод">
+                                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 5v14M7 5v14M11 5v14M15 5v14M19 5v14M21 5v14"></path></svg>
+                                </button>
                             </div>
                             <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                         </div>
@@ -973,10 +1014,10 @@
                         </div>
                     </div>
 
-                    <!-- ВЫДЕЛЕННЫЙ БЛОК PAO (КЛЮЧЕВАЯ ФИШКА) -->
                     <div class="pao-highlight-box">
                         <div class="pao-title">
-                            <span>⏳ Срок после вскрытия (PAO)</span>
+                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+                            <span>Срок после вскрытия (PAO)</span>
                         </div>
                         <div class="pao-picker" id="paoPicker">
                             <button type="button" class="pao-chip" data-months="3">3M</button>
@@ -993,11 +1034,13 @@
                         </div>
                     </div>
 
-                    <!-- ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ (ГРАФИК И ПАУЗЫ) -->
                     <div class="form-section">
                         <button type="button" class="accordion-toggle-btn" id="btnToggleAdvancedAccordion">
-                            <span>⚙️ Настройки графика и пауз</span>
-                            <span id="advancedAccordionArrow">▼</span>
+                            <span style="display: flex; align-items: center; gap: 6px;">
+                                <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                Настройки графика и пауз
+                            </span>
+                            <span id="advancedAccordionArrow" class="category-chevron"><svg class="svg-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                         </button>
                         <div class="accordion-content" id="advancedAccordionContent">
                             <div class="form-group" style="margin-top: 12px;">
@@ -1008,7 +1051,7 @@
                                     <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
                                 </div>
                                 <div id="daysGroup" style="display: none; margin-top: 10px;">
-                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит галочку ✓ в плане):</label>
+                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит галочку в плане):</label>
                                     <div class="days-picker" id="daysPicker">
                                         <button type="button" class="day-chip" data-day="1">Пн</button>
                                         <button type="button" class="day-chip" data-day="2">Вт</button>
@@ -1063,13 +1106,12 @@
         <div class="modal-card" style="max-width: 400px; max-height: 85vh;">
             <div class="modal-header-row">
                 <div class="modal-title-wrapper">
-                    <svg class="title-settings-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: var(--text-primary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                    </svg>
+                    <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     <div class="modal-title uniform-brand-title" style="font-size: 15px; font-weight: 600;">настройки</div>
                 </div>
-                <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">✕</button>
+                <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
             </div>
 
             <div class="modal-body-scrollable">
@@ -1158,13 +1200,25 @@
         }
 
         const localProductDictionary = [
-            "Пенка для умывания", "Гель для умывания", "Гидрофильное масло", 
-            "Мицеллярная вода", "Энзимная пудра", "Тонер увлажняющий", 
-            "Тоник успокаивающий", "Кислотный тоник", "Эссенция с муцином", 
-            "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", 
-            "Сыворотка с витамином C", "Сыворотка с ретинолом", "Крем для век", 
-            "Увлажняющий крем", "Питательный крем", "Восстанавливающий бальзам", 
-            "Солнцезащитный крем SPF 50", "Маска увлажняющая", "Глиняная маска"
+            "Патчи для глаз", "Патчи гидрогелевые", "Патчи с кофеином", "Патчи с микроиглами",
+            "Пенка для умывания", "Пенка очищающая", "Гель для умывания", "Гидрофильное масло", 
+            "Гидрофильный бальзам", "Мицеллярная вода", "Энзимная пудра", "Молочко для снятия макияжа", 
+            "Двухфазная жидкость", "Очищающий крем", "Мыло для лица",
+            "Тонер увлажняющий", "Тонер успокаивающий", "Тонер с центеллой", "Тоник кислотный", 
+            "Отшелушивающий тоник", "Эссенция с муцином", "Эссенция с галактомисисом", "Софтнер", 
+            "Мист для лица", "Лосьон увлажняющий",
+            "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", "Сыворотка с витамином C", 
+            "Сыворотка с ретинолом", "Сыворотка с пептидами", "Сыворотка с бакучиолом", 
+            "Сыворотка с центеллой", "Сыворотка с азелаиновой кислотой", "Сыворотка с салициловой кислотой", 
+            "Сыворотка с гликолевой кислотой", "Пилинг-сыворотка", "Ампульная сыворотка", "Бустер для лица",
+            "Крем для век", "Крем вокруг глаз", "Гель для кожи вокруг глаз", "Сыворотка для век",
+            "Увлажняющий крем", "Питательный крем", "Восстанавливающий крем", "Ламеллярный крем", 
+            "Эмульсия для лица", "Флюид увлажняющий", "Солнцезащитный крем SPF 50", "Солнцезащитный флюид SPF 30", 
+            "Солнцезащитный стик", "SPF кушон", "Ночная маска", "Тканевая маска", "Глиняная маска", 
+            "Альгинатная маска", "Карбокситерапия", "Пилинг-скатка", "Масло для лица", "Бальзам для губ",
+            "Cleansing Foam", "Cleansing Gel", "Cleansing Oil", "Micellar Water", "Toner", "Essence", 
+            "Mist", "Serum", "Retinol", "Vitamin C", "Niacinamide", "AHA BHA PHA Acid", "Hyaluronic Acid", 
+            "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
         const SMART_PRESETS = [
@@ -1211,30 +1265,19 @@
                 freqType: 'custom',
                 pauseBefore: 0,
                 pauseAfter: 15,
-                reason: 'Маски рекомендуется применять 1-3 раза в неделю.'
-            },
-            {
-                keywords: ['патчи', 'patch'],
-                type: 'Уход за глазами',
-                tods: ['morning'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 0,
-                reason: 'Патчи под глаза — отличный ежедневный ритуал для утреннего снятия отеков.'
+                reason: 'Маски рекомендуется применять 1-3 раза в неделю по графику.'
             },
             {
                 keywords: ['пенк', 'гель для умыв', 'гидрофильн', 'мицелляр', 'cleanser', 'foam'],
                 type: 'Очищение',
                 tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 0, pauseAfter: 0
+                freqType: 'daily'
             },
             {
                 keywords: ['тонер', 'тоник', 'эссенци', 'toner'],
                 type: 'Тонизирование',
                 tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 0, pauseAfter: 0
+                freqType: 'daily'
             }
         ];
 
@@ -1333,8 +1376,19 @@
         let products = JSON.parse(safeStorage.getItem('cb_custom_products') || '[]');
         let barcodeCache = JSON.parse(safeStorage.getItem('cb_barcode_cache') || '{}');
         let productProgress = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
-        let currentTOD = (new Date().getHours() >= 3 && new Date().getHours() < 18) ? 'morning' : 'evening';
 
+        let installDateStr = safeStorage.getItem('cb_install_date');
+        if (!installDateStr) {
+            installDateStr = getLocalTodayStr();
+            safeStorage.setItem('cb_install_date', installDateStr);
+        }
+
+        function getSystemTOD() {
+            const h = new Date().getHours();
+            return (h >= 3 && h < 18) ? 'morning' : 'evening';
+        }
+
+        let currentTOD = getSystemTOD();
         let activePopoverProductId = null;
         let selectedPAOMonths = null;
         let selectedPauseBeforeVal = null;
@@ -1362,6 +1416,14 @@
                 return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             }
             return new Date();
+        }
+
+        function getAllowedStartDateObj() {
+            const parts = installDateStr.split('-');
+            const installObj = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
+            const ninetyDaysAgo = new Date();
+            ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+            return (installObj < ninetyDaysAgo) ? installObj : ninetyDaysAgo;
         }
 
         function renderCurrentDateChip() {
@@ -1406,25 +1468,29 @@
 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const selectedDateStr = safeStorage.getItem('cb_selected_date') || getLocalTodayStr();
+            const allowedMinStr = getLocalTodayStr(getAllowedStartDateObj());
 
             for (let d = 1; d <= daysInMonth; d++) {
                 const curDateObj = new Date(year, month, d, 12, 0, 0);
                 const curStr = getLocalTodayStr(curDateObj);
                 const isSelected = (curStr === selectedDateStr);
+                const isDisabled = (curStr < allowedMinStr);
 
                 const cell = document.createElement('div');
-                cell.className = `cal-day-cell ${isSelected ? 'selected' : ''}`;
+                cell.className = `cal-day-cell ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`;
                 cell.innerText = d;
 
-                cell.addEventListener('click', () => {
-                    if (curStr === getLocalTodayStr()) {
-                        safeStorage.removeItem('cb_selected_date');
-                    } else {
-                        safeStorage.setItem('cb_selected_date', curStr);
-                    }
-                    switchTOD(currentTOD);
-                    closeCustomCalendar();
-                });
+                if (!isDisabled) {
+                    cell.addEventListener('click', () => {
+                        if (curStr === getLocalTodayStr()) {
+                            safeStorage.removeItem('cb_selected_date');
+                        } else {
+                            safeStorage.setItem('cb_selected_date', curStr);
+                        }
+                        switchTOD(currentTOD);
+                        closeCustomCalendar();
+                    });
+                }
 
                 grid.appendChild(cell);
             }
@@ -1455,6 +1521,14 @@
             return activeProducts;
         }
 
+        function isTimerAllowedForCurrentView() {
+            const selectedDateStr = safeStorage.getItem('cb_selected_date');
+            const todayStr = getLocalTodayStr();
+            const isToday = (!selectedDateStr || selectedDateStr === todayStr);
+            const isCurrentTOD = (currentTOD === getSystemTOD());
+            return isToday && isCurrentTOD;
+        }
+
         function renderRoutine() {
             renderCurrentDateChip();
             const container = document.getElementById('routineContainer');
@@ -1468,16 +1542,17 @@
 
             const htmlBuffer = [];
             const routineDateStr = getLocalTodayStr(getRoutineDateObj());
+            const isTimerActive = isTimerAllowedForCurrentView();
 
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths);
                 
-                // Галочка ✓ ТОЛЬКО для средств по расписанию (freqType === 'custom')
                 let toggleCircleHtml = '';
                 if (item.freqType === 'custom') {
                     const isCompleted = productProgress[item.id] && Array.isArray(productProgress[item.id].dates) && productProgress[item.id].dates.includes(routineDateStr);
                     const completedClass = isCompleted ? 'completed' : '';
-                    toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" onclick="toggleActiveProduct(${item.id})" title="Отметить шаг">✓</div>`;
+                    const checkIcon = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" onclick="toggleActiveProduct(${item.id})" title="Отметить шаг">${checkIcon}</div>`;
                 }
 
                 htmlBuffer.push(`
@@ -1503,14 +1578,26 @@
                     const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
 
                     if (pauseMins > 0) {
-                        htmlBuffer.push(`
-                            <div class="pause-step-card">
-                                <div class="pause-step-info">
-                                    <span>⏱️ Выдержка перед след. этапом: <b>${pauseMins} мин</b></span>
+                        const clockSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+                        if (isTimerActive) {
+                            htmlBuffer.push(`
+                                <div class="pause-step-container">
+                                    <button type="button" class="btn-pause-timer" onclick="startTimerForStep(this, ${pauseMins})">
+                                        ${clockSvg}
+                                        <span>пауза ${pauseMins} мин</span>
+                                    </button>
                                 </div>
-                                <button type="button" class="btn-timer-trigger" onclick="startTimerForStep(this, ${pauseMins})">Запустить (${pauseMins}:00)</button>
-                            </div>
-                        `);
+                            `);
+                        } else {
+                            htmlBuffer.push(`
+                                <div class="pause-step-container">
+                                    <div class="btn-pause-timer" style="opacity: 0.5; cursor: default;">
+                                        ${clockSvg}
+                                        <span>пауза ${pauseMins} мин</span>
+                                    </div>
+                                </div>
+                            `);
+                        }
                     }
                 }
             });
@@ -1518,12 +1605,24 @@
             container.innerHTML = htmlBuffer.join('');
         }
 
+        // ЗАПУСК ТАЙМЕРА (СЛОВО "ПАУЗА" ИСЧЕЗАЕТ)
         function startTimerForStep(btnEl, mins) {
+            if (btnEl.classList.contains('running') || btnEl.classList.contains('completed')) return;
+            btnEl.classList.add('running');
+            
+            const clockSvgWhite = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+
             activeRoutineTimer.start(
                 mins,
-                (formatted) => { btnEl.innerText = `⏳ ${formatted}`; },
+                (formatted) => {
+                    // Слово "пауза" исчезает, остается только время
+                    btnEl.innerHTML = `${clockSvgWhite} <span>${formatted}</span>`;
+                },
                 () => {
-                    btnEl.innerText = "✓ Готово!";
+                    btnEl.classList.remove('running');
+                    btnEl.classList.add('completed');
+                    const checkSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    btnEl.innerHTML = `${checkSvg} <span>выдержка окончена</span>`;
                     showToast("Выдержка завершена! Можно наносить следующее средство.");
                 }
             );
@@ -1554,9 +1653,6 @@
             renderRoutine();
         }
 
-        // ==========================================
-        // АВТОКОМПЛИТ И СМАРТ-ПОДСКАЗКИ
-        // ==========================================
         function closeAutocomplete() {
             const dropdown = document.getElementById('autocompleteDropdown');
             if (dropdown) {
@@ -1578,13 +1674,13 @@
         function handleNameInput(val) {
             const cleanQuery = val.trim().toLowerCase();
 
-            // Авто-подсвечивание категорий на лету
             currentDetectedPreset = detectSmartPreset(val);
             const banner = document.getElementById('smartPresetBanner');
 
             if (currentDetectedPreset) {
                 if (currentDetectedPreset.reason) {
-                    document.getElementById('smartPresetText').innerHTML = `<b>💡 Совет MySpa:</b> ${escapeHtml(currentDetectedPreset.reason)}`;
+                    const bulbSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px; margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
+                    document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MySpa:</b> ${escapeHtml(currentDetectedPreset.reason)}`;
                     banner.style.display = 'block';
                 } else banner.style.display = 'none';
 
@@ -1602,7 +1698,6 @@
                 banner.style.display = 'none';
             }
 
-            // Поиск автокомплита от 2 букв
             if (cleanQuery.length < 2) {
                 closeAutocomplete();
                 return;
@@ -1610,7 +1705,7 @@
 
             const userProducts = products.map(p => p.name);
             const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
-            const matchedLocal = combinedLocal.filter(item => item.toLowerCase().includes(cleanQuery)).slice(0, 5);
+            const matchedLocal = combinedLocal.filter(item => item.toLowerCase().includes(cleanQuery)).slice(0, 6);
 
             renderAutocompleteResults(matchedLocal, []);
 
@@ -1648,27 +1743,23 @@
             dropdown.classList.add('open');
         }
 
-        // КЛИК "ПРИМЕНИТЬ РЕКОМЕНДУЕМЫЕ ПАУЗЫ" С ПЕРЕХОДОМ К ЧАСТОТЕ
         document.getElementById('btnApplyPreset').addEventListener('click', () => {
             if (!currentDetectedPreset) return;
 
             if (currentDetectedPreset.pauseBefore) applyPauseBefore(currentDetectedPreset.pauseBefore);
             if (currentDetectedPreset.pauseAfter) applyPauseAfter(currentDetectedPreset.pauseAfter);
             
-            // Устанавливаем режим "По дням недели"
             document.getElementById('pFreqType').value = 'custom';
             document.querySelectorAll('#freqPicker .picker-btn').forEach(b => {
                 b.classList.toggle('active', b.dataset.freq === 'custom');
             });
             document.getElementById('daysGroup').style.display = 'block';
 
-            // Разворачиваем аккордеон
             const content = document.getElementById('advancedAccordionContent');
             if (!content.classList.contains('open')) content.classList.add('open');
 
             document.getElementById('smartPresetBanner').style.display = 'none';
 
-            // Плавный скролл к блоку выбора дней недели
             setTimeout(() => {
                 document.getElementById('daysGroup').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
@@ -1676,9 +1767,6 @@
             showToast('Установлен режим с графиком! Выберите дни применения.');
         });
 
-        // ==========================================
-        // СКАНИРОВАНИЕ ШТРИХКОДА
-        // ==========================================
         async function startBarcodeScanner() {
             if (isScannerBusy) return;
             if (typeof Html5Qrcode === 'undefined') return showToast("Сканер недоступен");
@@ -1936,6 +2024,8 @@
         function renderManageList() {
             const container = document.getElementById('manageList');
             const htmlBuffer = [];
+            const chevronSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+            const rightChevronSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
 
             CATEGORIES.forEach((catName, catIndex) => {
                 const catProducts = products.filter(p => p.type === catName);
@@ -1946,7 +2036,7 @@
                                 ${calcExpiryDots(p.openDate, p.paoMonths)}
                                 <span><b>${escapeHtml(p.name)}</b></span>
                             </div>
-                            <div class="manage-chevron">›</div>
+                            <div class="manage-chevron">${rightChevronSvg}</div>
                         </div>
                         <div class="popover-actions-menu" id="popover-${p.id}">
                             <button type="button" class="popover-btn" onclick="editProduct(${p.id})">редактировать</button>
@@ -1959,7 +2049,7 @@
                     <div class="category-group-block">
                         <button type="button" class="category-header-btn" id="cat-header-${catIndex}" onclick="toggleCategoryAccordion(${catIndex})">
                             <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${catProducts.length})</span></span>
-                            <span class="category-chevron">▼</span>
+                            <span class="category-chevron">${chevronSvg}</span>
                         </button>
                         <div class="category-items-container" id="cat-container-${catIndex}">
                             ${catItemsHtml || '<div style="font-size: 11px; color: var(--text-secondary); padding: 8px 12px;">нет средств</div>'}
@@ -1983,7 +2073,6 @@
             container.style.maxHeight = !isOpen ? container.scrollHeight + 'px' : '0px';
         }
 
-        // БЭКАП И ЭКСПОРТ/ИМПОРТ
         function getBackupData() {
             return {
                 version: APP_VERSION,
@@ -2000,7 +2089,6 @@
                 return false;
             }
             try {
-                // Валидация каждого продукта
                 const sanitizedProducts = data.products.map(p => ({
                     id: Number(p.id) || Date.now(),
                     name: String(p.name || ''),
@@ -2219,7 +2307,6 @@
             document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning'));
             document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
 
-            // Клик по затененному фону закрывает модальные окна
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
                 overlay.addEventListener('click', (e) => {
                     if (e.target === overlay) {
