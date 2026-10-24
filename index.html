@@ -469,6 +469,10 @@
         .dot-red { background-color: rgb(205, 92, 92); }
         .dot-gray { background-color: var(--icon-inactive); }
 
+        #customCalendarModal {
+            z-index: 1100 !important;
+        }
+
         .custom-calendar-modal {
             max-width: 340px !important;
             padding: 20px 16px !important;
@@ -659,15 +663,17 @@
             margin-bottom: 14px; letter-spacing: 0.06em; font-style: normal;
         }
 
-        .version-row { display: flex; justify-content: space-between; align-items: center; }
-        .version-text { font-size: 17px; color: var(--text-secondary); font-weight: 500; }
+        .version-row { display: flex; flex-direction: column; gap: 8px; }
+        .version-text { font-size: 17px; color: var(--text-secondary); font-weight: 600; }
 
         .btn-update-inline {
             background: var(--surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 6px 12px; border-radius: 12px;
-            font-size: 17px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            padding: 14px; border-radius: 16px; width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px; font-weight: 600; letter-spacing: 0.04em;
+            text-transform: lowercase; cursor: pointer; transition: all 0.2s ease;
             touch-action: manipulation;
         }
 
@@ -1053,7 +1059,7 @@
 
                     <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
                         <div id="smartPresetText" style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
-                        <button type="button" id="btnApplyPreset" class="btn-update-inline uniform-brand-title" style="width: 100%;">применить рекомендуемые паузы</button>
+                        <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;">применить рекомендуемые паузы</button>
                     </div>
 
                     <div class="form-section">
@@ -1189,7 +1195,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.28</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.29</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1227,7 +1233,13 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.28';
+        const APP_VERSION = '1.2.29';
+
+        function triggerHaptic(pattern = 15) {
+            if (navigator.vibrate) {
+                try { navigator.vibrate(pattern); } catch (e) {}
+            }
+        }
 
         const safeStorage = {
             getItem(key) {
@@ -1428,7 +1440,7 @@
             finish() {
                 this.stop();
                 this.playChimeSound();
-                if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]);
+                triggerHaptic([200, 100, 200, 100, 300]);
                 if (this.onComplete) this.onComplete();
             }
 
@@ -1544,6 +1556,7 @@
         }
 
         function openCustomCalendar(mode = 'routine') {
+            triggerHaptic(20);
             calendarTargetMode = mode;
             if (calendarTargetMode === 'pao') {
                 const currentOpenDate = document.getElementById('pOpenDate').value || getLocalTodayStr();
@@ -1557,6 +1570,7 @@
         }
 
         function closeCustomCalendar() {
+            triggerHaptic(10);
             closeModalElement(document.getElementById('customCalendarModal'));
         }
 
@@ -1615,6 +1629,7 @@
                 if (!isDisabled) {
                     cell.addEventListener('click', (e) => {
                         e.preventDefault();
+                        triggerHaptic(25);
                         if (calendarTargetMode === 'pao') {
                             document.getElementById('pOpenDate').value = curStr;
                             closeCustomCalendar();
@@ -1636,6 +1651,7 @@
         }
 
         function switchTOD(tod) {
+            triggerHaptic(20);
             currentTOD = tod;
             document.getElementById('btnMorning').classList.toggle('active', tod === 'morning');
             document.getElementById('btnEvening').classList.toggle('active', tod === 'evening');
@@ -1757,6 +1773,7 @@
 
         function startTimerForStep(btnEl, mins) {
             if (btnEl.classList.contains('running') || btnEl.classList.contains('completed')) return;
+            triggerHaptic(30);
             btnEl.classList.add('running');
             
             const clockSvgWhite = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px; stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
@@ -1791,6 +1808,7 @@
         }
 
         function toggleActiveProduct(productId) {
+            triggerHaptic(35);
             const routineDateStr = getLocalTodayStr(getRoutineDateObj());
             if (!productProgress[productId]) productProgress[productId] = { dates: [] };
             const dates = productProgress[productId].dates;
@@ -1812,6 +1830,7 @@
         }
 
         function selectAutocompleteItem(val) {
+            triggerHaptic(15);
             const input = document.getElementById('pName');
             if (input) {
                 input.value = val;
@@ -1953,6 +1972,7 @@
         document.getElementById('btnApplyPreset').addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
+            triggerHaptic(20);
             if (!currentDetectedPreset) return;
 
             setPauseBefore(currentDetectedPreset.pauseBefore !== undefined && currentDetectedPreset.pauseBefore !== null ? currentDetectedPreset.pauseBefore : null);
@@ -1986,6 +2006,7 @@
         });
 
         async function startBarcodeScanner() {
+            triggerHaptic(20);
             if (isScannerBusy) return;
             if (typeof Html5Qrcode === 'undefined') return showToast("Сканер недоступен");
 
@@ -2034,6 +2055,7 @@
         }
 
         async function stopBarcodeScanner() {
+            triggerHaptic(15);
             if (html5QrCodeScanner) {
                 try { await html5QrCodeScanner.stop(); } catch (e) {}
             }
@@ -2042,6 +2064,7 @@
         }
 
         function applyPAO(months) {
+            triggerHaptic(15);
             selectedPAOMonths = (selectedPAOMonths === months) ? null : months;
             document.querySelectorAll('#paoPicker .pao-chip').forEach(c => {
                 c.classList.toggle('active', c.dataset.months == selectedPAOMonths);
@@ -2063,14 +2086,17 @@
         }
 
         function togglePauseBefore(mins) {
+            triggerHaptic(15);
             setPauseBefore(selectedPauseBeforeVal === mins ? null : mins);
         }
 
         function togglePauseAfter(mins) {
+            triggerHaptic(15);
             setPauseAfter(selectedPauseAfterVal === mins ? null : mins);
         }
 
         function saveProduct() {
+            triggerHaptic(30);
             const name = document.getElementById('pName').value.trim();
             const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
             const type = activeTypeBtn ? activeTypeBtn.dataset.type : null;
@@ -2115,6 +2141,7 @@
         }
 
         function editProduct(id) {
+            triggerHaptic(20);
             closeAutocomplete();
             closeAllPopovers();
             const item = products.find(p => p.id === Number(id));
@@ -2161,6 +2188,7 @@
         }
 
         function deleteProduct(id) {
+            triggerHaptic(30);
             closeAutocomplete();
             closeAllPopovers();
             products = products.filter(p => p.id !== Number(id));
@@ -2171,6 +2199,7 @@
 
         function toggleProductPopover(e, id) {
             if (e) e.stopPropagation();
+            triggerHaptic(15);
             const targetId = Number(id);
             const popoverEl = document.getElementById(`popover-${targetId}`);
             const itemEl = document.getElementById(`manage-item-${targetId}`);
@@ -2201,6 +2230,7 @@
         }
 
         function closeModalElement(modalEl, onClosed) {
+            triggerHaptic(15);
             closeAutocomplete();
             modalEl.classList.remove('active-modal');
             setTimeout(() => {
@@ -2211,6 +2241,7 @@
         }
 
         function showForm() {
+            triggerHaptic(20);
             closeAutocomplete();
             stopBarcodeScanner();
             closeAllPopovers();
@@ -2224,6 +2255,7 @@
         }
 
         function hideForm() {
+            triggerHaptic(15);
             closeAutocomplete();
             document.getElementById('productFormContainer').classList.remove('open');
             document.getElementById('manageList').style.display = 'flex';
@@ -2299,6 +2331,7 @@
         }
 
         function toggleCategoryAccordion(catIndex) {
+            triggerHaptic(15);
             closeAllPopovers();
             const headerBtn = document.getElementById(`cat-header-${catIndex}`);
             const container = document.getElementById(`cat-container-${catIndex}`);
@@ -2362,6 +2395,7 @@
         }
 
         function exportJsonFile() {
+            triggerHaptic(20);
             const data = getBackupData();
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -2375,6 +2409,7 @@
         }
 
         function importJsonFile(file) {
+            triggerHaptic(20);
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -2391,6 +2426,7 @@
         }
 
         function copyShareLink() {
+            triggerHaptic(20);
             try {
                 const data = getBackupData();
                 const encoded = toBase64(JSON.stringify(data));
@@ -2402,6 +2438,7 @@
         }
 
         function forceAppUpdate() {
+            triggerHaptic(25);
             showToast('поиск обновлений...');
             setTimeout(() => {
                 window.location.href = `${window.location.origin}${window.location.pathname}?v_force=${Date.now()}${window.location.hash}`;
@@ -2432,6 +2469,7 @@
         }
 
         function setTheme(theme) {
+            triggerHaptic(15);
             document.body.setAttribute('data-theme', theme);
             safeStorage.setItem('cb_theme', theme);
             document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
@@ -2452,10 +2490,12 @@
             document.getElementById('currentDateChip').addEventListener('click', () => openCustomCalendar('routine'));
             document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
             document.getElementById('calPrevMonth').addEventListener('click', () => {
+                triggerHaptic(10);
                 calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() - 1);
                 renderCustomCalendar();
             });
             document.getElementById('calNextMonth').addEventListener('click', () => {
+                triggerHaptic(10);
                 calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() + 1);
                 renderCustomCalendar();
             });
@@ -2477,6 +2517,7 @@
             document.getElementById('typePicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
+                    triggerHaptic(15);
                     document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                 }
@@ -2484,12 +2525,16 @@
 
             document.getElementById('todPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
-                if (btn) btn.classList.toggle('active');
+                if (btn) {
+                    triggerHaptic(15);
+                    btn.classList.toggle('active');
+                }
             });
 
             document.getElementById('freqPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
+                    triggerHaptic(15);
                     const freq = btn.dataset.freq;
                     document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
@@ -2500,10 +2545,14 @@
 
             document.getElementById('daysPicker').addEventListener('click', (e) => {
                 const chip = e.target.closest('.day-chip');
-                if (chip) chip.classList.toggle('active');
+                if (chip) {
+                    triggerHaptic(15);
+                    chip.classList.toggle('active');
+                }
             });
 
             document.getElementById('btnToggleAdvancedAccordion').addEventListener('click', () => {
+                triggerHaptic(15);
                 document.getElementById('advancedAccordionContent').classList.toggle('open');
             });
 
@@ -2518,13 +2567,17 @@
             });
 
             document.getElementById('btnOpenSettings').addEventListener('click', () => {
+                triggerHaptic(20);
                 renderManageList();
                 openModalElement(document.getElementById('settingsModal'));
             });
             document.getElementById('btnCloseSettings').addEventListener('click', () => closeModalElement(document.getElementById('settingsModal')));
             document.getElementById('btnHeaderClose').addEventListener('click', () => closeModalElement(document.getElementById('settingsModal')));
 
-            document.getElementById('btnOpenAppSettings').addEventListener('click', () => openModalElement(document.getElementById('appSettingsModal')));
+            document.getElementById('btnOpenAppSettings').addEventListener('click', () => {
+                triggerHaptic(20);
+                openModalElement(document.getElementById('appSettingsModal'));
+            });
             document.getElementById('btnCloseAppSettings').addEventListener('click', () => closeModalElement(document.getElementById('appSettingsModal')));
             document.getElementById('btnAppHeaderClose').addEventListener('click', () => closeModalElement(document.getElementById('appSettingsModal')));
 
