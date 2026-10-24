@@ -1373,7 +1373,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.5</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.6</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1422,7 +1422,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.5';
+        const APP_VERSION = '1.2.6';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -1484,7 +1484,6 @@
             checkUrlImport();
         });
 
-        // Надежная нормализация даты установки (гарантированно YYYY-MM-DD без лишних таймстампов)
         function getNormalizedInstallDate() {
             let rawInstall = safeStorage.getItem('cb_install_date');
             const todayStr = getLocalTodayStr();
@@ -1492,7 +1491,6 @@
                 safeStorage.setItem('cb_install_date', todayStr);
                 return todayStr;
             }
-            // Если в строке случайно затесался мусор или ISO-время, берем первые 10 символов (YYYY-MM-DD)
             const cleaned = rawInstall.substring(0, 10);
             if (!/^\d{4}-\d{2}-\d{2}$/.test(cleaned)) {
                 safeStorage.setItem('cb_install_date', todayStr);
@@ -1640,7 +1638,6 @@
             return selected < logicalToday;
         }
 
-        // Вычисление минимальной доступной даты (максимум между 90 днями назад и датой установки)
         function getMinAvailableDateStr() {
             const today = new Date();
             const ninetyDaysAgo = new Date(today);
@@ -1648,8 +1645,6 @@
             const ninetyDaysAgoStr = getLocalTodayStr(ninetyDaysAgo);
 
             const instDate = getNormalizedInstallDate();
-
-            // Возвращаем ту дату, которая ближе к сегодняшнему дню (позже во времени)
             return instDate > ninetyDaysAgoStr ? instDate : ninetyDaysAgoStr;
         }
 
@@ -2325,11 +2320,11 @@
             });
         }
 
-        function showCustomAlert(msg, targetElement) {
+        function showCustomAlert(msg, onOkCallback) {
             document.getElementById('customAlertText').innerText = msg;
             const modal = document.getElementById('customAlertModal');
             openModalElement(modal);
-            window.alertTarget = targetElement;
+            window.alertOkCallback = onOkCallback;
         }
 
         document.getElementById('btnAlertOk').addEventListener('click', () => {
@@ -2338,10 +2333,10 @@
             modal.style.display = 'none';
             document.body.classList.remove('modal-open');
 
-            const target = window.alertTarget;
-            window.alertTarget = null;
-            if (target) {
-                target.focus();
+            const cb = window.alertOkCallback;
+            window.alertOkCallback = null;
+            if (typeof cb === 'function') {
+                cb();
             }
         });
 
@@ -2545,17 +2540,26 @@
             });
 
             if (!name) {
-                showCustomAlert('Введите название', document.getElementById('pName'));
+                showCustomAlert('Введите название', () => {
+                    const inputEl = document.getElementById('pName');
+                    if (inputEl) inputEl.focus();
+                });
                 return;
             }
 
             if (!type) {
-                showCustomAlert('Выберите тип средства', document.getElementById('typePicker'));
+                showCustomAlert('Выберите тип средства', () => {
+                    const typePickerEl = document.getElementById('typePicker');
+                    if (typePickerEl) typePickerEl.focus();
+                });
                 return;
             }
 
             if (tods.length === 0) {
-                showCustomAlert('Выберите время суток', document.getElementById('todPicker'));
+                showCustomAlert('Выберите время суток', () => {
+                    const todPickerEl = document.getElementById('todPicker');
+                    if (todPickerEl) todPickerEl.focus();
+                });
                 return;
             }
 
@@ -2776,7 +2780,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('hiddenDateInput').addEventListener('change', (e) => {
+            const hiddenDateInput = document.getElementById('hiddenDateInput');
+
+            hiddenDateInput.addEventListener('change', (e) => {
                 const val = e.target.value;
                 if (!val) return;
                 
@@ -2785,8 +2791,17 @@
                     const parts = minAllowedDateStr.split('-');
                     const formattedMinDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
                     
-                    showCustomAlert(`Просмотр архива доступен от ${formattedMinDate}`);
-                    renderRoutine();
+                    showCustomAlert(`Просмотр архива доступен от ${formattedMinDate}`, () => {
+                        renderRoutine();
+                        // Сразу открываем нативный инпут календаря обратно, чтобы выбор даты оставался активным
+                        setTimeout(() => {
+                            if (typeof hiddenDateInput.showPicker === 'function') {
+                                try { hiddenDateInput.showPicker(); } catch(err) {}
+                            } else {
+                                hiddenDateInput.click();
+                            }
+                        }, 100);
+                    });
                     return;
                 }
 
