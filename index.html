@@ -951,15 +951,19 @@
         .popover-btn.danger:active { background: rgba(231, 76, 60, 0.15); }
 
         .accordion-toggle-btn {
-            width: 100%; padding: 12px 16px; border-radius: 14px;
+            width: 100%; padding: 12px 16px; border-radius: 16px;
             border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: 17px; font-weight: 500; cursor: pointer;
+            color: var(--text-primary); font-size: 17px; font-weight: 600; cursor: pointer;
             display: flex; justify-content: space-between; align-items: center; transition: background-color 0.2s ease;
             touch-action: manipulation;
         }
 
         .accordion-toggle-btn:active { background: var(--accent-light); }
-        .accordion-content { display: none; padding-top: 8px; }
+        
+        .accordion-content {
+            display: none;
+            padding-top: 12px;
+        }
         .accordion-content.open { display: block; }
         
         #productFormContainer {
@@ -1068,15 +1072,9 @@
                     <input type="hidden" id="editProductId" value="">
                     <input type="hidden" id="pOpenDate" value="">
 
-                    <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
-                        <div id="smartPresetText" style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
-                        <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;">применить рекомендуемые паузы</button>
-                    </div>
-
-                    <div class="form-section">
-                        <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">о средстве</div>
-                        
-                        <div class="form-group">
+                    <!-- Поле названия средств (ВСЕГДА ВИДИМОЕ) -->
+                    <div class="form-section" style="margin-bottom: 12px;">
+                        <div class="form-group" style="margin-bottom: 0;">
                             <label for="pName">Название средства</label>
                             <div class="input-with-icon-wrapper">
                                 <input type="text" id="pName" class="input-control input-control-with-btn" placeholder="Например: Сыворотка с ретинолом" autocomplete="off">
@@ -1086,53 +1084,60 @@
                             </div>
                             <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                         </div>
-
-                        <div class="form-group">
-                            <label>Тип / Этап ухода</label>
-                            <div class="type-picker-grid" id="typePicker">
-                                <button type="button" class="picker-btn" data-type="Очищение">Очищение</button>
-                                <button type="button" class="picker-btn" data-type="Тонизирование">Тонизирование</button>
-                                <button type="button" class="picker-btn" data-type="Активы">Активы</button>
-                                <button type="button" class="picker-btn" data-type="Уход за глазами">Уход за глазами</button>
-                                <button type="button" class="picker-btn" data-type="Питание / Увлажнение">Питание / Увлажнение</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label>Время суток</label>
-                            <div class="picker-group" id="todPicker">
-                                <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
-                                <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
-                            </div>
-                        </div>
                     </div>
 
-                    <div class="pao-highlight-box">
-                        <div class="pao-title">
-                            <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
-                            <span>Срок после вскрытия (PAO)</span>
-                        </div>
-                        <div class="pao-picker" id="paoPicker">
-                            <button type="button" class="pao-chip" data-months="3">3M</button>
-                            <button type="button" class="pao-chip" data-months="6">6M</button>
-                            <button type="button" class="pao-chip" data-months="12">12M</button>
-                            <button type="button" class="pao-chip" data-months="24">24M</button>
-                        </div>
-                        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: flex-end;">
-                            <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 14px;">изменить дату вскрытия</button>
-                        </div>
-                    </div>
-
+                    <!-- Скрываемый блок: «параметры и график» -->
                     <div class="form-section">
-                        <button type="button" class="accordion-toggle-btn" id="btnToggleAdvancedAccordion">
-                            <span style="display: flex; align-items: center; gap: 6px;">
-                                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
-                                Настройки графика и пауз
+                        <button type="button" class="accordion-toggle-btn" id="btnToggleDetailsAccordion">
+                            <span style="display: flex; align-items: center; gap: 8px; font-weight: 600;" class="uniform-brand-title">
+                                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
+                                параметры и график
                             </span>
-                            <span id="advancedAccordionArrow" class="category-chevron"><svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                            <span id="detailsAccordionArrow" class="category-chevron"><svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                         </button>
-                        <div class="accordion-content" id="advancedAccordionContent">
+
+                        <div class="accordion-content" id="detailsAccordionContent">
+                            <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 16px; padding: 12px; margin-bottom: 14px; margin-top: 10px;">
+                                <div id="smartPresetText" style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
+                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;">применить рекомендуемые паузы</button>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label>Тип / Этап ухода</label>
+                                <div class="type-picker-grid" id="typePicker">
+                                    <button type="button" class="picker-btn" data-type="Очищение">Очищение</button>
+                                    <button type="button" class="picker-btn" data-type="Тонизирование">Тонизирование</button>
+                                    <button type="button" class="picker-btn" data-type="Активы">Активы</button>
+                                    <button type="button" class="picker-btn" data-type="Уход за глазами">Уход за глазами</button>
+                                    <button type="button" class="picker-btn" data-type="Питание / Увлажнение">Питание / Увлажнение</button>
+                                </div>
+                            </div>
+
                             <div class="form-group" style="margin-top: 12px;">
+                                <label>Время суток</label>
+                                <div class="picker-group" id="todPicker">
+                                    <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
+                                    <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
+                                </div>
+                            </div>
+
+                            <div class="pao-highlight-box" style="margin-top: 14px; margin-bottom: 14px;">
+                                <div class="pao-title">
+                                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+                                    <span>Срок после вскрытия (PAO)</span>
+                                </div>
+                                <div class="pao-picker" id="paoPicker">
+                                    <button type="button" class="pao-chip" data-months="3">3M</button>
+                                    <button type="button" class="pao-chip" data-months="6">6M</button>
+                                    <button type="button" class="pao-chip" data-months="12">12M</button>
+                                    <button type="button" class="pao-chip" data-months="24">24M</button>
+                                </div>
+                                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: flex-end;">
+                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 14px;">изменить дату вскрытия</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label>Частота применения</label>
                                 <input type="hidden" id="pFreqType" value="daily">
                                 <div class="picker-group" id="freqPicker">
@@ -1140,7 +1145,7 @@
                                     <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
                                 </div>
                                 <div id="daysGroup" style="display: none; margin-top: 10px;">
-                                    <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит галочку в плане):</label>
+                                    <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит галочку в план):</label>
                                     <div class="days-picker" id="daysPicker">
                                         <button type="button" class="day-chip" data-day="1">Пн</button>
                                         <button type="button" class="day-chip" data-day="2">Вт</button>
@@ -1857,6 +1862,34 @@
             renderRoutine();
         }
 
+        function openDetailsAccordion() {
+            const content = document.getElementById('detailsAccordionContent');
+            const arrow = document.getElementById('detailsAccordionArrow');
+            if (content && !content.classList.contains('open')) {
+                content.classList.add('open');
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function closeDetailsAccordion() {
+            const content = document.getElementById('detailsAccordionContent');
+            const arrow = document.getElementById('detailsAccordionArrow');
+            if (content && content.classList.contains('open')) {
+                content.classList.remove('open');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function toggleDetailsAccordion() {
+            triggerHaptic(15);
+            const content = document.getElementById('detailsAccordionContent');
+            if (content && content.classList.contains('open')) {
+                closeDetailsAccordion();
+            } else {
+                openDetailsAccordion();
+            }
+        }
+
         function closeAutocomplete() {
             clearTimeout(autocompleteDebounceTimer);
             const dropdown = document.getElementById('autocompleteDropdown');
@@ -1874,6 +1907,7 @@
                 input.value = val;
                 handleNameInput(val, true);
             }
+            openDetailsAccordion();
             closeAutocomplete();
         }
 
@@ -1885,6 +1919,8 @@
                 applyFormStateFromPreset(null, false);
                 return;
             }
+
+            openDetailsAccordion();
 
             currentDetectedPreset = detectSmartPreset(val);
             
@@ -2013,6 +2049,8 @@
             triggerHaptic(20);
             if (!currentDetectedPreset) return;
 
+            openDetailsAccordion();
+
             setPauseBefore(currentDetectedPreset.pauseBefore !== undefined && currentDetectedPreset.pauseBefore !== null ? currentDetectedPreset.pauseBefore : null);
             setPauseAfter(currentDetectedPreset.pauseAfter !== undefined && currentDetectedPreset.pauseAfter !== null ? currentDetectedPreset.pauseAfter : null);
             
@@ -2029,9 +2067,6 @@
                     chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10)));
                 });
             }
-
-            const content = document.getElementById('advancedAccordionContent');
-            if (!content.classList.contains('open')) content.classList.add('open');
 
             document.getElementById('smartPresetBanner').style.display = 'none';
 
@@ -2062,6 +2097,7 @@
                         if (barcodeCache[decodedText]) {
                             document.getElementById('pName').value = barcodeCache[decodedText].name;
                             handleNameInput(barcodeCache[decodedText].name, true);
+                            openDetailsAccordion();
                             return;
                         }
 
@@ -2073,6 +2109,7 @@
                                 if (rawName.length > 2) {
                                     document.getElementById('pName').value = rawName;
                                     handleNameInput(rawName, true);
+                                    openDetailsAccordion();
                                     barcodeCache[decodedText] = { name: rawName, type: 'Очищение' };
                                     safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
                                     return;
@@ -2186,6 +2223,7 @@
             if (!item) return;
 
             showForm();
+            openDetailsAccordion();
 
             document.getElementById('editProductId').value = item.id;
             document.getElementById('pName').value = item.name;
@@ -2290,6 +2328,7 @@
             document.getElementById('formFooterButtons').style.display = 'flex';
             document.getElementById('mainModalTitle').innerText = 'новое средство';
             resetForm();
+            closeDetailsAccordion();
         }
 
         function hideForm() {
@@ -2302,6 +2341,7 @@
             document.getElementById('formFooterButtons').style.display = 'none';
             document.getElementById('mainModalTitle').innerText = 'моя коллекция';
             resetForm();
+            closeDetailsAccordion();
         }
 
         function resetForm() {
@@ -2542,6 +2582,8 @@
             document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
             document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
 
+            document.getElementById('btnToggleDetailsAccordion').addEventListener('click', toggleDetailsAccordion);
+
             document.getElementById('paoPicker').addEventListener('click', (e) => {
                 const chip = e.target.closest('.pao-chip');
                 if (chip) applyPAO(chip.dataset.months);
@@ -2587,11 +2629,6 @@
                     triggerHaptic(15);
                     chip.classList.toggle('active');
                 }
-            });
-
-            document.getElementById('btnToggleAdvancedAccordion').addEventListener('click', () => {
-                triggerHaptic(15);
-                document.getElementById('advancedAccordionContent').classList.toggle('open');
             });
 
             document.getElementById('pauseBeforePicker').addEventListener('click', (e) => {
