@@ -554,10 +554,11 @@
             opacity: 0.6;
         }
 
+        /* ИСПРАВЛЕНИЕ 5: ЕДИНЫЙ ВИД ЗАБЛОКИРОВАННЫХ ДНЕЙ ДЛЯ ПЛАНШЕТОВ И ТЕЛЕФОНОВ */
         .cal-day-cell.disabled {
-            opacity: 0.2;
-            color: var(--text-secondary);
-            text-decoration: line-through;
+            opacity: 0.3 !important;
+            color: var(--text-secondary) !important;
+            text-decoration: line-through !important;
             cursor: not-allowed !important;
             pointer-events: none !important;
             background: transparent !important;
@@ -840,7 +841,7 @@
 
         .category-header-btn.open .category-chevron { transform: rotate(180deg); }
 
-        /* ИСПРАВЛЕНИЕ 1: ПЛАВНОЕ ВЫПАДЕНИЕ КАТЕГОРИЙ КАК POP-OVER */
+        /* ИСПРАВЛЕНИЕ 1: ПЛАВНОЕ ВЫПАДЕНИЕ СПИСКА СРЕДСТВ В КАТЕГОРИИ */
         .category-items-container {
             max-height: 0;
             opacity: 0;
@@ -851,7 +852,7 @@
             padding-left: 8px;
             padding-top: 0;
             padding-bottom: 0;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, padding 0.25s ease;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
         }
 
         .category-items-container.open {
@@ -1180,7 +1181,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.17</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.18</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1218,7 +1219,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.17';
+        const APP_VERSION = '1.2.18';
 
         const safeStorage = {
             getItem(key) {
@@ -1284,6 +1285,7 @@
             "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
+        /* ИСПРАВЛЕНИЕ 2: СТРОГИЙ ПОРЯДОК ПРОВЕРКИ ПРЕСЕТОВ БЕЗ ПЕРЕСЕЧЕНИЙ С ОЧИЩЕНИЕМ */
         const SMART_PRESETS = [
             {
                 keywords: ['патч', 'patch', 'патчи'],
@@ -1294,12 +1296,6 @@
             {
                 keywords: ['сыворотка для век', 'сыворотка вокруг глаз', 'крем для век', 'крем вокруг глаз', 'гель для век', 'гель вокруг глаз', 'eye cream', 'eye patch', 'eye serum'],
                 type: 'Уход за глазами',
-                tods: ['morning', 'evening'],
-                freqType: 'daily'
-            },
-            {
-                keywords: ['очищающий крем', 'cleansing cream', 'cleanser'],
-                type: 'Очищение',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
             },
@@ -1352,13 +1348,22 @@
                 reason: 'Маски рекомендуется применять по графику (Пн и Чт).'
             },
             {
+                keywords: ['сыворотк', 'serum', 'ампул', 'бустер'],
+                type: 'Активы',
+                tods: ['morning', 'evening'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 10,
+                reason: 'Сывороткам требуется 10 минут для полноценного проникновения активных компонентов.'
+            },
+            {
                 keywords: ['увлажнят', 'увлажняющий', 'питательный', 'восстанавливающий', 'крем', 'moisturizer', 'эмульсия', 'флюид'],
                 type: 'Питание / Увлажнение',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
             },
             {
-                keywords: ['пенк', 'гель для умыв', 'гидрофильн', 'мицелляр', 'foam'],
+                keywords: ['пенк', 'гель для умыв', 'гидрофильн', 'мицелляр', 'foam', 'очищающ'],
                 type: 'Очищение',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
@@ -1784,23 +1789,28 @@
             const input = document.getElementById('pName');
             if (input) {
                 input.value = val;
-                handleNameInput(val);
+                closeAutocomplete();
+                handleNameInput(val, true); // Название введено полностью из списка подсказок
                 input.blur();
             }
-            closeAutocomplete();
         }
 
-        // ИСПРАВЛЕНИЕ 6: ОБРАБОТКА И СБРОС ПАРАМЕТРОВ ПРИ ИЗМЕНЕНИИ ИЛИ ВВОДЕ ТЕКСТА НАЗВАНИЯ
-        function handleNameInput(val) {
+        /* ИСПРАВЛЕНИЕ 4: СОВЕТЫ СВЕРХУ ПОЯВЛЯЮТСЯ ТОЛЬКО КОГДА НАЗВАНИЕ ВВЕДЕНО ПОЛНОСТЬЮ ИЛИ ВЫБРАНО ИЗ СПИСКА */
+        function handleNameInput(val, isComplete = false) {
             const cleanQuery = val.trim().toLowerCase();
-
-            currentDetectedPreset = detectSmartPreset(val);
-            applyFormStateFromPreset(currentDetectedPreset);
 
             if (cleanQuery.length < 2) {
                 closeAutocomplete();
+                applyFormStateFromPreset(null, false);
                 return;
             }
+
+            currentDetectedPreset = detectSmartPreset(val);
+            
+            // Если название совпало полностью с каким-то ключом из словаря или справочника, либо передано явно
+            const isFullMatch = isComplete || localProductDictionary.some(item => item.toLowerCase() === cleanQuery) || products.some(p => p.name.toLowerCase() === cleanQuery);
+            
+            applyFormStateFromPreset(currentDetectedPreset, isFullMatch);
 
             const userProducts = products.map(p => p.name);
             const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
@@ -1834,12 +1844,12 @@
             }, 300);
         }
 
-        function applyFormStateFromPreset(preset) {
+        function applyFormStateFromPreset(preset, showBanner = false) {
             const banner = document.getElementById('smartPresetBanner');
-            const defaultDays = [1, 4]; // ИСПРАВЛЕНИЕ 4: Пн, Чт по умолчанию
+            const defaultDays = [1, 4]; // Пн, Чт по умолчанию
 
             if (preset) {
-                if (preset.reason) {
+                if (preset.reason && showBanner) {
                     const bulbSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px; margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
                     document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MySpa:</b> ${escapeHtml(preset.reason)}`;
                     banner.style.display = 'block';
@@ -1881,7 +1891,6 @@
                 applyPauseAfter(preset.pauseAfter !== undefined && preset.pauseAfter !== null ? preset.pauseAfter : null);
 
             } else {
-                // Если пресет не найден — сбрасываем в чистые дефолтные значения
                 banner.style.display = 'none';
                 document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.add('active'));
@@ -1917,6 +1926,7 @@
             dropdown.classList.add('open');
         }
 
+        /* ИСПРАВЛЕНИЕ 3: АВТОМАТИЧЕСКОЕ ПРОСТАВЛЕНИЕ ПАУЗ И РАСПИСАНИЯ ПРИ НАЖАТИИ ПРИМЕНИТЬ */
         document.getElementById('btnApplyPreset').addEventListener('click', () => {
             if (!currentDetectedPreset) return;
 
@@ -1973,7 +1983,7 @@
                         stopBarcodeScanner();
                         if (barcodeCache[decodedText]) {
                             document.getElementById('pName').value = barcodeCache[decodedText].name;
-                            handleNameInput(barcodeCache[decodedText].name);
+                            handleNameInput(barcodeCache[decodedText].name, true);
                             return;
                         }
 
@@ -1984,7 +1994,7 @@
                                 const rawName = data.product.product_name || data.product.brands || '';
                                 if (rawName.length > 2) {
                                     document.getElementById('pName').value = rawName;
-                                    handleNameInput(rawName);
+                                    handleNameInput(rawName, true);
                                     barcodeCache[decodedText] = { name: rawName, type: 'Очищение' };
                                     safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
                                     return;
@@ -2181,7 +2191,7 @@
             document.getElementById('listFooterButtons').style.display = 'none';
             document.getElementById('formFooterButtons').style.display = 'flex';
             document.getElementById('mainModalTitle').innerText = 'новое средство';
-            resetForm(); // Полный сброс формы при открытии нового средства
+            resetForm();
         }
 
         function hideForm() {
@@ -2207,7 +2217,6 @@
             document.getElementById('pFreqType').value = 'daily';
             document.getElementById('daysGroup').style.display = 'none';
             
-            // Пн, Чт по умолчанию при сбросе
             const defaultDays = [1, 4];
             document.querySelectorAll('.day-chip').forEach(chip => {
                 chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10)));
@@ -2421,7 +2430,7 @@
                 renderCustomCalendar();
             });
 
-            document.getElementById('pName').addEventListener('input', (e) => handleNameInput(e.target.value));
+            document.getElementById('pName').addEventListener('input', (e) => handleNameInput(e.target.value, false));
             document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
             document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
 
