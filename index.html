@@ -234,7 +234,6 @@
             text-align: center;
         }
 
-        /* MAIN CARD */
         .main-card {
             background: var(--surface);
             border-radius: 32px;
@@ -1118,9 +1117,10 @@
             display: block;
         }
 
+        /* УВЕДОМЛЕНИЯ (TOAST) — МАКСИМАЛЬНЫЙ Z-INDEX ДЛЯ ПЕРЕКРЫТИЯ КАЛЕНДАРЯ И МОДАЛОК */
         .toast-notification {
             position: fixed;
-            top: 40%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.9);
             width: 90%;
@@ -1133,11 +1133,11 @@
             font-size: 13px;
             font-weight: 600;
             line-height: 1.4;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
             opacity: 0;
             pointer-events: none;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            z-index: 5000;
+            z-index: 9999;
             text-align: center;
             word-wrap: break-word;
         }
@@ -1348,7 +1348,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.9</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.10</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1383,11 +1383,11 @@
         </div>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ TOAST -->
+    <!-- ВСПЛЫВАЮЩИЙ TOAST ПОВЕРХ ВСЕХ ЭЛЕМЕНТОВ (Z-INDEX 9999) -->
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.9';
+        const APP_VERSION = '1.2.10';
 
         const safeStorage = {
             getItem(key) {
