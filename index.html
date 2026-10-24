@@ -841,7 +841,6 @@
 
         .category-header-btn.open .category-chevron { transform: rotate(180deg); }
 
-        /* ИДЕАЛЬНО ПЛАВНОЕ ВЫПАДЕНИЕ ЧЕРЕЗ CSS GRID */
         .category-items-container {
             display: grid;
             grid-template-rows: 0fr;
@@ -953,8 +952,18 @@
         .accordion-toggle-btn:active { background: var(--accent-light); }
         .accordion-content { display: none; padding-top: 8px; }
         .accordion-content.open { display: block; }
-        #productFormContainer { display: none; }
-        #productFormContainer.open { display: block; }
+        
+        /* ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ ФОРМЫ БЕЗ МИГАНИЯ И ЛАГОВ */
+        #productFormContainer {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        #productFormContainer.open {
+            max-height: 2500px;
+            opacity: 1;
+        }
 
         .toast-notification {
             position: fixed; top: 50%; left: 50%;
@@ -1190,7 +1199,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.21</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.22</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1228,7 +1237,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.21';
+        const APP_VERSION = '1.2.22';
 
         const safeStorage = {
             getItem(key) {
@@ -1294,7 +1303,7 @@
             "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
-        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ: СОВЕТЫ ЕСТЬ ТОЛЬКО У АКТИВОВ ИЛИ СРЕДСТВ С НЕОБЯЗАТЕЛЬНЫМ ЕЖЕДНЕВНЫМ ПРИМЕНЕНИЕМ */
+        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ БЕЗ УПОМИНАНИЯ ДНЕЙ НЕДЕЛИ */
         const SMART_PRESETS = [
             {
                 keywords: ['ретинол', 'retinol', 'адапален', 'adapalene', 'третиноин', 'tretinoin'],
@@ -1304,7 +1313,7 @@
                 days: [1, 4],
                 pauseBefore: 15,
                 pauseAfter: 10,
-                reason: 'Ретинолу требуется нанесение на сухую кожу (15 мин после умывания) и 10 мин перед кремом.'
+                reason: 'Ретинолу требуется нанесение на сухую кожу и выдержка перед следующим этапом ухода.'
             },
             {
                 keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'пилинг'],
@@ -1314,7 +1323,7 @@
                 days: [1, 4],
                 pauseBefore: 0,
                 pauseAfter: 15,
-                reason: 'Кислотам требуется 15 минут работы при низком pH до нанесения следующего ухода.'
+                reason: 'Кислотам требуется время для полноценного воздействия при низком pH до нанесения крема.'
             },
             {
                 keywords: ['витамин c', 'витамин с', 'витаминов с', 'vitamin c', 'ascorbic', 'аскорбинов'],
@@ -1323,26 +1332,26 @@
                 freqType: 'daily',
                 pauseBefore: 0,
                 pauseAfter: 10,
-                reason: 'Витамин C наносится утром и требует 10 минут для впитывания.'
+                reason: 'Витамин C наносится утром и требует времени для впитывания.'
             },
             {
-                keywords: ['микроиглам', 'микроигольчат', 'кофеин', 'caffeine'],
+                keywords: ['микроиглам', 'микроигольчат', 'кофеин', 'caffeine', 'патч', 'patch', 'сыворотка для век', 'сыворотка вокруг глаз', 'крем для век', 'крем вокруг глаз', 'гель для век', 'гель вокруг глаз', 'eye cream', 'eye patch', 'eye serum'],
                 type: 'Уход за глазами',
                 tods: ['morning'],
                 freqType: 'daily',
                 pauseBefore: 0,
                 pauseAfter: 10,
-                reason: 'Патчи с активными компонентами (кофеин/микроигольчатые) требуют времени для полноценного проникновения сыворотки.'
+                reason: 'Средства для зоны вокруг глаз и патчи требуют времени для полноценного проникновения активных компонентов.'
             },
             {
                 keywords: ['маск', 'mask'],
                 type: 'Питание / Увлажнение',
-                tods: ['evening'],
+                tods: ['morning'],
                 freqType: 'custom',
                 days: [1, 4],
                 pauseBefore: 0,
-                pauseAfter: 15,
-                reason: 'Маски рекомендуется применять по графику (Пн и Чт).'
+                pauseAfter: 0,
+                reason: 'Маски для лица рекомендуется применять по индивидуальному графику ухода.'
             },
             {
                 keywords: ['spf', 'спф', 'солнц', 'sunscreen'],
@@ -1351,14 +1360,7 @@
                 freqType: 'daily',
                 pauseBefore: 5,
                 pauseAfter: 15,
-                reason: 'SPF-фильтрам нужно 15 минут для образования защитной пленки перед выходом или макияжем.'
-            },
-            {
-                keywords: ['патч', 'patch', 'сыворотка для век', 'сыворотка вокруг глаз', 'крем для век', 'крем вокруг глаз', 'гель для век', 'гель вокруг глаз', 'eye cream', 'eye patch', 'eye serum'],
-                type: 'Уход за глазами',
-                tods: ['morning', 'evening'],
-                freqType: 'daily'
-                // Базовые патчи и кремы для век ежедневные и без активных предупреждений -> нет reason (совет не появляется)
+                reason: 'SPF-фильтрам нужно время для образования стабильной защитной пленки перед выходом.'
             },
             {
                 keywords: ['сыворотк', 'serum', 'ампул', 'бустер'],
@@ -1367,28 +1369,25 @@
                 freqType: 'daily',
                 pauseBefore: 0,
                 pauseAfter: 10,
-                reason: 'Сывороткам с активными компонентами требуется 10 минут для полноценного проникновения.'
+                reason: 'Сывороткам с активными компонентами требуется время для глубокого проникновения.'
             },
             {
                 keywords: ['увлажнят', 'увлажняющий', 'питательный', 'восстанавливающий', 'крем', 'moisturizer', 'эмульсия', 'флюид'],
                 type: 'Питание / Увлажнение',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
-                // Базовый крем -> нет reason
             },
             {
                 keywords: ['пенк', 'гель для умыв', 'гидрофильн', 'мицелляр', 'foam', 'очищающ'],
                 type: 'Очищение',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
-                // Базовое очищение -> нет reason
             },
             {
                 keywords: ['тонер', 'тоник', 'эссенци', 'toner'],
                 type: 'Тонизирование',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
-                // Базовое тонизирование -> нет reason
             }
         ];
 
@@ -1803,13 +1802,12 @@
         }
 
         function selectAutocompleteItem(val) {
-            closeAutocomplete();
             const input = document.getElementById('pName');
             if (input) {
                 input.value = val;
                 handleNameInput(val, true);
-                input.blur();
             }
+            closeAutocomplete();
         }
 
         function handleNameInput(val, isComplete = false) {
@@ -1933,7 +1931,7 @@
             }
 
             dropdown.innerHTML = combined.map(name => `
-                <div class="autocomplete-item" onpointerdown="event.preventDefault(); selectAutocompleteItem('${escapeHtml(name)}')">
+                <div class="autocomplete-item" onclick="selectAutocompleteItem('${escapeHtml(name)}')">
                     ${escapeHtml(name)}
                 </div>
             `).join('');
@@ -1942,7 +1940,9 @@
             dropdown.classList.add('open');
         }
 
-        document.getElementById('btnApplyPreset').addEventListener('click', () => {
+        document.getElementById('btnApplyPreset').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (!currentDetectedPreset) return;
 
             if (currentDetectedPreset.pauseBefore !== undefined && currentDetectedPreset.pauseBefore !== null) {
