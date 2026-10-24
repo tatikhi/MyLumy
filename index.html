@@ -8,103 +8,113 @@
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
-    <!-- Шрифтовая пара: Cormorant Garamond (Editorial) + Inter (Clean UI) -->
+    <!-- Единый чистый интерфейсный шрифт Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <style>
         :root {
-            --font-heading: 'Cormorant Garamond', Georgia, serif;
-            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-            --radius-lg: 24px;
-            --radius-md: 16px;
-            --radius-sm: 12px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
             --radius-pill: 999px;
 
-            /* Nude (Default) - Warm Alabaster & Espresso */
-            --bg-main: #FAF6F1;
+            /* Nude (Default) - Warm Cream & Deep Espresso */
+            --bg-main: #F8F5F0;
             --surface: #FFFFFF;
-            --text-primary: #2C221E;
-            --text-secondary: #63534C;
-            --accent-main: #9E6746;
-            --accent-hover: #825235;
-            --accent-light: #F3ECE5;
-            --border-color: #E6DBCD;
-            --shadow-elevation: 0 12px 32px rgba(44, 34, 30, 0.06);
-            --icon-inactive: #B5A59E;
+            --text-primary: #231B18;
+            --text-secondary: #655650;
+            --accent-main: #8A583B;
+            --accent-hover: #6E442C;
+            --accent-light: #F2EBE3;
+            --border-color: #E2D7CB;
+            --shadow-elevation: 0 4px 20px rgba(35, 27, 24, 0.04);
+            --icon-inactive: #B8A9A2;
             --item-bg: #FFFFFF;
+            --btn-primary-bg: #231B18;
+            --btn-primary-text: #FFFFFF;
         }
 
         body[data-theme="mint"] {
-            /* Mint - Clean Eucalyptus & Deep Forest */
-            --bg-main: #F0F6F4;
+            /* Mint - Eucalyptus & Dark Forest */
+            --bg-main: #F1F6F4;
             --surface: #FFFFFF;
-            --text-primary: #1C2B27;
-            --text-secondary: #4D645F;
-            --accent-main: #3B7066;
-            --accent-hover: #2D5850;
-            --accent-light: #E3EDE9;
-            --border-color: #CCE0D9;
-            --shadow-elevation: 0 12px 32px rgba(28, 43, 39, 0.06);
-            --icon-inactive: #9DB5AF;
+            --text-primary: #192723;
+            --text-secondary: #4A605B;
+            --accent-main: #36665D;
+            --accent-hover: #274D46;
+            --accent-light: #E2EDE9;
+            --border-color: #CADCD6;
+            --shadow-elevation: 0 4px 20px rgba(25, 39, 35, 0.04);
+            --icon-inactive: #9BB3AD;
             --item-bg: #FFFFFF;
+            --btn-primary-bg: #192723;
+            --btn-primary-text: #FFFFFF;
         }
 
         body[data-theme="lavender"] {
-            /* Lavender - Soft Plum & Deep Velvet */
-            --bg-main: #F6F3F8;
+            /* Lavender - Soft Velvet & Plum Slate */
+            --bg-main: #F6F3F7;
             --surface: #FFFFFF;
-            --text-primary: #28202E;
-            --text-secondary: #5C5065;
-            --accent-main: #73538A;
-            --accent-hover: #5A3E6E;
-            --accent-light: #EDE5F3;
-            --border-color: #DDD1E3;
-            --shadow-elevation: 0 12px 32px rgba(40, 32, 46, 0.06);
-            --icon-inactive: #B1A2BB;
+            --text-primary: #251D2A;
+            --text-secondary: #584B60;
+            --accent-main: #6B4C80;
+            --accent-hover: #533964;
+            --accent-light: #ECE4F1;
+            --border-color: #DACEE1;
+            --shadow-elevation: 0 4px 20px rgba(37, 29, 42, 0.04);
+            --icon-inactive: #AFA0B8;
             --item-bg: #FFFFFF;
+            --btn-primary-bg: #251D2A;
+            --btn-primary-text: #FFFFFF;
         }
 
         body[data-theme="sage"] {
             /* Sage - Muted Botanical Sage */
-            --bg-main: #F1F5F1;
+            --bg-main: #F2F5F2;
             --surface: #FFFFFF;
-            --text-primary: #1E281F;
-            --text-secondary: #4F5E50;
-            --accent-main: #3E6140;
-            --accent-hover: #2E4A30;
-            --accent-light: #E3EBE3;
-            --border-color: #CFDBCF;
-            --shadow-elevation: 0 12px 32px rgba(30, 40, 31, 0.06);
-            --icon-inactive: #9FB2A0;
+            --text-primary: #1C261D;
+            --text-secondary: #4B5A4C;
+            --accent-main: #3B5B3D;
+            --accent-hover: #2B442D;
+            --accent-light: #E2EBE2;
+            --border-color: #CCD8CC;
+            --shadow-elevation: 0 4px 20px rgba(28, 38, 29, 0.04);
+            --icon-inactive: #9DB09E;
             --item-bg: #FFFFFF;
+            --btn-primary-bg: #1C261D;
+            --btn-primary-text: #FFFFFF;
         }
 
         body[data-theme="midnight"] {
-            /* Midnight - Premium Dark Slate & Amber Warmth */
-            --bg-main: #121620;
-            --surface: #1B2130;
-            --text-primary: #F2F5FA;
-            --text-secondary: #9AA8BF;
-            --accent-main: #DCA872;
-            --accent-hover: #C5935F;
-            --accent-light: #283147;
-            --border-color: #2D374D;
-            --shadow-elevation: 0 16px 40px rgba(0, 0, 0, 0.35);
-            --icon-inactive: #4E5C78;
-            --item-bg: #1B2130;
+            /* Midnight - Matte Obsidian & Gold Warmth */
+            --bg-main: #12151C;
+            --surface: #1A1F2B;
+            --text-primary: #F3F6FA;
+            --text-secondary: #9AA7BA;
+            --accent-main: #D4A373;
+            --accent-hover: #BF9062;
+            --accent-light: #262E40;
+            --border-color: #2B3548;
+            --shadow-elevation: 0 12px 32px rgba(0, 0, 0, 0.3);
+            --icon-inactive: #4B5872;
+            --item-bg: #1A1F2B;
+            --btn-primary-bg: #D4A373;
+            --btn-primary-text: #12151C;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-body);
+            font-family: var(--font-main);
             touch-action: manipulation;
-            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
@@ -115,17 +125,17 @@
             flex-direction: column;
             align-items: center;
             padding: 20px 16px 40px;
-            -webkit-font-smoothing: antialiased;
+            font-size: 16px;
         }
 
         body.modal-open { overflow: hidden; }
 
         .svg-icon {
             display: inline-block;
-            width: 18px;
-            height: 18px;
-            min-width: 18px;
-            min-height: 18px;
+            width: 19px;
+            height: 19px;
+            min-width: 19px;
+            min-height: 19px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
@@ -139,66 +149,64 @@
             width: 100%;
             max-width: 480px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            margin-bottom: 24px;
-            padding: 4px 4px 0;
+            margin-bottom: 20px;
+            padding: 0 4px;
         }
 
         .logo {
-            font-family: var(--font-heading);
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.08em;
             text-transform: lowercase;
             color: var(--text-primary);
         }
 
-        .uniform-brand-title {
-            font-family: var(--font-heading);
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            color: var(--text-primary);
-        }
-
+        /* Возвращенная рамка-контейнер для блока "Мои ритуалы" */
         .streak-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             width: 100%;
             max-width: 480px;
+            padding: 18px 20px;
             margin-bottom: 18px;
+            box-shadow: var(--shadow-elevation);
+            border: 1px solid var(--border-color);
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
         .streak-card-title {
-            font-family: var(--font-heading);
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
 
         .date-chip {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: var(--surface);
+            background: var(--bg-main);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
-            padding: 10px 20px;
+            padding: 12px 22px;
             border-radius: var(--radius-pill);
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            width: fit-content;
+            width: 100%;
+            max-width: 320px;
             transition: all 0.2s ease;
         }
 
         .date-chip:hover, .date-chip:active {
             background: var(--accent-light);
             border-color: var(--accent-main);
-            transform: translateY(-1px);
         }
 
         .main-card {
@@ -206,7 +214,7 @@
             border-radius: var(--radius-lg);
             width: 100%;
             max-width: 480px;
-            padding: 24px;
+            padding: 24px 20px;
             box-shadow: var(--shadow-elevation);
             border: 1px solid var(--border-color);
         }
@@ -223,15 +231,14 @@
 
         .tod-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px 10px;
             text-align: center;
             border-radius: var(--radius-sm);
             cursor: pointer;
             color: var(--text-secondary);
             border: none;
             background: transparent;
-            font-family: var(--font-heading);
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             transition: all 0.2s ease;
             display: flex;
@@ -242,7 +249,7 @@
         .tod-btn.active {
             background: var(--surface);
             color: var(--text-primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .routine-list {
@@ -262,12 +269,12 @@
         .btn-main-action {
             width: 100%;
             padding: 14px 20px;
-            min-height: 48px;
+            min-height: 52px;
             border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -284,7 +291,9 @@
         .btn-settings-inner {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            width: 100%;
         }
 
         .routine-item {
@@ -311,28 +320,28 @@
         }
 
         .item-num {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--accent-main);
             flex-shrink: 0;
-            width: 22px;
+            width: 24px;
         }
 
         .item-details {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
 
         .item-name {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             color: var(--text-primary);
             line-height: 1.3;
         }
 
         .item-tag {
-            font-size: 13px;
+            font-size: 14.5px;
             color: var(--text-secondary);
             font-weight: 500;
         }
@@ -341,11 +350,11 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 12px;
+            font-size: 13.5px;
             font-weight: 600;
             color: var(--accent-main);
             background: var(--accent-light);
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: var(--radius-pill);
             width: fit-content;
             margin-top: 4px;
@@ -359,8 +368,8 @@
         }
 
         .active-toggle-circle {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: var(--radius-pill);
             border: 1.5px solid var(--accent-main);
             background: transparent;
@@ -394,9 +403,9 @@
             background: var(--surface);
             border: 1.5px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 8px 18px;
+            padding: 10px 20px;
             border-radius: var(--radius-pill);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -436,8 +445,8 @@
         }
 
         .dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
         }
 
@@ -461,8 +470,7 @@
         }
 
         .cal-month-title {
-            font-family: var(--font-heading);
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
         }
 
@@ -470,8 +478,8 @@
             background: var(--bg-main);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: var(--radius-pill);
             display: flex;
             align-items: center;
@@ -487,7 +495,7 @@
         }
 
         .cal-day-name {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-secondary);
             padding-bottom: 6px;
@@ -498,7 +506,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             border-radius: var(--radius-pill);
             cursor: pointer;
@@ -595,8 +603,7 @@
         }
 
         .modal-title {
-            font-family: var(--font-heading);
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -610,8 +617,7 @@
         }
 
         .form-section-title {
-            font-family: var(--font-heading);
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             color: var(--accent-main);
             margin-bottom: 12px;
@@ -627,7 +633,7 @@
             padding: 12px;
             border-radius: var(--radius-sm);
             width: 100%;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -637,7 +643,7 @@
         .form-group:last-child { margin-bottom: 0; }
         .form-group label {
             display: block;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 6px;
@@ -645,15 +651,16 @@
 
         .input-with-icon-wrapper { position: relative; display: flex; align-items: center; }
 
+        /* 16px font-size предотвращает авто-зум на устройствах Apple */
         .input-control {
             width: 100%;
             padding: 12px 14px;
-            min-height: 46px;
+            min-height: 48px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 500;
             outline: none;
         }
@@ -693,8 +700,8 @@
         .autocomplete-dropdown.open { display: block; }
 
         .autocomplete-item {
-            padding: 10px 14px;
-            font-size: 14px;
+            padding: 12px 14px;
+            font-size: 15px;
             color: var(--text-primary);
             cursor: pointer;
             border-bottom: 1px solid var(--border-color);
@@ -708,11 +715,11 @@
         .picker-btn {
             flex: 1;
             padding: 10px;
-            min-height: 42px;
+            min-height: 44px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: var(--surface);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             color: var(--text-secondary);
@@ -726,7 +733,7 @@
             border-color: var(--accent-main);
         }
 
-        #themeRow .picker-btn { border-radius: var(--radius-sm); height: 38px; }
+        #themeRow .picker-btn { border-radius: var(--radius-sm); height: 42px; }
         #themeRow .picker-btn.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main); }
 
         .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
@@ -736,11 +743,11 @@
 
         .day-chip {
             flex: 1;
-            padding: 8px 0;
+            padding: 10px 0;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: var(--surface);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             color: var(--text-secondary);
@@ -758,7 +765,7 @@
         }
 
         .pao-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 8px;
@@ -771,11 +778,11 @@
 
         .pao-chip {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: var(--surface);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             color: var(--text-secondary);
@@ -786,13 +793,13 @@
 
         .btn-secondary {
             width: 100%;
-            padding: 12px;
-            min-height: 44px;
+            padding: 14px;
+            min-height: 48px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s;
@@ -800,31 +807,32 @@
 
         .btn-secondary:active { background: var(--bg-main); }
 
+        /* Второстепенная кнопка действия (Сохранить) выполнена в графитово-кофейном стиле */
         .btn-action {
             width: 100%;
             padding: 14px;
-            min-height: 48px;
+            min-height: 52px;
             border-radius: var(--radius-sm);
-            border: 1px solid var(--accent-main);
-            background: var(--accent-main);
-            color: #FFFFFF;
-            font-size: 15px;
+            border: 1px solid var(--btn-primary-bg);
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .btn-action:hover, .btn-action:active { background: var(--accent-hover); border-color: var(--accent-hover); }
+        .btn-action:hover, .btn-action:active { opacity: 0.9; }
 
         .btn-add-toggle {
             width: 100%;
-            padding: 12px;
-            min-height: 44px;
+            padding: 14px;
+            min-height: 48px;
             border-radius: var(--radius-sm);
             border: 1px dashed var(--accent-main);
             background: var(--accent-light);
             color: var(--accent-main);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             margin-bottom: 12px;
@@ -835,12 +843,12 @@
 
         .category-header-btn {
             width: 100%;
-            padding: 12px 14px;
+            padding: 14px;
             border-radius: var(--radius-sm);
             background: var(--bg-main);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             display: flex;
             justify-content: space-between;
@@ -848,7 +856,7 @@
             cursor: pointer;
         }
 
-        .category-title-text { font-family: var(--font-heading); font-size: 18px; font-weight: 600; }
+        .category-title-text { font-size: 16px; font-weight: 600; }
         .category-count-badge { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
         
         .category-chevron {
@@ -887,10 +895,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 14px;
+            padding: 14px;
             border-radius: var(--radius-sm);
             background: var(--surface);
-            font-size: 15px;
+            font-size: 16px;
             border: 1px solid var(--border-color);
             cursor: pointer;
         }
@@ -931,12 +939,12 @@
 
         .popover-btn {
             flex: 1;
-            padding: 8px 12px;
+            padding: 10px 12px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
         }
@@ -945,12 +953,12 @@
 
         .accordion-toggle-btn {
             width: 100%;
-            padding: 12px 14px;
+            padding: 14px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -973,7 +981,7 @@
             color: var(--text-primary);
             padding: 16px 20px;
             border-radius: var(--radius-md);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             line-height: 1.4;
             box-shadow: var(--shadow-elevation);
@@ -991,6 +999,7 @@
         <div class="logo">myspa</div>
     </div>
 
+    <!-- Восстановленная рамка карточки "Мои ритуалы" -->
     <div class="streak-card" id="streakCard">
         <div class="streak-card-title">Мои ритуалы</div>
         <div class="date-chip" id="currentDateChip">
@@ -1011,7 +1020,7 @@
             <button type="button" class="btn-main-action" id="btnOpenSettings">Мои средства</button>
             <button type="button" class="btn-main-action" id="btnOpenAppSettings">
                 <span class="btn-settings-inner">
-                    <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24">
+                    <svg class="svg-icon" width="19" height="19" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
                     </svg>
@@ -1087,8 +1096,8 @@
 
                         <div class="accordion-content" id="detailsAccordionContent">
                             <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 12px; margin-top: 10px;">
-                                <div id="smartPresetText" style="font-size: 13.5px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
-                                <button type="button" id="btnApplyPreset" class="btn-secondary" style="font-size: 13px; min-height: 38px;">Применить рекомендуемые паузы</button>
+                                <div id="smartPresetText" style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
+                                <button type="button" id="btnApplyPreset" class="btn-secondary" style="font-size: 14px; min-height: 40px;">Применить рекомендуемые паузы</button>
                             </div>
 
                             <div class="form-group" style="margin-top: 10px;">
@@ -1115,9 +1124,9 @@
                                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
                                     <span>Срок после вскрытия (PAO)</span>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
                                     <span style="color: var(--text-secondary);">Дата вскрытия: <b id="displayOpenDate" style="color: var(--text-primary);"></b></span>
-                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 13px;">Изменить</button>
+                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 14px;">Изменить</button>
                                 </div>
                                 <div class="pao-picker" id="paoPicker">
                                     <button type="button" class="pao-chip" data-months="3">3M</button>
@@ -1135,7 +1144,7 @@
                                     <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
                                 </div>
                                 <div id="daysGroup" style="display: none; margin-top: 10px;">
-                                    <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
+                                    <label style="font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
                                     <div class="days-picker" id="daysPicker">
                                         <button type="button" class="day-chip" data-day="1">Пн</button>
                                         <button type="button" class="day-chip" data-day="2">Вт</button>
@@ -1150,7 +1159,7 @@
 
                             <div style="background: var(--surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-top: 12px;">
                                 <div style="margin-bottom: 10px;">
-                                    <label style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: block;">Пауза ДО нанесения</label>
+                                    <label style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: block;">Пауза ДО нанесения</label>
                                     <div class="picker-group" id="pauseBeforePicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1159,7 +1168,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: block;">Пауза ПОСЛЕ нанесения</label>
+                                    <label style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: block;">Пауза ПОСЛЕ нанесения</label>
                                     <div class="picker-group" id="pauseAfterPicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1209,11 +1218,11 @@
                 <div class="form-section" style="margin-bottom: 12px;">
                     <div class="form-section-title">Тема оформления</div>
                     <div style="display: flex; gap: 6px; width: 100%;" id="themeRow">
-                        <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #9E6746; border-color: #9E6746;" title="Nude"></button>
-                        <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #3B7066; border-color: #3B7066;" title="Mint"></button>
-                        <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #73538A; border-color: #73538A;" title="Lavender"></button>
-                        <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #3E6140; border-color: #3E6140;" title="Sage"></button>
-                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; background: #1B2130; border-color: #1B2130;" title="Midnight"></button>
+                        <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #8A583B; border-color: #8A583B;" title="Nude"></button>
+                        <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #36665D; border-color: #36665D;" title="Mint"></button>
+                        <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #6B4C80; border-color: #6B4C80;" title="Lavender"></button>
+                        <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #3B5B3D; border-color: #3B5B3D;" title="Sage"></button>
+                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; background: #1A1F2B; border-color: #1A1F2B;" title="Midnight"></button>
                     </div>
                 </div>
             </div>
@@ -1738,7 +1747,7 @@
 
             if (activeProducts.length === 0) {
                 const arrowDownSvg = `<svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" style="margin: 8px auto 0; display: block; color: var(--accent-main);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-                container.innerHTML = `<div style="text-align: center; padding: 16px 0 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500; line-height: 1.4;">Здесь пока пусто.<br>Добавьте ваше первое средство<br>через кнопку «Мои средства».${arrowDownSvg}</div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 16px 0 8px; color: var(--text-secondary); font-size: 15px; font-weight: 500; line-height: 1.4;">Здесь пока пусто.<br>Добавьте ваше первое средство<br>через кнопку «Мои средства».${arrowDownSvg}</div>`;
                 return;
             }
 
@@ -2424,7 +2433,7 @@
                         </button>
                         <div class="category-items-container" id="cat-container-${catIndex}">
                             <div class="category-items-inner">
-                                ${catItemsHtml || '<div style="font-size: 13.5px; color: var(--text-secondary); padding: 8px 12px;">Нет средств</div>'}
+                                ${catItemsHtml || '<div style="font-size: 14px; color: var(--text-secondary); padding: 8px 12px;">Нет средств</div>'}
                             </div>
                         </div>
                     </div>
