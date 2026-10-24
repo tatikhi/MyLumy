@@ -16,7 +16,7 @@
             --bg-main: #F9F6F0;
             --surface: #FFFFFF;
             --text-primary: #4A3E3D;
-            --text-secondary: #7A6B69; /* Повышен контраст для читаемости */
+            --text-secondary: #7A6B69;
             --accent-main: #C49A82;
             --accent-grad: #B0836B;
             --accent-light: #F4ECE6;
@@ -369,7 +369,7 @@
         }
 
         .item-tag {
-            font-size: 12px; /* Увеличен размер с 11px */
+            font-size: 12px;
             color: var(--text-secondary);
             font-weight: 500;
         }
@@ -385,7 +385,7 @@
             display: inline-flex;
             align-items: center;
             font-family: 'Montserrat', sans-serif;
-            font-size: 11px; /* Увеличен с 10px */
+            font-size: 11px;
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: lowercase;
@@ -397,7 +397,7 @@
         }
 
         .active-toggle-circle {
-            width: 28px; /* Увеличен тач-таргет */
+            width: 28px;
             height: 28px;
             border-radius: 50%;
             border: 1px solid var(--accent-main);
@@ -422,21 +422,44 @@
             box-shadow: 0 2px 8px rgba(196, 154, 130, 0.25);
         }
 
-        .pause-inline-chip {
-            display: inline-flex;
-            align-items: center;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11px; /* Увеличен с 10px */
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: lowercase;
-            color: var(--accent-main);
+        /* Виджет паузы между шагами */
+        .pause-step-card {
             background: var(--accent-light);
-            padding: 5px 12px;
-            border-radius: 10px;
-            align-self: flex-start;
-            margin-top: 2px;
-            margin-bottom: 2px;
+            border: 1px dashed var(--accent-main);
+            border-radius: 16px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: -4px 0;
+        }
+
+        .pause-step-info {
+            font-size: 12px;
+            color: var(--text-primary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-timer-trigger {
+            background: var(--surface);
+            border: 1px solid var(--accent-main);
+            color: var(--accent-main);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn-timer-trigger:active {
+            background: var(--accent-main);
+            color: #FFFFFF;
         }
 
         .expiry-dots {
@@ -503,7 +526,7 @@
         }
 
         .cal-day-name {
-            font-size: 11px; /* Увеличен с 10px */
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-secondary);
             padding-bottom: 6px;
@@ -669,7 +692,7 @@
         }
 
         .form-section-title {
-            font-size: 12px; /* Увеличен с 11px */
+            font-size: 12px;
             font-weight: 600;
             color: var(--accent-main);
             margin-bottom: 14px;
@@ -724,6 +747,13 @@
             letter-spacing: 0.02em;
         }
 
+        /* Обвязка поля ввода со сканером */
+        .input-with-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
         .input-control {
             width: 100%;
             padding: 12px 16px;
@@ -733,6 +763,30 @@
             color: var(--text-primary);
             font-size: 13px;
             outline: none;
+        }
+
+        .input-control-with-btn {
+            padding-right: 48px;
+        }
+
+        .btn-inline-scan {
+            position: absolute;
+            right: 8px;
+            background: var(--accent-light);
+            border: 1px solid var(--border-color);
+            color: var(--accent-main);
+            border-radius: 10px;
+            padding: 6px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-inline-scan:active {
+            background: var(--accent-main);
+            color: #FFFFFF;
         }
 
         .autocomplete-dropdown {
@@ -831,7 +885,7 @@
             border-radius: 10px;
             border: 1px solid var(--border-color);
             background: var(--surface);
-            font-size: 12px; /* Увеличен с 11px */
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             color: var(--text-secondary);
@@ -845,11 +899,29 @@
             border-color: var(--accent-main);
         }
 
+        /* Выделенный блок PAO */
+        .pao-highlight-box {
+            background: var(--accent-light);
+            border: 1px solid var(--accent-main);
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .pao-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .pao-picker {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-top: 6px;
         }
 
         .pao-chip {
@@ -859,7 +931,7 @@
             border: 1px solid var(--border-color);
             background: var(--surface);
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             color: var(--text-secondary);
             text-align: center;
@@ -931,32 +1003,6 @@
             cursor: pointer;
             margin-bottom: 10px;
             transition: opacity 0.2s;
-        }
-
-        .btn-add-toggle:active {
-            opacity: 0.8;
-        }
-
-        .btn-scan-dashed {
-            width: 100%;
-            padding: 14px;
-            border-radius: 18px;
-            border: 1px dashed var(--accent-main);
-            background: transparent;
-            color: var(--accent-main);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: lowercase;
-            cursor: pointer;
-            margin-bottom: 16px;
-            transition: opacity 0.2s, background-color 0.2s;
-        }
-
-        .btn-scan-dashed:active {
-            opacity: 0.8;
-            background: var(--accent-light);
         }
 
         .product-manage-list {
@@ -1239,7 +1285,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно Встроенного Календаря -->
+    <!-- Кастомный Календарь -->
     <div class="modal-overlay" id="customCalendarModal">
         <div class="modal-card custom-calendar-modal">
             <div class="cal-header">
@@ -1266,7 +1312,6 @@
                 <div class="product-manage-list" id="manageList"></div>
 
                 <button type="button" class="btn-add-toggle uniform-brand-title" id="btnAddToggle">+ добавить средство</button>
-                <button type="button" class="btn-scan-dashed uniform-brand-title" id="btnScanBarcode">сканировать штрихкод</button>
                 
                 <div id="scannerWrapper" style="display: none; margin-bottom: 16px;">
                     <div id="barcodeReader" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
@@ -1274,18 +1319,23 @@
                 </div>
 
                 <div id="productFormContainer">
-                    <div id="scannerNoticeBanner" class="scanner-notice-banner" style="display: none;">
-                        В глобальной базе нет точного описания. Пожалуйста, введите название вручную, и оно сохранится в вашей персональной базе данных!
-                    </div>
-
                     <input type="hidden" id="editProductId" value="">
+
+                    <!-- ИНТЕЛЛЕКТУАЛЬНАЯ ПЛАШКА-ПОДСКАЗКА -->
+                    <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
+                        <div id="smartPresetText" style="font-size: 12px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
+                        <button type="button" id="btnApplyPreset" class="btn-update-inline uniform-brand-title" style="width: 100%;">применить рекомендуемые паузы</button>
+                    </div>
 
                     <div class="form-section">
                         <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">о средстве</div>
                         
                         <div class="form-group">
-                            <label for="pName">Название</label>
-                            <input type="text" id="pName" class="input-control" placeholder="" autocomplete="off">
+                            <label for="pName">Название средства</label>
+                            <div class="input-with-icon-wrapper">
+                                <input type="text" id="pName" class="input-control input-control-with-btn" placeholder="Например: Сыворотка с ретинолом" autocomplete="off">
+                                <button type="button" class="btn-inline-scan" id="btnScanBarcode" title="Сканировать штрихкод">║█║</button>
+                            </div>
                             <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
                         </div>
 
@@ -1307,38 +1357,59 @@
                                 <button type="button" class="picker-btn active" data-tod="evening">Вечер</button>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label>Частота применения</label>
-                            <input type="hidden" id="pFreqType" value="daily">
-                            <div class="picker-group" id="freqPicker">
-                                <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
-                                <button type="button" class="picker-btn active" data-freq="custom">По дням недели</button>
-                            </div>
-                            <div id="daysGroup" style="display: none; margin-top: 10px;">
-                                <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
-                                <div class="days-picker" id="daysPicker">
-                                    <button type="button" class="day-chip" data-day="1">Пн</button>
-                                    <button type="button" class="day-chip" data-day="2">Вт</button>
-                                    <button type="button" class="day-chip" data-day="3">Ср</button>
-                                    <button type="button" class="day-chip" data-day="4">Чт</button>
-                                    <button type="button" class="day-chip" data-day="5">Пт</button>
-                                    <button type="button" class="day-chip" data-day="6">Сб</button>
-                                    <button type="button" class="day-chip" data-day="0">Вс</button>
-                                </div>
-                            </div>
+                    <!-- ВЫДЕЛЕННЫЙ БЛОК PAO (КЛЮЧЕВАЯ ФИШКА) -->
+                    <div class="pao-highlight-box">
+                        <div class="pao-title">
+                            <span>⏳ Срок после вскрытия (PAO)</span>
+                        </div>
+                        <div class="pao-picker" id="paoPicker">
+                            <button type="button" class="pao-chip" data-months="3">3M</button>
+                            <button type="button" class="pao-chip" data-months="6">6M</button>
+                            <button type="button" class="pao-chip" data-months="12">12M</button>
+                            <button type="button" class="pao-chip" data-months="24">24M</button>
+                        </div>
+                        <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-secondary);">
+                            <span>Открыто: <b id="pOpenDateLabel">Сегодня</b></span>
+                            <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline;">Изменить дату</button>
+                        </div>
+                        <div id="openDateContainer" style="display: none; margin-top: 8px;">
+                            <input type="date" id="pOpenDate" class="input-control">
                         </div>
                     </div>
 
+                    <!-- ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ (ГРАФИК И ПАУЗЫ) -->
                     <div class="form-section">
-                        <button type="button" class="accordion-toggle-btn" id="btnTogglePauseAccordion">
-                            <span>Указать паузы (до/после)</span>
-                            <span id="pauseAccordionArrow">▼</span>
+                        <button type="button" class="accordion-toggle-btn" id="btnToggleAdvancedAccordion">
+                            <span>⚙️ Настройки графика и пауз</span>
+                            <span id="advancedAccordionArrow">▼</span>
                         </button>
-                        <div class="accordion-content" id="pauseAccordionContent">
-                            <div id="pauseOptionsContainer" style="background: var(--surface); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 8px;">
+                        <div class="accordion-content" id="advancedAccordionContent">
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label>Частота применения</label>
+                                <input type="hidden" id="pFreqType" value="daily">
+                                <div class="picker-group" id="freqPicker">
+                                    <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
+                                    <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
+                                </div>
+                                <div id="daysGroup" style="display: none; margin-top: 10px;">
+                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит галочку ✓ в плане):</label>
+                                    <div class="days-picker" id="daysPicker">
+                                        <button type="button" class="day-chip" data-day="1">Пн</button>
+                                        <button type="button" class="day-chip" data-day="2">Вт</button>
+                                        <button type="button" class="day-chip" data-day="3">Ср</button>
+                                        <button type="button" class="day-chip" data-day="4">Чт</button>
+                                        <button type="button" class="day-chip" data-day="5">Пт</button>
+                                        <button type="button" class="day-chip" data-day="6">Сб</button>
+                                        <button type="button" class="day-chip" data-day="0">Вс</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: var(--surface); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 12px;">
                                 <div style="margin-bottom: 10px;">
-                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ДО</label>
+                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ДО нанесения</label>
                                     <div class="picker-group" id="pauseBeforePicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1347,36 +1418,13 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ПОСЛЕ</label>
+                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block;">Пауза ПОСЛЕ нанесения</label>
                                     <div class="picker-group" id="pauseAfterPicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
                                         <button type="button" class="picker-btn" data-mins="15">15 мин</button>
                                         <button type="button" class="picker-btn" data-mins="20">20 мин</button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <button type="button" class="accordion-toggle-btn" id="btnToggleExpiryAccordion">
-                            <span>Указать сроки годности и PAO</span>
-                            <span id="expiryAccordionArrow">▼</span>
-                        </button>
-                        <div class="accordion-content" id="expiryAccordionContent">
-                            <div class="form-group" style="margin-top: 8px;">
-                                <label for="pOpenDate">Дата начала использования</label>
-                                <input type="text" placeholder="Выбрать дату" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" id="pOpenDate" class="input-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Срок после вскрытия (PAO)</label>
-                                <div class="pao-picker" id="paoPicker">
-                                    <button type="button" class="pao-chip" data-months="3">3M</button>
-                                    <button type="button" class="pao-chip" data-months="6">6M</button>
-                                    <button type="button" class="pao-chip" data-months="12">12M</button>
-                                    <button type="button" class="pao-chip" data-months="24">24M</button>
                                 </div>
                             </div>
                         </div>
@@ -1455,26 +1503,16 @@
 
         const safeStorage = {
             getItem(key) {
-                try {
-                    return localStorage.getItem(key);
-                } catch (e) {
-                    console.warn('LocalStorage error:', e);
-                    return null;
-                }
+                try { return localStorage.getItem(key); }
+                catch (e) { return null; }
             },
             setItem(key, value) {
-                try {
-                    localStorage.setItem(key, value);
-                } catch (e) {
-                    console.warn('LocalStorage error:', e);
-                }
+                try { localStorage.setItem(key, value); }
+                catch (e) {}
             },
             removeItem(key) {
-                try {
-                    localStorage.removeItem(key);
-                } catch (e) {
-                    console.warn('LocalStorage error:', e);
-                }
+                try { localStorage.removeItem(key); }
+                catch (e) {}
             }
         };
 
@@ -1485,7 +1523,6 @@
             });
         }
 
-        /* Точное вычисление даты добавления месяцев (устранение бага с краем месяца) */
         function addMonthsSafely(dateObj, months) {
             const d = new Date(dateObj);
             const currentDay = d.getDate();
@@ -1496,89 +1533,204 @@
             return d;
         }
 
-        const savedVersion = safeStorage.getItem('cb_app_version');
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const isForceUpdate = urlParams.has('v_force');
-
-            if (isForceUpdate) {
-                const toast = document.getElementById('toastNotification');
-                if (savedVersion !== APP_VERSION) {
-                    toast.innerText = `обновление успешно завершено. текущая версия v${APP_VERSION}`;
-                } else {
-                    toast.innerText = `у вас установлена актуальная версия v${APP_VERSION}`;
-                }
-                toast.classList.add('visible');
-                setTimeout(() => toast.classList.remove('visible'), 3000);
-                history.replaceState(null, null, window.location.pathname + window.location.hash);
+        // ==========================================
+        // РАСШИРЕННЫЙ СЛОВАРЬ И АНАЛИЗАТОР ПРЕCЕТОВ
+        // ==========================================
+        const SMART_PRESETS = [
+            {
+                keywords: ['ретинол', 'retinol', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'ретиноид'],
+                type: 'Активы',
+                tods: ['evening'],
+                freqType: 'custom',
+                pauseBefore: 15,
+                pauseAfter: 10,
+                reason: 'Ретинолу требуется нанесение на сухую кожу (15 мин после умывания) и 10 мин перед кремом.'
+            },
+            {
+                keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'пилинг'],
+                type: 'Активы',
+                tods: ['evening'],
+                freqType: 'custom',
+                pauseBefore: 0,
+                pauseAfter: 15,
+                reason: 'Кислотам требуется 15 минут работы при низком pH до нанесения следующего ухода.'
+            },
+            {
+                keywords: ['витамин c', 'vitamin c', 'ascorbic'],
+                type: 'Активы',
+                tods: ['morning'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 10,
+                reason: 'Витамин C наносится утром и требует 10 минут для впитывания.'
+            },
+            {
+                keywords: ['spf', 'спф', 'солнц', 'sunscreen'],
+                type: 'Питание / Увлажнение',
+                tods: ['morning'],
+                freqType: 'daily',
+                pauseBefore: 5,
+                pauseAfter: 15,
+                reason: 'SPF-фильтрам нужно 15 минут для образования защитной пленки перед выходом или макияжем.'
+            },
+            {
+                keywords: ['тканев', 'альгинат', 'маска для лица'],
+                type: 'Питание / Увлажнение',
+                tods: ['evening'],
+                freqType: 'custom',
+                pauseBefore: 0,
+                pauseAfter: 15,
+                reason: 'Маски рекомендуется применять 1-3 раза в неделю.'
+            },
+            {
+                keywords: ['патчи', 'patch'],
+                type: 'Уход за глазами',
+                tods: ['morning'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 0,
+                reason: 'Патчи под глаза — отличный ежедневный ритуал для утреннего снятия отеков.'
+            },
+            {
+                keywords: ['пенк', 'гель для умыв', 'гидрофильн', 'мицелляр', 'cleanser', 'foam'],
+                type: 'Очищение',
+                tods: ['morning', 'evening'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 0
+            },
+            {
+                keywords: ['тонер', 'тоник', 'эссенци', 'toner'],
+                type: 'Тонизирование',
+                tods: ['morning', 'evening'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 0
             }
+        ];
 
-            if (savedVersion !== APP_VERSION) {
-                safeStorage.setItem('cb_app_version', APP_VERSION);
-                safeStorage.removeItem('cb_view_date_offset');
-                safeStorage.removeItem('cb_is_tomorrow_plan');
-                safeStorage.removeItem('cb_tomorrow_rest');
-                safeStorage.removeItem('cb_viewing_tomorrow');
-            }
-            
-            checkUrlImport();
-        });
-
-        function getNormalizedInstallDate() {
-            let rawInstall = safeStorage.getItem('cb_install_date');
-            const todayStr = getLocalTodayStr();
-            if (!rawInstall || typeof rawInstall !== 'string' || rawInstall.length < 10) {
-                safeStorage.setItem('cb_install_date', todayStr);
-                return todayStr;
-            }
-            const cleaned = rawInstall.substring(0, 10);
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(cleaned)) {
-                safeStorage.setItem('cb_install_date', todayStr);
-                return todayStr;
-            }
-            return cleaned;
+        function detectSmartPreset(productName) {
+            if (!productName || productName.trim().length < 2) return null;
+            const clean = productName.toLowerCase().trim();
+            return SMART_PRESETS.find(p => p.keywords.some(kw => clean.includes(kw))) || null;
         }
 
-        let installDate = getNormalizedInstallDate();
+        // ==========================================
+        // ФОНОВЫЙ ТАЙМЕР ВЫДЕРЖКИ (WAKE LOCK + AUDIO)
+        // ==========================================
+        class RoutineTimerEngine {
+            constructor() {
+                this.endTime = null;
+                this.timerId = null;
+                this.wakeLock = null;
+                this.onTick = null;
+                this.onComplete = null;
+                
+                document.addEventListener('visibilitychange', () => this.sync());
+                window.addEventListener('focus', () => this.sync());
+            }
 
-        function cleanOldLogs() {
-            try {
-                const ninetyDaysAgo = new Date();
-                ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-                const cutoffStr = getLocalTodayStr(ninetyDaysAgo);
+            async start(durationMinutes, onTick, onComplete) {
+                this.stop();
+                this.onTick = onTick;
+                this.onComplete = onComplete;
+                this.endTime = Date.now() + (durationMinutes * 60 * 1000);
 
-                let logData = JSON.parse(safeStorage.getItem('cb_completed_log') || '{}');
-                let logModified = false;
-                for (let dateStr in logData) {
-                    if (dateStr < cutoffStr) {
-                        delete logData[dateStr];
-                        logModified = true;
-                    }
-                }
-                if (logModified) {
-                    safeStorage.setItem('cb_completed_log', JSON.stringify(logData));
+                await this.requestWakeLock();
+                this.timerId = setInterval(() => this.tick(), 500);
+                this.tick();
+            }
+
+            tick() {
+                if (!this.endTime) return;
+                const remainingMs = Math.max(0, this.endTime - Date.now());
+                const remainingSeconds = Math.ceil(remainingMs / 1000);
+
+                if (this.onTick) {
+                    const mins = Math.floor(remainingSeconds / 60);
+                    const secs = remainingSeconds % 60;
+                    const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    this.onTick(formatted, remainingSeconds);
                 }
 
-                let progressData = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
-                let progressModified = false;
-                for (let pid in progressData) {
-                    if (progressData[pid] && Array.isArray(progressData[pid].dates)) {
-                        const originalLen = progressData[pid].dates.length;
-                        progressData[pid].dates = progressData[pid].dates.filter(d => d >= cutoffStr);
-                        if (progressData[pid].dates.length !== originalLen) {
-                            progressModified = true;
-                        }
-                    }
+                if (remainingMs <= 0) {
+                    this.finish();
                 }
-                if (progressModified) {
-                    safeStorage.setItem('cb_product_progress', JSON.stringify(progressData));
+            }
+
+            sync() {
+                if (this.endTime) this.tick();
+            }
+
+            finish() {
+                this.stop();
+                this.playChimeSound();
+                if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 300]);
+                if (this.onComplete) this.onComplete();
+            }
+
+            stop() {
+                if (this.timerId) clearInterval(this.timerId);
+                this.timerId = null;
+                this.endTime = null;
+                this.releaseWakeLock();
+            }
+
+            async requestWakeLock() {
+                if ('wakeLock' in navigator) {
+                    try { this.wakeLock = await navigator.wakeLock.request('screen'); }
+                    catch (err) {}
                 }
-            } catch (err) {
-                console.error('Error cleaning logs:', err);
+            }
+
+            releaseWakeLock() {
+                if (this.wakeLock) {
+                    this.wakeLock.release().catch(() => {});
+                    this.wakeLock = null;
+                }
+            }
+
+            playChimeSound() {
+                try {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioCtx) return;
+                    const ctx = new AudioCtx();
+                    const playNote = (freq, time, duration) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, time);
+                        gain.gain.setValueAtTime(0.2, time);
+                        gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(time);
+                        osc.stop(time + duration);
+                    };
+                    playNote(523.25, ctx.currentTime, 0.8);
+                    playNote(659.25, ctx.currentTime + 0.15, 1.2);
+                } catch (e) {}
             }
         }
-        cleanOldLogs();
+
+        const activeRoutineTimer = new RoutineTimerEngine();
+
+        // Инициализация хранилищ
+        let products = JSON.parse(safeStorage.getItem('cb_custom_products') || '[]');
+        let barcodeCache = JSON.parse(safeStorage.getItem('cb_barcode_cache') || '{}');
+        let productProgress = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
+        let currentTOD = (new Date().getHours() >= 3 && new Date().getHours() < 18) ? 'morning' : 'evening';
+
+        let activePopoverProductId = null;
+        let selectedPAOMonths = null;
+        let selectedPauseBeforeVal = null;
+        let selectedPauseAfterVal = null;
+        let currentDetectedPreset = null;
+        let html5QrCodeScanner = null;
+        let isScannerBusy = false;
+
+        const CATEGORIES = ["Очищение", "Тонизирование", "Активы", "Уход за глазами", "Питание / Увлажнение"];
+        const typeOrder = { "Очищение": 1, "Тонизирование": 2, "Активы": 3, "Уход за глазами": 4, "Питание / Увлажнение": 5 };
 
         function getLocalTodayStr(d = new Date()) {
             const year = d.getFullYear();
@@ -1587,323 +1739,31 @@
             return `${year}-${month}-${day}`;
         }
 
-        function getLogicalTodayStr() {
-            return getLocalTodayStr(new Date());
-        }
-
-        function getInitialTOD() {
-            const h = new Date().getHours();
-            return (h >= 3 && h < 18) ? 'morning' : 'evening';
-        }
-
-        let completedLog = JSON.parse(safeStorage.getItem('cb_completed_log') || '{}');
-        let productProgress = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
-
-        const CATEGORIES = [
-            "Очищение",
-            "Тонизирование",
-            "Активы",
-            "Уход за глазами",
-            "Питание / Увлажнение"
-        ];
-
-        const typeOrder = {
-            "Очищение": 1,
-            "Тонизирование": 2,
-            "Активы": 3,
-            "Уход за глазами": 4,
-            "Питание / Увлажнение": 5
-        };
-
-        let products = JSON.parse(safeStorage.getItem('cb_custom_products') || '[]');
-        let barcodeCache = JSON.parse(safeStorage.getItem('cb_barcode_cache') || '{}');
-        let currentScannedBarcode = null;
-        let activePopoverProductId = null;
-        let autoExpandCategoryName = null;
-
-        let currentTOD = getInitialTOD();
-
-        let selectedPAOMonths = null;
-        let selectedPauseBeforeVal = null;
-        let selectedPauseAfterVal = null;
-        
-        let html5QrCodeScanner = null;
-        let isScannerBusy = false;
-
-        const localProductDictionary = [
-            "Пенка для умывания", "Гель для умывания", "Гидрофильное масло", 
-            "Мицеллярная вода", "Энзимная пудра", "Тонер увлажняющий", 
-            "Тоник успокаивающий", "Кислотный тоник", "Эссенция с муцином", 
-            "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", 
-            "Сыворотка с витамином C", "Сыворотка с ретинолом", "Крем для век", 
-            "Увлажняющий крем", "Питательный крем", "Восстанавливающий бальзам", 
-            "Солнцезащитный крем SPF 50", "Маска увлажняющая", "Глиняная маска"
-        ];
-
-        let autocompleteDebounceTimer = null;
-
         function getRoutineDateObj() {
             const selectedDateStr = safeStorage.getItem('cb_selected_date');
             if (selectedDateStr) {
                 const parts = selectedDateStr.split('-');
                 return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             }
-            const parts = getLogicalTodayStr().split('-');
-            return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
-        }
-
-        function isFuturePlan() {
-            const selectedDateStr = safeStorage.getItem('cb_selected_date');
-            if (!selectedDateStr) return false;
-            return selectedDateStr > getLogicalTodayStr();
-        }
-
-        function isArchiveMode() {
-            const selected = safeStorage.getItem('cb_selected_date');
-            if (!selected) return false;
-            return selected < getLogicalTodayStr();
-        }
-
-        function getMinAvailableDateStr() {
-            const today = new Date();
-            const ninetyDaysAgo = new Date(today);
-            ninetyDaysAgo.setDate(today.getDate() - 90);
-            const ninetyDaysAgoStr = getLocalTodayStr(ninetyDaysAgo);
-            const instDate = getNormalizedInstallDate();
-            return instDate > ninetyDaysAgoStr ? instDate : ninetyDaysAgoStr;
+            return new Date();
         }
 
         function renderCurrentDateChip() {
             const routineDate = getRoutineDateObj();
             let chipText = routineDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
-            
-            if (isFuturePlan()) chipText += " (план)";
-            else if (isArchiveMode()) chipText += " (архив)";
-            
+            const selectedDateStr = safeStorage.getItem('cb_selected_date');
+            const todayStr = getLocalTodayStr();
+
+            if (selectedDateStr && selectedDateStr > todayStr) chipText += " (план)";
+            else if (selectedDateStr && selectedDateStr < todayStr) chipText += " (архив)";
+
             document.getElementById('dateChipText').innerText = chipText;
         }
-
-        let calCurrentViewDate = new Date();
-
-        function openCustomCalendar() {
-            calCurrentViewDate = getRoutineDateObj();
-            renderCustomCalendar();
-            openModalElement(document.getElementById('customCalendarModal'));
-        }
-
-        function closeCustomCalendar() {
-            closeModalElement(document.getElementById('customCalendarModal'));
-        }
-
-        function renderCustomCalendar() {
-            const year = calCurrentViewDate.getFullYear();
-            const month = calCurrentViewDate.getMonth();
-            const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-            document.getElementById('calMonthTitle').innerText = `${monthNames[month]} ${year}`;
-
-            const grid = document.getElementById('calGrid');
-            grid.innerHTML = '';
-
-            const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-            dayNames.forEach(dn => grid.innerHTML += `<div class="cal-day-name">${dn}</div>`);
-
-            const firstDay = new Date(year, month, 1);
-            let startDay = firstDay.getDay() - 1;
-            if (startDay === -1) startDay = 6;
-
-            for (let i = 0; i < startDay; i++) grid.innerHTML += `<div></div>`;
-
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const minAllowedStr = getMinAvailableDateStr();
-            const selectedDateStr = safeStorage.getItem('cb_selected_date') || getLogicalTodayStr();
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const curDateObj = new Date(year, month, d, 12, 0, 0);
-                const curStr = getLocalTodayStr(curDateObj);
-                const isSelected = (curStr === selectedDateStr);
-                const isDisabled = (curStr < minAllowedStr);
-
-                const cell = document.createElement('div');
-                cell.className = `cal-day-cell ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`;
-                cell.innerText = d;
-                cell.dataset.date = curStr;
-                cell.dataset.disabled = isDisabled;
-
-                grid.appendChild(cell);
-            }
-        }
-
-        /* Делегирование кликов для календаря */
-        document.getElementById('calGrid').addEventListener('click', (e) => {
-            const cell = e.target.closest('.cal-day-cell');
-            if (!cell) return;
-
-            if (cell.dataset.disabled === 'true') {
-                const parts = getMinAvailableDateStr().split('-');
-                const minDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-                const formattedMinDate = minDateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-                showToast(`Просмотр архива доступен от ${formattedMinDate}`);
-                return;
-            }
-
-            const curStr = cell.dataset.date;
-            if (curStr === getLogicalTodayStr()) {
-                safeStorage.removeItem('cb_selected_date');
-                switchTOD(getInitialTOD());
-            } else {
-                safeStorage.setItem('cb_selected_date', curStr);
-                switchTOD('morning');
-            }
-            closeCustomCalendar();
-        });
-
-        function setTheme(theme) {
-            let activeTheme = theme;
-            if (!activeTheme) {
-                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                activeTheme = isDark ? 'midnight' : 'nude';
-            }
-            document.body.setAttribute('data-theme', activeTheme);
-            safeStorage.setItem('cb_theme', activeTheme);
-
-            document.querySelectorAll('#themeRow [data-theme]').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-theme') === activeTheme);
-            });
-        }
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!safeStorage.getItem('cb_theme')) {
-                setTheme(e.matches ? 'midnight' : 'nude');
-            }
-        });
-
-        setTheme(safeStorage.getItem('cb_theme'));
 
         function switchTOD(tod) {
             currentTOD = tod;
             document.getElementById('btnMorning').classList.toggle('active', tod === 'morning');
             document.getElementById('btnEvening').classList.toggle('active', tod === 'evening');
-            renderRoutine();
-        }
-
-        function applyPAO(months) {
-            selectedPAOMonths = months;
-            document.querySelectorAll('.pao-chip').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-months') == months);
-            });
-        }
-
-        function getActiveProgressDetails(item) {
-            if (item.type !== 'Активы') return { week: 1, step: 1, totalSteps: 1 };
-
-            try {
-                const freq = item.freqType;
-                let schDays;
-                if (freq === 'custom' && Array.isArray(item.days) && item.days.length > 0) {
-                    schDays = [...item.days].sort((a, b) => (a === 0 ? 7 : a) - (b === 0 ? 7 : b));
-                } else {
-                    schDays = [1, 2, 3, 4, 5, 6, 0];
-                }
-                const Z = schDays.length;
-
-                const progressData = productProgress[item.id] || { dates: [] };
-                const completedSet = new Set(progressData.dates || []);
-
-                let startTimestamp = Number(item.id);
-                if (!startTimestamp || isNaN(startTimestamp) || startTimestamp < 1600000000000) {
-                    startTimestamp = Date.now();
-                }
-                let startDate = new Date(startTimestamp);
-                if (isNaN(startDate.getTime())) startDate = new Date();
-                startDate.setHours(0,0,0,0);
-
-                const routineDate = getRoutineDateObj();
-                routineDate.setHours(0,0,0,0);
-
-                if (startDate > routineDate) startDate = new Date(routineDate);
-
-                let currentWeek = 1;
-                let currentStep = 1;
-
-                let weekStart = new Date(startDate);
-                const day = weekStart.getDay();
-                const diff = weekStart.getDate() - (day === 0 ? 6 : day - 1);
-                weekStart.setDate(diff);
-
-                let safetyCounter = 0;
-                while (weekStart <= routineDate && safetyCounter < 300) {
-                    safetyCounter++;
-                    let weekScheduledDates = [];
-                    for (let i = 0; i < 7; i++) {
-                        let d = new Date(weekStart);
-                        d.setDate(weekStart.getDate() + i);
-                        let dow = d.getDay();
-                        if (schDays.includes(dow)) {
-                            weekScheduledDates.push({
-                                dateObj: new Date(d),
-                                dateStr: getLocalTodayStr(d)
-                            });
-                        }
-                    }
-
-                    currentStep = 1;
-
-                    for (let idx = 0; idx < weekScheduledDates.length; idx++) {
-                        let sched = weekScheduledDates[idx];
-                        let stepNum = idx + 1;
-
-                        if (sched.dateObj > routineDate) {
-                            return { week: currentWeek, step: currentStep, totalSteps: Z };
-                        }
-
-                        let isCompleted = completedSet.has(sched.dateStr);
-
-                        if (sched.dateStr === getLocalTodayStr(routineDate)) {
-                            return { week: currentWeek, step: currentStep, totalSteps: Z };
-                        }
-
-                        if (isCompleted) {
-                            currentStep = (stepNum < Z) ? stepNum + 1 : 1;
-                        } else {
-                            currentStep = (stepNum === Z) ? 1 : stepNum;
-                        }
-                    }
-
-                    currentWeek++;
-                    currentStep = 1;
-                    weekStart.setDate(weekStart.getDate() + 7);
-                }
-
-                return { week: currentWeek > 1 ? currentWeek - 1 : 1, step: currentStep, totalSteps: Z };
-            } catch (e) {
-                console.error("Error calculating active progress:", e);
-                return { week: 1, step: 1, totalSteps: 1 };
-            }
-        }
-
-        function getActiveProgressHtml(item) {
-            if (item.type !== 'Активы') return '';
-            const { week, step, totalSteps } = getActiveProgressDetails(item);
-            return `<div class="active-progress-chip">нед ${week}, шаг ${step}/${totalSteps}</div>`;
-        }
-
-        function toggleActiveProduct(productId) {
-            const routineDateStr = getLocalTodayStr(getRoutineDateObj());
-            
-            if (!productProgress[productId]) {
-                productProgress[productId] = { dates: [] };
-            }
-
-            const dates = productProgress[productId].dates;
-            const index = dates.indexOf(routineDateStr);
-
-            if (index > -1) {
-                dates.splice(index, 1);
-            } else {
-                dates.push(routineDateStr);
-            }
-
-            safeStorage.setItem('cb_product_progress', JSON.stringify(productProgress));
             renderRoutine();
         }
 
@@ -1927,27 +1787,7 @@
 
         function renderRoutine() {
             renderCurrentDateChip();
-            
-            const isFuture = isFuturePlan();
-            const inArchive = isArchiveMode();
-            const banner = document.getElementById('noticeBanner');
             const container = document.getElementById('routineContainer');
-
-            const formatIndex = (idx) => String(idx + 1).padStart(2, '0') + '.';
-            const routineDateStr = getLocalTodayStr(getRoutineDateObj());
-
-            if (isFuture) {
-                banner.style.display = 'block';
-                banner.innerText = "Это план на выбранный день";
-            } else if (inArchive) {
-                banner.style.display = 'block';
-                const routineDate = getRoutineDateObj();
-                const dateStr = routineDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
-                banner.innerText = `Архив ухода за ${dateStr}`;
-            } else {
-                banner.style.display = 'none';
-            }
-
             const activeProducts = getActiveProductsForCurrentView();
 
             if (activeProducts.length === 0) {
@@ -1957,25 +1797,24 @@
             }
 
             const htmlBuffer = [];
+            const routineDateStr = getLocalTodayStr(getRoutineDateObj());
+
             activeProducts.forEach((item, index) => {
                 const dotsHtml = calcExpiryDots(item.openDate, item.paoMonths);
-                let pauseHtmlBefore = item.pauseBefore ? `<div class="pause-inline-chip">пауза до: ${escapeHtml(String(item.pauseBefore))} мин</div>` : '';
-                let pauseHtmlAfter = item.pauseAfter ? `<div class="pause-inline-chip">пауза после: ${escapeHtml(String(item.pauseAfter))} мин</div>` : '';
-                const activeProgressHtml = getActiveProgressHtml(item);
-
+                
+                // СТРОГОЕ ПРАВИЛО: Галочка ✓ отображается ТОЛЬКО для средств по расписанию (freqType === 'custom')
                 let toggleCircleHtml = '';
-                if (item.type === 'Активы') {
+                if (item.freqType === 'custom') {
                     const isCompleted = productProgress[item.id] && Array.isArray(productProgress[item.id].dates) && productProgress[item.id].dates.includes(routineDateStr);
                     const completedClass = isCompleted ? 'completed' : '';
-                    toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" data-action="toggle-active" data-id="${item.id}" title="Отметить нанесение">✓</div>`;
+                    toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" data-action="toggle-active" data-id="${item.id}" title="Отметить шаг">✓</div>`;
                 }
 
                 htmlBuffer.push(`
                     <div class="routine-item">
-                        ${pauseHtmlBefore}
                         <div class="routine-item-main">
                             <div class="item-left">
-                                <div class="item-num">${formatIndex(index)}</div>
+                                <div class="item-num">${String(index + 1).padStart(2, '0')}.</div>
                                 <div class="item-details">
                                     <span class="item-name">${escapeHtml(item.name)}</span>
                                     <span class="item-tag">${escapeHtml(item.type)}</span>
@@ -1983,59 +1822,185 @@
                                 ${dotsHtml}
                             </div>
                             <div class="item-right-group">
-                                ${activeProgressHtml}
                                 ${toggleCircleHtml}
                             </div>
                         </div>
-                        ${pauseHtmlAfter}
                     </div>
                 `);
+
+                // РАСЧЕТ ПАУЗЫ МЕЖДУ СРЕДСТВАМИ (A и B)
+                if (index < activeProducts.length - 1) {
+                    const nextItem = activeProducts[index + 1];
+                    const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
+
+                    if (pauseMins > 0) {
+                        htmlBuffer.push(`
+                            <div class="pause-step-card">
+                                <div class="pause-step-info">
+                                    <span>⏱️ Выдержка перед след. этапом: <b>${pauseMins} мин</b></span>
+                                </div>
+                                <button type="button" class="btn-timer-trigger" data-action="start-timer" data-mins="${pauseMins}" id="timer-btn-${index}">Запустить (${pauseMins}:00)</button>
+                            </div>
+                        `);
+                    }
+                }
             });
+
             container.innerHTML = htmlBuffer.join('');
         }
 
-        /* Безопасный расчет срока годности PAO */
         function calcExpiryDots(openDateStr, paoMonths) {
-            if (!paoMonths) {
-                return `<div class="expiry-dots" title="PAO не указан">
-                    <div class="dot dot-gray"></div>
-                    <div class="dot dot-gray"></div>
-                    <div class="dot dot-gray"></div>
-                </div>`;
-            }
-
+            if (!paoMonths) return `<div class="expiry-dots" title="PAO не указан"><div class="dot dot-gray"></div><div class="dot dot-gray"></div><div class="dot dot-gray"></div></div>`;
             const openDate = openDateStr ? new Date(openDateStr) : new Date();
             const expDate = addMonthsSafely(openDate, paoMonths);
-
-            const now = new Date();
+            const remainingDuration = expDate - new Date();
             const totalDuration = expDate - openDate;
-            const remainingDuration = expDate - now;
 
-            let dotsInner = '';
-            if (totalDuration <= 0 || remainingDuration <= 0) {
-                dotsInner = '<div class="dot dot-red"></div>';
-            } else {
-                const ratio = remainingDuration / totalDuration;
-                if (ratio > 0.3) {
-                    dotsInner = '<div class="dot dot-green"></div><div class="dot dot-green"></div><div class="dot dot-green"></div>';
-                } else if (ratio >= 0.1) {
-                    dotsInner = '<div class="dot dot-orange"></div><div class="dot dot-orange"></div>';
-                } else {
-                    dotsInner = '<div class="dot dot-red"></div>';
-                }
-            }
-
-            return `<div class="expiry-dots">${dotsInner}</div>`;
+            if (remainingDuration <= 0) return '<div class="expiry-dots"><div class="dot dot-red"></div></div>';
+            const ratio = remainingDuration / totalDuration;
+            if (ratio > 0.3) return '<div class="expiry-dots"><div class="dot dot-green"></div><div class="dot dot-green"></div><div class="dot dot-green"></div></div>';
+            if (ratio >= 0.1) return '<div class="expiry-dots"><div class="dot dot-orange"></div><div class="dot dot-orange"></div></div>';
+            return '<div class="expiry-dots"><div class="dot dot-red"></div></div>';
         }
 
-        /* Делегирование событий списка ухода */
+        function toggleActiveProduct(productId) {
+            const routineDateStr = getLocalTodayStr(getRoutineDateObj());
+            if (!productProgress[productId]) productProgress[productId] = { dates: [] };
+            const dates = productProgress[productId].dates;
+            const idx = dates.indexOf(routineDateStr);
+            if (idx > -1) dates.splice(idx, 1);
+            else dates.push(routineDateStr);
+            safeStorage.setItem('cb_product_progress', JSON.stringify(productProgress));
+            renderRoutine();
+        }
+
         document.getElementById('routineContainer').addEventListener('click', (e) => {
-            const toggleBtn = e.target.closest('[data-action="toggle-active"]');
-            if (toggleBtn) {
-                const id = Number(toggleBtn.dataset.id);
-                if (id) toggleActiveProduct(id);
+            const activeBtn = e.target.closest('[data-action="toggle-active"]');
+            if (activeBtn) toggleActiveProduct(Number(activeBtn.dataset.id));
+
+            const timerBtn = e.target.closest('[data-action="start-timer"]');
+            if (timerBtn) {
+                const mins = Number(timerBtn.dataset.mins);
+                activeRoutineTimer.start(
+                    mins,
+                    (formatted) => { timerBtn.innerText = `⏳ ${formatted}`; },
+                    () => {
+                        timerBtn.innerText = "✓ Готово!";
+                        showToast("Выдержка завершена! Можно наносить следующее средство.");
+                    }
+                );
             }
         });
+
+        // ==========================================
+        // РАБОТА С ФОРМОЙ И УМНЫМ ВВОДОМ
+        // ==========================================
+        function handleNameInput(val) {
+            currentDetectedPreset = detectSmartPreset(val);
+            const banner = document.getElementById('smartPresetBanner');
+
+            if (currentDetectedPreset) {
+                if (currentDetectedPreset.reason) {
+                    document.getElementById('smartPresetText').innerHTML = `<b>💡 Совет MySpa:</b> ${escapeHtml(currentDetectedPreset.reason)}`;
+                    banner.style.display = 'block';
+                } else banner.style.display = 'none';
+
+                // Автоподстановка категорий и режимов
+                if (currentDetectedPreset.type) {
+                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => {
+                        b.classList.toggle('active', b.dataset.type === currentDetectedPreset.type);
+                    });
+                }
+                if (currentDetectedPreset.tods) {
+                    document.querySelectorAll('#todPicker .picker-btn').forEach(b => {
+                        b.classList.toggle('active', currentDetectedPreset.tods.includes(b.dataset.tod));
+                    });
+                }
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+
+        document.getElementById('btnApplyPreset').addEventListener('click', () => {
+            if (!currentDetectedPreset) return;
+            if (currentDetectedPreset.pauseBefore) applyPauseBefore(currentDetectedPreset.pauseBefore);
+            if (currentDetectedPreset.pauseAfter) applyPauseAfter(currentDetectedPreset.pauseAfter);
+            if (currentDetectedPreset.freqType) {
+                document.getElementById('pFreqType').value = currentDetectedPreset.freqType;
+                document.querySelectorAll('#freqPicker .picker-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.freq === currentDetectedPreset.freqType);
+                });
+                document.getElementById('daysGroup').style.display = (currentDetectedPreset.freqType === 'custom') ? 'block' : 'none';
+            }
+            document.getElementById('smartPresetBanner').style.display = 'none';
+            showToast('Паузы и параметры успешно применены!');
+        });
+
+        function applyPAO(months) {
+            selectedPAOMonths = (selectedPAOMonths === months) ? null : months;
+            document.querySelectorAll('#paoPicker .pao-chip').forEach(c => {
+                c.classList.toggle('active', c.dataset.months == selectedPAOMonths);
+            });
+        }
+
+        function applyPauseBefore(mins) {
+            selectedPauseBeforeVal = (selectedPauseBeforeVal === mins) ? null : mins;
+            document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.mins == selectedPauseBeforeVal);
+            });
+        }
+
+        function applyPauseAfter(mins) {
+            selectedPauseAfterVal = (selectedPauseAfterVal === mins) ? null : mins;
+            document.querySelectorAll('#pauseAfterPicker .picker-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.mins == selectedPauseAfterVal);
+            });
+        }
+
+        function saveProduct() {
+            const name = document.getElementById('pName').value.trim();
+            const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
+            const type = activeTypeBtn ? activeTypeBtn.dataset.type : null;
+            let tods = [];
+            document.querySelectorAll('#todPicker .picker-btn.active').forEach(b => tods.push(b.dataset.tod));
+
+            if (!name) return showToast('Введите название');
+            if (!type) return showToast('Выберите тип средства');
+            if (tods.length === 0) return showToast('Выберите время суток');
+
+            const freqType = document.getElementById('pFreqType').value;
+            const openDateEl = document.getElementById('pOpenDate');
+            const openDate = openDateEl.value || getLocalTodayStr();
+            const editId = document.getElementById('editProductId').value;
+
+            let days = [];
+            if (freqType === 'custom') {
+                document.querySelectorAll('.day-chip.active').forEach(chip => {
+                    days.push(parseInt(chip.dataset.day, 10));
+                });
+            }
+
+            const productData = {
+                id: editId ? Number(editId) : Date.now(),
+                name, type, tods, freqType, days,
+                pauseBefore: selectedPauseBeforeVal,
+                pauseAfter: selectedPauseAfterVal,
+                openDate,
+                paoMonths: selectedPAOMonths
+            };
+
+            if (editId) {
+                const idx = products.findIndex(p => p.id === Number(editId));
+                if (idx !== -1) products[idx] = productData;
+            } else {
+                products.push(productData);
+            }
+
+            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
+            renderManageList();
+            hideForm();
+            renderRoutine();
+        }
 
         function openModalElement(modalEl) {
             modalEl.style.display = 'flex';
@@ -2052,639 +2017,39 @@
             }, 300);
         }
 
-        function openSettings() {
-            document.getElementById('manageList').style.display = 'flex';
-            renderManageList();
-            hideForm();
-            openModalElement(document.getElementById('settingsModal'));
-        }
-
-        function closeSettings() {
-            stopBarcodeScanner();
-            closeAllPopovers();
-            closeAutocomplete();
-            autoExpandCategoryName = null;
-            closeModalElement(document.getElementById('settingsModal'), () => {
-                resetForm();
-                renderRoutine();
-            });
-        }
-
-        function openAppSettings() {
-            openModalElement(document.getElementById('appSettingsModal'));
-        }
-
-        function closeAppSettings() {
-            closeModalElement(document.getElementById('appSettingsModal'));
-        }
-
-        function showForm(showNotice = false) {
-            stopBarcodeScanner();
-            closeAllPopovers();
-            const container = document.getElementById('productFormContainer');
-            
+        function showForm() {
             document.getElementById('manageList').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'none';
-            document.getElementById('btnScanBarcode').style.display = 'none';
-            document.getElementById('scannerNoticeBanner').style.display = showNotice ? 'block' : 'none';
-
+            document.getElementById('productFormContainer').classList.add('open');
             document.getElementById('listFooterButtons').style.display = 'none';
             document.getElementById('formFooterButtons').style.display = 'flex';
             document.getElementById('mainModalTitle').innerText = 'новое средство';
-
-            container.classList.add('open');
-
-            const scrollBody = document.getElementById('modalScrollBody');
-            if (scrollBody) scrollBody.scrollTop = 0;
-
-            const pNameInput = document.getElementById('pName');
-            if (pNameInput) pNameInput.focus();
         }
 
         function hideForm() {
-            const container = document.getElementById('productFormContainer');
-            container.classList.remove('open');
-            
+            document.getElementById('productFormContainer').classList.remove('open');
             document.getElementById('manageList').style.display = 'flex';
             document.getElementById('btnAddToggle').style.display = 'block';
-            document.getElementById('btnScanBarcode').style.display = 'block';
-            document.getElementById('scannerNoticeBanner').style.display = 'none';
-
             document.getElementById('listFooterButtons').style.display = 'block';
             document.getElementById('formFooterButtons').style.display = 'none';
             document.getElementById('mainModalTitle').innerText = 'моя коллекция';
-
-            closeAutocomplete();
             resetForm();
-        }
-
-        function toggleCategoryAccordion(catIndex) {
-            closeAllPopovers();
-            const headerBtn = document.getElementById(`cat-header-${catIndex}`);
-            const container = document.getElementById(`cat-container-${catIndex}`);
-
-            if (!container || !headerBtn) return;
-
-            const isOpen = container.classList.contains('open');
-
-            document.querySelectorAll('.category-items-container').forEach((el, idx) => {
-                if (idx !== catIndex && el.classList.contains('open')) {
-                    el.style.maxHeight = '0px';
-                    el.classList.remove('open');
-                    const hb = document.getElementById(`cat-header-${idx}`);
-                    if (hb) hb.classList.remove('open');
-                }
-            });
-
-            if (isOpen) {
-                container.style.maxHeight = '0px';
-                container.classList.remove('open');
-                headerBtn.classList.remove('open');
-            } else {
-                container.classList.add('open');
-                headerBtn.classList.add('open');
-                container.style.maxHeight = container.scrollHeight + 'px';
-
-                setTimeout(() => {
-                    headerBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 150);
-            }
-        }
-
-        function toggleProductPopover(targetId) {
-            const popoverEl = document.getElementById(`popover-${targetId}`);
-            const itemEl = document.getElementById(`manage-item-${targetId}`);
-            const container = popoverEl ? popoverEl.closest('.category-items-container') : null;
-            
-            if (activePopoverProductId && activePopoverProductId !== targetId) {
-                closeAllPopovers();
-            }
-
-            if (popoverEl && popoverEl.classList.contains('open')) {
-                closeAllPopovers();
-                if (container) {
-                    container.style.maxHeight = (container.scrollHeight - popoverEl.scrollHeight) + 'px';
-                }
-            } else if (popoverEl) {
-                popoverEl.classList.add('open');
-                if (itemEl) itemEl.classList.add('active-item');
-                activePopoverProductId = targetId;
-
-                if (container) {
-                    container.style.maxHeight = (container.scrollHeight + popoverEl.scrollHeight + 20) + 'px';
-                }
-            }
-        }
-
-        function closeAllPopovers() {
-            document.querySelectorAll('.popover-actions-menu').forEach(p => {
-                p.classList.remove('open');
-            });
-            document.querySelectorAll('.manage-item').forEach(i => i.classList.remove('active-item'));
-            activePopoverProductId = null;
-        }
-
-        function closeAutocomplete() {
-            const dropdown = document.getElementById('autocompleteDropdown');
-            if (dropdown) {
-                dropdown.classList.remove('open');
-                setTimeout(() => dropdown.innerHTML = '', 200);
-            }
-        }
-
-        function selectAutocompleteItem(val) {
-            const input = document.getElementById('pName');
-            if (input) {
-                input.value = val;
-                input.blur();
-            }
-            closeAutocomplete();
-        }
-
-        function handleNameInput(query) {
-            const cleanQuery = query.trim().toLowerCase();
-
-            if (cleanQuery.length < 2) {
-                closeAutocomplete();
-                return;
-            }
-
-            const userProducts = products.map(p => p.name);
-            const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
-            const matchedLocal = combinedLocal.filter(item => item.toLowerCase().includes(cleanQuery)).slice(0, 5);
-
-            renderAutocompleteResults(matchedLocal, []);
-
-            clearTimeout(autocompleteDebounceTimer);
-            autocompleteDebounceTimer = setTimeout(async () => {
-                try {
-                    const res = await fetch(`https://world.openbeautyfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=5`);
-                    const data = await res.json();
-                    if (data && data.products && Array.isArray(data.products)) {
-                        const onlineNames = data.products
-                            .map(p => p.product_name || p.brands || '')
-                            .filter(name => name.length > 2 && !isGarbageName(name));
-                        
-                        const uniqueOnline = Array.from(new Set(onlineNames)).slice(0, 4);
-                        renderAutocompleteResults(matchedLocal, uniqueOnline);
-                    }
-                } catch (e) {
-                    console.warn('Online autocomplete offline/error:', e);
-                }
-            }, 300);
-        }
-
-        function renderAutocompleteResults(localItems, onlineItems) {
-            const dropdown = document.getElementById('autocompleteDropdown');
-            if (!dropdown) return;
-
-            const combined = Array.from(new Set([...localItems, ...onlineItems]));
-
-            if (combined.length === 0) {
-                closeAutocomplete();
-                return;
-            }
-
-            dropdown.innerHTML = combined.map(name => `
-                <div class="autocomplete-item" data-action="select-autocomplete" data-value="${escapeHtml(name)}">
-                    ${escapeHtml(name)}
-                </div>
-            `).join('');
-
-            dropdown.classList.add('open');
-        }
-
-        document.getElementById('autocompleteDropdown').addEventListener('click', (e) => {
-            const item = e.target.closest('[data-action="select-autocomplete"]');
-            if (item) {
-                selectAutocompleteItem(item.dataset.value);
-            }
-        });
-
-        function isGarbageName(name) {
-            if (!name) return true;
-            const clean = name.trim().toLowerCase();
-            if (/^\d+$/.test(clean) || /^\[.*\]$/.test(clean) || clean === 'товар' || clean === 'product' || clean.length < 2) return true;
-            return false;
-        }
-
-        async function startBarcodeScanner() {
-            if (isScannerBusy) return;
-            
-            if (typeof Html5Qrcode === 'undefined') {
-                showToast("Библиотека сканера не загружена. Проверьте интернет-соединение.");
-                return;
-            }
-
-            isScannerBusy = true;
-
-            const scannerWrapper = document.getElementById('scannerWrapper');
-            scannerWrapper.style.display = 'block';
-            document.getElementById('manageList').style.display = 'none';
-            document.getElementById('btnAddToggle').style.display = 'none';
-            document.getElementById('btnScanBarcode').style.display = 'none';
-
-            if (!html5QrCodeScanner) {
-                html5QrCodeScanner = new Html5Qrcode("barcodeReader");
-            }
-
-            try {
-                await html5QrCodeScanner.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: { width: 250, height: 150 } },
-                    async (decodedText) => {
-                        stopBarcodeScanner();
-                        currentScannedBarcode = decodedText;
-
-                        if (barcodeCache[decodedText]) {
-                            const cached = barcodeCache[decodedText];
-                            showForm(false);
-                            document.getElementById('pName').value = cached.name;
-                            const typeBtn = document.querySelector(`#typePicker .picker-btn[data-type="${cached.type}"]`);
-                            if (typeBtn) typeBtn.click();
-                            return;
-                        }
-
-                        try {
-                            const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${encodeURIComponent(decodedText)}.json`);
-                            const data = await res.json();
-                            if (data && data.status === 1 && data.product) {
-                                const prod = data.product;
-                                const rawName = prod.product_name || prod.brands || '';
-                                
-                                if (!isGarbageName(rawName)) {
-                                    showForm(false);
-                                    document.getElementById('pName').value = rawName;
-                                    barcodeCache[decodedText] = { name: rawName, type: 'Очищение' };
-                                    safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
-                                    return;
-                                }
-                            }
-                        } catch (err) {
-                            console.warn('API fetch failed:', err);
-                        }
-
-                        showForm(true);
-                        document.getElementById('pName').value = '';
-                    },
-                    () => {}
-                );
-            } catch (err) {
-                console.error("Camera error:", err);
-                showToast("Не удалось запустить камеру. Проверьте разрешения браузера.");
-                stopBarcodeScanner();
-            } finally {
-                isScannerBusy = false;
-            }
-        }
-
-        async function stopBarcodeScanner() {
-            if (html5QrCodeScanner) {
-                try {
-                    await html5QrCodeScanner.stop();
-                } catch (e) {
-                    console.warn('Scanner stop:', e);
-                }
-            }
-            document.getElementById('scannerWrapper').style.display = 'none';
-            document.getElementById('manageList').style.display = 'flex';
-            document.getElementById('btnAddToggle').style.display = 'block';
-            document.getElementById('btnScanBarcode').style.display = 'block';
-            isScannerBusy = false;
-        }
-
-        function applyPauseBefore(mins) {
-            selectedPauseBeforeVal = (selectedPauseBeforeVal === mins) ? null : mins;
-            document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-mins') == selectedPauseBeforeVal);
-            });
-        }
-
-        function applyPauseAfter(mins) {
-            selectedPauseAfterVal = (selectedPauseAfterVal === mins) ? null : mins;
-            document.querySelectorAll('#pauseAfterPicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-mins') == selectedPauseAfterVal);
-            });
-        }
-
-        function showToast(msg, duration = 3000) {
-            const toast = document.getElementById('toastNotification');
-            toast.innerText = msg;
-            toast.classList.add('visible');
-            setTimeout(() => toast.classList.remove('visible'), duration);
-        }
-
-        function toggleAccordion(contentId, arrowId) {
-            const content = document.getElementById(contentId);
-            const arrow = document.getElementById(arrowId);
-            const isOpen = content.classList.contains('open');
-            content.classList.toggle('open', !isOpen);
-            arrow.innerText = isOpen ? '▼' : '▲';
-        }
-
-        function toBase64(str) {
-            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => 
-                String.fromCharCode('0x' + p1)
-            ));
-        }
-
-        function fromBase64(str) {
-            return decodeURIComponent(Array.prototype.map.call(atob(str), c => 
-                '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2)
-            ).join(''));
-        }
-
-        function getBackupData() {
-            return {
-                version: APP_VERSION,
-                timestamp: Date.now(),
-                products: JSON.parse(safeStorage.getItem('cb_custom_products') || '[]'),
-                productProgress: JSON.parse(safeStorage.getItem('cb_product_progress') || '{}'),
-                completedLog: JSON.parse(safeStorage.getItem('cb_completed_log') || '{}'),
-                theme: safeStorage.getItem('cb_theme') || 'nude',
-                installDate: getNormalizedInstallDate()
-            };
-        }
-
-        function applyImportData(data) {
-            if (!data || typeof data !== 'object' || !Array.isArray(data.products)) {
-                showToast('Ошибка: неверный формат файла.');
-                return false;
-            }
-            
-            try {
-                safeStorage.setItem('cb_custom_products', JSON.stringify(data.products));
-                products = data.products;
-
-                if (data.productProgress && typeof data.productProgress === 'object') {
-                    safeStorage.setItem('cb_product_progress', JSON.stringify(data.productProgress));
-                    productProgress = data.productProgress;
-                }
-
-                if (data.completedLog && typeof data.completedLog === 'object') {
-                    safeStorage.setItem('cb_completed_log', JSON.stringify(data.completedLog));
-                    completedLog = data.completedLog;
-                }
-
-                if (data.theme) setTheme(data.theme);
-                if (data.installDate) safeStorage.setItem('cb_install_date', data.installDate.substring(0, 10));
-                
-                renderManageList();
-                switchTOD(currentTOD);
-                return true;
-            } catch (err) {
-                showToast('Ошибка при импорте данных.');
-                return false;
-            }
-        }
-
-        function exportJsonFile() {
-            const data = getBackupData();
-            const jsonStr = JSON.stringify(data, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `myspa_backup_${getLocalTodayStr()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function importJsonFile(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (confirm('Импортировать коллекцию? Все текущие данные будут обновлены.')) {
-                        if (applyImportData(data)) showToast('Данные импортированы!');
-                    }
-                } catch (err) {
-                    showToast('Ошибка чтения файла.');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function copyShareLink() {
-            try {
-                const data = getBackupData();
-                const jsonStr = JSON.stringify(data);
-                const encoded = toBase64(jsonStr);
-                const fullUrl = `${window.location.origin}${window.location.pathname}#import=${encoded}`;
-                
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(fullUrl).then(() => showToast('Ссылка скопирована!'))
-                    .catch(() => fallbackCopyText(fullUrl));
-                } else {
-                    fallbackCopyText(fullUrl);
-                }
-            } catch(e) {
-                showToast('Воспользуйтесь кнопкой "скачать архив".');
-            }
-        }
-
-        function fallbackCopyText(text) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.focus();
-            ta.select();
-            try {
-                document.execCommand('copy');
-                showToast('Ссылка скопирована!');
-            } catch(err) {
-                showToast('Ошибка копирования ссылки');
-            }
-            document.body.removeChild(ta);
-        }
-
-        function forceAppUpdate() {
-            showToast('поиск обновлений...');
-            setTimeout(() => {
-                window.location.href = `${window.location.origin}${window.location.pathname}?v_force=${Date.now()}${window.location.hash}`;
-            }, 300);
-        }
-
-        function checkUrlImport() {
-            if (window.location.hash && window.location.hash.startsWith('#import=')) {
-                const rawHash = window.location.hash.substring(8);
-                if (!rawHash) return;
-                try {
-                    const jsonStr = fromBase64(rawHash);
-                    const data = JSON.parse(jsonStr);
-                    setTimeout(() => {
-                        if (confirm('Импортировать найденные данные ухода MySpa?')) {
-                            if (applyImportData(data)) showToast('Данные успешно импортированы!');
-                        }
-                        history.replaceState(null, null, window.location.pathname);
-                    }, 400);
-                } catch (err) {
-                    console.error('Import URL error', err);
-                    showToast('Ошибка импорта из ссылки.');
-                }
-            }
-        }
-
-        function saveProduct() {
-            const name = document.getElementById('pName').value.trim();
-            const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
-            const type = activeTypeBtn ? activeTypeBtn.getAttribute('data-type') : null;
-
-            let tods = [];
-            document.querySelectorAll('#todPicker .picker-btn.active').forEach(btn => {
-                tods.push(btn.getAttribute('data-tod'));
-            });
-
-            if (!name) {
-                showToast('Введите название');
-                document.getElementById('pName').focus();
-                return;
-            }
-
-            if (!type) {
-                showToast('Выберите тип средства');
-                return;
-            }
-
-            if (tods.length === 0) {
-                showToast('Выберите время суток');
-                return;
-            }
-
-            const freqType = document.getElementById('pFreqType').value;
-            const openDateEl = document.getElementById('pOpenDate');
-            const openDate = (openDateEl.value) ? openDateEl.value : getLocalTodayStr();
-            const editId = document.getElementById('editProductId').value;
-
-            let days = [];
-            if (freqType === 'custom') {
-                document.querySelectorAll('.day-chip.active').forEach(chip => {
-                    days.push(parseInt(chip.getAttribute('data-day'), 10));
-                });
-            }
-
-            const productData = {
-                id: editId ? Number(editId) : Date.now(),
-                name,
-                type,
-                tods,
-                freqType,
-                days,
-                pauseBefore: selectedPauseBeforeVal,
-                pauseAfter: selectedPauseAfterVal,
-                openDate,
-                paoMonths: selectedPAOMonths
-            };
-
-            if (currentScannedBarcode && !editId) {
-                barcodeCache[currentScannedBarcode] = { name, type };
-                safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
-            }
-            currentScannedBarcode = null;
-
-            if (editId) {
-                const idx = products.findIndex(p => p.id === Number(editId));
-                if (idx !== -1) products[idx] = productData;
-            } else {
-                products.push(productData);
-            }
-
-            autoExpandCategoryName = type;
-            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
-            renderManageList();
-            hideForm();
-            renderRoutine();
-        }
-
-        function editProduct(id) {
-            closeAllPopovers();
-            const item = products.find(p => p.id === Number(id));
-            if (!item) return;
-
-            showForm(false);
-
-            document.getElementById('editProductId').value = item.id;
-            document.getElementById('pName').value = item.name;
-            
-            document.querySelectorAll('#typePicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-type') === item.type);
-            });
-
-            const itemTods = item.tods || [];
-            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', itemTods.includes(btn.getAttribute('data-tod')));
-            });
-
-            const freq = item.freqType || 'daily';
-            document.getElementById('pFreqType').value = freq;
-            document.querySelectorAll('#freqPicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-freq') === freq);
-            });
-            document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
-
-            if (item.pauseBefore || item.pauseAfter) {
-                document.getElementById('pauseAccordionContent').classList.add('open');
-                document.getElementById('pauseAccordionArrow').innerText = '▲';
-            }
-
-            applyPauseBefore(item.pauseBefore || null);
-            applyPauseAfter(item.pauseAfter || null);
-
-            const openDateEl = document.getElementById('pOpenDate');
-            openDateEl.value = item.openDate || getLocalTodayStr();
-            openDateEl.type = 'date';
-
-            if (item.paoMonths) {
-                applyPAO(item.paoMonths);
-                document.getElementById('expiryAccordionContent').classList.add('open');
-                document.getElementById('expiryAccordionArrow').innerText = '▲';
-            } else {
-                document.querySelectorAll('.pao-chip').forEach(c => c.classList.remove('active'));
-                selectedPAOMonths = null;
-            }
-
-            document.querySelectorAll('.day-chip').forEach(chip => {
-                const day = parseInt(chip.getAttribute('data-day'), 10);
-                chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day));
-            });
-
-            document.getElementById('mainModalTitle').innerText = 'редактировать средство';
         }
 
         function resetForm() {
             selectedPAOMonths = null;
             selectedPauseBeforeVal = null;
             selectedPauseAfterVal = null;
-            currentScannedBarcode = null;
             document.getElementById('editProductId').value = '';
             document.getElementById('pName').value = '';
-            
-            document.querySelectorAll('#typePicker .picker-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('#todPicker .picker-btn').forEach(btn => btn.classList.add('active'));
-
+            document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.add('active'));
+            document.querySelectorAll('.pao-chip, .day-chip, #pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(c => c.classList.remove('active'));
             document.getElementById('pFreqType').value = 'daily';
-            document.querySelectorAll('#freqPicker .picker-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-freq') === 'daily');
-            });
             document.getElementById('daysGroup').style.display = 'none';
-            document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(b => b.classList.remove('active'));
-            
-            const openDateEl = document.getElementById('pOpenDate');
-            openDateEl.value = getLocalTodayStr();
-            openDateEl.type = 'date';
-            document.querySelectorAll('.day-chip, .pao-chip').forEach(c => c.classList.remove('active'));
-
-            document.getElementById('pauseAccordionContent').classList.remove('open');
-            document.getElementById('pauseAccordionArrow').innerText = '▼';
-            document.getElementById('expiryAccordionContent').classList.remove('open');
-            document.getElementById('expiryAccordionArrow').innerText = '▼';
-
-            document.getElementById('mainModalTitle').innerText = 'моя коллекция';
+            document.getElementById('pOpenDate').value = getLocalTodayStr();
+            document.getElementById('openDateContainer').style.display = 'none';
+            document.getElementById('smartPresetBanner').style.display = 'none';
         }
 
         function renderManageList() {
@@ -2693,148 +2058,86 @@
 
             CATEGORIES.forEach((catName, catIndex) => {
                 const catProducts = products.filter(p => p.type === catName);
-                const count = catProducts.length;
-                const shouldAutoExpand = (autoExpandCategoryName === catName);
-
-                let catItemsHtml = '';
-                if (count === 0) {
-                    catItemsHtml = `<div style="font-size: 11px; color: var(--text-secondary); padding: 8px 12px;">нет средств в категории</div>`;
-                } else {
-                    catItemsHtml = catProducts.map(p => {
-                        const dotsHtml = calcExpiryDots(p.openDate, p.paoMonths);
-                        return `
-                            <div class="product-wrapper-block">
-                                <div class="manage-item" id="manage-item-${p.id}" data-action="toggle-popover" data-id="${p.id}">
-                                    <div class="manage-info">
-                                        ${dotsHtml}
-                                        <span><b>${escapeHtml(p.name)}</b></span>
-                                    </div>
-                                    <div class="manage-chevron">›</div>
-                                </div>
-                                <div class="popover-actions-menu" id="popover-${p.id}">
-                                    <button type="button" class="popover-btn" data-action="edit-product" data-id="${p.id}">редактировать</button>
-                                    <button type="button" class="popover-btn danger" data-action="delete-product" data-id="${p.id}">удалить</button>
-                                </div>
+                let catItemsHtml = catProducts.map(p => `
+                    <div class="product-wrapper-block">
+                        <div class="manage-item" data-action="toggle-popover" data-id="${p.id}">
+                            <div class="manage-info">
+                                ${calcExpiryDots(p.openDate, p.paoMonths)}
+                                <span><b>${escapeHtml(p.name)}</b></span>
                             </div>
-                        `;
-                    }).join('');
-                }
+                            <div class="manage-chevron">›</div>
+                        </div>
+                        <div class="popover-actions-menu" id="popover-${p.id}">
+                            <button type="button" class="popover-btn" data-action="edit-product" data-id="${p.id}">редактировать</button>
+                            <button type="button" class="popover-btn danger" data-action="delete-product" data-id="${p.id}">удалить</button>
+                        </div>
+                    </div>
+                `).join('');
 
                 htmlBuffer.push(`
                     <div class="category-group-block">
-                        <button type="button" class="category-header-btn ${shouldAutoExpand ? 'open' : ''}" id="cat-header-${catIndex}" data-action="toggle-category" data-index="${catIndex}">
-                            <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${count})</span></span>
+                        <button type="button" class="category-header-btn" data-action="toggle-category" data-index="${catIndex}">
+                            <span class="category-title-text">${escapeHtml(catName)} <span class="category-count-badge">(${catProducts.length})</span></span>
                             <span class="category-chevron">▼</span>
                         </button>
-                        <div class="category-items-container ${shouldAutoExpand ? 'open' : ''}" id="cat-container-${catIndex}" style="${shouldAutoExpand ? 'max-height: 2000px;' : ''}">
-                            ${catItemsHtml}
+                        <div class="category-items-container" id="cat-container-${catIndex}">
+                            ${catItemsHtml || '<div style="font-size: 11px; color: var(--text-secondary); padding: 8px 12px;">нет средств</div>'}
                         </div>
                     </div>
                 `);
             });
 
             container.innerHTML = htmlBuffer.join('');
-            autoExpandCategoryName = null;
         }
 
-        /* Делегирование событий списка управления продуктами */
         document.getElementById('manageList').addEventListener('click', (e) => {
             const target = e.target.closest('[data-action]');
             if (!target) return;
-
             const action = target.dataset.action;
             const id = Number(target.dataset.id);
 
             if (action === 'toggle-category') {
-                toggleCategoryAccordion(Number(target.dataset.index));
+                const container = document.getElementById(`cat-container-${target.dataset.index}`);
+                container.classList.toggle('open');
+                container.style.maxHeight = container.classList.contains('open') ? container.scrollHeight + 'px' : '0px';
             } else if (action === 'toggle-popover') {
-                toggleProductPopover(id);
-            } else if (action === 'edit-product') {
-                editProduct(id);
+                const popover = document.getElementById(`popover-${id}`);
+                popover.classList.toggle('open');
             } else if (action === 'delete-product') {
-                deleteProduct(id);
-            }
-        });
-
-        function deleteProduct(id) {
-            closeAllPopovers();
-            const targetId = Number(id);
-            products = products.filter(p => p.id !== targetId);
-            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
-
-            if (products.length === 0) {
-                safeStorage.removeItem('cb_product_progress');
-                safeStorage.removeItem('cb_selected_date');
-                safeStorage.removeItem('cb_evening_completed');
-                safeStorage.removeItem('cb_install_date');
-                productProgress = {};
-                switchTOD(getInitialTOD());
-            } else {
+                products = products.filter(p => p.id !== id);
+                safeStorage.setItem('cb_custom_products', JSON.stringify(products));
                 renderManageList();
                 renderRoutine();
             }
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            toast.innerText = msg;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 3000);
+        }
+
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            safeStorage.setItem('cb_theme', theme);
+            document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
+                b.classList.toggle('active', b.dataset.theme === theme);
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('currentDateChip').addEventListener('click', openCustomCalendar);
-            document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
+            setTheme(safeStorage.getItem('cb_theme') || 'nude');
 
-            document.getElementById('calPrevMonth').addEventListener('click', () => {
-                calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() - 1);
-                renderCustomCalendar();
+            document.getElementById('pName').addEventListener('input', (e) => handleNameInput(e.target.value));
+            document.getElementById('paoPicker').addEventListener('click', (e) => {
+                const chip = e.target.closest('.pao-chip');
+                if (chip) applyPAO(chip.dataset.months);
             });
 
-            document.getElementById('calNextMonth').addEventListener('click', () => {
-                calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() + 1);
-                renderCustomCalendar();
-            });
-
-            document.getElementById('themeRow').addEventListener('click', (e) => {
-                const themeBtn = e.target.closest('[data-theme]');
-                if (themeBtn) setTheme(themeBtn.getAttribute('data-theme'));
-            });
-
-            document.getElementById('btnOpenSettings').addEventListener('click', openSettings);
-            document.getElementById('btnCloseSettings').addEventListener('click', closeSettings);
-            document.getElementById('btnHeaderClose').addEventListener('click', closeSettings);
-
-            document.getElementById('btnOpenAppSettings').addEventListener('click', openAppSettings);
-            document.getElementById('btnCloseAppSettings').addEventListener('click', closeAppSettings);
-            document.getElementById('btnAppHeaderClose').addEventListener('click', closeAppSettings);
-
-            document.getElementById('btnAddToggle').addEventListener('click', () => showForm(false));
-            document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
-            document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
-            document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
-            document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
-
-            document.getElementById('btnTogglePauseAccordion').addEventListener('click', () => toggleAccordion('pauseAccordionContent', 'pauseAccordionArrow'));
-            document.getElementById('btnToggleExpiryAccordion').addEventListener('click', () => toggleAccordion('expiryAccordionContent', 'expiryAccordionArrow'));
-
-            document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
-            document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
-            document.getElementById('btnImportJson').addEventListener('click', () => document.getElementById('jsonFileInput').click());
-            
-            document.getElementById('jsonFileInput').addEventListener('change', (e) => {
-                if (e.target.files && e.target.files[0]) {
-                    importJsonFile(e.target.files[0]);
-                    e.target.value = '';
-                }
-            });
-
-            document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
-
-            const pNameInput = document.getElementById('pName');
-            pNameInput.addEventListener('input', (e) => handleNameInput(e.target.value));
-            pNameInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.target.blur();
-                    closeAutocomplete();
-                }
-            });
-
-            document.getElementById('productFormContainer').addEventListener('click', (e) => {
-                if (!e.target.closest('.form-group')) closeAutocomplete();
+            document.getElementById('btnToggleOpenDate').addEventListener('click', () => {
+                const el = document.getElementById('openDateContainer');
+                el.style.display = (el.style.display === 'none') ? 'block' : 'none';
             });
 
             document.getElementById('typePicker').addEventListener('click', (e) => {
@@ -2853,7 +2156,7 @@
             document.getElementById('freqPicker').addEventListener('click', (e) => {
                 const btn = e.target.closest('.picker-btn');
                 if (btn) {
-                    const freq = btn.getAttribute('data-freq');
+                    const freq = btn.dataset.freq;
                     document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     document.getElementById('pFreqType').value = freq;
@@ -2861,59 +2164,48 @@
                 }
             });
 
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.product-wrapper-block')) closeAllPopovers();
-            });
-
-            document.getElementById('btnMorning').addEventListener('click', () => {
-                if (safeStorage.getItem('cb_selected_date') === getLogicalTodayStr()) {
-                    safeStorage.removeItem('cb_selected_date');
-                }
-                switchTOD('morning');
-            });
-
-            document.getElementById('btnEvening').addEventListener('click', () => {
-                if (safeStorage.getItem('cb_selected_date') === getLogicalTodayStr()) {
-                    safeStorage.removeItem('cb_selected_date');
-                }
-                switchTOD('evening');
-            });
-
-            document.getElementById('pauseBeforePicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) applyPauseBefore(btn.getAttribute('data-mins'));
-            });
-
-            document.getElementById('pauseAfterPicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) applyPauseAfter(btn.getAttribute('data-mins'));
-            });
-
             document.getElementById('daysPicker').addEventListener('click', (e) => {
                 const chip = e.target.closest('.day-chip');
                 if (chip) chip.classList.toggle('active');
             });
 
-            document.getElementById('paoPicker').addEventListener('click', (e) => {
-                const chip = e.target.closest('.pao-chip');
-                if (chip) {
-                    const months = chip.getAttribute('data-months');
-                    if (months) applyPAO(months);
-                }
+            document.getElementById('btnToggleAdvancedAccordion').addEventListener('click', () => {
+                const content = document.getElementById('advancedAccordionContent');
+                content.classList.toggle('open');
             });
 
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeAllPopovers();
-                    closeAutocomplete();
-                    const modal = document.getElementById('settingsModal');
-                    if (modal && modal.style.display === 'flex') closeSettings();
-                    const appModal = document.getElementById('appSettingsModal');
-                    if (appModal && appModal.style.display === 'flex') closeAppSettings();
-                    const calModal = document.getElementById('customCalendarModal');
-                    if (calModal && calModal.style.display === 'flex') closeCustomCalendar();
-                }
+            document.getElementById('pauseBeforePicker').addEventListener('click', (e) => {
+                const btn = e.target.closest('.picker-btn');
+                if (btn) applyPauseBefore(btn.dataset.mins);
             });
+
+            document.getElementById('pauseAfterPicker').addEventListener('click', (e) => {
+                const btn = e.target.closest('.picker-btn');
+                if (btn) applyPauseAfter(btn.dataset.mins);
+            });
+
+            document.getElementById('btnOpenSettings').addEventListener('click', () => {
+                renderManageList();
+                openModalElement(document.getElementById('settingsModal'));
+            });
+            document.getElementById('btnCloseSettings').addEventListener('click', () => closeModalElement(document.getElementById('settingsModal')));
+            document.getElementById('btnHeaderClose').addEventListener('click', () => closeModalElement(document.getElementById('settingsModal')));
+
+            document.getElementById('btnOpenAppSettings').addEventListener('click', () => openModalElement(document.getElementById('appSettingsModal')));
+            document.getElementById('btnCloseAppSettings').addEventListener('click', () => closeModalElement(document.getElementById('appSettingsModal')));
+            document.getElementById('btnAppHeaderClose').addEventListener('click', () => closeModalElement(document.getElementById('appSettingsModal')));
+
+            document.getElementById('btnAddToggle').addEventListener('click', showForm);
+            document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
+            document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
+
+            document.getElementById('themeRow').addEventListener('click', (e) => {
+                const b = e.target.closest('[data-theme]');
+                if (b) setTheme(b.dataset.theme);
+            });
+
+            document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning'));
+            document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
 
             switchTOD(currentTOD);
         });
