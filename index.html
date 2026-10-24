@@ -387,41 +387,43 @@
             box-shadow: 0 2px 8px rgba(196, 154, 130, 0.25);
         }
 
-        /* МИНИМАЛИСТИЧНЫЙ КАПСУЛЬНЫЙ ТАЙМЕР */
+        /* КРУПНАЯ И ЗАМЕТНАЯ КНОПКА ТАЙМЕРА */
         .pause-step-container {
             display: flex;
             justify-content: center;
-            margin: -2px 0;
+            margin: 6px 0;
+            width: 100%;
         }
 
         .btn-pause-timer {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            gap: 8px;
             background: var(--surface);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
+            border: 1.5px solid var(--accent-main);
+            color: var(--accent-main);
+            padding: 10px 22px;
+            border-radius: 24px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            min-width: 190px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
             transition: all 0.25s ease;
         }
 
         .btn-pause-timer:hover:not(.running):not(.completed) {
-            border-color: var(--accent-main);
-            color: var(--accent-main);
             background: var(--accent-light);
+            transform: translateY(-1px);
         }
 
-        /* Запущенный таймер (окрашивание в цвет темы + замена текста) */
         .btn-pause-timer.running {
             background: var(--accent-main);
             color: #FFFFFF;
             border-color: var(--accent-main);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            pointer-events: none; /* Защита от случайного сброса */
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            pointer-events: none;
         }
 
         .btn-pause-timer.running .svg-icon {
@@ -525,10 +527,14 @@
             font-weight: 600;
         }
 
+        /* СТИЛИ ДЛЯ НЕКЛИКАБЕЛЬНЫХ ДАТ АРХИВА */
         .cal-day-cell.disabled {
-            opacity: 0.25;
-            cursor: not-allowed;
-            pointer-events: none;
+            opacity: 0.2;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            background: transparent !important;
         }
 
         .modal-overlay {
@@ -797,13 +803,25 @@
 
         .category-header-btn.open .category-chevron { transform: rotate(180deg); }
 
+        /* ИСПРАВЛЕНИЕ: ОТСУТСТВИЕ ОБРЕЗКИ КНОПОК ПРИ ОТКРЫТИИ КАТЕГОРИИ */
         .category-items-container {
-            max-height: 0; opacity: 0; overflow: hidden;
-            display: flex; flex-direction: column; gap: 6px; padding-left: 8px;
-            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-left: 8px;
+            transition: opacity 0.3s ease;
         }
 
-        .category-items-container.open { opacity: 1; padding-top: 4px; padding-bottom: 8px; }
+        .category-items-container.open {
+            opacity: 1;
+            padding-top: 4px;
+            padding-bottom: 8px;
+            max-height: none !important;
+            overflow: visible !important;
+        }
         
         .product-wrapper-block {
             display: flex;
@@ -831,44 +849,49 @@
 
         .manage-item.active-item .manage-chevron { transform: rotate(90deg); }
 
+        /* ИСПРАВЛЕННОЕ ПОЛНОСТЬЮ ВИДИМОЕ МЕНЮ КНОПОК */
         .popover-actions-menu {
             max-height: 0;
             opacity: 0;
             overflow: hidden;
             display: flex;
-            background: var(--surface);
-            border: 0px solid var(--border-color);
+            background: var(--bg-main);
+            border: 1px solid transparent;
             border-radius: 14px;
-            padding: 0 6px;
-            gap: 6px;
-            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
-                        opacity 0.25s ease, 
-                        padding 0.3s ease,
-                        margin 0.3s ease,
-                        border-width 0.2s ease,
-                        box-shadow 0.25s ease;
+            padding: 0 8px;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .popover-actions-menu.open {
-            max-height: 54px;
+            max-height: 60px;
             opacity: 1;
-            padding: 6px;
-            margin-top: 2px;
-            margin-bottom: 4px;
-            border-width: 1px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 6px;
+            border-color: var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
         .popover-btn {
-            flex: 1; padding: 10px 14px; border-radius: 12px; border: none;
-            background: var(--bg-main); color: var(--text-primary);
-            font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600;
-            letter-spacing: 0.15em; text-transform: lowercase; cursor: pointer; transition: background-color 0.2s ease;
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: lowercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .popover-btn:active { background: var(--accent-light); }
-        .popover-btn.danger { color: #E74C3C; background: rgba(231, 76, 60, 0.05); }
-        .popover-btn.danger:active { background: rgba(231, 76, 60, 0.12); }
+        .popover-btn.danger { color: #E74C3C; border-color: rgba(231, 76, 60, 0.2); background: rgba(231, 76, 60, 0.06); }
+        .popover-btn.danger:active { background: rgba(231, 76, 60, 0.15); }
 
         .accordion-toggle-btn {
             width: 100%; padding: 12px 16px; border-radius: 14px;
@@ -1221,7 +1244,14 @@
             "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
+        // ДОБАВЛЕНЫ КЛЮЧЕВЫЕ СЛОВА ДЛЯ ПАТЧЕЙ (УХОД ЗА ГЛАЗАМИ)
         const SMART_PRESETS = [
+            {
+                keywords: ['патч', 'patch', 'патчи'],
+                type: 'Уход за глазами',
+                tods: ['morning', 'evening'],
+                freqType: 'daily'
+            },
             {
                 keywords: ['ретинол', 'retinol', 'адапален', 'adapalene', 'третиноин', 'tretinoin'],
                 type: 'Активы',
@@ -1418,12 +1448,14 @@
             return new Date();
         }
 
+        // ИСПРАВЛЕННЫЙ РАСЧЕТ МИНИМАЛЬНО ДОПУСТИМОЙ ДАТЫ АРХИВА
         function getAllowedStartDateObj() {
             const parts = installDateStr.split('-');
-            const installObj = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
+            const installObj = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
             const ninetyDaysAgo = new Date();
             ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-            return (installObj < ninetyDaysAgo) ? installObj : ninetyDaysAgo;
+            ninetyDaysAgo.setHours(0, 0, 0, 0);
+            return (installObj > ninetyDaysAgo) ? installObj : ninetyDaysAgo;
         }
 
         function renderCurrentDateChip() {
@@ -1578,7 +1610,7 @@
                     const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
 
                     if (pauseMins > 0) {
-                        const clockSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+                        const clockSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
                         if (isTimerActive) {
                             htmlBuffer.push(`
                                 <div class="pause-step-container">
@@ -1605,23 +1637,21 @@
             container.innerHTML = htmlBuffer.join('');
         }
 
-        // ЗАПУСК ТАЙМЕРА (СЛОВО "ПАУЗА" ИСЧЕЗАЕТ)
         function startTimerForStep(btnEl, mins) {
             if (btnEl.classList.contains('running') || btnEl.classList.contains('completed')) return;
             btnEl.classList.add('running');
             
-            const clockSvgWhite = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+            const clockSvgWhite = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px; stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
 
             activeRoutineTimer.start(
                 mins,
                 (formatted) => {
-                    // Слово "пауза" исчезает, остается только время
                     btnEl.innerHTML = `${clockSvgWhite} <span>${formatted}</span>`;
                 },
                 () => {
                     btnEl.classList.remove('running');
                     btnEl.classList.add('completed');
-                    const checkSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    const checkSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     btnEl.innerHTML = `${checkSvg} <span>выдержка окончена</span>`;
                     showToast("Выдержка завершена! Можно наносить следующее средство.");
                 }
@@ -1654,49 +1684,55 @@
         }
 
         function closeAutocomplete() {
+            clearTimeout(autocompleteDebounceTimer);
             const dropdown = document.getElementById('autocompleteDropdown');
             if (dropdown) {
                 dropdown.classList.remove('open');
-                setTimeout(() => dropdown.innerHTML = '', 200);
+                dropdown.innerHTML = '';
             }
         }
 
+        // ИСПРАВЛЕННЫЙ ВЫБОР ИЗ АВТОКОМПЛИТА БЕЗ ПОВТОРНОГО ОТКРЫТИЯ
         function selectAutocompleteItem(val) {
             const input = document.getElementById('pName');
             if (input) {
                 input.value = val;
-                handleNameInput(val);
+                currentDetectedPreset = detectSmartPreset(val);
+                applySmartPresetUI(currentDetectedPreset);
                 input.blur();
             }
             closeAutocomplete();
+        }
+
+        function applySmartPresetUI(preset) {
+            const banner = document.getElementById('smartPresetBanner');
+            if (preset) {
+                if (preset.reason) {
+                    const bulbSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px; margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
+                    document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MySpa:</b> ${escapeHtml(preset.reason)}`;
+                    banner.style.display = 'block';
+                } else banner.style.display = 'none';
+
+                if (preset.type) {
+                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => {
+                        b.classList.toggle('active', b.dataset.type === preset.type);
+                    });
+                }
+                if (preset.tods) {
+                    document.querySelectorAll('#todPicker .picker-btn').forEach(b => {
+                        b.classList.toggle('active', preset.tods.includes(b.dataset.tod));
+                    });
+                }
+            } else {
+                if (banner) banner.style.display = 'none';
+            }
         }
 
         function handleNameInput(val) {
             const cleanQuery = val.trim().toLowerCase();
 
             currentDetectedPreset = detectSmartPreset(val);
-            const banner = document.getElementById('smartPresetBanner');
-
-            if (currentDetectedPreset) {
-                if (currentDetectedPreset.reason) {
-                    const bulbSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px; margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
-                    document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MySpa:</b> ${escapeHtml(currentDetectedPreset.reason)}`;
-                    banner.style.display = 'block';
-                } else banner.style.display = 'none';
-
-                if (currentDetectedPreset.type) {
-                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => {
-                        b.classList.toggle('active', b.dataset.type === currentDetectedPreset.type);
-                    });
-                }
-                if (currentDetectedPreset.tods) {
-                    document.querySelectorAll('#todPicker .picker-btn').forEach(b => {
-                        b.classList.toggle('active', currentDetectedPreset.tods.includes(b.dataset.tod));
-                    });
-                }
-            } else {
-                banner.style.display = 'none';
-            }
+            applySmartPresetUI(currentDetectedPreset);
 
             if (cleanQuery.length < 2) {
                 closeAutocomplete();
@@ -2061,6 +2097,7 @@
             container.innerHTML = htmlBuffer.join('');
         }
 
+        // ИСПРАВЛЕННЫЙ АККОРДЕОН КАТЕГОРИЙ БЕЗ ОБРЕЗКИ КНОПОК
         function toggleCategoryAccordion(catIndex) {
             closeAllPopovers();
             const headerBtn = document.getElementById(`cat-header-${catIndex}`);
@@ -2068,9 +2105,15 @@
             if (!container || !headerBtn) return;
 
             const isOpen = container.classList.contains('open');
-            container.classList.toggle('open', !isOpen);
-            headerBtn.classList.toggle('open', !isOpen);
-            container.style.maxHeight = !isOpen ? container.scrollHeight + 'px' : '0px';
+            if (isOpen) {
+                container.classList.remove('open');
+                headerBtn.classList.remove('open');
+                container.style.maxHeight = '0px';
+            } else {
+                container.classList.add('open');
+                headerBtn.classList.add('open');
+                container.style.maxHeight = 'none';
+            }
         }
 
         function getBackupData() {
