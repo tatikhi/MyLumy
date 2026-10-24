@@ -537,10 +537,6 @@
             color: var(--text-primary);
         }
 
-        .cal-day-cell:hover:not(.disabled), .cal-day-cell:active:not(.disabled) {
-            background: var(--accent-light);
-        }
-
         .cal-day-cell.selected {
             background: var(--accent-main);
             color: #FFFFFF;
@@ -554,7 +550,7 @@
             opacity: 0.6;
         }
 
-        /* ИСПРАВЛЕНИЕ 5: ЕДИНЫЙ ВИД ЗАБЛОКИРОВАННЫХ ДНЕЙ ДЛЯ ПЛАНШЕТОВ И ТЕЛЕФОНОВ */
+        /* ИСПРАВЛЕНИЕ 2: ГАРАНТИРОВАННОЕ ОТОБРАЖЕНИЕ ЗАЧЕРКНУТЫХ ДНЕЙ НА ВСЕХ УСТРОЙСТВАХ И ПЛАНШЕТАХ */
         .cal-day-cell.disabled {
             opacity: 0.3 !important;
             color: var(--text-secondary) !important;
@@ -841,7 +837,7 @@
 
         .category-header-btn.open .category-chevron { transform: rotate(180deg); }
 
-        /* ИСПРАВЛЕНИЕ 1: ПЛАВНОЕ ВЫПАДЕНИЕ СПИСКА СРЕДСТВ В КАТЕГОРИИ */
+        /* ИСПРАВЛЕНИЕ 3: ПЛАВНОЕ ВЫПАДЕНИЕ И СКРЫТИЕ СПИСКА СРЕДСТВ В КАТЕГОРИЯХ */
         .category-items-container {
             max-height: 0;
             opacity: 0;
@@ -856,7 +852,7 @@
         }
 
         .category-items-container.open {
-            max-height: 600px;
+            max-height: 800px;
             opacity: 1;
             padding-top: 4px;
             padding-bottom: 8px;
@@ -1181,7 +1177,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.18</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.19</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1219,7 +1215,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.18';
+        const APP_VERSION = '1.2.19';
 
         const safeStorage = {
             getItem(key) {
@@ -1285,18 +1281,12 @@
             "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
-        /* ИСПРАВЛЕНИЕ 2: СТРОГИЙ ПОРЯДОК ПРОВЕРКИ ПРЕСЕТОВ БЕЗ ПЕРЕСЕЧЕНИЙ С ОЧИЩЕНИЕМ */
+        /* ИСПРАВЛЕНИЕ 4: ПРОВЕРКА ВСЕХ СРЕДСТВ СО СЛОВАМИ "ГЛАЗ" / "ВЕК" В САМОМ НАЧАЛЕ */
         const SMART_PRESETS = [
             {
-                keywords: ['патч', 'patch', 'патчи'],
+                keywords: ['патч', 'patch', 'глаз', 'век', 'eye'],
                 type: 'Уход за глазами',
                 tods: ['morning'],
-                freqType: 'daily'
-            },
-            {
-                keywords: ['сыворотка для век', 'сыворотка вокруг глаз', 'крем для век', 'крем вокруг глаз', 'гель для век', 'гель вокруг глаз', 'eye cream', 'eye patch', 'eye serum'],
-                type: 'Уход за глазами',
-                tods: ['morning', 'evening'],
                 freqType: 'daily'
             },
             {
@@ -1785,17 +1775,17 @@
             }
         }
 
+        /* ИСПРАВЛЕНИЕ 1: СМЫКАНИЕ И ОЧИСТКА ВЫПАДАЮЩЕГО СПИСКА ПРИ КЛИКЕ НА ВАРИАНТ */
         function selectAutocompleteItem(val) {
+            closeAutocomplete();
             const input = document.getElementById('pName');
             if (input) {
                 input.value = val;
-                closeAutocomplete();
-                handleNameInput(val, true); // Название введено полностью из списка подсказок
+                handleNameInput(val, true);
                 input.blur();
             }
         }
 
-        /* ИСПРАВЛЕНИЕ 4: СОВЕТЫ СВЕРХУ ПОЯВЛЯЮТСЯ ТОЛЬКО КОГДА НАЗВАНИЕ ВВЕДЕНО ПОЛНОСТЬЮ ИЛИ ВЫБРАНО ИЗ СПИСКА */
         function handleNameInput(val, isComplete = false) {
             const cleanQuery = val.trim().toLowerCase();
 
@@ -1807,7 +1797,6 @@
 
             currentDetectedPreset = detectSmartPreset(val);
             
-            // Если название совпало полностью с каким-то ключом из словаря или справочника, либо передано явно
             const isFullMatch = isComplete || localProductDictionary.some(item => item.toLowerCase() === cleanQuery) || products.some(p => p.name.toLowerCase() === cleanQuery);
             
             applyFormStateFromPreset(currentDetectedPreset, isFullMatch);
@@ -1846,7 +1835,7 @@
 
         function applyFormStateFromPreset(preset, showBanner = false) {
             const banner = document.getElementById('smartPresetBanner');
-            const defaultDays = [1, 4]; // Пн, Чт по умолчанию
+            const defaultDays = [1, 4];
 
             if (preset) {
                 if (preset.reason && showBanner) {
@@ -1926,7 +1915,6 @@
             dropdown.classList.add('open');
         }
 
-        /* ИСПРАВЛЕНИЕ 3: АВТОМАТИЧЕСКОЕ ПРОСТАВЛЕНИЕ ПАУЗ И РАСПИСАНИЯ ПРИ НАЖАТИИ ПРИМЕНИТЬ */
         document.getElementById('btnApplyPreset').addEventListener('click', () => {
             if (!currentDetectedPreset) return;
 
@@ -2267,7 +2255,6 @@
             container.innerHTML = htmlBuffer.join('');
         }
 
-        // ИСПРАВЛЕНИЕ 1: ПЛАВНОЕ РАСКРЫТИЕ КАТЕГОРИИ
         function toggleCategoryAccordion(catIndex) {
             closeAllPopovers();
             const headerBtn = document.getElementById(`cat-header-${catIndex}`);
