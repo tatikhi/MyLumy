@@ -556,6 +556,7 @@
         /* СПЕЦИАЛЬНОЕ ЦЕНТРИРОВАНИЕ ДЛЯ АЛЕРТОВ */
         .modal-overlay.alert-overlay {
             align-items: center !important;
+            z-index: 4000;
         }
 
         /* КОМПАКТНАЯ МОБИЛЬНАЯ ЭРГОНОМИКА */
@@ -1373,7 +1374,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.6</span>
+                        <span class="version-text uniform-brand-title">версия v1.2.7</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate" onclick="forceAppUpdate()">проверить обновление</button>
                     </div>
                 </div>
@@ -1422,7 +1423,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.6';
+        const APP_VERSION = '1.2.7';
 
         /* ЗАЩИЩЕННЫЙ HELPER ДЛЯ LOCALSTORAGE */
         const safeStorage = {
@@ -2793,14 +2794,6 @@
                     
                     showCustomAlert(`Просмотр архива доступен от ${formattedMinDate}`, () => {
                         renderRoutine();
-                        // Сразу открываем нативный инпут календаря обратно, чтобы выбор даты оставался активным
-                        setTimeout(() => {
-                            if (typeof hiddenDateInput.showPicker === 'function') {
-                                try { hiddenDateInput.showPicker(); } catch(err) {}
-                            } else {
-                                hiddenDateInput.click();
-                            }
-                        }, 100);
                     });
                     return;
                 }
