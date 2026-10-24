@@ -672,7 +672,7 @@
             color: var(--text-primary);
             padding: 14px; border-radius: 16px; width: 100%;
             font-family: 'Montserrat', sans-serif;
-            font-size: 15px; font-weight: 600; letter-spacing: 0.04em;
+            font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
             text-transform: lowercase; cursor: pointer; transition: all 0.2s ease;
             touch-action: manipulation;
         }
@@ -793,6 +793,10 @@
         }
 
         .btn-secondary:active { background: var(--bg-main); }
+
+        .btn-secondary.small-font {
+            font-size: 14px;
+        }
 
         .btn-action {
             width: 100%; padding: 16px 20px; border-radius: 20px;
@@ -1184,7 +1188,7 @@
         <div class="modal-card" style="max-width: 400px; max-height: 85vh;">
             <div class="modal-header-row">
                 <div class="modal-title-wrapper">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     <div class="modal-title uniform-brand-title" style="font-size: 17px; font-weight: 600;">настройки</div>
                 </div>
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">
@@ -1195,7 +1199,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">версия v1.2.29</span>
+                        <span class="version-text uniform-brand-title">версия v.1.2.0</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">проверить обновление</button>
                     </div>
                 </div>
@@ -1203,10 +1207,10 @@
                 <div class="form-section" style="margin-bottom: 14px;">
                     <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">перенос и бэкап</div>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <button type="button" class="btn-secondary uniform-brand-title" id="btnCopyShareLink">скопировать ссылку переноса</button>
+                        <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnCopyShareLink">скопировать ссылку переноса</button>
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="btn-secondary uniform-brand-title" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
-                            <button type="button" class="btn-secondary uniform-brand-title" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
+                            <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnExportJson" style="flex: 1; margin-top: 0;">скачать архив</button>
+                            <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnImportJson" style="flex: 1; margin-top: 0;">загрузить архив</button>
                         </div>
                         <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
                     </div>
@@ -1233,7 +1237,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = '1.2.29';
+        const APP_VERSION = 'v.1.2.0';
 
         function triggerHaptic(pattern = 15) {
             if (navigator.vibrate) {
@@ -2480,7 +2484,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('v_force')) {
-                showToast(`Версия v${APP_VERSION} актуальна`);
+                showToast(`Версия ${APP_VERSION} актуальна`);
                 history.replaceState(null, null, window.location.pathname + window.location.hash);
             }
 
