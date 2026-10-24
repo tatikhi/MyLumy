@@ -122,6 +122,7 @@
             stroke-linecap: round;
             stroke-linejoin: round;
             vertical-align: middle;
+            flex-shrink: 0;
         }
 
         .header-bar {
@@ -293,7 +294,9 @@
         .btn-settings-inner {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            width: 100%;
             position: relative;
         }
 
@@ -340,7 +343,7 @@
         }
 
         .item-name {
-            font-size: 17px;
+            font-size: 17.5px;
             font-weight: 600;
             color: var(--text-primary);
             letter-spacing: -0.1px;
@@ -825,14 +828,14 @@
         .category-header-btn {
             width: 100%; padding: 14px 16px; border-radius: 16px;
             background: var(--bg-main); border: 1px solid var(--border-color);
-            color: var(--text-primary); font-size: 17px; font-weight: 600;
+            color: var(--text-primary); font-size: 17.5px; font-weight: 600;
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation;
         }
 
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
-        .category-title-text { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 600; letter-spacing: 0.03em; text-transform: lowercase; }
+        .category-title-text { font-family: 'Montserrat', sans-serif; font-size: 17.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: lowercase; }
         .category-count-badge { font-size: 16px; color: var(--text-secondary); font-weight: 500; }
         
         .category-chevron {
@@ -883,7 +886,7 @@
         .manage-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 12px 14px; border-radius: 14px; background: var(--surface);
-            font-size: 17px; border: 1px solid var(--border-color); cursor: pointer;
+            font-size: 17.5px; border: 1px solid var(--border-color); cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation;
         }
@@ -972,8 +975,10 @@
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 360px;
             background: var(--surface); border: 1px solid var(--accent-main);
-            color: var(--text-primary); padding: 18px 22px; border-radius: 20px;
-            font-size: 17px; font-weight: 600; line-height: 1.4;
+            color: var(--text-primary); padding: 16px 20px; border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
+            line-height: 1.4; text-transform: lowercase;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35); opacity: 0; pointer-events: none;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
             z-index: 10000; text-align: center; word-wrap: break-word;
@@ -2434,7 +2439,7 @@
                 const encoded = toBase64(JSON.stringify(data));
                 const fullUrl = `${window.location.origin}${window.location.pathname}#import=${encoded}`;
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(fullUrl).then(() => showToast('Ссылка скопирована!'));
+                    navigator.clipboard.writeText(fullUrl).then(() => showToast('ссылка скопирована!'));
                 }
             } catch(e) { showToast('Ошибка создания ссылки'); }
         }
@@ -2482,7 +2487,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('v_force')) {
-                showToast(`Версия ${APP_VERSION} актуальна`);
+                showToast(`версия ${APP_VERSION} актуальна`);
                 history.replaceState(null, null, window.location.pathname + window.location.hash);
             }
 
