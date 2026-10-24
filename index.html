@@ -114,8 +114,10 @@
 
         .svg-icon {
             display: inline-block;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            min-height: 18px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
@@ -1013,9 +1015,9 @@
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">моя коллекция</button>
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
                 <span class="btn-settings-inner">
-                    <svg class="svg-icon" viewBox="0 0 24 24">
+                    <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0-1.51 1z"></path>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
                     </svg>
                     мои настройки
                 </span>
@@ -1028,11 +1030,11 @@
         <div class="modal-card custom-calendar-modal">
             <div class="cal-header">
                 <button type="button" class="cal-nav-btn" id="calPrevMonth">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </button>
                 <div class="cal-month-title" id="calMonthTitle"></div>
                 <button type="button" class="cal-nav-btn" id="calNextMonth">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
             </div>
             <div class="cal-grid" id="calGrid"></div>
@@ -1048,7 +1050,7 @@
             <div class="modal-header-row">
                 <div class="modal-title uniform-brand-title" id="mainModalTitle" style="font-size: 17px; font-weight: 600;">моя коллекция</div>
                 <button type="button" class="modal-close-icon" id="btnHeaderClose" aria-label="Закрыть">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
             
@@ -1079,7 +1081,7 @@
                             <div class="input-with-icon-wrapper">
                                 <input type="text" id="pName" class="input-control input-control-with-btn" placeholder="Например: Сыворотка с ретинолом" autocomplete="off">
                                 <button type="button" class="btn-inline-scan" id="btnScanBarcode" title="Сканировать штрихкод">
-                                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 5v14M7 5v14M11 5v14M15 5v14M19 5v14M21 5v14"></path></svg>
+                                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M3 5v14M7 5v14M11 5v14M15 5v14M19 5v14M21 5v14"></path></svg>
                                 </button>
                             </div>
                             <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
@@ -1107,7 +1109,7 @@
 
                     <div class="pao-highlight-box">
                         <div class="pao-title">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+                            <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
                             <span>Срок после вскрытия (PAO)</span>
                         </div>
                         <div class="pao-picker" id="paoPicker">
@@ -1124,10 +1126,10 @@
                     <div class="form-section">
                         <button type="button" class="accordion-toggle-btn" id="btnToggleAdvancedAccordion">
                             <span style="display: flex; align-items: center; gap: 6px;">
-                                <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
                                 Настройки графика и пауз
                             </span>
-                            <span id="advancedAccordionArrow" class="category-chevron"><svg class="svg-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                            <span id="advancedAccordionArrow" class="category-chevron"><svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                         </button>
                         <div class="accordion-content" id="advancedAccordionContent">
                             <div class="form-group" style="margin-top: 12px;">
@@ -1193,11 +1195,11 @@
         <div class="modal-card" style="max-width: 400px; max-height: 85vh;">
             <div class="modal-header-row">
                 <div class="modal-title-wrapper">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
                     <div class="modal-title uniform-brand-title" style="font-size: 17px; font-weight: 600;">настройки</div>
                 </div>
                 <button type="button" class="modal-close-icon" id="btnAppHeaderClose" aria-label="Закрыть">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
 
@@ -1715,7 +1717,7 @@
                 if (item.freqType === 'custom') {
                     const isCompleted = productProgress[item.id] && Array.isArray(productProgress[item.id].dates) && productProgress[item.id].dates.includes(routineDateStr);
                     const completedClass = isCompleted ? 'completed' : '';
-                    const checkIcon = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    const checkIcon = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" onclick="toggleActiveProduct(${item.id})" title="Отметить шаг">${checkIcon}</div>`;
 
                     const prog = productProgress[item.id] || { dates: [] };
@@ -1723,7 +1725,7 @@
                     const daysPerWeek = Array.isArray(item.days) ? Math.max(1, item.days.length) : 1;
                     const currentWeek = Math.floor(completedCount / daysPerWeek) + 1;
                     const stepInWeek = (completedCount % daysPerWeek) + 1;
-                    const calendarSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+                    const calendarSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
                     weekStepHtml = `<span class="item-week-step">${calendarSvg} неделя ${currentWeek} • шаг ${stepInWeek}</span>`;
                 }
 
@@ -1751,7 +1753,7 @@
                     const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
 
                     if (pauseMins > 0) {
-                        const clockSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+                        const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
                         if (isTimerActive) {
                             htmlBuffer.push(`
                                 <div class="pause-step-container">
@@ -1783,7 +1785,7 @@
             triggerHaptic(30);
             btnEl.classList.add('running');
             
-            const clockSvgWhite = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px; stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+            const clockSvgWhite = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
 
             activeRoutineTimer.start(
                 mins,
@@ -1793,7 +1795,7 @@
                 () => {
                     btnEl.classList.remove('running');
                     btnEl.classList.add('completed');
-                    const checkSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    const checkSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     btnEl.innerHTML = `${checkSvg} <span>выдержка окончена</span>`;
                     showToast("Выдержка завершена! Можно наносить следующее средство.");
                 }
@@ -1899,7 +1901,7 @@
 
             if (preset) {
                 if (preset.reason && showBanner) {
-                    const bulbSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px; margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
+                    const bulbSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
                     document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MySpa:</b> ${escapeHtml(preset.reason)}`;
                     banner.style.display = 'block';
                 } else {
@@ -2298,8 +2300,8 @@
         function renderManageList() {
             const container = document.getElementById('manageList');
             const htmlBuffer = [];
-            const chevronSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-            const rightChevronSvg = `<svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+            const chevronSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+            const rightChevronSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
 
             CATEGORIES.forEach((catName, catIndex) => {
                 const catProducts = products.filter(p => p.type === catName);
@@ -2423,7 +2425,7 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (confirm('Импортировать архив? Текущие данные будут обновлены.')) {
-                        if (applyImportData(data)) showToast('Данные успешно импортированы!');
+                        if (applyImportData(data)) showToast('данные успешно импортированы!');
                     }
                 } catch (err) {
                     showToast('Ошибка чтения файла.');
@@ -2460,7 +2462,7 @@
                     const data = JSON.parse(fromBase64(rawHash));
                     setTimeout(() => {
                         if (confirm('Импортировать коллекцию ухода по ссылке?')) {
-                            if (applyImportData(data)) showToast('Данные успешно перенесены!');
+                            if (applyImportData(data)) showToast('данные успешно перенесены!');
                         }
                         history.replaceState(null, null, window.location.pathname);
                     }, 400);
