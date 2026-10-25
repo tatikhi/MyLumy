@@ -8,10 +8,10 @@
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
-    <!-- Подключение Tenor Sans (Заголовки/Брендинг) + Plus Jakarta Sans (Интерфейс/UI) -->
+    <!-- Подключение Playfair Display (Заголовки/Брендинг 600/700) + Plus Jakarta Sans (Интерфейс/UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Tenor+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
@@ -145,23 +145,25 @@
             margin-bottom: 16px;
         }
 
+        /* Четкие и плотные заголовки */
         .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
-            font-family: 'Tenor Sans', sans-serif;
-            letter-spacing: 0.03em;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 600;
+            letter-spacing: 0.01em;
         }
 
         .uniform-brand-title {
             font-size: clamp(16px, 4.2vw, 19px);
-            font-weight: 400;
             text-transform: none;
             color: var(--text-primary);
             font-style: normal;
         }
 
         .logo {
-            font-family: 'Tenor Sans', sans-serif;
+            font-family: 'Playfair Display', Georgia, serif;
             font-size: clamp(24px, 6vw, 28px);
-            letter-spacing: 0.12em;
+            font-weight: 700;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
             color: var(--text-primary);
         }
@@ -503,8 +505,8 @@
         }
 
         .cal-month-title {
-            font-size: 16px;
-            font-weight: 400;
+            font-size: 17px;
+            font-weight: 600;
         }
 
         .cal-nav-btn {
@@ -642,7 +644,7 @@
             min-height: 24px;
         }
 
-        .modal-title { font-size: clamp(17px, 4.5vw, 19px); font-weight: 400; color: var(--text-primary); }
+        .modal-title { font-size: clamp(17px, 4.5vw, 19px); font-weight: 600; color: var(--text-primary); }
 
         .form-section {
             background: var(--bg-main);
@@ -653,12 +655,12 @@
         }
 
         .form-section-title {
-            font-size: 15.5px; font-weight: 400; color: var(--accent-main);
-            margin-bottom: 10px; letter-spacing: 0.03em; font-style: normal;
+            font-size: 16px; font-weight: 600; color: var(--accent-main);
+            margin-bottom: 10px; letter-spacing: 0.01em; font-style: normal;
         }
 
         .version-row { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
-        .version-text { font-size: 15px; color: var(--text-secondary); font-weight: 600; text-align: center; width: 100%; }
+        .version-text { font-size: 16px; color: var(--text-secondary); font-weight: 600; text-align: center; width: 100%; }
 
         .btn-update-inline {
             background: var(--surface);
@@ -828,7 +830,7 @@
         }
 
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
-        .category-title-text { font-family: 'Tenor Sans', sans-serif; font-size: 15.5px; font-weight: 400; letter-spacing: 0.02em; text-transform: none; }
+        .category-title-text { font-family: 'Playfair Display', Georgia, serif; font-size: 16px; font-weight: 600; letter-spacing: 0.01em; text-transform: none; }
         .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
         
         .category-chevron {
