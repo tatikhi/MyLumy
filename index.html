@@ -1577,12 +1577,7 @@
         let barcodeCache = JSON.parse(safeStorage.getItem('cb_barcode_cache') || '{}');
         let productProgress = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
 
-        let installDateStr = safeStorage.getItem('cb_install_date');
-        if (!installDateStr) {
-            installDateStr = getLocalTodayStr();
-            safeStorage.setItem('cb_install_date', installDateStr);
-        }
-
+        // Определение времени суток по локальным часам девайса: 03:00–17:59 -> Утро, 18:00–02:59 -> Вечер
         function getSystemTOD() {
             const h = new Date().getHours();
             return (h >= 3 && h < 18) ? 'morning' : 'evening';
@@ -1603,11 +1598,25 @@
         const CATEGORIES = ["Очищение", "Тонизирование", "Активы", "Уход за глазами", "Питание / Увлажнение"];
         const typeOrder = { "Очищение": 1, "Тонизирование": 2, "Активы": 3, "Уход за глазами": 4, "Питание / Увлажнение": 5 };
 
-        function getLocalTodayStr(d = new Date()) {
+        // Локальная текущая дата с учетом переключения дня в 03:00 ночи
+        function getLocalTodayStr(d) {
+            if (!d) {
+                const now = new Date();
+                if (now.getHours() < 3) {
+                    now.setDate(now.getDate() - 1);
+                }
+                d = now;
+            }
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        let installDateStr = safeStorage.getItem('cb_install_date');
+        if (!installDateStr) {
+            installDateStr = getLocalTodayStr();
+            safeStorage.setItem('cb_install_date', installDateStr);
         }
 
         function getRoutineDateObj() {
@@ -1616,15 +1625,20 @@
                 const parts = selectedDateStr.split('-');
                 return new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             }
-            return new Date();
+            const now = new Date();
+            if (now.getHours() < 3) {
+                now.setDate(now.getDate() - 1);
+            }
+            now.setHours(12, 0, 0, 0);
+            return now;
         }
 
         function getAllowedStartDateObj() {
             const parts = installDateStr.split('-');
-            const installObj = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
+            const installObj = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             const ninetyDaysAgo = new Date();
             ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-            ninetyDaysAgo.setHours(0, 0, 0, 0);
+            ninetyDaysAgo.setHours(12, 0, 0, 0);
             return (installObj > ninetyDaysAgo) ? installObj : ninetyDaysAgo;
         }
 
@@ -1858,7 +1872,7 @@
                     const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
 
                     if (pauseMins > 0) {
-                        const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+                        const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>`;
                         if (isTimerActive) {
                             htmlBuffer.push(`
                                 <div class="pause-step-container">
