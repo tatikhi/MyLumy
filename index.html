@@ -145,7 +145,6 @@
             margin-bottom: 18px;
         }
 
-        /* Увеличенный шрифт Alice для заголовков */
         .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
             font-family: 'Alice', Georgia, serif;
             font-weight: 400;
@@ -304,7 +303,6 @@
             transform: translateY(-1px);
         }
 
-        /* Отдельная карточка "Мои настройки" в точности как "Мои ритуалы" */
         .settings-card-wrapper {
             background: var(--surface);
             border-radius: 24px;
@@ -319,7 +317,6 @@
             align-items: center;
         }
 
-        /* Центрирование надписи "Мои настройки" с иконкой слева */
         .btn-settings-inner {
             position: relative;
             display: inline-block;
@@ -691,7 +688,6 @@
         .version-row { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
         .version-text { font-size: 16.5px; color: var(--text-secondary); font-weight: 400; text-align: center; width: 100%; }
 
-        /* Выравнивание размеров кнопок настроек к кнопке Закрыть */
         .btn-update-inline,
         .btn-secondary.small-font {
             background: var(--surface);
@@ -1282,20 +1278,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно подтверждения импорта в стиле MySpa -->
-    <div class="modal-overlay" id="confirmModal">
-        <div class="modal-card" style="max-width: 360px; text-align: center; padding: 20px 18px;">
-            <div class="modal-title uniform-brand-title" style="margin-bottom: 12px;" id="confirmModalTitle">Импорт данных</div>
-            <div id="confirmModalText" style="font-size: 15px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;">
-                Перезаписать текущую коллекцию средств новыми данными из архива?
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button type="button" class="btn-action uniform-brand-title" id="btnConfirmYes">Да, импортировать</button>
-                <button type="button" class="btn-secondary uniform-brand-title" id="btnConfirmNo" style="margin-top: 0;">Отмена</button>
-            </div>
-        </div>
-    </div>
-
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
@@ -1591,7 +1573,6 @@
 
         const activeRoutineTimer = new RoutineTimerEngine();
 
-        // Загрузка реальной пользовательской базы из localStorage
         let products = JSON.parse(safeStorage.getItem('cb_custom_products') || '[]');
         let barcodeCache = JSON.parse(safeStorage.getItem('cb_barcode_cache') || '{}');
         let productProgress = JSON.parse(safeStorage.getItem('cb_product_progress') || '{}');
@@ -1618,7 +1599,6 @@
         let autocompleteDebounceTimer = null;
         let calCurrentViewDate = new Date();
         let calendarTargetMode = 'routine';
-        let pendingImportData = null;
 
         const CATEGORIES = ["Очищение", "Тонизирование", "Активы", "Уход за глазами", "Питание / Увлажнение"];
         const typeOrder = { "Очищение": 1, "Тонизирование": 2, "Активы": 3, "Уход за глазами": 4, "Питание / Увлажнение": 5 };
@@ -2581,13 +2561,9 @@
             }
         }
 
-        function askConfirmImport(data) {
-            pendingImportData = data;
-            openModalElement(document.getElementById('confirmModal'));
-        }
-
         function exportJsonFile() {
             triggerHaptic(20);
+            if (!confirm('Скачать архив данных MySpa?')) return;
             const data = getBackupData();
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -2598,7 +2574,6 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('Архив скачан');
         }
 
         function importJsonFile(file) {
@@ -2608,7 +2583,9 @@
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    askConfirmImport(data);
+                    if (confirm('Перезаписать текущую коллекцию средств новыми данными из архива?')) {
+                        applyImportData(data);
+                    }
                 } catch (err) {
                     showToast('Ошибка чтения файла.');
                 }
@@ -2643,7 +2620,9 @@
                 try {
                     const data = JSON.parse(fromBase64(rawHash));
                     setTimeout(() => {
-                        askConfirmImport(data);
+                        if (confirm('Перезаписать текущую коллекцию средств новыми данными из архива?')) {
+                            applyImportData(data);
+                        }
                         history.replaceState(null, null, window.location.pathname);
                     }, 400);
                 } catch (err) {}
@@ -2778,23 +2757,6 @@
             document.getElementById('btnImportJson').addEventListener('click', () => document.getElementById('jsonFileInput').click());
             document.getElementById('jsonFileInput').addEventListener('change', (e) => {
                 if (e.target.files && e.target.files[0]) importJsonFile(e.target.files[0]);
-            });
-
-            document.getElementById('btnConfirmYes').addEventListener('click', () => {
-                triggerHaptic(25);
-                closeModalElement(document.getElementById('confirmModal'));
-                if (pendingImportData) {
-                    if (applyImportData(pendingImportData)) {
-                        showToast('Данные успешно импортированы!');
-                    }
-                    pendingImportData = null;
-                }
-            });
-
-            document.getElementById('btnConfirmNo').addEventListener('click', () => {
-                triggerHaptic(15);
-                closeModalElement(document.getElementById('confirmModal'));
-                pendingImportData = null;
             });
 
             document.getElementById('themeRow').addEventListener('click', (e) => {
