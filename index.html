@@ -8,11 +8,15 @@
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Подключение Tenor Sans (Заголовки/Брендинг) + Plus Jakarta Sans (Интерфейс/UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Tenor+Sans&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
-            /* 1. Nude (по умолчанию) — контрастный и чистый благородный нюд */
+            /* 1. Nude (по умолчанию) */
             --bg-main: #F5EFE8;
             --surface: #FFFFFF;
             --text-primary: #2C2220;
@@ -28,7 +32,7 @@
             --scroll-track: rgba(168, 110, 82, 0.12);
         }
 
-        /* 2. Mint — глубокий свежий мятно-эвкалиптовый */
+        /* 2. Mint */
         body[data-theme="mint"] {
             --bg-main: #E6F2EE;
             --surface: #FFFFFF;
@@ -45,7 +49,7 @@
             --scroll-track: rgba(59, 108, 99, 0.12);
         }
 
-        /* 3. Lavender — контрастная сочная лаванда */
+        /* 3. Lavender */
         body[data-theme="lavender"] {
             --bg-main: #F0E8F5;
             --surface: #FFFFFF;
@@ -62,7 +66,7 @@
             --scroll-track: rgba(107, 81, 128, 0.12);
         }
 
-        /* 4. Sage — насыщенный естественный шалфей */
+        /* 4. Sage */
         body[data-theme="sage"] {
             --bg-main: #E7EFE7;
             --surface: #FFFFFF;
@@ -79,7 +83,7 @@
             --scroll-track: rgba(56, 82, 54, 0.12);
         }
 
-        /* 5. Midnight Calm (без изменений) */
+        /* 5. Midnight Calm */
         body[data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
@@ -100,7 +104,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             touch-action: manipulation;
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
@@ -112,17 +116,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 24px 16px 40px;
+            padding: 20px 12px 40px;
         }
 
         body.modal-open { overflow: hidden; }
 
         .svg-icon {
             display: inline-block;
-            width: 19px;
-            height: 19px;
-            min-width: 19px;
-            min-height: 19px;
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            min-height: 18px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
@@ -138,33 +142,27 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        .brand-font {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            text-transform: none;
-            font-style: normal;
+        .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
+            font-family: 'Tenor Sans', sans-serif;
+            letter-spacing: 0.03em;
         }
 
         .uniform-brand-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 19.5px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
+            font-size: clamp(16px, 4.2vw, 19px);
+            font-weight: 400;
             text-transform: none;
             color: var(--text-primary);
             font-style: normal;
         }
 
         .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: none;
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: clamp(24px, 6vw, 28px);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
             color: var(--text-primary);
         }
 
@@ -173,8 +171,8 @@
             border-radius: 24px;
             width: 100%;
             max-width: 480px;
-            padding: 16px 20px;
-            margin-bottom: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
             text-align: center;
@@ -199,12 +197,12 @@
             background: var(--surface);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
-            padding: 14px 24px;
+            padding: 12px 20px;
             border-radius: 20px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 17px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(14px, 3.8vw, 16px);
             font-weight: 600;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.02em;
             text-transform: none;
             cursor: pointer;
             position: relative;
@@ -212,6 +210,7 @@
             max-width: 320px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             transition: all 0.25s ease;
+            white-space: nowrap;
         }
 
         .date-chip:hover, .date-chip:active {
@@ -222,10 +221,10 @@
 
         .main-card {
             background: var(--surface);
-            border-radius: 32px;
+            border-radius: 28px;
             width: 100%;
             max-width: 480px;
-            padding: 28px 22px;
+            padding: 20px 16px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
         }
@@ -233,18 +232,18 @@
         .tod-switch {
             display: flex;
             background: var(--bg-main);
-            border-radius: 20px;
-            padding: 5px;
-            margin-bottom: 24px;
+            border-radius: 18px;
+            padding: 4px;
+            margin-bottom: 20px;
             border: 1px solid var(--border-color);
             gap: 4px;
         }
 
         .tod-btn {
             flex: 1;
-            padding: 12px 10px;
+            padding: 10px 8px;
             text-align: center;
-            border-radius: 16px;
+            border-radius: 14px;
             cursor: pointer;
             color: var(--text-secondary);
             border: none;
@@ -253,6 +252,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            white-space: nowrap;
         }
 
         .tod-btn.uniform-brand-title {
@@ -263,13 +263,14 @@
             background: var(--surface);
             color: var(--text-primary);
             box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+            font-weight: 600;
         }
 
         .routine-list {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            margin-bottom: 24px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .main-card-actions {
@@ -281,8 +282,8 @@
 
         .btn-main-action {
             width: 100%;
-            padding: 16px 20px;
-            border-radius: 20px;
+            padding: 14px 16px;
+            border-radius: 18px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
@@ -291,27 +292,22 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.25s ease;
+            white-space: nowrap;
         }
 
         .btn-settings-inner {
-            position: relative;
-            display: inline-block;
-            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             color: inherit;
-        }
-
-        .settings-icon {
-            position: absolute;
-            right: calc(100% + 0.3em);
-            top: 50%;
-            transform: translateY(-50%);
         }
 
         .routine-item {
             background: var(--item-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 16px 18px;
+            border-radius: 18px;
+            padding: 14px 14px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -324,22 +320,25 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            gap: 8px;
         }
 
         .item-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
         }
 
         .item-num {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
             color: var(--accent-main);
-            letter-spacing: 0.03em;
+            letter-spacing: 0.02em;
             flex-shrink: 0;
-            width: 24px;
+            width: 22px;
             opacity: 0.9;
         }
 
@@ -347,46 +346,54 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
+            min-width: 0;
+            flex: 1;
         }
 
         .item-name {
-            font-size: 17.5px;
+            font-size: clamp(15px, 4vw, 17px);
             font-weight: 600;
             color: var(--text-primary);
             letter-spacing: -0.1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .item-tag {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
             font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .item-week-step {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            font-size: 14px;
+            gap: 4px;
+            font-size: 12.5px;
             font-weight: 600;
             color: var(--accent-main);
             background: var(--accent-light);
-            padding: 4px 10px;
-            border-radius: 10px;
+            padding: 3px 8px;
+            border-radius: 8px;
             width: fit-content;
             margin-top: 3px;
-            letter-spacing: 0.02em;
+            white-space: nowrap;
         }
 
         .item-right-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-shrink: 0;
         }
 
         .active-toggle-circle {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             border: 1px solid var(--accent-main);
             background: transparent;
@@ -410,7 +417,7 @@
         .pause-step-container {
             display: flex;
             justify-content: center;
-            margin: 6px 0;
+            margin: 4px 0;
             width: 100%;
         }
 
@@ -418,19 +425,20 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             background: var(--surface);
             border: 1.5px solid var(--accent-main);
             color: var(--accent-main);
-            padding: 10px 22px;
-            border-radius: 24px;
-            font-size: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13.5px;
             font-weight: 600;
             cursor: pointer;
-            min-width: 190px;
+            max-width: 100%;
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
             transition: all 0.25s ease;
             touch-action: manipulation;
+            white-space: nowrap;
         }
 
         .btn-pause-timer:hover:not(.running):not(.completed) {
@@ -459,18 +467,17 @@
 
         .expiry-dots {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             align-items: center;
             flex-shrink: 0;
-            padding: 4px;
+            padding: 2px;
             border-radius: 12px;
-            margin-left: 2px;
             pointer-events: none;
         }
 
         .dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
         }
 
@@ -484,31 +491,28 @@
         }
 
         .custom-calendar-modal {
-            max-width: 340px !important;
-            padding: 20px 16px !important;
+            max-width: 320px !important;
+            padding: 16px 12px !important;
         }
 
         .cal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .cal-month-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 17px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: none;
+            font-size: 16px;
+            font-weight: 400;
         }
 
         .cal-nav-btn {
             background: var(--bg-main);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -520,15 +524,15 @@
         .cal-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
+            gap: 4px;
             text-align: center;
         }
 
         .cal-day-name {
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
             color: var(--text-secondary);
-            padding-bottom: 6px;
+            padding-bottom: 4px;
         }
 
         .cal-day-cell {
@@ -536,7 +540,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14.5px;
+            font-size: 13.5px;
             border-radius: 50%;
             cursor: pointer;
             touch-action: manipulation;
@@ -575,7 +579,7 @@
             display: none;
             justify-content: center;
             align-items: flex-start;
-            padding: 24px 16px 40px;
+            padding: 16px 12px 30px;
             z-index: 1000;
             overflow-y: auto;
             overscroll-behavior: contain;
@@ -589,14 +593,14 @@
 
         .modal-card {
             background: var(--surface);
-            border-radius: 32px;
+            border-radius: 26px;
             width: 100%;
             max-width: 460px;
             max-height: 85vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            padding: 16px 20px 16px;
+            padding: 14px 14px 12px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
             position: relative;
@@ -615,25 +619,18 @@
             overflow-y: auto;
             overscroll-behavior: contain;
             -webkit-overflow-scrolling: touch;
-            padding-right: 4px;
+            padding-right: 2px;
             padding-left: 2px;
         }
 
         .modal-footer-pinned {
             flex-shrink: 0;
             background: var(--surface);
-            padding-top: 12px;
+            padding-top: 10px;
             padding-bottom: calc(4px + env(safe-area-inset-bottom));
-            margin-top: 8px;
+            margin-top: 6px;
             border-top: 1px solid var(--border-color);
             z-index: 10;
-        }
-
-        @media (max-width: 480px) {
-            .modal-overlay { padding: 12px 12px 30px; }
-            .modal-card { padding: 14px 14px 12px; border-radius: 26px; max-height: 90vh; }
-            .form-section { padding: 12px 12px !important; margin-bottom: 12px !important; border-radius: 16px !important; }
-            .input-control { padding: 12px 14px !important; font-size: 16px !important; }
         }
 
         .modal-header-row {
@@ -645,62 +642,60 @@
             min-height: 24px;
         }
 
-        .modal-title { font-size: 19.5px; font-weight: 600; color: var(--text-primary); }
+        .modal-title { font-size: clamp(17px, 4.5vw, 19px); font-weight: 400; color: var(--text-primary); }
 
         .form-section {
             background: var(--bg-main);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 16px 16px;
-            margin-bottom: 14px;
+            border-radius: 18px;
+            padding: 12px 12px;
+            margin-bottom: 12px;
         }
 
         .form-section-title {
-            font-size: 17px; font-weight: 600; color: var(--accent-main);
-            margin-bottom: 12px; letter-spacing: 0.04em; font-style: normal;
+            font-size: 15.5px; font-weight: 400; color: var(--accent-main);
+            margin-bottom: 10px; letter-spacing: 0.03em; font-style: normal;
         }
 
         .version-row { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
-        .version-text { font-size: 17px; color: var(--text-secondary); font-weight: 600; text-align: center; width: 100%; }
+        .version-text { font-size: 15px; color: var(--text-secondary); font-weight: 600; text-align: center; width: 100%; }
 
         .btn-update-inline {
             background: var(--surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 14px; border-radius: 16px; width: 100%;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
+            padding: 12px; border-radius: 14px; width: 100%;
+            font-size: 13.5px; font-weight: 600; letter-spacing: 0.02em;
             text-transform: none; cursor: pointer; transition: all 0.2s ease;
             touch-action: manipulation;
         }
 
         .btn-update-inline:active { background: var(--accent-light); border-color: var(--accent-main); }
 
-        .form-group { margin-bottom: 12px; position: relative; }
+        .form-group { margin-bottom: 10px; position: relative; }
         .form-group:last-child { margin-bottom: 0; }
         .form-group label {
             display: block;
-            font-size: 15px;
+            font-size: 13.5px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 6px;
-            letter-spacing: 0.01em;
         }
 
         .input-with-icon-wrapper { position: relative; display: flex; align-items: center; }
 
         .input-control {
-            width: 100%; padding: 12px 16px; border-radius: 14px;
+            width: 100%; padding: 10px 14px; border-radius: 12px;
             border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: 16.5px; font-weight: 500; outline: none;
+            color: var(--text-primary); font-size: 15px; font-weight: 500; outline: none;
         }
 
-        .input-control-with-btn { padding-right: 48px; }
+        .input-control-with-btn { padding-right: 42px; }
 
         .btn-inline-scan {
-            position: absolute; right: 8px;
+            position: absolute; right: 6px;
             background: var(--accent-light); border: 1px solid var(--border-color);
-            color: var(--accent-main); border-radius: 10px; padding: 6px 8px;
+            color: var(--accent-main); border-radius: 8px; padding: 6px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s ease;
             touch-action: manipulation;
@@ -711,7 +706,7 @@
         .autocomplete-dropdown {
             position: absolute; top: 100%; left: 0; right: 0;
             background: var(--surface); border: 1px solid var(--border-color);
-            border-radius: 14px; margin-top: 4px; max-height: 0; opacity: 0;
+            border-radius: 12px; margin-top: 4px; max-height: 0; opacity: 0;
             overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
             transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
             display: none;
@@ -719,12 +714,12 @@
 
         .autocomplete-dropdown.open {
             display: block;
-            max-height: 180px;
+            max-height: 160px;
             opacity: 1;
         }
 
         .autocomplete-item {
-            padding: 12px 16px; font-size: 15px; color: var(--text-primary);
+            padding: 10px 14px; font-size: 14px; color: var(--text-primary);
             cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s ease;
             touch-action: manipulation;
         }
@@ -732,14 +727,14 @@
         .autocomplete-item:last-child { border-bottom: none; }
         .autocomplete-item:active, .autocomplete-item:hover { background: var(--accent-light); }
 
-        .picker-group { display: flex; gap: 6px; }
+        .picker-group { display: flex; gap: 4px; }
 
         .picker-btn {
-            flex: 1; padding: 10px; border-radius: 12px;
+            flex: 1; padding: 8px 4px; border-radius: 10px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: 15px; font-weight: 600; cursor: pointer;
+            font-size: 13px; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
-            touch-action: manipulation;
+            touch-action: manipulation; min-width: 0; white-space: nowrap;
         }
 
         .picker-btn.active {
@@ -747,97 +742,94 @@
             border-color: var(--accent-main); box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
-        #themeRow .picker-btn { border-radius: 12px; height: 38px; }
+        #themeRow .picker-btn { border-radius: 10px; height: 36px; }
         #themeRow .picker-btn.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main); }
 
-        .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
         .type-picker-grid .picker-btn:last-child { grid-column: span 2; }
 
-        .days-picker { display: flex; gap: 4px; width: 100%; margin-top: 6px; }
+        .days-picker { display: flex; gap: 3px; width: 100%; margin-top: 6px; }
 
         .day-chip {
-            flex: 1; padding: 8px 0; border-radius: 10px;
+            flex: 1; padding: 8px 0; border-radius: 8px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: 15px; font-weight: 600; cursor: pointer;
+            font-size: 13px; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
-            touch-action: manipulation;
+            touch-action: manipulation; min-width: 0;
         }
 
         .day-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
         .pao-highlight-box {
             background: var(--accent-light); border: 1px solid var(--accent-main);
-            border-radius: 18px; padding: 14px; margin-bottom: 12px;
+            border-radius: 14px; padding: 10px; margin-bottom: 10px;
         }
 
         .pao-title {
-            font-size: 15px; font-weight: 600; color: var(--text-primary);
-            margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+            font-size: 13.5px; font-weight: 600; color: var(--text-primary);
+            margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
         }
 
-        .pao-picker { display: flex; gap: 6px; flex-wrap: wrap; }
+        .pao-picker { display: flex; gap: 4px; flex-wrap: nowrap; }
 
         .pao-chip {
-            flex: 1; padding: 9px 6px; border-radius: 10px;
+            flex: 1; padding: 7px 4px; border-radius: 8px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: 15px; font-weight: 600; cursor: pointer;
+            font-size: 13px; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
-            touch-action: manipulation;
+            touch-action: manipulation; min-width: 0;
         }
 
         .pao-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
         .btn-secondary {
-            width: 100%; padding: 14px; border-radius: 16px;
+            width: 100%; padding: 12px; border-radius: 14px;
             border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-family: 'Montserrat', sans-serif;
-            font-size: 17px; font-weight: 600; letter-spacing: 0.04em;
-            text-transform: none; cursor: pointer; margin-top: 8px; transition: background-color 0.2s;
-            touch-action: manipulation;
+            color: var(--text-primary); font-size: 15px; font-weight: 600;
+            letter-spacing: 0.02em; text-transform: none; cursor: pointer; margin-top: 6px;
+            transition: background-color 0.2s; touch-action: manipulation; white-space: nowrap;
         }
 
         .btn-secondary:active { background: var(--bg-main); }
 
         .btn-secondary.small-font {
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .btn-action {
-            width: 100%; padding: 16px 20px; border-radius: 20px;
+            width: 100%; padding: 14px 16px; border-radius: 18px;
             border: 1px solid var(--accent-main); background: transparent;
-            color: var(--text-primary); font-family: 'Montserrat', sans-serif;
-            font-size: 17px; font-weight: 600; letter-spacing: 0.04em;
-            text-transform: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            transition: all 0.25s ease;
-            touch-action: manipulation;
+            color: var(--text-primary); font-size: 15px; font-weight: 600;
+            letter-spacing: 0.02em; text-transform: none; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: all 0.25s ease;
+            touch-action: manipulation; white-space: nowrap;
         }
 
         .btn-action:hover, .btn-action:active { background: var(--accent-light); border-color: var(--accent-main); transform: translateY(-1px); }
 
         .btn-add-toggle {
-            width: 100%; padding: 14px; border-radius: 18px;
+            width: 100%; padding: 12px; border-radius: 16px;
             border: 1px dashed var(--accent-main); background: var(--accent-light);
-            color: var(--accent-main); font-family: 'Montserrat', sans-serif;
-            font-size: 17px; font-weight: 600; letter-spacing: 0.04em;
-            text-transform: none; cursor: pointer; margin-bottom: 10px; transition: opacity 0.2s;
-            touch-action: manipulation;
+            color: var(--accent-main); font-size: 15px; font-weight: 600;
+            letter-spacing: 0.02em; text-transform: none; cursor: pointer;
+            margin-bottom: 8px; transition: opacity 0.2s; touch-action: manipulation; white-space: nowrap;
         }
 
-        .product-manage-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; padding-right: 2px; padding-bottom: 20px; }
-        .category-group-block { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+        .product-manage-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; padding-right: 2px; padding-bottom: 12px; }
+        .category-group-block { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
 
         .category-header-btn {
-            width: 100%; padding: 14px 16px; border-radius: 16px;
+            width: 100%; padding: 12px 14px; border-radius: 14px;
             background: var(--bg-main); border: 1px solid var(--border-color);
-            color: var(--text-primary); font-size: 17.5px; font-weight: 600;
+            color: var(--text-primary); font-size: 15px; font-weight: 600;
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation;
         }
 
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
-        .category-title-text { font-family: 'Montserrat', sans-serif; font-size: 17.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: none; }
-        .category-count-badge { font-size: 16px; color: var(--text-secondary); font-weight: 500; }
+        .category-title-text { font-family: 'Tenor Sans', sans-serif; font-size: 15.5px; font-weight: 400; letter-spacing: 0.02em; text-transform: none; }
+        .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
         
         .category-chevron {
             display: inline-flex;
@@ -865,7 +857,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             padding-left: 0;
             padding-top: 0;
             padding-bottom: 0;
@@ -873,9 +865,9 @@
         }
 
         .category-items-container.open .category-items-inner {
-            padding-left: 8px;
+            padding-left: 4px;
             padding-top: 4px;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
         
         .product-wrapper-block {
@@ -886,14 +878,15 @@
 
         .manage-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 14px; border-radius: 14px; background: var(--surface);
-            font-size: 17.5px; border: 1px solid var(--border-color); cursor: pointer;
+            padding: 10px 12px; border-radius: 12px; background: var(--surface);
+            font-size: 14.5px; border: 1px solid var(--border-color); cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
-            touch-action: manipulation;
+            touch-action: manipulation; gap: 8px;
         }
 
         .manage-item:active, .manage-item.active-item { background: var(--accent-light); border-color: var(--accent-main); }
-        .manage-info { display: flex; align-items: center; gap: 10px; }
+        .manage-info { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
+        .manage-info span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .manage-chevron {
             display: inline-flex;
@@ -901,6 +894,7 @@
             justify-content: center;
             color: var(--text-secondary);
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
         }
 
         .manage-item.active-item .manage-chevron { transform: rotate(90deg); }
@@ -912,37 +906,37 @@
             display: flex;
             background: var(--bg-main);
             border: 1px solid transparent;
-            border-radius: 14px;
-            padding: 0 8px;
-            gap: 8px;
+            border-radius: 12px;
+            padding: 0 6px;
+            gap: 6px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .popover-actions-menu.open {
-            max-height: 60px;
+            max-height: 52px;
             opacity: 1;
-            padding: 8px;
-            margin-top: 4px;
-            margin-bottom: 6px;
+            padding: 6px;
+            margin-top: 2px;
+            margin-bottom: 4px;
             border-color: var(--border-color);
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
         .popover-btn {
             flex: 1;
-            padding: 10px 14px;
-            border-radius: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 17px;
+            font-size: 13.5px;
             font-weight: 600;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.02em;
             text-transform: none;
             cursor: pointer;
             transition: all 0.2s ease;
             touch-action: manipulation;
+            white-space: nowrap;
         }
 
         .popover-btn:active { background: var(--accent-light); }
@@ -951,15 +945,14 @@
 
         .accordion-toggle-btn {
             width: 100%;
-            padding: 16px 20px;
-            border-radius: 20px;
+            padding: 12px 14px;
+            border-radius: 14px;
             border: 1px solid var(--accent-main);
             background: transparent;
             color: var(--text-primary);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 17px;
+            font-size: 14.5px;
             font-weight: 600;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.02em;
             text-transform: none;
             cursor: pointer;
             display: flex;
@@ -968,6 +961,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
             transition: all 0.25s ease;
             touch-action: manipulation;
+            white-space: nowrap;
         }
 
         .accordion-toggle-btn:hover, .accordion-toggle-btn:active {
@@ -978,7 +972,7 @@
         
         .accordion-content {
             display: none;
-            padding-top: 12px;
+            padding-top: 10px;
         }
         .accordion-content.open { display: block; }
         
@@ -991,12 +985,11 @@
 
         .toast-notification {
             position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 360px;
+            transform: translate(-50%, -50%) scale(0.9); width: 88%; max-width: 340px;
             background: var(--surface); border: 1px solid var(--accent-main);
-            color: var(--text-primary); padding: 16px 20px; border-radius: 20px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
-            line-height: 1.4; text-transform: none;
+            color: var(--text-primary); padding: 14px 16px; border-radius: 18px;
+            font-size: 13.5px; font-weight: 600; letter-spacing: 0.02em;
+            line-height: 1.35; text-transform: none;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35); opacity: 0; pointer-events: none;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
             z-index: 10000; text-align: center; word-wrap: break-word;
@@ -1031,11 +1024,11 @@
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">Мои средства</button>
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
                 <span class="btn-settings-inner uniform-brand-title">
-                    <svg class="svg-icon settings-icon" width="19" height="19" viewBox="0 0 24 24">
+                    <svg class="svg-icon settings-icon" width="18" height="18" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
                     </svg>
-                    Мои настройки
+                    <span>Мои настройки</span>
                 </span>
             </button>
         </div>
@@ -1054,7 +1047,7 @@
                 </button>
             </div>
             <div class="cal-grid" id="calGrid"></div>
-            <div style="margin-top: 14px;">
+            <div style="margin-top: 12px;">
                 <button type="button" class="btn-secondary uniform-brand-title" id="btnCloseCal" style="margin-top: 0;">Закрыть</button>
             </div>
         </div>
@@ -1072,8 +1065,8 @@
 
                 <button type="button" class="btn-add-toggle uniform-brand-title" id="btnAddToggle">+ Добавить средство</button>
                 
-                <div id="scannerWrapper" style="display: none; margin-bottom: 14px;">
-                    <div id="barcodeReader" style="border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 8px;"></div>
+                <div id="scannerWrapper" style="display: none; margin-bottom: 12px;">
+                    <div id="barcodeReader" style="border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 6px;"></div>
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelScanner" style="margin-top: 0;">Отмена сканирования</button>
                 </div>
 
@@ -1082,7 +1075,7 @@
                     <input type="hidden" id="pOpenDate" value="">
 
                     <!-- Поле названия средств -->
-                    <div class="form-section" style="margin-bottom: 12px; margin-top: 0;">
+                    <div class="form-section" style="margin-bottom: 10px; margin-top: 0;">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="pName">Название средства</label>
                             <div class="input-with-icon-wrapper">
@@ -1098,20 +1091,20 @@
                     <!-- Скрываемый блок: «Параметры и график» -->
                     <div class="form-section">
                         <button type="button" class="accordion-toggle-btn" id="btnToggleDetailsAccordion">
-                            <span style="display: flex; align-items: center; gap: 8px;">
-                                <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
+                            <span style="display: flex; align-items: center; gap: 6px;">
+                                <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
                                 Параметры и график
                             </span>
                             <span id="detailsAccordionArrow" class="category-chevron"><svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
                         </button>
 
                         <div class="accordion-content" id="detailsAccordionContent">
-                            <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 16px; padding: 12px; margin-bottom: 12px; margin-top: 10px;">
-                                <div id="smartPresetText" style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4;"></div>
-                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px 14px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;">Применить рекомендуемые паузы</button>
+                            <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 14px; padding: 10px; margin-bottom: 10px; margin-top: 8px;">
+                                <div id="smartPresetText" style="font-size: 13px; color: var(--text-primary); margin-bottom: 6px; line-height: 1.35;"></div>
+                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;">Применить рекомендуемые паузы</button>
                             </div>
 
-                            <div class="form-group" style="margin-top: 10px;">
+                            <div class="form-group" style="margin-top: 8px;">
                                 <label>Тип / этап ухода</label>
                                 <div class="type-picker-grid" id="typePicker">
                                     <button type="button" class="picker-btn" data-type="Очищение">Очищение</button>
@@ -1122,7 +1115,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" style="margin-top: 12px;">
+                            <div class="form-group" style="margin-top: 10px;">
                                 <label>Время суток</label>
                                 <div class="picker-group" id="todPicker">
                                     <button type="button" class="picker-btn active" data-tod="morning">Утро</button>
@@ -1130,14 +1123,14 @@
                                 </div>
                             </div>
 
-                            <div class="pao-highlight-box" style="margin-top: 12px;">
+                            <div class="pao-highlight-box" style="margin-top: 10px;">
                                 <div class="pao-title">
-                                    <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
+                                    <svg class="svg-icon" width="15" height="15" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
                                     <span>Срок после вскрытия (PAO)</span>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 14px; margin-bottom: 8px; padding: 0 2px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; margin-bottom: 6px; padding: 0 2px;">
                                     <span style="color: var(--text-secondary); font-weight: 500;">Дата вскрытия: <b id="displayOpenDate" style="color: var(--text-primary);"></b></span>
-                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 14px;">Изменить</button>
+                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 13px;">Изменить</button>
                                 </div>
                                 <div class="pao-picker" id="paoPicker">
                                     <button type="button" class="pao-chip" data-months="3">3M</button>
@@ -1147,15 +1140,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" style="margin-top: 12px;">
+                            <div class="form-group" style="margin-top: 10px;">
                                 <label>Частота применения</label>
                                 <input type="hidden" id="pFreqType" value="daily">
                                 <div class="picker-group" id="freqPicker">
                                     <button type="button" class="picker-btn active" data-freq="daily">Ежедневно</button>
                                     <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
                                 </div>
-                                <div id="daysGroup" style="display: none; margin-top: 10px;">
-                                    <label style="font-size: 13.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели (включит в расписание):</label>
+                                <div id="daysGroup" style="display: none; margin-top: 8px;">
+                                    <label style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
                                     <div class="days-picker" id="daysPicker">
                                         <button type="button" class="day-chip" data-day="1">Пн</button>
                                         <button type="button" class="day-chip" data-day="2">Вт</button>
@@ -1168,9 +1161,9 @@
                                 </div>
                             </div>
 
-                            <div style="background: var(--surface); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); margin-top: 12px;">
-                                <div style="margin-bottom: 10px;">
-                                    <label style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: block;">Пауза до нанесения</label>
+                            <div style="background: var(--surface); padding: 10px; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 10px;">
+                                <div style="margin-bottom: 8px;">
+                                    <label style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: block;">Пауза до нанесения</label>
                                     <div class="picker-group" id="pauseBeforePicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1179,7 +1172,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: block;">Пауза после нанесения</label>
+                                    <label style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: block;">Пауза после нанесения</label>
                                     <div class="picker-group" id="pauseAfterPicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1197,7 +1190,7 @@
                 <div id="listFooterButtons">
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCloseSettings" style="margin-top: 0;">Закрыть</button>
                 </div>
-                <div id="formFooterButtons" style="display: none; flex-direction: column; gap: 8px;">
+                <div id="formFooterButtons" style="display: none; flex-direction: column; gap: 6px;">
                     <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct" style="font-weight: 600;">Сохранить средство</button>
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
                 </div>
@@ -1215,16 +1208,16 @@
             </div>
 
             <div class="modal-body-scrollable">
-                <div class="form-section" style="margin-bottom: 14px;">
+                <div class="form-section" style="margin-bottom: 12px;">
                     <div class="version-row">
                         <span class="version-text uniform-brand-title">MySpa версия v.1.2.3</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">Проверить обновления</button>
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 14px;">
+                <div class="form-section" style="margin-bottom: 12px;">
                     <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">Перенос и бэкап</div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
                         <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnCopyShareLink">Скопировать ссылку переноса</button>
                         <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnExportJson" style="margin-top: 0;">Скачать архив</button>
                         <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnImportJson" style="margin-top: 0;">Загрузить архив</button>
@@ -1232,9 +1225,9 @@
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 14px;">
+                <div class="form-section" style="margin-bottom: 12px;">
                     <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">Тема оформления</div>
-                    <div style="display: flex; gap: 6px; width: 100%;" id="themeRow">
+                    <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
                         <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #A86E52; border-color: #A86E52;" title="Nude"></button>
                         <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #3B6C63; border-color: #3B6C63;" title="Mint"></button>
                         <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #6B5180; border-color: #6B5180;" title="Lavender"></button>
@@ -1771,8 +1764,8 @@
             const activeProducts = getActiveProductsForCurrentView();
 
             if (activeProducts.length === 0) {
-                const arrowDownSvg = `<svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24" style="margin: 8px auto 0; display: block; color: var(--accent-main);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-                container.innerHTML = `<div style="text-align: center; padding: 8px 0 4px; color: var(--text-secondary); font-size: 15.5px; font-weight: 500; line-height: 1.35;">Здесь пока пусто.<br>Добавьте ваше первое средство<br>через кнопку «Мои средства».${arrowDownSvg}</div>`;
+                const arrowDownSvg = `<svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" style="margin: 6px auto 0; display: block; color: var(--accent-main);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+                container.innerHTML = `<div style="text-align: center; padding: 6px 0 2px; color: var(--text-secondary); font-size: 14.5px; font-weight: 500; line-height: 1.35;">Здесь пока пусто.<br>Добавьте ваше первое средство<br>через кнопку «Мои средства».${arrowDownSvg}</div>`;
                 return;
             }
 
@@ -1789,12 +1782,12 @@
 
                 if (item.type === 'Активы') {
                     const currentWeekNum = calcActiveWeekNumber(item.openDate, routineDateObj);
-                    const calendarSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+                    const calendarSvg = `<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
                     weekStepHtml = `<span class="item-week-step">${calendarSvg} Неделя ${currentWeekNum}</span>`;
                 } else if (item.freqType === 'custom') {
                     const isCompleted = productProgress[item.id] && Array.isArray(productProgress[item.id].dates) && productProgress[item.id].dates.includes(routineDateStr);
                     const completedClass = isCompleted ? 'completed' : '';
-                    const checkIcon = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    const checkIcon = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     toggleCircleHtml = `<div class="active-toggle-circle ${completedClass}" onclick="toggleActiveProduct(${item.id})" title="Отметить шаг">${checkIcon}</div>`;
 
                     const prog = productProgress[item.id] || { dates: [] };
@@ -1802,7 +1795,7 @@
                     const daysPerWeek = Array.isArray(item.days) ? Math.max(1, item.days.length) : 1;
                     const currentWeek = Math.floor(completedCount / daysPerWeek) + 1;
                     const stepInWeek = (completedCount % daysPerWeek) + 1;
-                    const calendarSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+                    const calendarSvg = `<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
                     weekStepHtml = `<span class="item-week-step">${calendarSvg} Неделя ${currentWeek} • Шаг ${stepInWeek}</span>`;
                 }
 
@@ -1830,7 +1823,7 @@
                     const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
 
                     if (pauseMins > 0) {
-                        const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+                        const clockSvg = `<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
                         if (isTimerActive) {
                             htmlBuffer.push(`
                                 <div class="pause-step-container">
@@ -1862,7 +1855,7 @@
             triggerHaptic(30);
             btnEl.classList.add('running');
             
-            const clockSvgWhite = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+            const clockSvgWhite = `<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24" style="stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
 
             activeRoutineTimer.start(
                 mins,
@@ -1872,7 +1865,7 @@
                 () => {
                     btnEl.classList.remove('running');
                     btnEl.classList.add('completed');
-                    const checkSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                    const checkSvg = `<svg class="svg-icon" width="12" height="12" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     btnEl.innerHTML = `${checkSvg} <span>Выдержка окончена</span>`;
                     showToast("Выдержка завершена! Можно наносить следующее средство.");
                 }
@@ -2018,7 +2011,7 @@
 
             if (preset) {
                 if (preset.reason && showBanner) {
-                    const bulbSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
+                    const bulbSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
                     document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MySpa:</b> ${escapeHtml(preset.reason)}`;
                     banner.style.display = 'block';
                 } else {
@@ -2146,7 +2139,7 @@
             try {
                 await html5QrCodeScanner.start(
                     { facingMode: "environment" },
-                    { fps: 10, qrbox: { width: 250, height: 150 } },
+                    { fps: 10, qrbox: { width: 230, height: 140 } },
                     async (decodedText) => {
                         stopBarcodeScanner();
                         if (barcodeCache[decodedText]) {
@@ -2430,8 +2423,8 @@
         function renderManageList() {
             const container = document.getElementById('manageList');
             const htmlBuffer = [];
-            const chevronSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-            const rightChevronSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+            const chevronSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+            const rightChevronSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
 
             CATEGORIES.forEach((catName, catIndex) => {
                 const catProducts = products.filter(p => p.type === catName);
@@ -2459,7 +2452,7 @@
                         </button>
                         <div class="category-items-container" id="cat-container-${catIndex}">
                             <div class="category-items-inner">
-                                ${catItemsHtml || '<div style="font-size: 15px; color: var(--text-secondary); padding: 8px 12px;">Нет средств</div>'}
+                                ${catItemsHtml || '<div style="font-size: 13.5px; color: var(--text-secondary); padding: 6px 10px;">Нет средств</div>'}
                             </div>
                         </div>
                     </div>
