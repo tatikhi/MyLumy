@@ -145,7 +145,7 @@
             margin-bottom: 18px;
         }
 
-        /* Брендовый шрифт Alice для заголовков */
+        /* Увеличенный шрифт Alice для заголовков */
         .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
             font-family: 'Alice', Georgia, serif;
             font-weight: 400;
@@ -153,7 +153,7 @@
         }
 
         .uniform-brand-title {
-            font-size: clamp(17px, 4.6vw, 20px);
+            font-size: clamp(20px, 5.5vw, 24px);
             text-transform: none;
             color: var(--text-primary);
             font-style: normal;
@@ -256,7 +256,7 @@
             align-items: center;
             justify-content: center;
             white-space: nowrap;
-            font-size: clamp(16.5px, 4.4vw, 19.5px);
+            font-size: clamp(18.5px, 4.8vw, 21.5px);
         }
 
         .tod-btn.uniform-brand-title {
@@ -298,7 +298,28 @@
             white-space: nowrap;
         }
 
-        /* Точное центрирование «Мои настройки» без учета иконки (иконка слева через absolute) */
+        .btn-main-action:hover, .btn-main-action:active {
+            background: var(--accent-light);
+            border-color: var(--accent-main);
+            transform: translateY(-1px);
+        }
+
+        /* Отдельная карточка для "Мои настройки" */
+        .settings-card-wrapper {
+            background: var(--surface);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            padding: 14px 18px;
+            margin-top: 18px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Центрирование надписи "Мои настройки" без учета иконки */
         .btn-settings-inner {
             position: relative;
             display: inline-block;
@@ -513,7 +534,7 @@
         }
 
         .cal-month-title {
-            font-size: clamp(17px, 4.5vw, 19px);
+            font-size: clamp(20px, 5.2vw, 23px);
             font-weight: 400;
         }
 
@@ -652,7 +673,7 @@
             min-height: 24px;
         }
 
-        .modal-title { font-size: clamp(17.5px, 4.6vw, 20px); font-weight: 400; color: var(--text-primary); }
+        .modal-title { font-size: clamp(21px, 5.5vw, 25px); font-weight: 400; color: var(--text-primary); }
 
         .form-section {
             background: var(--bg-main);
@@ -663,7 +684,7 @@
         }
 
         .form-section-title {
-            font-size: clamp(16.5px, 4.4vw, 18.5px); font-weight: 400; color: var(--accent-main);
+            font-size: clamp(19px, 5vw, 22px); font-weight: 400; color: var(--accent-main);
             margin-bottom: 10px; font-style: normal;
         }
 
@@ -838,7 +859,7 @@
         }
 
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
-        .category-title-text { font-family: 'Alice', Georgia, serif; font-size: clamp(16.5px, 4.4vw, 18.5px); font-weight: 400; text-transform: none; }
+        .category-title-text { font-family: 'Alice', Georgia, serif; font-size: clamp(19px, 5vw, 22px); font-weight: 400; text-transform: none; }
         .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
         
         .category-chevron {
@@ -1013,6 +1034,7 @@
         <div class="logo">MySpa</div>
     </div>
 
+    <!-- 1. Карточка "Мои ритуалы" -->
     <div class="streak-card" id="streakCard">
         <div class="streak-card-title uniform-brand-title">Мои ритуалы</div>
         <div class="date-chip" id="currentDateChip">
@@ -1020,6 +1042,7 @@
         </div>
     </div>
 
+    <!-- 2. Основная карточка с графиком и средствами -->
     <div class="main-card">
         <div class="tod-switch">
             <button type="button" class="tod-btn uniform-brand-title" id="btnMorning">Утро</button>
@@ -1031,16 +1054,20 @@
 
         <div class="main-card-actions">
             <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">Мои средства</button>
-            <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
-                <span class="btn-settings-inner uniform-brand-title">
-                    <svg class="svg-icon settings-icon" width="19" height="19" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
-                    </svg>
-                    Мои настройки
-                </span>
-            </button>
         </div>
+    </div>
+
+    <!-- 3. Отдельная карточка "Мои настройки" -->
+    <div class="settings-card-wrapper">
+        <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings" style="border: none; box-shadow: none; background: transparent; padding: 0; width: 100%;">
+            <span class="btn-settings-inner uniform-brand-title">
+                <svg class="svg-icon settings-icon" width="19" height="19" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
+                </svg>
+                Мои настройки
+            </span>
+        </button>
     </div>
 
     <!-- Кастомный Календарь -->
