@@ -8,10 +8,10 @@
     <meta http-equiv="Expires" content="0">
     
     <title>MySpa</title>
-    <!-- Подключение Playfair Display (600/700) + Plus Jakarta Sans (500/600/700) -->
+    <!-- Подключение шрифтовой пары: Alice (Заголовки/Брендинг) + Plus Jakarta Sans (Интерфейс) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alice&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
@@ -145,25 +145,26 @@
             margin-bottom: 18px;
         }
 
-        /* Заголовки с увеличенным расстоянием между буквами */
+        /* Брендовый шрифт Alice для заголовков */
         .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-weight: 600;
-            letter-spacing: 0.04em;
+            font-family: 'Alice', Georgia, serif;
+            font-weight: 400;
+            letter-spacing: 0.025em;
         }
 
         .uniform-brand-title {
-            font-size: clamp(17px, 4.5vw, 19.5px);
+            font-size: clamp(17px, 4.6vw, 20px);
             text-transform: none;
             color: var(--text-primary);
             font-style: normal;
+            line-height: 1.25;
         }
 
         .logo {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
+            font-family: 'Alice', Georgia, serif;
+            font-size: clamp(25px, 6.5vw, 29px);
+            font-weight: 400;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--text-primary);
         }
@@ -173,7 +174,7 @@
             border-radius: 24px;
             width: 100%;
             max-width: 480px;
-            padding: 16px 20px;
+            padding: 16px 18px;
             margin-bottom: 18px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
@@ -199,12 +200,12 @@
             background: var(--surface);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
-            padding: 13px 22px;
+            padding: 12px 20px;
             border-radius: 20px;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: clamp(15.5px, 4.2vw, 17.5px);
+            font-size: clamp(15px, 4vw, 17px);
             font-weight: 600;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.015em;
             text-transform: none;
             cursor: pointer;
             position: relative;
@@ -255,7 +256,7 @@
             align-items: center;
             justify-content: center;
             white-space: nowrap;
-            font-size: clamp(16.5px, 4.4vw, 19px);
+            font-size: clamp(16.5px, 4.4vw, 19.5px);
         }
 
         .tod-btn.uniform-brand-title {
@@ -284,7 +285,7 @@
 
         .btn-main-action {
             width: 100%;
-            padding: 15px 20px;
+            padding: 15px 18px;
             border-radius: 20px;
             border: 1px solid var(--border-color);
             background: var(--surface);
@@ -297,7 +298,7 @@
             white-space: nowrap;
         }
 
-        /* Верстка центрирования кнопки "Мои настройки" без смещения иконкой */
+        /* Точное центрирование «Мои настройки» без учета иконки (иконка слева через absolute) */
         .btn-settings-inner {
             position: relative;
             display: inline-block;
@@ -342,7 +343,7 @@
 
         .item-num {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 16px;
+            font-size: 15.5px;
             font-weight: 700;
             color: var(--accent-main);
             letter-spacing: 0.02em;
@@ -360,7 +361,7 @@
         }
 
         .item-name {
-            font-size: clamp(16px, 4.3vw, 18px);
+            font-size: clamp(15.5px, 4.2vw, 17.5px);
             font-weight: 600;
             color: var(--text-primary);
             letter-spacing: -0.1px;
@@ -370,7 +371,7 @@
         }
 
         .item-tag {
-            font-size: 14px;
+            font-size: 13.5px;
             color: var(--text-secondary);
             font-weight: 500;
             white-space: nowrap;
@@ -382,7 +383,7 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--accent-main);
             background: var(--accent-light);
@@ -440,7 +441,7 @@
             color: var(--accent-main);
             padding: 9px 18px;
             border-radius: 22px;
-            font-size: 14.5px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             max-width: 100%;
@@ -513,8 +514,7 @@
 
         .cal-month-title {
             font-size: clamp(17px, 4.5vw, 19px);
-            font-weight: 600;
-            letter-spacing: 0.04em;
+            font-weight: 400;
         }
 
         .cal-nav-btn {
@@ -539,7 +539,7 @@
         }
 
         .cal-day-name {
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-secondary);
             padding-bottom: 4px;
@@ -550,7 +550,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14.5px;
+            font-size: 14px;
             border-radius: 50%;
             cursor: pointer;
             touch-action: manipulation;
@@ -652,7 +652,7 @@
             min-height: 24px;
         }
 
-        .modal-title { font-size: clamp(17.5px, 4.6vw, 20px); font-weight: 600; color: var(--text-primary); letter-spacing: 0.04em; }
+        .modal-title { font-size: clamp(17.5px, 4.6vw, 20px); font-weight: 400; color: var(--text-primary); }
 
         .form-section {
             background: var(--bg-main);
@@ -663,19 +663,19 @@
         }
 
         .form-section-title {
-            font-size: clamp(16.5px, 4.4vw, 18px); font-weight: 600; color: var(--accent-main);
-            margin-bottom: 10px; letter-spacing: 0.04em; font-style: normal;
+            font-size: clamp(16.5px, 4.4vw, 18.5px); font-weight: 400; color: var(--accent-main);
+            margin-bottom: 10px; font-style: normal;
         }
 
         .version-row { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
-        .version-text { font-size: 16.5px; color: var(--text-secondary); font-weight: 600; text-align: center; width: 100%; letter-spacing: 0.04em; }
+        .version-text { font-size: 16.5px; color: var(--text-secondary); font-weight: 400; text-align: center; width: 100%; }
 
         .btn-update-inline {
             background: var(--surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             padding: 13px; border-radius: 15px; width: 100%;
-            font-size: 14.5px; font-weight: 600; letter-spacing: 0.03em;
+            font-size: 14.5px; font-weight: 400;
             text-transform: none; cursor: pointer; transition: all 0.2s ease;
             touch-action: manipulation;
         }
@@ -686,7 +686,7 @@
         .form-group:last-child { margin-bottom: 0; }
         .form-group label {
             display: block;
-            font-size: 14.5px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 6px;
@@ -697,7 +697,7 @@
         .input-control {
             width: 100%; padding: 12px 14px; border-radius: 14px;
             border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: 16px; font-weight: 500; outline: none;
+            color: var(--text-primary); font-size: 15.5px; font-weight: 500; outline: none;
         }
 
         .input-control-with-btn { padding-right: 44px; }
@@ -742,7 +742,7 @@
         .picker-btn {
             flex: 1; padding: 9px 5px; border-radius: 11px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: 14px; font-weight: 600; cursor: pointer;
+            font-size: 13.5px; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
             touch-action: manipulation; min-width: 0; white-space: nowrap;
         }
@@ -763,7 +763,7 @@
         .day-chip {
             flex: 1; padding: 8px 0; border-radius: 9px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: 14px; font-weight: 600; cursor: pointer;
+            font-size: 13.5px; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
             touch-action: manipulation; min-width: 0;
         }
@@ -785,7 +785,7 @@
         .pao-chip {
             flex: 1; padding: 8px 5px; border-radius: 9px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: 14px; font-weight: 600; cursor: pointer;
+            font-size: 13.5px; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
             touch-action: manipulation; min-width: 0;
         }
@@ -795,8 +795,8 @@
         .btn-secondary {
             width: 100%; padding: 13px; border-radius: 15px;
             border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: clamp(15.5px, 4.2vw, 17px); font-weight: 600;
-            letter-spacing: 0.03em; text-transform: none; cursor: pointer; margin-top: 6px;
+            color: var(--text-primary); font-size: clamp(15.5px, 4.2vw, 17.5px);
+            text-transform: none; cursor: pointer; margin-top: 6px;
             transition: background-color 0.2s; touch-action: manipulation; white-space: nowrap;
         }
 
@@ -809,8 +809,8 @@
         .btn-action {
             width: 100%; padding: 15px 18px; border-radius: 18px;
             border: 1px solid var(--accent-main); background: transparent;
-            color: var(--text-primary); font-size: clamp(16px, 4.3vw, 17.5px); font-weight: 600;
-            letter-spacing: 0.03em; text-transform: none; cursor: pointer;
+            color: var(--text-primary); font-size: clamp(16px, 4.3vw, 18px);
+            text-transform: none; cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: all 0.25s ease;
             touch-action: manipulation; white-space: nowrap;
         }
@@ -820,8 +820,8 @@
         .btn-add-toggle {
             width: 100%; padding: 13px; border-radius: 16px;
             border: 1px dashed var(--accent-main); background: var(--accent-light);
-            color: var(--accent-main); font-size: clamp(16px, 4.3vw, 17.5px); font-weight: 600;
-            letter-spacing: 0.03em; text-transform: none; cursor: pointer;
+            color: var(--accent-main); font-size: clamp(16px, 4.3vw, 18px);
+            text-transform: none; cursor: pointer;
             margin-bottom: 8px; transition: opacity 0.2s; touch-action: manipulation; white-space: nowrap;
         }
 
@@ -831,15 +831,15 @@
         .category-header-btn {
             width: 100%; padding: 13px 15px; border-radius: 15px;
             background: var(--bg-main); border: 1px solid var(--border-color);
-            color: var(--text-primary); font-size: clamp(16.5px, 4.4vw, 18px); font-weight: 600;
+            color: var(--text-primary); font-size: clamp(16.5px, 4.4vw, 18.5px);
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation;
         }
 
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
-        .category-title-text { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(16.5px, 4.4vw, 18px); font-weight: 600; letter-spacing: 0.03em; text-transform: none; }
-        .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14.5px; color: var(--text-secondary); font-weight: 500; }
+        .category-title-text { font-family: 'Alice', Georgia, serif; font-size: clamp(16.5px, 4.4vw, 18.5px); font-weight: 400; text-transform: none; }
+        .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
         
         .category-chevron {
             display: inline-flex;
@@ -889,7 +889,7 @@
         .manage-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 11px 13px; border-radius: 13px; background: var(--surface);
-            font-size: 16px; font-weight: 600; border: 1px solid var(--border-color); cursor: pointer;
+            font-size: 15.5px; font-weight: 600; border: 1px solid var(--border-color); cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation; gap: 8px;
         }
@@ -939,7 +939,7 @@
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 15px;
+            font-size: 14.5px;
             font-weight: 600;
             letter-spacing: 0.02em;
             text-transform: none;
@@ -960,7 +960,7 @@
             border: 1px solid var(--accent-main);
             background: transparent;
             color: var(--text-primary);
-            font-size: 15.5px;
+            font-size: 15px;
             font-weight: 600;
             letter-spacing: 0.02em;
             text-transform: none;
@@ -998,8 +998,7 @@
             transform: translate(-50%, -50%) scale(0.9); width: 88%; max-width: 340px;
             background: var(--surface); border: 1px solid var(--accent-main);
             color: var(--text-primary); padding: 15px 18px; border-radius: 20px;
-            font-size: 14.5px; font-weight: 600; letter-spacing: 0.03em;
-            line-height: 1.35; text-transform: none;
+            font-size: 14.5px; font-weight: 400; line-height: 1.35; text-transform: none;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35); opacity: 0; pointer-events: none;
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
             z-index: 10000; text-align: center; word-wrap: break-word;
@@ -1111,7 +1110,7 @@
                         <div class="accordion-content" id="detailsAccordionContent">
                             <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 14px; padding: 10px; margin-bottom: 10px; margin-top: 8px;">
                                 <div id="smartPresetText" style="font-size: 13.5px; color: var(--text-primary); margin-bottom: 6px; line-height: 1.35;"></div>
-                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 9px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600; cursor: pointer;">Применить рекомендуемые паузы</button>
+                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 9px 12px; border-radius: 10px; font-size: 13.5px; cursor: pointer;">Применить рекомендуемые паузы</button>
                             </div>
 
                             <div class="form-group" style="margin-top: 10px;">
@@ -1201,7 +1200,7 @@
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCloseSettings" style="margin-top: 0;">Закрыть</button>
                 </div>
                 <div id="formFooterButtons" style="display: none; flex-direction: column; gap: 6px;">
-                    <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct" style="font-weight: 600;">Сохранить средство</button>
+                    <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct">Сохранить средство</button>
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
                 </div>
             </div>
@@ -1220,13 +1219,13 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 12px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">MySpa версия v.1.2.3</span>
+                        <span class="version-text uniform-brand-title">MySpa версия v0.1.4b</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">Проверить обновления</button>
                     </div>
                 </div>
 
                 <div class="form-section" style="margin-bottom: 12px;">
-                    <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">Перенос и бэкап</div>
+                    <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Перенос и бэкап</div>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnCopyShareLink">Скопировать ссылку переноса</button>
                         <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnExportJson" style="margin-top: 0;">Скачать архив</button>
@@ -1236,7 +1235,7 @@
                 </div>
 
                 <div class="form-section" style="margin-bottom: 12px;">
-                    <div class="form-section-title uniform-brand-title" style="font-weight: 600; color: var(--accent-main);">Тема оформления</div>
+                    <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Тема оформления</div>
                     <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
                         <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #A86E52; border-color: #A86E52;" title="Nude"></button>
                         <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #3B6C63; border-color: #3B6C63;" title="Mint"></button>
@@ -1256,7 +1255,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = 'v.1.2.3';
+        const APP_VERSION = 'v0.1.4b';
 
         function triggerHaptic(pattern = 15) {
             if (navigator.vibrate) {
