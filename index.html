@@ -6,13 +6,13 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    
-    <title>MySpa</title>
+
+    <title>MyLumy</title>
     <!-- Подключение шрифтовой пары: Alice (Заголовки/Брендинг) + Plus Jakarta Sans (Интерфейс) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alice&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         :root {
@@ -837,7 +837,7 @@
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
         .category-title-text { font-family: 'Alice', Georgia, serif; font-size: clamp(19px, 5vw, 22px); font-weight: 400; text-transform: none; }
         .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-        
+
         .category-chevron {
             display: inline-flex;
             align-items: center;
@@ -876,7 +876,7 @@
             padding-top: 4px;
             padding-bottom: 6px;
         }
-        
+
         .product-wrapper-block {
             display: flex;
             flex-direction: column;
@@ -976,13 +976,13 @@
             border-color: var(--accent-main);
             transform: translateY(-1px);
         }
-        
+
         .accordion-content {
             display: none;
             padding-top: 10px;
         }
         .accordion-content.open { display: block; }
-        
+
         #productFormContainer {
             display: none;
         }
@@ -1007,7 +1007,7 @@
 <body>
 
     <div class="header-bar">
-        <div class="logo">MySpa</div>
+        <div class="logo">MyLumy</div>
     </div>
 
     <!-- 1. Карточка "Мои ритуалы" -->
@@ -1071,12 +1071,12 @@
             <div class="modal-header-row" id="settingsModalHeader" style="display: none;">
                 <div class="modal-title uniform-brand-title" id="mainModalTitle"></div>
             </div>
-            
+
             <div class="modal-body-scrollable" id="modalScrollBody">
                 <div class="product-manage-list" id="manageList"></div>
 
                 <button type="button" class="btn-add-toggle uniform-brand-title" id="btnAddToggle">+ Добавить средство</button>
-                
+
                 <div id="scannerWrapper" style="display: none; margin-bottom: 12px;">
                     <div id="barcodeReader" style="border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 6px;"></div>
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelScanner" style="margin-top: 0;">Отмена сканирования</button>
@@ -1222,7 +1222,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 12px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">MySpa версия v0.1.8b</span>
+                        <span class="version-text uniform-brand-title">MyLumy версия v0.1.8b</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">Проверить обновления</button>
                     </div>
                 </div>
@@ -1269,9 +1269,9 @@
     <div class="modal-overlay" id="welcomeModal" style="z-index: 12000;">
         <div class="modal-card" style="max-width: 400px; padding: 24px 20px;">
             <div class="brand-font" style="font-size: 28px; text-align: center; color: var(--accent-main); margin-bottom: 16px;">
-                Добро пожаловать в MySpa
+                Добро пожаловать в MyLumy
             </div>
-            
+
             <div style="font-size: 15px; color: var(--text-primary); text-align: center; margin-bottom: 20px; line-height: 1.4;">
                 Ваш личный трекер для осознанного ухода за кожей.
             </div>
@@ -1282,7 +1282,7 @@
                     ⚠️ Важное предупреждение
                 </div>
                 <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
-                    MySpa — это только инструмент-органайзер, а не медицинский сервис. Приложение не дает медицинских назначений. Перед использованием сильных активов (ретинол, кислоты) обязательно консультируйтесь с врачом-дерматологом.
+                    MyLumy — это только инструмент-органайзер, а не медицинский сервис. Приложение не дает медицинских назначений. Перед использованием сильных активов (ретинол, кислоты) обязательно консультируйтесь с врачом-дерматологом.
                 </div>
             </div>
 
@@ -1814,7 +1814,7 @@
             const parts = addedDateStr.split('-');
             if (parts.length !== 3) return 1;
             const startObj = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12, 0, 0);
-            
+
             const startMon = getMondayOfWeek(startObj);
             startMon.setHours(0, 0, 0, 0);
 
@@ -1905,7 +1905,7 @@
             if (btnEl.classList.contains('running') || btnEl.classList.contains('completed')) return;
             triggerHaptic(30);
             btnEl.classList.add('running');
-            
+
             const clockSvgWhite = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
 
             activeRoutineTimer.start(
@@ -1925,7 +1925,7 @@
 
         function calcExpiryDots(openDateStr, paoMonths) {
             if (!paoMonths) return `<div class="expiry-dots" title="PAO не указан"><div class="dot dot-gray"></div><div class="dot dot-gray"></div><div class="dot dot-gray"></div></div>`;
-            
+
             let openDate;
             if (openDateStr && typeof openDateStr === 'string' && openDateStr.includes('-')) {
                 const parts = openDateStr.split('-');
@@ -2007,14 +2007,14 @@
             openDetailsAccordion();
 
             currentDetectedPreset = detectSmartPreset(val);
-            
+
             const isFullMatch = isComplete || localProductDictionary.some(item => item.toLowerCase() === cleanQuery) || products.some(p => p.name.toLowerCase() === cleanQuery);
-            
+
             applyFormStateFromPreset(currentDetectedPreset, isFullMatch);
 
             const userProducts = products.map(p => p.name);
             const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
-            
+
             let matchedLocal = combinedLocal.filter(item => item.toLowerCase().includes(cleanQuery));
             matchedLocal.sort((a, b) => {
                 const aL = a.toLowerCase();
@@ -2051,7 +2051,7 @@
             if (preset) {
                 if (preset.reason && showBanner) {
                     const bulbSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
-                    document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MySpa:</b> ${escapeHtml(preset.reason)}`;
+                    document.getElementById('smartPresetText').innerHTML = `<b>${bulbSvg} Совет MyLumy:</b> ${escapeHtml(preset.reason)}`;
                     banner.style.display = 'block';
                 } else {
                     banner.style.display = 'none';
@@ -2140,7 +2140,7 @@
 
             setPauseBefore(currentDetectedPreset.pauseBefore !== undefined && currentDetectedPreset.pauseBefore !== null ? currentDetectedPreset.pauseBefore : null);
             setPauseAfter(currentDetectedPreset.pauseAfter !== undefined && currentDetectedPreset.pauseAfter !== null ? currentDetectedPreset.pauseAfter : null);
-            
+
             const targetFreq = currentDetectedPreset.freqType || 'daily';
             document.getElementById('pFreqType').value = targetFreq;
             document.querySelectorAll('#freqPicker .picker-btn').forEach(b => {
@@ -2272,7 +2272,7 @@
             const freqType = document.getElementById('pFreqType').value;
             const openDate = document.getElementById('pOpenDate').value || getLocalTodayStr();
             const editId = document.getElementById('editProductId').value;
-            
+
             const existingItem = editId ? products.find(p => p.id === Number(editId)) : null;
             const addedDate = existingItem ? (existingItem.addedDate || existingItem.openDate || getLocalTodayStr()) : getLocalTodayStr();
 
@@ -2308,7 +2308,7 @@
 
         function editProduct(id) {
             showForm();
-            
+
             const nameInput = document.getElementById('pName');
             if (nameInput) nameInput.focus();
 
@@ -2322,7 +2322,7 @@
 
             document.getElementById('editProductId').value = item.id;
             nameInput.value = item.name;
-            
+
             document.querySelectorAll('#typePicker .picker-btn').forEach(b => {
                 b.classList.toggle('active', b.dataset.type === item.type);
             });
@@ -2370,7 +2370,7 @@
             const targetId = Number(id);
             const popoverEl = document.getElementById(`popover-${targetId}`);
             const itemEl = document.getElementById(`manage-item-${targetId}`);
-            
+
             if (activePopoverProductId && activePopoverProductId !== targetId) {
                 closeAllPopovers();
             }
@@ -2414,7 +2414,7 @@
             document.getElementById('productFormContainer').classList.add('open');
             document.getElementById('listFooterButtons').style.display = 'none';
             document.getElementById('formFooterButtons').style.display = 'flex';
-            
+
             resetForm();
             closeDetailsAccordion();
 
@@ -2451,7 +2451,7 @@
             document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(c => c.classList.remove('active'));
             document.getElementById('pFreqType').value = 'daily';
             document.getElementById('daysGroup').style.display = 'none';
-            
+
             const defaultDays = [1, 4];
             document.querySelectorAll('.day-chip').forEach(chip => {
                 chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10)));
@@ -2572,13 +2572,13 @@
 
         function exportJsonFile() {
             triggerHaptic(20);
-            if (!confirm('Скачать архив данных MySpa?')) return;
+            if (!confirm('Скачать архив данных MyLumy?')) return;
             const data = getBackupData();
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `myspa_backup_${getLocalTodayStr()}.json`;
+            a.download = `mylumy_backup_${getLocalTodayStr()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
