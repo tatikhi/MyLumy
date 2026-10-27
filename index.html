@@ -8,19 +8,6 @@
     <meta http-equiv="Expires" content="0">
 
     <title>MyLumy</title>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113811190', 'ym');
-
-    ym(113811190, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/113811190" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <!-- Подключение шрифтовой пары: Alice (Заголовки/Брендинг) + Plus Jakarta Sans (Интерфейс) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -769,8 +756,8 @@
         #themeRow .picker-btn { border-radius: 11px; height: 38px; }
         #themeRow .picker-btn.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main); }
 
+        /* Обновлена сетка для 6 категорий (3x2) */
         .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
-        .type-picker-grid .picker-btn:last-child { grid-column: span 2; }
 
         .days-picker { display: flex; gap: 4px; width: 100%; margin-top: 6px; }
 
@@ -1137,6 +1124,7 @@
                                     <button type="button" class="picker-btn" data-type="Активы">Активы</button>
                                     <button type="button" class="picker-btn" data-type="Уход за глазами">Уход за глазами</button>
                                     <button type="button" class="picker-btn" data-type="Питание / Увлажнение">Питание / Увлажнение</button>
+                                    <button type="button" class="picker-btn" data-type="Защита от солнца (SPF)">Солнцезащита (SPF)</button>
                                 </div>
                             </div>
 
@@ -1261,7 +1249,6 @@
                     </div>
                 </div>
 
-                <!-- БЛОК С ССЫЛКАМИ НА ДОКУМЕНТЫ (С учетом смены репозитория на MyLumy) -->
                 <div class="form-section" style="margin-bottom: 12px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Документы</div>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -1289,7 +1276,6 @@
                 Ваш личный трекер для осознанного ухода за кожей.
             </div>
 
-            <!-- Medical Disclaimer (Отказ от мед. ответственности) -->
             <div style="background: rgba(192, 57, 43, 0.08); border: 1px solid rgba(192, 57, 43, 0.3); border-radius: 16px; padding: 14px; margin-bottom: 20px;">
                 <div style="font-size: 14px; font-weight: 700; color: #C0392B; margin-bottom: 6px;">
                     ⚠️ Важное предупреждение
@@ -1377,51 +1363,78 @@
             if (displayEl) displayEl.innerText = formatDateForDisplay(openDateVal);
         }
 
+        /* ОБНОВЛЕННЫЙ РАСШИРЕННЫЙ СЛОВАРЬ СРЕДСТВ */
         const localProductDictionary = [
-            "Патчи для глаз", "Патчи гидрогелевые", "Патчи с кофеином", "Патчи с микроиглами",
-            "Пенка для умывания", "Пенка очищающая", "Гель для умывания", "Гидрофильное масло", 
-            "Гидрофильный бальзам", "Мицеллярная вода", "Энзимная пудра", "Молочко для снятия макияжа", 
-            "Двухфазная жидкость", "Очищающий крем", "Мыло для лица",
+            // 1. Очищение
+            "Пенка для умывания", "Пенка очищающая", "Гель для умывания", "Гель-масло для умывания",
+            "Гидрофильное масло", "Гидрофильный бальзам", "Очищающий бальзам", "Мицеллярная вода", 
+            "Энзимная пудра", "Молочко для снятия макияжа", "Двухфазная жидкость", "Очищающий крем", "Мыло для лица",
+            "Cleansing Foam", "Cleansing Gel", "Cleansing Oil", "Cleansing Balm", "Micellar Water", "Enzyme Powder",
+
+            // 2. Тонизирование
             "Тонер увлажняющий", "Тонер успокаивающий", "Тонер с центеллой", "Тоник кислотный", 
-            "Отшелушивающий тоник", "Эссенция с муцином", "Эссенция с галактомисисом", "Софтнер", 
-            "Мист для лица", "Лосьон увлажняющий",
-            "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", "Сыворотка с витамином C", 
-            "Сыворотка с витамином с", "Сыворотка с ретинолом", "Сыворотка с пептидами", "Сыворотка с бакучиолом", 
-            "Сыворотка с центеллой", "Сыворотка с азелаиновой кислотой", "Сыворотка с салициловой кислотой", 
-            "Сыворотка с гликолевой кислотой", "Пилинг-сыворотка", "Ампульная сыворотка", "Бустер для лица",
-            "Сыворотка для век", "Сыворотка вокруг глаз", "Крем для век", "Крем вокруг глаз", "Гель для кожи вокруг глаз", "Гель для век",
-            "Увлажняющий крем", "Питательный крем", "Восстанавливающий крем", "Ламеллярный крем", 
-            "Эмульсия для лица", "Флюид увлажняющий", "Солнцезащитный крем SPF 50", "Солнцезащитный флюид SPF 30", 
-            "Солнцезащитный стик", "SPF кушон", "Ночная маска", "Тканевая маска", "Глиняная маска", 
-            "Альгинатная маска", "Карбокситерапия", "Пилинг-скатка", "Масло для лица", "Бальзам для губ",
-            "Cleansing Foam", "Cleansing Gel", "Cleansing Oil", "Micellar Water", "Toner", "Essence", 
-            "Mist", "Serum", "Retinol", "Vitamin C", "Niacinamide", "AHA BHA PHA Acid", "Hyaluronic Acid", 
-            "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
+            "Тонер с BHA-кислотой", "Тонер с PHA-кислотой", "Тонер с миндальной кислотой",
+            "Отшелушивающий тоник", "Эссенция с муцином", "Эссенция с галактомисисом", "Эссенция с комбучей", 
+            "Софтнер", "Мист для лица", "Лосьон увлажняющий", "Toner", "Essence", "Mist",
+
+            // 3. Активы & Сыворотки
+            "Сыворотка с ретинолом", "Сыворотка с ретиналем", "Сыворотка с третиноином",
+            "Сыворотка с витамином C", "Сыворотка с витамином с", "Сыворотка с аскорбиновой кислотой",
+            "Сыворотка с азелаиновой кислотой", "Гель с азелаиновой кислотой",
+            "Сыворотка с гиалуроновой кислотой", "Сыворотка с ниацинамидом", "Сыворотка с пептидами", 
+            "Сыворотка с медными пептидами", "Сыворотка с бакучиолом", "Сыворотка с центеллой", 
+            "Сыворотка с салициловой кислотой", "Сыворотка с гликолевой кислотой", "Сыворотка с миндальной кислотой",
+            "Сыворотка с полинуклеотидами (PDRN)", "Сыворотка с транексамовой кислотой", "Сыворотка с арбутином", 
+            "Пилинг-сыворотка", "Кислотный пилинг", "Ампульная сыворотка", "Бустер для лица",
+            "Точечный гель от прыщей", "Точечный крем с бензоилпероксидом", "Циндол / Точечная болтушка",
+            "Serum", "Retinol", "Retinal", "Vitamin C", "Niacinamide", "Azelaic Acid", "AHA BHA PHA Acid", 
+            "Hyaluronic Acid", "Peptide Serum", "PDRN Serum", "Tranexamic Acid",
+
+            // 4. Уход за глазами
+            "Патчи для глаз", "Патчи гидрогелевые", "Патчи с кофеином", "Патчи с микроиглами", "Патчи с волюфилином",
+            "Сыворотка для век", "Сыворотка вокруг глаз", "Крем для век", "Крем вокруг глаз", 
+            "Крем для век с ретиналем", "Крем для век с пептидами", "Гель для кожи вокруг глаз", "Гель для век",
+            "Eye Cream", "Eye Patch", "Eye Serum",
+
+            // 5. Питание / Увлажнение / Маски
+            "Увлажняющий крем", "Питательный крем", "Восстанавливающий крем", "Ламеллярный крем", "Cica-бальзам",
+            "Крем с церамидами", "Крем с центнеллой", "Эмульсия для лица", "Флюид увлажняющий", "Масло для лица", "Сквалан",
+            "Ночная маска", "Тканевая маска", "Глиняная маска", "Альгинатная маска", "Карбокситерапия", "Пилинг-скатка", "Бальзам для губ",
+            "Moisturizer", "Ceramide Cream", "Centella Cica", "Sheet Mask", "Sleeping Mask", "Clay Mask",
+
+            // 6. Защита от солнца (SPF)
+            "Солнцезащитный крем SPF 50", "Солнцезащитный флюид SPF 30", "Солнцезащитный флюид SPF 50",
+            "Солнцезащитный стик", "SPF кушон", "Солнцезащитный спрей SPF 50", "Солнцезащитное молочко SPF 50",
+            "SPF 50", "Sunscreen", "Sun Fluid", "Sun Stick"
         ];
 
-        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ */
+        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ (Учтена специфика dermatological skincare) */
         const SMART_PRESETS = [
+            // 1. РЕТИНОИДЫ (Ретинол, Ретиналь, Адапален, Третиноин, Тазаротен)
             {
-                keywords: ['ретинол', 'retinol', 'адапален', 'adapalene', 'третиноин', 'tretinoin'],
+                keywords: ['ретинол', 'retinol', 'ретиналь', 'retinal', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'тазаротен', 'tazarotene'],
+                type: 'Активы',
+                pao: '6',
+                tods: ['evening'],
+                freqType: 'custom',
+                days: [1, 4],
+                pauseBefore: 15,
+                pauseAfter: 15,
+                reason: 'Ретиноидам требуется нанесение на полностью сухую кожу (пауза 15 мин) и выдержка 15 мин до закрытия кремом. PAO — 6 месяцев.'
+            },
+            // 2. КИСЛОТЫ (AHA, BHA, PHA, Гликолевая, Салициловая, Молочная, Миндальная)
+            {
+                keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'миндаль', 'молочн', 'пилинг'],
                 type: 'Активы',
                 pao: '12',
                 tods: ['evening'],
                 freqType: 'custom',
                 days: [1, 4],
-                pauseBefore: 15,
-                pauseAfter: 10,
-                reason: 'Ретинолу требуется выдержка 15 минут до нанесения и 10 минут после.'
-            },
-            {
-                keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'пилинг'],
-                type: 'Активы',
-                tods: ['evening'],
-                freqType: 'custom',
-                days: [1, 4],
-                pauseBefore: 0,
+                pauseBefore: 5,
                 pauseAfter: 15,
-                reason: 'Кислотам требуется выдержка 15 минут после нанесения.'
+                reason: 'Кислотам требуется выдержка 15 минут для работы pH перед нанесением следующего средства.'
             },
+            // 3. ВИТАМИН C (Кислые и стабильные формы)
             {
                 keywords: ['витамин c', 'витамин с', 'витаминов с', 'vitamin c', 'ascorbic', 'аскорбинов'],
                 type: 'Активы',
@@ -1430,61 +1443,152 @@
                 freqType: 'daily',
                 pauseBefore: 0,
                 pauseAfter: 10,
-                reason: 'Витамин C требует выдержки 10 минут после нанесения.'
+                reason: 'Витамин C — главный антиоксидант под SPF. Кислым формам требуется выдержка 10 минут. PAO — 6 месяцев.'
             },
+            // 4. АЗЕЛАИНОВАЯ КИСЛОТА
             {
-                keywords: ['микроиглам', 'микроигольчат', 'кофеин', 'caffeine', 'патч', 'patch', 'сыворотка для век', 'сыворотка вокруг глаз', 'крем для век', 'крем вокруг глаз', 'гель для век', 'гель вокруг глаз', 'eye cream', 'eye patch', 'eye serum'],
-                type: 'Уход за глазами',
+                keywords: ['азелаин', 'azelaic', 'скинорен', 'азелик'],
+                type: 'Активы',
                 pao: '6',
-                tods: ['morning'],
+                tods: ['morning', 'evening'],
+                freqType: 'daily',
+                pauseBefore: 5,
+                pauseAfter: 10,
+                reason: 'Азелаиновая кислота наносится на сухую кожу с выдержкой 10 минут.'
+            },
+            // 5. ГИДРОФИЛЬНОЕ ОЧИЩЕНИЕ (1-й этап демакияжа)
+            {
+                keywords: ['гидрофильн', 'cleansing oil', 'cleansing balm', 'двухфазн', 'бальзам для снятия'],
+                type: 'Очищение',
+                pao: '12',
+                tods: ['evening'],
                 freqType: 'daily',
                 pauseBefore: 0,
-                pauseAfter: 10,
-                reason: 'Патчам и средствам для век требуется выдержка 10 минут после нанесения.'
-            },
-            {
-                keywords: ['маск', 'mask'],
-                type: 'Питание / Увлажнение',
-                tods: ['morning'],
-                freqType: 'custom',
-                days: [1, 4],
-                pauseBefore: 0,
                 pauseAfter: 0,
-                reason: 'Маски для лица применяются по индивидуальному графику ухода.'
+                reason: '1-й этап очищения растворяет SPF и макияж. Применяется строго в вечернем уходе.'
             },
+            // 6. СОЛНЦЕЗАЩИТА (SPF)
             {
-                keywords: ['spf', 'спф', 'солнц', 'sunscreen'],
-                type: 'Питание / Увлажнение',
+                keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'sun fluid', 'sun stick'],
+                type: 'Защита от солнца (SPF)',
+                pao: '6',
                 tods: ['morning'],
                 freqType: 'daily',
                 pauseBefore: 5,
                 pauseAfter: 15,
-                reason: 'SPF-фильтрам требуется выдержка 5 минут до нанесения и 15 минут после.'
+                reason: 'SPF наносится через 5 минут после увлажняющего крема. Выдержка 15 минут перед выходом на улицу или макияжем.'
             },
+            // 7. ЭНЗИМНАЯ ПУДРА / ЭКСФОЛИАНТЫ
             {
-                keywords: ['сыворотк', 'serum', 'ампул', 'бустер'],
-                type: 'Активы',
+                keywords: ['энзим', 'enzyme'],
+                type: 'Очищение',
+                pao: '12',
+                tods: ['evening'],
+                freqType: 'custom',
+                days: [2, 5],
+                pauseBefore: 0,
+                pauseAfter: 0,
+                reason: 'Энзимная пудра применяется 2-3 раза в неделю для глубокого очищения.'
+            },
+            // 8. ПАТЧИ ДЛЯ ГЛАЗ
+            {
+                keywords: ['патч', 'patch'],
+                type: 'Уход за глазами',
+                pao: '3',
+                tods: ['morning'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 15,
+                reason: 'Патчи наносятся утром на 15 минут. PAO после вскрытия баночки — 3 месяца.'
+            },
+            // 9. КРЕМЫ И СЫВОРОТКИ ДЛЯ ВЕК
+            {
+                keywords: ['сыворотка для век', 'сыворотка вокруг глаз', 'крем для век', 'крем вокруг глаз', 'гель для век', 'гель вокруг глаз', 'eye cream', 'eye serum'],
+                type: 'Уход за глазами',
+                pao: '6',
                 tods: ['morning', 'evening'],
                 freqType: 'daily',
                 pauseBefore: 0,
+                pauseAfter: 0,
+                reason: 'Крем/сыворотка для век применяется утром и вечером. Дополнительная пауза не требуется.'
+            },
+            // 10. ПЕПТИДЫ И ФАКТОРЫ РОСТА
+            {
+                keywords: ['пептид', 'peptide', 'matrixyl', 'argireline', 'pdrn'],
+                type: 'Активы',
+                pao: '12',
+                tods: ['morning', 'evening'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 5,
+                reason: 'Пептиды восстанавливают упругость. Не сочетайте в одном шаге с кислыми AHA/BHA (pH ломает пептидные связи).'
+            },
+            // 11. ТОЧЕЧНЫЕ СРЕДСТВА ОТ ПРЫЩЕЙ
+            {
+                keywords: ['бензоил', 'benzoyl', 'базирон', 'точечн', 'spot treatment', 'циндол'],
+                type: 'Активы',
+                pao: '6',
+                tods: ['evening'],
+                freqType: 'daily',
+                pauseBefore: 5,
                 pauseAfter: 10,
-                reason: 'Сывороткам требуется выдержка 10 минут после нанесения.'
+                reason: 'Точечные средства наносятся строго на воспаления.'
             },
+            // 12. НОЧНЫЕ МАСКИ
             {
-                keywords: ['увлажнят', 'увлажняющий', 'питательный', 'восстанавливающий', 'крем', 'moisturizer', 'эмульсия', 'флюид'],
+                keywords: ['ночная маск', 'sleeping mask', 'sleeping pack'],
                 type: 'Питание / Увлажнение',
-                tods: ['morning', 'evening'],
-                freqType: 'daily'
+                pao: '12',
+                tods: ['evening'],
+                freqType: 'custom',
+                days: [2, 5],
+                pauseBefore: 5,
+                pauseAfter: 0,
+                reason: 'Ночные маски наносятся вечером за 30 минут до сна вместо или поверх крема.'
             },
+            // 13. БАКУЧИОЛ
             {
-                keywords: ['пенк', 'гель для умыв', 'гидрофильн', 'мицелляр', 'foam', 'очищающ'],
-                type: 'Очищение',
+                keywords: ['бакучиол', 'bakuchiol'],
+                type: 'Активы',
+                pao: '12',
+                tods: ['morning', 'evening'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 5,
+                reason: 'Бакучиол — растительный аналог ретинола без фотосенсибилизации. Подходит на утро и вечер.'
+            },
+            // 14. БАЗОВЫЕ СЫВОРОТКИ (Гиалуроновая кислота, Центелла, Ниацинамид)
+            {
+                keywords: ['сыворотк', 'serum', 'ампул', 'бустер', 'ниацинамид', 'niacinamide', 'гиалурон', 'центелл', 'cica'],
+                type: 'Активы',
+                pao: '12',
+                tods: ['morning', 'evening'],
+                freqType: 'daily',
+                pauseBefore: 0,
+                pauseAfter: 0,
+                reason: 'Базовые увлажняющие сыворотки закрываются кремом через 1-2 минуты, пока кожа слегка влажная.'
+            },
+            // 15. УВЛАЖНЯЮЩИЕ И ПИТАТЕЛЬНЫЕ КРЕМЫ
+            {
+                keywords: ['увлажнят', 'увлажняющий', 'питательный', 'восстанавливающий', 'крем', 'moisturizer', 'эмульсия', 'флюид', 'церамид', 'ceramide', 'ламелляр'],
+                type: 'Питание / Увлажнение',
+                pao: '12',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
             },
+            // 16. ПЕНКИ И ГЕЛИ ДЛЯ УМЫВАНИЯ (2-й этап)
+            {
+                keywords: ['пенк', 'гель для умыв', 'мицелляр', 'foam', 'очищающ'],
+                type: 'Очищение',
+                pao: '12',
+                tods: ['morning', 'evening'],
+                freqType: 'daily'
+            },
+            // 17. ТОНЕРЫ И ТОНИКИ
             {
                 keywords: ['тонер', 'тоник', 'эссенци', 'toner'],
                 type: 'Тонизирование',
+                pao: '12',
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
             }
@@ -1627,8 +1731,9 @@
         let calCurrentViewDate = new Date();
         let calendarTargetMode = 'routine';
 
-        const CATEGORIES = ["Очищение", "Тонизирование", "Активы", "Уход за глазами", "Питание / Увлажнение"];
-        const typeOrder = { "Очищение": 1, "Тонизирование": 2, "Активы": 3, "Уход за глазами": 4, "Питание / Увлажнение": 5 };
+        /* ОБНОВЛЕННЫЕ КАТЕГОРИИ С УЧЕТОМ SPF (Порядок шагов) */
+        const CATEGORIES = ["Очищение", "Тонизирование", "Активы", "Уход за глазами", "Питание / Увлажнение", "Защита от солнца (SPF)"];
+        const typeOrder = { "Очищение": 1, "Тонизирование": 2, "Активы": 3, "Уход за глазами": 4, "Питание / Увлажнение": 5, "Защита от солнца (SPF)": 6 };
 
         function getLocalTodayStr(d) {
             if (!d) {
@@ -1919,7 +2024,7 @@
             triggerHaptic(30);
             btnEl.classList.add('running');
 
-            const clockSvgWhite = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+            const clockSvgWhite = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>`;
 
             activeRoutineTimer.start(
                 mins,
@@ -2689,7 +2794,6 @@
                 safeStorage.setItem('cb_terms_agreed', 'true');
                 closeModalElement(document.getElementById('welcomeModal'));
             });
-            /* ------------------------------------------- */
 
             document.getElementById('currentDateChip').addEventListener('click', () => openCustomCalendar('routine'));
             document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
