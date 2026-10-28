@@ -109,6 +109,10 @@
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+        input, textarea, select {
+            caret-color: var(--accent-main); /* Явная установка цвета курсора ввода под активную тему */
+        }
+
         body {
             background-color: var(--bg-main);
             color: var(--text-primary);
@@ -699,6 +703,7 @@
             width: 100%; padding: 12px 14px; border-radius: 14px;
             border: 1px solid var(--border-color); background: var(--surface);
             color: var(--text-primary); font-size: 15.5px; font-weight: 500; outline: none;
+            caret-color: var(--accent-main);
         }
 
         .input-control-with-btn { padding-right: 44px; }
@@ -1195,16 +1200,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Кнопки формы перемещены внутрь прокручиваемой зоны -->
+                    <div id="formFooterButtons" style="display: flex; flex-direction: column; gap: 6px; margin-top: 14px; margin-bottom: 12px;">
+                        <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct">Сохранить средство</button>
+                        <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
+                    </div>
                 </div>
             </div>
 
             <div class="modal-footer-pinned" id="pinnedModalFooter">
                 <div id="listFooterButtons">
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCloseSettings" style="margin-top: 0;">Закрыть</button>
-                </div>
-                <div id="formFooterButtons" style="display: none; flex-direction: column; gap: 6px;">
-                    <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct">Сохранить средство</button>
-                    <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
                 </div>
             </div>
         </div>
@@ -1386,7 +1393,7 @@
             "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
-        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ (С поиском по корням слов и исключением гиалуроновой кислоты) */
+        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ (С разделением масок на УТРО и ВЕЧЕР) */
         const SMART_PRESETS = [
             // 0. ИСКЛЮЧЕНИЯ (Проверяются первыми, чтобы избежать ложных срабатываний)
             {
@@ -1399,7 +1406,7 @@
                 pauseAfter: 0,
                 reason: 'Увлажняющие компоненты (гиалуроновая кислота, пантенол) нужно закрывать кремом сразу, пока кожа влажная.'
             },
-            // 1. РЕТИНОИДЫ (Поиск по корню "ретин" охватывает ретинол, ретиналь, ретиноевую кислоту и т.д.)
+            // 1. РЕТИНОИДЫ
             {
                 keywords: ['ретин', 'retin', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'тазаротен', 'дифферин'],
                 type: 'Активы',
@@ -1479,7 +1486,7 @@
                 pauseAfter: 0,
                 reason: 'Энзимная пудра применяется 2-3 раза в неделю для глубокого очищения.'
             },
-            // 8. ПАТЧИ ДЛЯ ГЛАЗ
+            // 8. ПАТЧИ ДЛЯ ГЛАЗ (УТРО)
             {
                 keywords: ['патч', 'patch'],
                 type: 'Уход за глазами',
@@ -1488,9 +1495,21 @@
                 freqType: 'daily',
                 pauseBefore: 0,
                 pauseAfter: 15,
-                reason: 'Патчам и средствам для век требуется выдержка 10-15 минут после нанесения.'
+                reason: 'Патчи подготавливают кожу к макияжу, снимают отечность и тонизируют утром.'
             },
-            // 9. КРЕМЫ И СЫВОРОТКИ ДЛЯ ВЕК
+            // 9. ТКАНЕВЫЕ МАСКИ (УТРО)
+            {
+                keywords: ['тканев', 'sheet mask'],
+                type: 'Питание / Увлажнение',
+                pao: '12',
+                tods: ['morning'],
+                freqType: 'custom',
+                days: [2, 5],
+                pauseBefore: 0,
+                pauseAfter: 0,
+                reason: 'Тканевые маски освежают, интенсивно увлажняют и снимают следы сна перед макияжем.'
+            },
+            // 10. КРЕМЫ И СЫВОРОТКИ ДЛЯ ВЕК
             {
                 keywords: ['век', 'вокруг глаз', 'eye cream', 'eye serum'],
                 type: 'Уход за глазами',
@@ -1501,7 +1520,7 @@
                 pauseAfter: 0,
                 reason: 'Крем/сыворотка для век применяется утром и вечером. Дополнительная пауза не требуется.'
             },
-            // 10. ПЕПТИДЫ И ФАКТОРЫ РОСТА
+            // 11. ПЕПТИДЫ И ФАКТОРЫ РОСТА
             {
                 keywords: ['пептид', 'peptide', 'matrixyl', 'argireline', 'pdrn', 'полинуклеотид'],
                 type: 'Активы',
@@ -1512,7 +1531,7 @@
                 pauseAfter: 5,
                 reason: 'Пептиды восстанавливают упругость. Не сочетайте в одном шаге с кислыми AHA/BHA (pH ломает пептидные связи).'
             },
-            // 11. ТОЧЕЧНЫЕ СРЕДСТВА
+            // 12. ТОЧЕЧНЫЕ СРЕДСТВА
             {
                 keywords: ['бензоил', 'benzoyl', 'базирон', 'точечн', 'spot', 'циндол', 'прыщ', 'болтушка'],
                 type: 'Активы',
@@ -1523,7 +1542,7 @@
                 pauseAfter: 10,
                 reason: 'Точечные средства наносятся строго локально на воспаления.'
             },
-            // 12. НОЧНЫЕ МАСКИ
+            // 13. НОЧНЫЕ МАСКИ (ВЕЧЕР)
             {
                 keywords: ['ночн', 'sleeping'],
                 type: 'Питание / Увлажнение',
@@ -1535,19 +1554,19 @@
                 pauseAfter: 0,
                 reason: 'Ночные маски наносятся вечером за 30 минут до сна вместо или поверх крема.'
             },
-            // 13. БАЗОВЫЕ МАСКИ (Тканевые, глиняные, альгинатные)
+            // 14. СМЫВАЕМЫЕ И АЛЬГИНАТНЫЕ МАСКИ (ВЕЧЕР)
             {
-                keywords: ['маск', 'mask', 'тканев', 'глинян', 'альгинат'],
+                keywords: ['маск', 'mask', 'глинян', 'альгинат'],
                 type: 'Питание / Увлажнение',
                 pao: '12',
-                tods: ['morning', 'evening'],
+                tods: ['evening'],
                 freqType: 'custom',
                 days: [2, 5],
                 pauseBefore: 0,
                 pauseAfter: 0,
-                reason: 'Очищающие и питательные маски используются 1-3 раза в неделю.'
+                reason: 'Очищающие, смываемые и альгинатные маски используются 1–3 раза в неделю в вечернем ритуале.'
             },
-            // 14. БАКУЧИОЛ
+            // 15. БАКУЧИОЛ
             {
                 keywords: ['бакучиол', 'bakuchiol'],
                 type: 'Активы',
@@ -1558,7 +1577,7 @@
                 pauseAfter: 5,
                 reason: 'Бакучиол — растительный аналог ретинола без фотосенсибилизации. Подходит на утро и вечер.'
             },
-            // 15. БАЗОВЫЕ СЫВОРОТКИ (Ниацинамид, центелла и др.)
+            // 16. БАЗОВЫЕ СЫВОРОТКИ (Ниацинамид, центелла и др.)
             {
                 keywords: ['сыворотк', 'serum', 'ампул', 'бустер', 'ниацинамид', 'niacinamide', 'центелл', 'cica'],
                 type: 'Активы',
@@ -1569,7 +1588,7 @@
                 pauseAfter: 0,
                 reason: 'Базовые сыворотки закрываются кремом через 1-2 минуты, пока кожа слегка влажная.'
             },
-            // 16. УВЛАЖНЯЮЩИЕ И ПИТАТЕЛЬНЫЕ КРЕМЫ
+            // 17. УВЛАЖНЯЮЩИЕ И ПИТАТЕЛЬНЫЕ КРЕМЫ
             {
                 keywords: ['увлажня', 'питательн', 'восстанавлива', 'крем', 'moisturizer', 'эмульсия', 'флюид', 'церамид', 'ceramide', 'ламелляр'],
                 type: 'Питание / Увлажнение',
@@ -1577,7 +1596,7 @@
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
             },
-            // 17. ПЕНКИ И ГЕЛИ ДЛЯ УМЫВАНИЯ (2-й этап)
+            // 18. ПЕНКИ И ГЕЛИ ДЛЯ УМЫВАНИЯ (2-й этап)
             {
                 keywords: ['пенк', 'гель для умыв', 'умывалка', 'foam', 'очищающ', 'мицелляр'],
                 type: 'Очищение',
@@ -1585,7 +1604,7 @@
                 tods: ['morning', 'evening'],
                 freqType: 'daily'
             },
-            // 18. ТОНЕРЫ И ТОНИКИ
+            // 19. ТОНЕРЫ И ТОНИКИ
             {
                 keywords: ['тонер', 'тоник', 'эссенци', 'toner', 'лосьон'],
                 type: 'Тонизирование',
@@ -2530,8 +2549,7 @@
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('settingsModalHeader').style.display = 'none';
             document.getElementById('productFormContainer').classList.add('open');
-            document.getElementById('listFooterButtons').style.display = 'none';
-            document.getElementById('formFooterButtons').style.display = 'flex';
+            document.getElementById('pinnedModalFooter').style.display = 'none';
 
             resetForm();
             closeDetailsAccordion();
@@ -2552,8 +2570,7 @@
             document.getElementById('settingsModalHeader').style.display = 'none';
             document.getElementById('manageList').style.display = 'flex';
             document.getElementById('btnAddToggle').style.display = 'block';
-            document.getElementById('listFooterButtons').style.display = 'block';
-            document.getElementById('formFooterButtons').style.display = 'none';
+            document.getElementById('pinnedModalFooter').style.display = 'block';
             resetForm();
             closeDetailsAccordion();
         }
