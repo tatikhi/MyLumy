@@ -1037,6 +1037,17 @@
     </style>
 </head>
 <body>
+    <!-- Мгновенная установка темы из localStorage до отрисовки кадров -->
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('cb_theme');
+                if (savedTheme) {
+                    document.body.setAttribute('data-theme', savedTheme);
+                }
+            } catch(e) {}
+        })();
+    </script>
 
     <div class="header-bar">
         <div class="logo">MyLumy</div>
@@ -2893,11 +2904,20 @@
                 await tgCloud.setItem('cb_install_date', installDateStr);
             }
 
+            // Загружаем тему из Облака
             const cloudTheme = await tgCloud.getItem('cb_theme');
             if (cloudTheme) {
-                document.body.setAttribute('data-theme', cloudTheme);
+                // Избегаем повторной перерисовки если тема уже совпадает с той что в localStorage
+                if (document.body.getAttribute('data-theme') !== cloudTheme) {
+                    document.body.setAttribute('data-theme', cloudTheme);
+                }
                 document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
                     b.classList.toggle('active', b.dataset.theme === cloudTheme);
+                });
+            } else {
+                const currentTheme = document.body.getAttribute('data-theme') || 'nude';
+                document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
+                    b.classList.toggle('active', b.dataset.theme === currentTheme);
                 });
             }
 
