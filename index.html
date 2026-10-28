@@ -1381,6 +1381,16 @@
             }
         };
 
+        function confirmAction(message, onConfirm) {
+            if (window.Telegram?.WebApp?.showConfirm) {
+                window.Telegram.WebApp.showConfirm(message, (approved) => {
+                    if (approved) onConfirm();
+                });
+            } else {
+                if (confirm(message)) onConfirm();
+            }
+        }
+
         function escapeHtml(str) {
             if (typeof str !== 'string') return '';
             return str.replace(/[&<>"']/g, function(m) {
@@ -2426,13 +2436,16 @@
         }
 
         function deleteProduct(id) {
-            triggerHaptic(30);
-            closeAutocomplete();
-            closeAllPopovers();
-            products = products.filter(p => p.id !== Number(id));
-            saveProductsSync();
-            renderManageList();
-            renderRoutine();
+            confirmAction('Удалить это средство из вашей коллекции?', () => {
+                triggerHaptic(30);
+                closeAutocomplete();
+                closeAllPopovers();
+                products = products.filter(p => p.id !== Number(id));
+                saveProductsSync();
+                renderManageList();
+                renderRoutine();
+                showToast('Средство удалено');
+            });
         }
 
         function toggleProductPopover(e, id) {
@@ -2632,6 +2645,7 @@
                 if (data.theme) setTheme(data.theme);
                 renderManageList();
                 switchTOD(currentTOD);
+                showToast('Данные успешно загружены!');
                 return true;
             } catch (err) {
                 showToast('Ошибка применения архива');
@@ -2639,19 +2653,97 @@
             }
         }
 
-        function exportJsonFile() {
+        async function exportJsonFile() {
             triggerHaptic(20);
-            if (!confirm('Скачать архив данных MyLumy?')) return;
             const data = getBackupData();
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `mylumy_backup_${getLocalTodayStr()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            const jsonString = JSON.stringify(data, null, 2);
+            const filename = `mylumy_backup_${getLocalTodayStr()}.json`;
+            const file = new File([jsonString], filename, { type: 'application/json' });
+
+            // 1. Попытка через Web Share API (Системное шторка "Сохранить в Файлы")
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: 'Архив MyLumy',
+                        text: 'Резервная копия данных MyLumy',
+                        files: [file]
+                    });
+                    showToast('Архив экспортирован!');
+                    return;
+                } catch (err) {
+                    if (err.name === 'AbortError') return; // Пользователь сам закрыл шторку
+                }
+            }
+
+            // 2. Если мы внутри Telegram WebApp — открываем системный браузер (Safari / Chrome)
+            if (window.Telegram?.WebApp?.openLink) {
+                const encoded = toBase64(jsonString);
+                const downloadUrl = `${window.location.origin}${window.location.pathname}#download=${encoded}`;
+                showToast('Переходим в браузер для скачивания...');
+                setTimeout(() => {
+                    window.Telegram.WebApp.openLink(downloadUrl);
+                }, 300);
+                return;
+            }
+
+            // 3. Обычный браузер вне Telegram
+            try {
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                showToast('Файл скачан!');
+            } catch (e) {
+                showToast('Ошибка при скачивании файла');
+            }
+        }
+
+        function checkUrlDownload() {
+            if (window.location.hash && window.location.hash.startsWith('#download=')) {
+                const rawHash = window.location.hash.substring(10);
+                if (!rawHash) return;
+                try {
+                    const jsonString = fromBase64(rawHash);
+                    const filename = `mylumy_backup_${getLocalTodayStr()}.json`;
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    showToast("Файл архива успешно скачан!");
+                    history.replaceState(null, null, window.location.pathname);
+                } catch (err) {
+                    console.error('Ошибка автоматического скачивания:', err);
+                }
+            }
+        }
+
+        async function triggerImportJson() {
+            triggerHaptic(20);
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if (text && text.trim().startsWith('{') && text.trim().endsWith('}')) {
+                        const data = JSON.parse(text);
+                        if (data && Array.isArray(data.products)) {
+                            confirmAction('Перезаписать текущую коллекцию новыми данными из буфера обмена?', () => {
+                                applyImportData(data);
+                            });
+                            return;
+                        }
+                    }
+                } catch (e) {}
+            }
+            document.getElementById('jsonFileInput').click();
         }
 
         function importJsonFile(file) {
@@ -2661,9 +2753,9 @@
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (confirm('Перезаписать текущую коллекцию средств новыми данными из архива?')) {
+                    confirmAction('Перезаписать текущую коллекцию средств новыми данными из архива?', () => {
                         applyImportData(data);
-                    }
+                    });
                 } catch (err) {
                     showToast('Ошибка чтения файла.');
                 }
@@ -2698,9 +2790,9 @@
                 try {
                     const data = JSON.parse(fromBase64(rawHash));
                     setTimeout(() => {
-                        if (confirm('Перезаписать текущую коллекцию средств новыми данными из архива?')) {
+                        confirmAction('Перезаписать текущую коллекцию средств новыми данными из архива?', () => {
                             applyImportData(data);
-                        }
+                        });
                         history.replaceState(null, null, window.location.pathname);
                     }, 400);
                 } catch (err) {}
@@ -2747,7 +2839,6 @@
                         products = parsed;
                         renderManageList();
                         renderRoutine();
-                        // Авто-миграция средств в облако Telegram
                         saveProductsSync();
                     }
                 } catch (e) {
@@ -2765,6 +2856,7 @@
                 history.replaceState(null, null, window.location.pathname + window.location.hash);
             }
 
+            checkUrlDownload();
             checkUrlImport();
 
             /* ЛОГИКА СТАРТОВОГО ЭКРАНА С ПРИНЯТИЕМ ПРАВИЛ */
@@ -2879,7 +2971,7 @@
             document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
             document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
             document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
-            document.getElementById('btnImportJson').addEventListener('click', () => document.getElementById('jsonFileInput').click());
+            document.getElementById('btnImportJson').addEventListener('click', triggerImportJson);
             document.getElementById('jsonFileInput').addEventListener('change', (e) => {
                 if (e.target.files && e.target.files[0]) importJsonFile(e.target.files[0]);
             });
