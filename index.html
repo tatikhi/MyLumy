@@ -1318,7 +1318,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = 'v0.1.8d';
+        const APP_VERSION = 'v0.1.8e';
 
         // Универсальный модуль синхронизации с Telegram CloudStorage + LocalStorage
         const tgCloud = {
@@ -1701,6 +1701,48 @@
         const CATEGORIES = ["Очищение", "Тонизирование", "Активы", "Уход за глазами", "Питание / Увлажнение", "SPF / Защита"];
         const typeOrder = { "Очищение": 1, "Тонизирование": 2, "Активы": 3, "Уход за глазами": 4, "Питание / Увлажнение": 5, "SPF / Защита": 6 };
 
+        // НОВЫЙ АЛГОРИТМ СОРТИРОВКИ (Определяет приоритет внутри категорий и исключений)
+        function getSortWeight(item) {
+            const name = (item.name || '').toLowerCase();
+            const baseCategoryWeight = (typeOrder[item.type] || 99) * 100;
+            let subWeight = 50;
+
+            // 1. Исключения (Кросс-категорийные форматы):
+            if (name.includes('патч')) return 250; 
+            if (name.includes('тканев') && name.includes('маск')) return 260; 
+            if (name.includes('пилинг-скатка') || name.includes('глинян') || name.includes('альгинат') || name.includes('очищающ маск')) return 180; 
+            if (name.includes('точечн') || name.includes('прыщ') || name.includes('бензоил') || name.includes('циндол')) return 580; 
+
+            // 2. Внутренняя иерархия по категориям:
+            if (item.type === 'Очищение') {
+                if (name.includes('гидрофильн') || name.includes('масло') || name.includes('бальзам') || name.includes('мицелляр') || name.includes('двухфазн')) subWeight = 10;
+                else if (name.includes('энзим') || name.includes('пудра')) subWeight = 20;
+                else if (name.includes('пенка') || name.includes('гель') || name.includes('умывалк') || name.includes('foam') || name.includes('мыло')) subWeight = 30;
+            }
+            else if (item.type === 'Тонизирование') {
+                if (name.includes('пэд') || name.includes('отшелушивающ')) subWeight = 10;
+                else if (name.includes('тонер') || name.includes('тоник') || name.includes('лосьон')) subWeight = 20;
+                else if (name.includes('мист') || name.includes('софтнер')) subWeight = 30;
+            }
+            else if (item.type === 'Активы') {
+                if (name.includes('эссенци')) subWeight = 10; 
+                else if (name.includes('сыворотк') || name.includes('serum') || name.includes('ампул') || name.includes('бустер')) subWeight = 20;
+                else if (name.includes('ретин') || name.includes('кислот')) subWeight = 30; 
+            }
+            else if (item.type === 'Уход за глазами') {
+                if (name.includes('сыворотк') || name.includes('гель')) subWeight = 10;
+                else if (name.includes('крем')) subWeight = 20;
+            }
+            else if (item.type === 'Питание / Увлажнение') {
+                if (name.includes('эмульси') || name.includes('флюид')) subWeight = 10;
+                else if (name.includes('крем') || name.includes('moisturizer') || name.includes('лосьон')) subWeight = 20;
+                else if (name.includes('масло для лица')) subWeight = 30;
+                else if (name.includes('ночн') && name.includes('маск')) subWeight = 40; 
+            }
+
+            return baseCategoryWeight + subWeight;
+        }
+
         function getLocalTodayStr(d) {
             if (!d) {
                 const now = new Date();
@@ -1874,7 +1916,8 @@
                 return matchTOD && matchDay;
             });
 
-            activeProducts.sort((a, b) => (typeOrder[a.type] || 99) - (typeOrder[b.type] || 99));
+            // ИСПОЛЬЗУЕМ НОВУЮ СОРТИРОВКУ ПО ВЕСУ
+            activeProducts.sort((a, b) => getSortWeight(a) - getSortWeight(b));
             return activeProducts;
         }
 
