@@ -2743,10 +2743,12 @@
             if (cloudProductsJson) {
                 try {
                     const parsed = typeof cloudProductsJson === 'string' ? JSON.parse(cloudProductsJson) : cloudProductsJson;
-                    if (Array.isArray(parsed)) {
+                    if (Array.isArray(parsed) && parsed.length > 0) {
                         products = parsed;
                         renderManageList();
                         renderRoutine();
+                        // Авто-миграция средств в облако Telegram
+                        saveProductsSync();
                     }
                 } catch (e) {
                     console.error('Ошибка разбора данных средств из Telegram Cloud:', e);
