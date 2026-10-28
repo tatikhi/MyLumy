@@ -169,10 +169,22 @@
             touch-action: manipulation;
         }
 
-        /* Точечное отключение выделения только для интерактива */
-        button, .date-chip, .tod-btn, .picker-btn, .day-chip, .pao-chip, .toggle-switch, .category-header-btn, .manage-item, .svg-icon {
-            -webkit-user-select: none;
-            user-select: none;
+        /* Принудительно разрешаем выделение текста и контекстное меню для Telegram WebApp */
+        body, p, span, div, label, 
+        .item-name, .item-tag, .toast-notification, 
+        .version-text, #smartPresetText, .item-details {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+            -webkit-touch-callout: default !important;
+        }
+
+        /* Блокируем выделение строго для интерактивных кнопок и переключателей */
+        button, input[type="button"], .picker-btn, .day-chip, 
+        .pao-chip, .toggle-switch, .tod-btn, .date-chip, 
+        .cal-day-cell, .svg-icon, .category-header-btn, .manage-item {
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
         }
 
         body.theme-animated * {
@@ -899,11 +911,18 @@
         .picker-group { display: flex; gap: 5px; }
 
         .picker-btn {
-            flex: 1; padding: 9px 5px; border-radius: 11px;
+            flex: 1; padding: 8px 6px; border-radius: 11px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: calc(13.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
+            font-size: calc(12.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
-            touch-action: manipulation; min-width: 0; white-space: nowrap;
+            touch-action: manipulation; min-width: 0;
+            white-space: normal !important;
+            word-break: break-word;
+            line-height: 1.25;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .picker-btn.active {
@@ -914,7 +933,7 @@
         #themeRow .picker-btn { border-radius: 11px; height: 38px; }
         #themeRow .picker-btn.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main); }
 
-        .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+        .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
 
         .days-picker { display: flex; gap: 4px; width: 100%; margin-top: 6px; }
 
@@ -988,11 +1007,21 @@
             color: var(--text-primary); font-size: calc(clamp(16.5px, 4.4vw, 18.5px) * var(--font-scale));
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease;
-            touch-action: manipulation;
+            touch-action: manipulation; gap: 8px;
         }
 
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
-        .category-title-text { font-family: 'Alice', Georgia, serif; font-size: calc(clamp(19px, 5vw, 22px) * var(--font-scale)); font-weight: 400; text-transform: none; }
+        .category-title-text {
+            font-family: 'Alice', Georgia, serif;
+            font-size: calc(clamp(16px, 4.2vw, 19px) * var(--font-scale));
+            font-weight: 400;
+            text-transform: none;
+            flex: 1;
+            min-width: 0;
+            line-height: 1.25;
+            word-break: break-word;
+            text-align: left;
+        }
         .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: calc(14px * var(--font-scale)); color: var(--text-secondary); font-weight: 500; }
 
         .category-chevron {
