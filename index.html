@@ -362,6 +362,22 @@
             transform: translateY(-1px);
         }
 
+        .pro-badge {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-main);
+            background: var(--accent-light);
+            border: 1px solid var(--accent-main);
+            padding: 2px 7px;
+            border-radius: 8px;
+            margin-left: 8px;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1.2;
+        }
+
         .settings-card-wrapper {
             background: var(--surface);
             border-radius: 24px;
@@ -1099,7 +1115,9 @@
         <div class="routine-list" id="routineContainer"></div>
 
         <div class="main-card-actions">
-            <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">Мои средства</button>
+            <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenSettings">
+                Мои средства <span class="pro-badge" id="proBadge" style="display: none;">PRO</span>
+            </button>
         </div>
     </div>
 
@@ -1326,13 +1344,13 @@
 
             <div class="modal-body-scrollable">
                 
-                <!-- Блок переключения режима "Super коллекция" -->
+                <!-- Блок переключения режима "Мои средства PRO" -->
                 <div class="form-section" style="margin-bottom: 12px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Продвинутый режим</div>
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                         <div>
-                            <div style="font-size: 15px; font-weight: 600; color: var(--text-primary);">Super коллекция</div>
-                            <div style="font-size: 12.5px; color: var(--text-secondary); margin-top: 2px;">Расширенный список средств в уходе и на паузе</div>
+                            <div style="font-size: 15px; font-weight: 600; color: var(--text-primary);">Мои средства PRO</div>
+                            <div style="font-size: 12.5px; color: var(--text-secondary); margin-top: 2px;">расширенный список средств</div>
                         </div>
                         <label class="toggle-switch">
                             <input type="checkbox" id="toggleSuperCollection">
@@ -1523,6 +1541,13 @@
             const openDateVal = document.getElementById('pOpenDate').value || getLocalTodayStr();
             const displayEl = document.getElementById('displayOpenDate');
             if (displayEl) displayEl.innerText = formatDateForDisplay(openDateVal);
+        }
+
+        function updateProBadgeUI() {
+            const proBadge = document.getElementById('proBadge');
+            if (proBadge) {
+                proBadge.style.display = isSuperCollectionEnabled ? 'inline-block' : 'none';
+            }
         }
 
         const localProductDictionary = [
@@ -2687,6 +2712,7 @@
                     safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled));
                     tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled));
                     document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled;
+                    updateProBadgeUI();
                 }
 
                 products = data.products.map(p => ({
@@ -2827,6 +2853,7 @@
                 safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled));
             }
             document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled;
+            updateProBadgeUI();
 
             const cloudInstallDate = await tgCloud.getItem('cb_install_date');
             if (cloudInstallDate) {
@@ -2852,13 +2879,16 @@
 
             const toggleSuperEl = document.getElementById('toggleSuperCollection');
             toggleSuperEl.checked = isSuperCollectionEnabled;
+            updateProBadgeUI();
+
             toggleSuperEl.addEventListener('change', (e) => {
                 triggerHaptic(20);
                 isSuperCollectionEnabled = e.target.checked;
                 safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled));
                 tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled));
+                updateProBadgeUI();
                 renderManageList();
-                showToast(isSuperCollectionEnabled ? 'Super коллекция включена' : 'Super коллекция отключена');
+                showToast(isSuperCollectionEnabled ? 'Режим PRO включен' : 'Режим PRO отключен');
             });
 
             document.getElementById('btnActionTogglePause').addEventListener('click', toggleProductRoutineAction);
