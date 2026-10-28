@@ -1407,7 +1407,12 @@
         };
 
         function confirmAction(message, onConfirm) {
-            if (window.Telegram?.WebApp?.showConfirm) {
+            const isTelegram = window.Telegram && 
+                               window.Telegram.WebApp && 
+                               window.Telegram.WebApp.platform !== 'unknown' && 
+                               window.Telegram.WebApp.initData !== '';
+
+            if (isTelegram && window.Telegram.WebApp.showConfirm) {
                 window.Telegram.WebApp.showConfirm(message, (approved) => {
                     if (approved) onConfirm();
                 });
