@@ -8,6 +8,9 @@
     <meta http-equiv="Expires" content="0">
 
     <title>MyLumy</title>
+    <!-- Подключение Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <!-- Подключение шрифтовой пары: Alice (Заголовки/Брендинг) + Plus Jakarta Sans (Интерфейс) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,7 +113,7 @@
         }
 
         input, textarea, select {
-            caret-color: var(--accent-main); /* Явная установка цвета курсора ввода под активную тему */
+            caret-color: var(--accent-main);
         }
 
         body {
@@ -1201,7 +1204,7 @@
                         </div>
                     </div>
 
-                    <!-- Кнопки формы перемещены внутрь прокручиваемой зоны -->
+                    <!-- Кнопки формы внутрь прокручиваемой зоны -->
                     <div id="formFooterButtons" style="display: flex; flex-direction: column; gap: 6px; margin-top: 14px; margin-bottom: 12px;">
                         <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct">Сохранить средство</button>
                         <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
@@ -1283,7 +1286,6 @@
                 Ваш личный трекер для осознанного ухода за кожей.
             </div>
 
-            <!-- Medical Disclaimer -->
             <div style="background: rgba(192, 57, 43, 0.08); border: 1px solid rgba(192, 57, 43, 0.3); border-radius: 16px; padding: 14px; margin-bottom: 20px;">
                 <div style="font-size: 14px; font-weight: 700; color: #C0392B; margin-bottom: 6px;">
                     ⚠️ Важное предупреждение
@@ -1309,6 +1311,54 @@
 
     <script>
         const APP_VERSION = 'v0.1.8b';
+
+        // Универсальный модуль синхронизации с Telegram CloudStorage + LocalStorage
+        const tgCloud = {
+            isAvailable() {
+                return !!(window.Telegram?.WebApp?.CloudStorage);
+            },
+            setItem(key, value) {
+                return new Promise((resolve) => {
+                    const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+                    safeStorage.setItem(key, strValue);
+                    if (this.isAvailable()) {
+                        window.Telegram.WebApp.CloudStorage.setItem(key, strValue, (err, success) => {
+                            if (err) console.error(`[Telegram CloudStorage] Ошибка записи ${key}:`, err);
+                            resolve(success);
+                        });
+                    } else {
+                        resolve(true);
+                    }
+                });
+            },
+            getItem(key) {
+                return new Promise((resolve) => {
+                    if (this.isAvailable()) {
+                        window.Telegram.WebApp.CloudStorage.getItem(key, (err, value) => {
+                            if (!err && value !== null && value !== undefined && value !== '') {
+                                resolve(value);
+                            } else {
+                                resolve(safeStorage.getItem(key) || null);
+                            }
+                        });
+                    } else {
+                        resolve(safeStorage.getItem(key) || null);
+                    }
+                });
+            },
+            removeItem(key) {
+                return new Promise((resolve) => {
+                    safeStorage.removeItem(key);
+                    if (this.isAvailable()) {
+                        window.Telegram.WebApp.CloudStorage.removeItem(key, (err, success) => {
+                            resolve(success);
+                        });
+                    } else {
+                        resolve(true);
+                    }
+                });
+            }
+        };
 
         function triggerHaptic(pattern = 15) {
             if (navigator.vibrate) {
@@ -1393,224 +1443,104 @@
             "Peptide Serum", "Eye Cream", "Eye Patch", "Moisturizer", "SPF 50", "Sunscreen", "Sheet Mask"
         ];
 
-        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ (С разделением масок на УТРО и ВЕЧЕР) */
+        /* ИНТЕЛЛЕКТУАЛЬНЫЕ ПРЕСЕТЫ */
         const SMART_PRESETS = [
-            // 0. ИСКЛЮЧЕНИЯ (Проверяются первыми, чтобы избежать ложных срабатываний)
             {
                 keywords: ['гиалурон', 'hyaluron', 'пантенол', 'pantenol', 'алоэ', 'aloe'],
-                type: 'Активы',
-                pao: '12',
-                tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 0,
+                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
                 reason: 'Увлажняющие компоненты (гиалуроновая кислота, пантенол) нужно закрывать кремом сразу, пока кожа влажная.'
             },
-            // 1. РЕТИНОИДЫ
             {
                 keywords: ['ретин', 'retin', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'тазаротен', 'дифферин'],
-                type: 'Активы',
-                pao: '6',
-                tods: ['evening'],
-                freqType: 'custom',
-                days: [1, 4],
-                pauseBefore: 15,
-                pauseAfter: 15,
+                type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15,
                 reason: 'Ретиноидам требуется нанесение на сухую кожу (пауза 15 мин) и выдержка 15 мин до закрытия кремом. PAO — 6 месяцев.'
             },
-            // 2. КИСЛОТЫ (AHA, BHA, PHA)
             {
                 keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'миндаль', 'молочн', 'пилинг'],
-                type: 'Активы',
-                pao: '12',
-                tods: ['evening'],
-                freqType: 'custom',
-                days: [1, 4],
-                pauseBefore: 5,
-                pauseAfter: 15,
+                type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 5, pauseAfter: 15,
                 reason: 'Кислотам требуется выдержка 15 минут для работы pH перед нанесением следующего средства.'
             },
-            // 3. ВИТАМИН C
             {
                 keywords: ['витамин c', 'витамин с', 'vitamin c', 'ascorbi', 'аскорбин'],
-                type: 'Активы',
-                pao: '6',
-                tods: ['morning'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 10,
+                type: 'Активы', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 0, pauseAfter: 10,
                 reason: 'Витамин C — главный антиоксидант под SPF. Требуется выдержка 10 минут. PAO — 6 месяцев.'
             },
-            // 4. АЗЕЛАИНОВАЯ КИСЛОТА
             {
                 keywords: ['азелаин', 'azelaic', 'скинорен', 'азелик'],
-                type: 'Активы',
-                pao: '6',
-                tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 5,
-                pauseAfter: 10,
+                type: 'Активы', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
                 reason: 'Азелаиновая кислота наносится на сухую кожу с выдержкой 10 минут.'
             },
-            // 5. ГИДРОФИЛЬНОЕ ОЧИЩЕНИЕ (1-й этап демакияжа)
             {
                 keywords: ['гидрофильн', 'cleansing oil', 'cleansing balm', 'двухфазн', 'бальзам для снятия'],
-                type: 'Очищение',
-                pao: '12',
-                tods: ['evening'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 0,
+                type: 'Очищение', pao: '12', tods: ['evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
                 reason: '1-й этап очищения растворяет SPF и макияж. Применяется строго в вечернем уходе.'
             },
-            // 6. СОЛНЦЕЗАЩИТА (SPF)
             {
                 keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'sun fluid', 'sun stick', 'санскрин'],
-                type: 'Питание / Увлажнение',
-                pao: '6',
-                tods: ['morning'],
-                freqType: 'daily',
-                pauseBefore: 5,
-                pauseAfter: 15,
+                type: 'Питание / Увлажнение', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 15,
                 reason: 'SPF-фильтрам требуется выдержка 5 минут до нанесения и 15 минут после.'
             },
-            // 7. ЭНЗИМНАЯ ПУДРА
             {
                 keywords: ['энзим', 'enzyme'],
-                type: 'Очищение',
-                pao: '12',
-                tods: ['evening'],
-                freqType: 'custom',
-                days: [2, 5],
-                pauseBefore: 0,
-                pauseAfter: 0,
+                type: 'Очищение', pao: '12', tods: ['evening'], freqType: 'custom', days: [2, 5], pauseBefore: 0, pauseAfter: 0,
                 reason: 'Энзимная пудра применяется 2-3 раза в неделю для глубокого очищения.'
             },
-            // 8. ПАТЧИ ДЛЯ ГЛАЗ (УТРО)
             {
                 keywords: ['патч', 'patch'],
-                type: 'Уход за глазами',
-                pao: '3',
-                tods: ['morning'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 15,
+                type: 'Уход за глазами', pao: '3', tods: ['morning'], freqType: 'daily', pauseBefore: 0, pauseAfter: 15,
                 reason: 'Патчи подготавливают кожу к макияжу, снимают отечность и тонизируют утром.'
             },
-            // 9. ТКАНЕВЫЕ МАСКИ (УТРО)
             {
                 keywords: ['тканев', 'sheet mask'],
-                type: 'Питание / Увлажнение',
-                pao: '12',
-                tods: ['morning'],
-                freqType: 'custom',
-                days: [2, 5],
-                pauseBefore: 0,
-                pauseAfter: 0,
+                type: 'Питание / Увлажнение', pao: '12', tods: ['morning'], freqType: 'custom', days: [2, 5], pauseBefore: 0, pauseAfter: 0,
                 reason: 'Тканевые маски освежают, интенсивно увлажняют и снимают следы сна перед макияжем.'
             },
-            // 10. КРЕМЫ И СЫВОРОТКИ ДЛЯ ВЕК
             {
                 keywords: ['век', 'вокруг глаз', 'eye cream', 'eye serum'],
-                type: 'Уход за глазами',
-                pao: '6',
-                tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 0,
+                type: 'Уход за глазами', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
                 reason: 'Крем/сыворотка для век применяется утром и вечером. Дополнительная пауза не требуется.'
             },
-            // 11. ПЕПТИДЫ И ФАКТОРЫ РОСТА
             {
                 keywords: ['пептид', 'peptide', 'matrixyl', 'argireline', 'pdrn', 'полинуклеотид'],
-                type: 'Активы',
-                pao: '12',
-                tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 5,
+                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 5,
                 reason: 'Пептиды восстанавливают упругость. Не сочетайте в одном шаге с кислыми AHA/BHA (pH ломает пептидные связи).'
             },
-            // 12. ТОЧЕЧНЫЕ СРЕДСТВА
             {
                 keywords: ['бензоил', 'benzoyl', 'базирон', 'точечн', 'spot', 'циндол', 'прыщ', 'болтушка'],
-                type: 'Активы',
-                pao: '6',
-                tods: ['evening'],
-                freqType: 'daily',
-                pauseBefore: 5,
-                pauseAfter: 10,
+                type: 'Активы', pao: '6', tods: ['evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
                 reason: 'Точечные средства наносятся строго локально на воспаления.'
             },
-            // 13. НОЧНЫЕ МАСКИ (ВЕЧЕР)
             {
                 keywords: ['ночн', 'sleeping'],
-                type: 'Питание / Увлажнение',
-                pao: '12',
-                tods: ['evening'],
-                freqType: 'custom',
-                days: [2, 5],
-                pauseBefore: 5,
-                pauseAfter: 0,
+                type: 'Питание / Увлажнение', pao: '12', tods: ['evening'], freqType: 'custom', days: [2, 5], pauseBefore: 5, pauseAfter: 0,
                 reason: 'Ночные маски наносятся вечером за 30 минут до сна вместо или поверх крема.'
             },
-            // 14. СМЫВАЕМЫЕ И АЛЬГИНАТНЫЕ МАСКИ (ВЕЧЕР)
             {
                 keywords: ['маск', 'mask', 'глинян', 'альгинат'],
-                type: 'Питание / Увлажнение',
-                pao: '12',
-                tods: ['evening'],
-                freqType: 'custom',
-                days: [2, 5],
-                pauseBefore: 0,
-                pauseAfter: 0,
+                type: 'Питание / Увлажнение', pao: '12', tods: ['evening'], freqType: 'custom', days: [2, 5], pauseBefore: 0, pauseAfter: 0,
                 reason: 'Очищающие, смываемые и альгинатные маски используются 1–3 раза в неделю в вечернем ритуале.'
             },
-            // 15. БАКУЧИОЛ
             {
                 keywords: ['бакучиол', 'bakuchiol'],
-                type: 'Активы',
-                pao: '12',
-                tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 5,
+                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 5,
                 reason: 'Бакучиол — растительный аналог ретинола без фотосенсибилизации. Подходит на утро и вечер.'
             },
-            // 16. БАЗОВЫЕ СЫВОРОТКИ (Ниацинамид, центелла и др.)
             {
                 keywords: ['сыворотк', 'serum', 'ампул', 'бустер', 'ниацинамид', 'niacinamide', 'центелл', 'cica'],
-                type: 'Активы',
-                pao: '12',
-                tods: ['morning', 'evening'],
-                freqType: 'daily',
-                pauseBefore: 0,
-                pauseAfter: 0,
+                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
                 reason: 'Базовые сыворотки закрываются кремом через 1-2 минуты, пока кожа слегка влажная.'
             },
-            // 17. УВЛАЖНЯЮЩИЕ И ПИТАТЕЛЬНЫЕ КРЕМЫ
             {
                 keywords: ['увлажня', 'питательн', 'восстанавлива', 'крем', 'moisturizer', 'эмульсия', 'флюид', 'церамид', 'ceramide', 'ламелляр'],
-                type: 'Питание / Увлажнение',
-                pao: '12',
-                tods: ['morning', 'evening'],
-                freqType: 'daily'
+                type: 'Питание / Увлажнение', pao: '12', tods: ['morning', 'evening'], freqType: 'daily'
             },
-            // 18. ПЕНКИ И ГЕЛИ ДЛЯ УМЫВАНИЯ (2-й этап)
             {
                 keywords: ['пенк', 'гель для умыв', 'умывалка', 'foam', 'очищающ', 'мицелляр'],
-                type: 'Очищение',
-                pao: '12',
-                tods: ['morning', 'evening'],
-                freqType: 'daily'
+                type: 'Очищение', pao: '12', tods: ['morning', 'evening'], freqType: 'daily'
             },
-            // 19. ТОНЕРЫ И ТОНИКИ
             {
                 keywords: ['тонер', 'тоник', 'эссенци', 'toner', 'лосьон'],
-                type: 'Тонизирование',
-                pao: '12',
-                tods: ['morning', 'evening'],
-                freqType: 'daily'
+                type: 'Тонизирование', pao: '12', tods: ['morning', 'evening'], freqType: 'daily'
             }
         ];
 
@@ -2394,6 +2324,10 @@
             setPauseAfter(selectedPauseAfterVal === mins ? null : mins);
         }
 
+        async function saveProductsSync() {
+            await tgCloud.setItem('cb_custom_products', products);
+        }
+
         function saveProduct() {
             triggerHaptic(30);
             const name = document.getElementById('pName').value.trim();
@@ -2437,7 +2371,7 @@
                 products.push(productData);
             }
 
-            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
+            saveProductsSync();
             renderManageList();
             hideForm();
             renderRoutine();
@@ -2496,7 +2430,7 @@
             closeAutocomplete();
             closeAllPopovers();
             products = products.filter(p => p.id !== Number(id));
-            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
+            saveProductsSync();
             renderManageList();
             renderRoutine();
         }
@@ -2687,8 +2621,8 @@
                     paoMonths: p.paoMonths ? String(p.paoMonths) : '12'
                 }));
 
-                safeStorage.setItem('cb_custom_products', JSON.stringify(sanitizedProducts));
                 products = sanitizedProducts;
+                saveProductsSync();
 
                 if (data.productProgress && typeof data.productProgress === 'object') {
                     safeStorage.setItem('cb_product_progress', JSON.stringify(data.productProgress));
@@ -2780,23 +2714,55 @@
             setTimeout(() => toast.classList.remove('visible'), 3000);
         }
 
-        function setTheme(theme) {
+        async function setTheme(theme) {
             triggerHaptic(15);
             document.body.setAttribute('data-theme', theme);
-            safeStorage.setItem('cb_theme', theme);
             document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
                 b.classList.toggle('active', b.dataset.theme === theme);
             });
+            await tgCloud.setItem('cb_theme', theme);
+        }
+
+        async function loadAppDataFromCloud() {
+            if (window.Telegram?.WebApp) {
+                try {
+                    window.Telegram.WebApp.ready();
+                    window.Telegram.WebApp.expand();
+                } catch (e) {}
+            }
+
+            const cloudTheme = await tgCloud.getItem('cb_theme');
+            if (cloudTheme) {
+                document.body.setAttribute('data-theme', cloudTheme);
+                document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
+                    b.classList.toggle('active', b.dataset.theme === cloudTheme);
+                });
+            }
+
+            const cloudProductsJson = await tgCloud.getItem('cb_custom_products');
+            if (cloudProductsJson) {
+                try {
+                    const parsed = typeof cloudProductsJson === 'string' ? JSON.parse(cloudProductsJson) : cloudProductsJson;
+                    if (Array.isArray(parsed)) {
+                        products = parsed;
+                        renderManageList();
+                        renderRoutine();
+                    }
+                } catch (e) {
+                    console.error('Ошибка разбора данных средств из Telegram Cloud:', e);
+                }
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            loadAppDataFromCloud();
+
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('v_force')) {
                 showToast(`Версия ${APP_VERSION} актуальна`);
                 history.replaceState(null, null, window.location.pathname + window.location.hash);
             }
 
-            setTheme(safeStorage.getItem('cb_theme') || 'nude');
             checkUrlImport();
 
             /* ЛОГИКА СТАРТОВОГО ЭКРАНА С ПРИНЯТИЕМ ПРАВИЛ */
