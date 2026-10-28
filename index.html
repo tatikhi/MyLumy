@@ -553,6 +553,39 @@
         .dot-red { background-color: rgb(205, 52, 52); }
         .dot-gray { background-color: var(--icon-inactive); }
 
+        /* Переключатель табов "В уходе / На паузе" */
+        .routine-filter-switch {
+            display: flex;
+            background: var(--bg-main);
+            border-radius: 16px;
+            padding: 4px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            gap: 4px;
+        }
+
+        .filter-tab-btn {
+            flex: 1;
+            padding: 9px 6px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            touch-action: manipulation;
+        }
+
+        .filter-tab-btn.active {
+            background: var(--surface);
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
         #customCalendarModal {
             z-index: 1100 !important;
         }
@@ -999,14 +1032,14 @@
 
         .popover-btn {
             flex: 1;
-            padding: 9px 12px;
+            padding: 9px 8px;
             border-radius: 9px;
             border: 1px solid var(--border-color);
             background: var(--surface);
             color: var(--text-primary);
-            font-size: 14.5px;
+            font-size: 13.5px;
             font-weight: 600;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
             text-transform: none;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -1141,6 +1174,13 @@
             </div>
 
             <div class="modal-body-scrollable" id="modalScrollBody">
+                
+                <!-- Переключатель режима ухода -->
+                <div class="routine-filter-switch" id="manageFilterSwitch">
+                    <button type="button" class="filter-tab-btn active" id="tabInRoutine">✦ В уходе (<span id="cntInRoutine">0</span>)</button>
+                    <button type="button" class="filter-tab-btn" id="tabOnPause">⏸ На паузе (<span id="cntOnPause">0</span>)</button>
+                </div>
+
                 <div class="product-manage-list" id="manageList"></div>
 
                 <button type="button" class="btn-add-toggle uniform-brand-title" id="btnAddToggle">+ Добавить средство</button>
@@ -1761,6 +1801,7 @@
         }
 
         let currentTOD = getSystemTOD();
+        let currentManageTab = 'inRoutine'; // 'inRoutine' | 'onPause'
         let activePopoverProductId = null;
         let selectedPAOMonths = '12';
         let selectedPauseBeforeVal = null;
@@ -1978,6 +2019,7 @@
             const targetDayOfWeek = routineDate.getDay();
 
             let activeProducts = products.filter(p => {
+                if (p.inRoutine === false) return false; // Исключаем средства на паузе
                 const tads = Array.isArray(p.tods) ? p.tods : [];
                 const matchTOD = tads.includes(currentTOD);
                 let matchDay = true;
@@ -2476,6 +2518,7 @@
 
             const existingItem = editId ? products.find(p => p.id === Number(editId)) : null;
             const addedDate = existingItem ? (existingItem.addedDate || existingItem.openDate || getLocalTodayStr()) : getLocalTodayStr();
+            const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : true;
 
             let days = [];
             if (freqType === 'custom') {
@@ -2491,7 +2534,8 @@
                 pauseAfter: selectedPauseAfterVal,
                 openDate,
                 addedDate,
-                paoMonths: selectedPAOMonths
+                paoMonths: selectedPAOMonths,
+                inRoutine: inRoutineStatus
             };
 
             if (editId) {
@@ -2505,6 +2549,23 @@
             renderManageList();
             hideForm();
             renderRoutine();
+        }
+
+        function toggleProductRoutine(e, id, targetState) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            triggerHaptic(20);
+            closeAllPopovers();
+            const item = products.find(p => p.id === Number(id));
+            if (item) {
+                item.inRoutine = targetState;
+                saveProductsSync();
+                renderManageList();
+                renderRoutine();
+                showToast(targetState ? 'Средство возвращено в уход' : 'Средство поставлено на паузу');
+            }
         }
 
         function editProduct(e, id) {
@@ -2623,6 +2684,7 @@
         }
 
         function showForm() {
+            document.getElementById('manageFilterSwitch').style.display = 'none';
             document.getElementById('manageList').style.display = 'none';
             document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('settingsModalHeader').style.display = 'none';
@@ -2646,6 +2708,7 @@
             closeAutocomplete();
             document.getElementById('productFormContainer').classList.remove('open');
             document.getElementById('settingsModalHeader').style.display = 'none';
+            document.getElementById('manageFilterSwitch').style.display = 'flex';
             document.getElementById('manageList').style.display = 'flex';
             document.getElementById('btnAddToggle').style.display = 'block';
             document.getElementById('pinnedModalFooter').style.display = 'block';
@@ -2677,28 +2740,49 @@
         }
 
         function renderManageList() {
+            const inRoutineCount = products.filter(p => p.inRoutine !== false).length;
+            const onPauseCount = products.filter(p => p.inRoutine === false).length;
+
+            const cntInEl = document.getElementById('cntInRoutine');
+            const cntPauseEl = document.getElementById('cntOnPause');
+            if (cntInEl) cntInEl.innerText = inRoutineCount;
+            if (cntPauseEl) cntPauseEl.innerText = onPauseCount;
+
             const container = document.getElementById('manageList');
             const htmlBuffer = [];
             const chevronSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
             const rightChevronSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
 
+            const isPauseTab = (currentManageTab === 'onPause');
+
             CATEGORIES.forEach((catName, catIndex) => {
-                const catProducts = products.filter(p => p.type === catName);
-                let catItemsHtml = catProducts.map(p => `
-                    <div class="product-wrapper-block">
-                        <div class="manage-item" id="manage-item-${p.id}" onclick="toggleProductPopover(event, ${p.id})">
-                            <div class="manage-info">
-                                ${calcExpiryDots(p.openDate, p.paoMonths)}
-                                <span><b>${escapeHtml(p.name)}</b></span>
+                const catProducts = products.filter(p => {
+                    const isIn = (p.inRoutine !== false);
+                    return isPauseTab ? !isIn : isIn;
+                }).filter(p => p.type === catName);
+
+                let catItemsHtml = catProducts.map(p => {
+                    const toggleActionBtn = (p.inRoutine !== false)
+                        ? `<button type="button" class="popover-btn" onclick="toggleProductRoutine(event, ${p.id}, false)">⏸ На паузу</button>`
+                        : `<button type="button" class="popover-btn" onclick="toggleProductRoutine(event, ${p.id}, true)">▶ В уход</button>`;
+
+                    return `
+                        <div class="product-wrapper-block">
+                            <div class="manage-item" id="manage-item-${p.id}" onclick="toggleProductPopover(event, ${p.id})">
+                                <div class="manage-info">
+                                    ${calcExpiryDots(p.openDate, p.paoMonths)}
+                                    <span><b>${escapeHtml(p.name)}</b></span>
+                                </div>
+                                <div class="manage-chevron">${rightChevronSvg}</div>
                             </div>
-                            <div class="manage-chevron">${rightChevronSvg}</div>
+                            <div class="popover-actions-menu" id="popover-${p.id}">
+                                ${toggleActionBtn}
+                                <button type="button" class="popover-btn" onclick="editProduct(event, ${p.id})">Изменить</button>
+                                <button type="button" class="popover-btn danger" onclick="deleteProduct(event, ${p.id})">Удалить</button>
+                            </div>
                         </div>
-                        <div class="popover-actions-menu" id="popover-${p.id}">
-                            <button type="button" class="popover-btn" onclick="editProduct(event, ${p.id})">Редактировать</button>
-                            <button type="button" class="popover-btn danger" onclick="deleteProduct(event, ${p.id})">Удалить</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
 
                 htmlBuffer.push(`
                     <div class="category-group-block">
@@ -2769,7 +2853,8 @@
                     pauseAfter: p.pauseAfter !== null && p.pauseAfter !== undefined ? Number(p.pauseAfter) : null,
                     openDate: String(p.openDate || getLocalTodayStr()),
                     addedDate: String(p.addedDate || p.openDate || getLocalTodayStr()),
-                    paoMonths: p.paoMonths ? String(p.paoMonths) : '12'
+                    paoMonths: p.paoMonths ? String(p.paoMonths) : '12',
+                    inRoutine: p.inRoutine !== false
                 }));
 
                 products = sanitizedProducts;
@@ -3119,6 +3204,24 @@
                 openModalElement(document.getElementById('appSettingsModal'));
             });
             document.getElementById('btnCloseAppSettings').addEventListener('click', () => closeModalElement(document.getElementById('appSettingsModal')));
+
+            document.getElementById('tabInRoutine').addEventListener('click', () => {
+                triggerHaptic(15);
+                closeAllPopovers();
+                currentManageTab = 'inRoutine';
+                document.getElementById('tabInRoutine').classList.add('active');
+                document.getElementById('tabOnPause').classList.remove('active');
+                renderManageList();
+            });
+
+            document.getElementById('tabOnPause').addEventListener('click', () => {
+                triggerHaptic(15);
+                closeAllPopovers();
+                currentManageTab = 'onPause';
+                document.getElementById('tabOnPause').classList.add('active');
+                document.getElementById('tabInRoutine').classList.remove('active');
+                renderManageList();
+            });
 
             document.getElementById('btnAddToggle').addEventListener('click', showForm);
             document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
