@@ -7,17 +7,15 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <!-- Мгновенная установка темы ДО парсинга CSS и отрисовки первого кадра -->
+    <!-- Мгновенная установка темы ДО парсинга CSS с автозаменой устаревших тем -->
     <script>
         (function() {
             try {
+                var oldThemes = ['nude', 'mint', 'lavender', 'sage'];
                 var savedTheme = localStorage.getItem('cb_theme');
-                if (!savedTheme) {
-                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                        savedTheme = 'midnight';
-                    } else {
-                        savedTheme = 'sunlit';
-                    }
+                if (!savedTheme || oldThemes.indexOf(savedTheme) !== -1) {
+                    savedTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'midnight' : 'sunlit';
+                    localStorage.setItem('cb_theme', savedTheme);
                 }
                 document.documentElement.setAttribute('data-theme', savedTheme);
             } catch(e) {}
@@ -50,7 +48,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        /* 1. Sunlit Gloss (Светлая по умолчанию) */
+        /* 1. Sunlit Gloss (Светлая тема по умолчанию) */
         :root, [data-theme="sunlit"] {
             --bg-main: #FFF5F0;
             --surface: #FFFFFF;
@@ -135,21 +133,21 @@
             --scroll-track: rgba(138, 92, 245, 0.12);
         }
 
-        /* 6. Midnight Calm (Тёмная тема устройства) */
+        /* 6. Midnight Calm (Премиальная чистая тёмная тема) */
         [data-theme="midnight"] {
-            --bg-main: #1A1F2C;
-            --surface: #242A3B;
-            --text-primary: #F0F3F9;
-            --text-secondary: #8E9DB5;
-            --accent-main: #D4A373;
-            --accent-grad: #B58455;
-            --accent-light: #2D354A;
-            --border-color: #3A455C;
-            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
-            --icon-inactive: #525E7A;
-            --item-bg: rgba(36, 42, 59, 0.65);
-            --scroll-thumb: rgba(212, 163, 115, 0.6);
-            --scroll-track: rgba(212, 163, 115, 0.12);
+            --bg-main: #0F141C;
+            --surface: #161D2B;
+            --text-primary: #F0F5FF;
+            --text-secondary: #8E9EB8;
+            --accent-main: #4E9EFF;
+            --accent-grad: #2B7AE6;
+            --accent-light: #1A2E4A;
+            --border-color: #23324A;
+            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.5);
+            --icon-inactive: #4B5E7D;
+            --item-bg: rgba(22, 29, 43, 0.85);
+            --scroll-thumb: rgba(78, 158, 255, 0.6);
+            --scroll-track: rgba(78, 158, 255, 0.12);
         }
 
         * {
@@ -1318,7 +1316,7 @@
                         <button type="button" class="picker-btn" data-theme="icederm" style="flex: 1; min-width: 40px; background: #2B78A3; border-color: #2B78A3;" title="Ice Derm"></button>
                         <button type="button" class="picker-btn" data-theme="espresso" style="flex: 1; min-width: 40px; background: #6F4E37; border-color: #6F4E37;" title="Espresso"></button>
                         <button type="button" class="picker-btn" data-theme="cyberglow" style="flex: 1; min-width: 40px; background: #8A5CF5; border-color: #8A5CF5;" title="Cyber Glow"></button>
-                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; min-width: 40px; background: #242A3B; border-color: #242A3B;" title="Midnight Calm"></button>
+                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; min-width: 40px; background: #4E9EFF; border-color: #4E9EFF;" title="Midnight Calm"></button>
                     </div>
                 </div>
 
@@ -1375,6 +1373,7 @@
 
     <script>
         const APP_VERSION = 'v0.2.0b';
+        const OLD_THEMES = ['nude', 'mint', 'lavender', 'sage'];
 
         const THEME_COLORS = {
             sunlit: '#FFF5F0',
@@ -1382,7 +1381,7 @@
             icederm: '#F0F6FA',
             espresso: '#F8F4EE',
             cyberglow: '#F5F0FE',
-            midnight: '#1A1F2C'
+            midnight: '#0F141C'
         };
 
         function applyTelegramThemeColors(theme) {
@@ -2072,7 +2071,7 @@
                     const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
 
                     if (pauseMins > 0) {
-                        const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>`;
+                        const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 14"></polyline></svg>`;
                         if (isTimerActive) {
                             htmlBuffer.push(`
                                 <div class="pause-step-container">
@@ -2781,7 +2780,10 @@
                     productProgress = data.productProgress;
                 }
 
-                if (data.theme) setTheme(data.theme);
+                if (data.theme) {
+                    const validTheme = OLD_THEMES.includes(data.theme) ? 'sunlit' : data.theme;
+                    setTheme(validTheme);
+                }
                 renderManageList();
                 switchTOD(currentTOD);
                 showToast('Данные успешно загружены!');
@@ -2932,16 +2934,18 @@
                 document.body.classList.add('theme-animated');
             }
 
-            document.documentElement.setAttribute('data-theme', theme);
-            document.body.setAttribute('data-theme', theme);
-            safeStorage.setItem('cb_theme', theme);
+            const validTheme = OLD_THEMES.includes(theme) ? 'sunlit' : theme;
 
-            applyTelegramThemeColors(theme);
+            document.documentElement.setAttribute('data-theme', validTheme);
+            document.body.setAttribute('data-theme', validTheme);
+            safeStorage.setItem('cb_theme', validTheme);
+
+            applyTelegramThemeColors(validTheme);
 
             document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
-                b.classList.toggle('active', b.dataset.theme === theme);
+                b.classList.toggle('active', b.dataset.theme === validTheme);
             });
-            await tgCloud.setItem('cb_theme', theme);
+            await tgCloud.setItem('cb_theme', validTheme);
         }
 
         async function loadAppDataFromCloud() {
@@ -2956,7 +2960,11 @@
                 return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'midnight' : 'sunlit';
             };
 
-            const currentLocalTheme = safeStorage.getItem('cb_theme') || getDefaultTheme();
+            let currentLocalTheme = safeStorage.getItem('cb_theme');
+            if (!currentLocalTheme || OLD_THEMES.includes(currentLocalTheme)) {
+                currentLocalTheme = getDefaultTheme();
+                safeStorage.setItem('cb_theme', currentLocalTheme);
+            }
             applyTelegramThemeColors(currentLocalTheme);
 
             const cloudInstallDate = await tgCloud.getItem('cb_install_date');
@@ -2967,8 +2975,13 @@
                 await tgCloud.setItem('cb_install_date', installDateStr);
             }
 
-            // Синхронизация темы из Облака Telegram
-            const cloudTheme = await tgCloud.getItem('cb_theme');
+            // Синхронизация темы из Облака Telegram с фильтрацией старых тем
+            let cloudTheme = await tgCloud.getItem('cb_theme');
+            if (cloudTheme && OLD_THEMES.includes(cloudTheme)) {
+                cloudTheme = currentLocalTheme;
+                await tgCloud.setItem('cb_theme', cloudTheme);
+            }
+
             if (cloudTheme && cloudTheme !== currentLocalTheme) {
                 setTheme(cloudTheme, true);
             } else {
