@@ -471,13 +471,6 @@
             white-space: nowrap;
         }
 
-        .item-right-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
         .pause-step-container {
             display: flex;
             justify-content: center;
@@ -548,7 +541,7 @@
         .dot-red { background-color: rgb(205, 52, 52); }
         .dot-gray { background-color: var(--icon-inactive); }
 
-        /* Переключатель табов "В уходе / На паузе" (Super коллекция) */
+        /* Переключатель табов "В уходе / На паузе" */
         .routine-filter-switch {
             display: flex;
             background: var(--bg-main);
@@ -1339,7 +1332,7 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                         <div>
                             <div style="font-size: 15px; font-weight: 600; color: var(--text-primary);">Super коллекция</div>
-                            <div style="font-size: 12.5px; color: var(--text-secondary); margin-top: 2px;">Раздел и управление средствами «На паузе»</div>
+                            <div style="font-size: 12.5px; color: var(--text-secondary); margin-top: 2px;">Расширенный список средств в уходе и на паузе</div>
                         </div>
                         <label class="toggle-switch">
                             <input type="checkbox" id="toggleSuperCollection">
@@ -1541,31 +1534,97 @@
             "Солнцезащитный крем SPF 50", "Ночная маска", "Тканевая маска", "Глиняная маска", "Бальзам для губ"
         ];
 
+        /* ПОЛНЫЙ И ПРОВЕРЕННЫЙ СПИСОК КОСМЕТОЛОГИЧЕСКИХ ПРЕСЕТОВ */
         const SMART_PRESETS = [
             {
                 keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'sun fluid', 'sun stick', 'санскрин', 'защит'],
                 type: 'SPF / Защита', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 15,
-                reason: 'SPF-фильтрам требуется выдержка 5 минут до нанесения на крем и 15 минут после для формирования защитной пленки.'
+                reason: 'SPF-фильтрам требуется 5 минут после увлажняющего крема и 15 минут после нанесения для формирования непрерывной защитной пленки.'
             },
             {
-                keywords: ['ретин', 'retin', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'дифферин'],
+                keywords: ['ретин', 'retin', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'тазаротен', 'дифферин'],
                 type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15,
-                reason: 'Ретиноиды наносятся на сухую кожу (пауза 15 мин) строго вечером. Пауза 15 мин до закрытия кремом минимизирует раздражение.'
+                reason: 'Ретиноиды фотосенсибильны, наносятся строго вечером на полностью сухую кожу (пауза 15 мин). Пауза 15 мин до закрытия кремом минимизирует раздражение.'
             },
             {
-                keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'пилинг'],
+                keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'миндаль', 'молочн', 'пилинг'],
                 type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 5, pauseAfter: 15,
-                reason: 'Кислотам требуется выдержка 15 минут для работы pH перед нанесением следующего средства.'
+                reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном кислотном pH кожи перед нанесением следующего ухода.'
             },
             {
-                keywords: ['витамин c', 'витамин с', 'vitamin c'],
+                keywords: ['бензоил', 'benzoyl', 'базирон', 'точечн', 'spot', 'циндол', 'прыщ', 'болтушка'],
+                type: 'Активы', pao: '6', tods: ['evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
+                reason: 'Точечные средства от акне высушивают воспаления и наносятся локально с выдержкой 10 минут.'
+            },
+            {
+                keywords: ['витамин c', 'витамин с', 'vitamin c', 'ascorbi', 'аскорбин'],
                 type: 'Активы', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 0, pauseAfter: 10,
-                reason: 'Витамин C — главный утренний антиоксидант. Требуется выдержка 10 минут перед закрытием.'
+                reason: 'Витамин C — главный утренний антиоксидант, нейтрализующий действие УФ и свободных радикалов. Выдержка 10 минут.'
             },
             {
-                keywords: ['гидрофильн', 'cleansing oil', 'cleansing balm'],
+                keywords: ['азелаин', 'azelaic', 'скинорен', 'азелик'],
+                type: 'Активы', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
+                reason: 'Азелаиновая кислота не вызывает фоточувствительности и отлично подходит для двукратного ежедневного применения.'
+            },
+            {
+                keywords: ['гидрофильн', 'cleansing oil', 'cleansing balm', 'двухфазн', 'бальзам для снятия'],
                 type: 'Очищение', pao: '12', tods: ['evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
-                reason: 'Гидрофильное масло — 1-й этап очищения, растворяет SPF и макияж. Применяется строго вечером.'
+                reason: 'Гидрофильное масло — 1-й этап двухэтапного очищения, эффективный строго вечером для растворения SPF и макияжа.'
+            },
+            {
+                keywords: ['энзим', 'enzyme'],
+                type: 'Очищение', pao: '12', tods: ['evening'], freqType: 'custom', days: [2, 5], pauseBefore: 0, pauseAfter: 0,
+                reason: 'Энзимная пудра мягко отшелушивает ороговевшие клетки. Применяется 2–3 раза в неделю в вечернем уходе.'
+            },
+            {
+                keywords: ['ночн', 'sleeping'],
+                type: 'Питание / Увлажнение', pao: '12', tods: ['evening'], freqType: 'custom', days: [2, 5], pauseBefore: 5, pauseAfter: 0,
+                reason: 'Ночные маски работают во время сна и восстанавливают липидный барьер. Применяются строго вечером 2–3 раза в неделю.'
+            },
+            {
+                keywords: ['патч', 'patch'],
+                type: 'Уход за глазами', pao: '3', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 15,
+                reason: 'Патчи универсальны: утром тонизируют и снимают отёчность, а вечером интенсивно увлажняют и расслабляют кожу.'
+            },
+            {
+                keywords: ['тканев', 'sheet mask', 'глинян', 'альгинат', 'очищающ маск', 'mask'],
+                type: 'Питание / Увлажнение', pao: '12', tods: ['morning', 'evening'], freqType: 'custom', days: [2, 5], pauseBefore: 0, pauseAfter: 0,
+                reason: 'Маски универсальны: экспресс-увлажнение перед макияжем утром или глубокое очищение и релакс вечером.'
+            },
+            {
+                keywords: ['бакучиол', 'bakuchiol'],
+                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 5,
+                reason: 'Бакучиол — растительный аналог ретинола без фотосенсибилизации. Безопасен для использования утром и вечером.'
+            },
+            {
+                keywords: ['пептид', 'peptide', 'matrixyl', 'argireline', 'pdrn', 'полинуклеотид'],
+                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 5,
+                reason: 'Пептиды стимулируют синтез коллагена и укрепляют барьер. Подходят для применения утром и вечером.'
+            },
+            {
+                keywords: ['век', 'вокруг глаз', 'eye cream', 'eye serum'],
+                type: 'Уход за глазами', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
+                reason: 'Базовый ежедневный уход за чувствительной зоной вокруг глаз.'
+            },
+            {
+                keywords: ['гиалурон', 'hyaluron', 'пантенол', 'pantenol', 'алоэ', 'aloe', 'ниацинамид', 'niacinamide', 'центелл', 'cica', 'сыворотк', 'serum', 'ампул', 'бустер'],
+                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
+                reason: 'Базовые увлажняющие и успокаивающие сыворотки подходят для ежедневного двукратного нанесения.'
+            },
+            {
+                keywords: ['увлажня', 'питательн', 'восстанавлива', 'крем', 'moisturizer', 'эмульсия', 'флюид', 'церамид', 'ceramide', 'ламелляр'],
+                type: 'Питание / Увлажнение', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
+                reason: 'Базовые кремы для восстановления гидролипидного барьера и закрытия активов.'
+            },
+            {
+                keywords: ['пенк', 'гель для умыв', 'умывалка', 'foam', 'очищающ', 'мицелляр'],
+                type: 'Очищение', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
+                reason: 'Базовое очищение на водной основе для утреннего умывания и второго этапа вечернего ухода.'
+            },
+            {
+                keywords: ['тонер', 'тоник', 'эссенци', 'toner', 'лосьон', 'мист', 'софтнер'],
+                type: 'Тонизирование', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
+                reason: 'Базовое тонизирование для восстановления естественного pH кожи после контакта с водой.'
             }
         ];
 
