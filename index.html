@@ -11,7 +11,14 @@
     <script>
         (function() {
             try {
-                var savedTheme = localStorage.getItem('cb_theme') || 'nude';
+                var savedTheme = localStorage.getItem('cb_theme');
+                if (!savedTheme) {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        savedTheme = 'midnight';
+                    } else {
+                        savedTheme = 'sunlit';
+                    }
+                }
                 document.documentElement.setAttribute('data-theme', savedTheme);
             } catch(e) {}
         })();
@@ -43,75 +50,92 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        :root, [data-theme="nude"] {
-            /* 1. Nude (по умолчанию) */
-            --bg-main: #F5EFE8;
+        /* 1. Sunlit Gloss (Светлая по умолчанию) */
+        :root, [data-theme="sunlit"] {
+            --bg-main: #FFF5F0;
             --surface: #FFFFFF;
-            --text-primary: #2C2220;
-            --text-secondary: #5C4E4B;
-            --accent-main: #A86E52;
-            --accent-grad: #8E563B;
-            --accent-light: #EBE0D5;
-            --border-color: #D6C4B4;
-            --shadow-soft: 0 16px 40px rgba(168, 110, 82, 0.12);
-            --icon-inactive: #B8A89C;
+            --text-primary: #331B14;
+            --text-secondary: #704C42;
+            --accent-main: #E87A5D;
+            --accent-grad: #C95B3E;
+            --accent-light: #FDE6DD;
+            --border-color: #F7CBBF;
+            --shadow-soft: 0 16px 40px rgba(232, 122, 93, 0.15);
+            --icon-inactive: #C7A69C;
             --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(168, 110, 82, 0.6);
-            --scroll-track: rgba(168, 110, 82, 0.12);
+            --scroll-thumb: rgba(232, 122, 93, 0.6);
+            --scroll-track: rgba(232, 122, 93, 0.12);
         }
 
-        /* 2. Mint */
-        [data-theme="mint"] {
-            --bg-main: #E6F2EE;
-            --surface: #FFFFFF;
-            --text-primary: #182824;
-            --text-secondary: #3D5752;
-            --accent-main: #3B6C63;
-            --accent-grad: #2B544D;
-            --accent-light: #D5E7E2;
-            --border-color: #BCCECA;
-            --shadow-soft: 0 16px 40px rgba(59, 108, 99, 0.12);
-            --icon-inactive: #9CB2AD;
-            --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(59, 108, 99, 0.6);
-            --scroll-track: rgba(59, 108, 99, 0.12);
+        /* 2. Berry Velvet (Тёмный вечерний спа) */
+        [data-theme="berry"] {
+            --bg-main: #1D161E;
+            --surface: #2A202C;
+            --text-primary: #F7EBF0;
+            --text-secondary: #B39DA8;
+            --accent-main: #D96B94;
+            --accent-grad: #B84D75;
+            --accent-light: #3D2938;
+            --border-color: #4A3545;
+            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.4);
+            --icon-inactive: #6B5263;
+            --item-bg: rgba(42, 32, 44, 0.75);
+            --scroll-thumb: rgba(217, 107, 148, 0.6);
+            --scroll-track: rgba(217, 107, 148, 0.12);
         }
 
-        /* 3. Lavender */
-        [data-theme="lavender"] {
-            --bg-main: #F0E8F5;
+        /* 3. Ice Derm (Кристальная свежесть) */
+        [data-theme="icederm"] {
+            --bg-main: #F0F6FA;
             --surface: #FFFFFF;
-            --text-primary: #251D2C;
-            --text-secondary: #52455E;
-            --accent-main: #6B5180;
-            --accent-grad: #543B68;
-            --accent-light: #E2D7EA;
-            --border-color: #CFC2DA;
-            --shadow-soft: 0 16px 40px rgba(107, 81, 128, 0.12);
-            --icon-inactive: #B0A2BD;
+            --text-primary: #122836;
+            --text-secondary: #425F73;
+            --accent-main: #2B78A3;
+            --accent-grad: #1C5A7D;
+            --accent-light: #DCECF5;
+            --border-color: #B9D5E6;
+            --shadow-soft: 0 16px 40px rgba(43, 120, 163, 0.12);
+            --icon-inactive: #90AEC2;
             --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(107, 81, 128, 0.6);
-            --scroll-track: rgba(107, 81, 128, 0.12);
+            --scroll-thumb: rgba(43, 120, 163, 0.6);
+            --scroll-track: rgba(43, 120, 163, 0.12);
         }
 
-        /* 4. Sage */
-        [data-theme="sage"] {
-            --bg-main: #E7EFE7;
+        /* 4. Espresso & Oat (Кофейный уход) */
+        [data-theme="espresso"] {
+            --bg-main: #F8F4EE;
             --surface: #FFFFFF;
-            --text-primary: #182419;
-            --text-secondary: #3C4E3D;
-            --accent-main: #385236;
-            --accent-grad: #273D26;
-            --accent-light: #D8E4D8;
-            --border-color: #BFCFC0;
-            --shadow-soft: 0 16px 40px rgba(56, 82, 54, 0.12);
-            --icon-inactive: #9EB09E;
+            --text-primary: #2B211A;
+            --text-secondary: #5C4C40;
+            --accent-main: #6F4E37;
+            --accent-grad: #523825;
+            --accent-light: #ECE1D7;
+            --border-color: #D9C8B8;
+            --shadow-soft: 0 16px 40px rgba(111, 78, 55, 0.12);
+            --icon-inactive: #AFA093;
             --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(56, 82, 54, 0.6);
-            --scroll-track: rgba(56, 82, 54, 0.12);
+            --scroll-thumb: rgba(111, 78, 55, 0.6);
+            --scroll-track: rgba(111, 78, 55, 0.12);
         }
 
-        /* 5. Midnight Calm */
+        /* 5. Cyber Glow (K-Beauty Неон) */
+        [data-theme="cyberglow"] {
+            --bg-main: #F5F0FE;
+            --surface: #FFFFFF;
+            --text-primary: #1F1135;
+            --text-secondary: #523D70;
+            --accent-main: #8A5CF5;
+            --accent-grad: #6E3BD9;
+            --accent-light: #EBE1FF;
+            --border-color: #D3C2F8;
+            --shadow-soft: 0 16px 40px rgba(138, 92, 245, 0.15);
+            --icon-inactive: #A692CD;
+            --item-bg: rgba(255, 255, 255, 0.9);
+            --scroll-thumb: rgba(138, 92, 245, 0.6);
+            --scroll-track: rgba(138, 92, 245, 0.12);
+        }
+
+        /* 6. Midnight Calm (Тёмная тема устройства) */
         [data-theme="midnight"] {
             --bg-main: #1A1F2C;
             --surface: #242A3B;
@@ -1288,12 +1312,13 @@
 
                 <div class="form-section" style="margin-bottom: 12px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Тема оформления</div>
-                    <div style="display: flex; gap: 4px; width: 100%;" id="themeRow">
-                        <button type="button" class="picker-btn" data-theme="nude" style="flex: 1; background: #A86E52; border-color: #A86E52;" title="Nude"></button>
-                        <button type="button" class="picker-btn" data-theme="mint" style="flex: 1; background: #3B6C63; border-color: #3B6C63;" title="Mint"></button>
-                        <button type="button" class="picker-btn" data-theme="lavender" style="flex: 1; background: #6B5180; border-color: #6B5180;" title="Lavender"></button>
-                        <button type="button" class="picker-btn" data-theme="sage" style="flex: 1; background: #385236; border-color: #385236;" title="Sage"></button>
-                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; background: #242A3B; border-color: #242A3B;" title="Midnight"></button>
+                    <div style="display: flex; gap: 6px; width: 100%; flex-wrap: wrap;" id="themeRow">
+                        <button type="button" class="picker-btn" data-theme="sunlit" style="flex: 1; min-width: 40px; background: #E87A5D; border-color: #E87A5D;" title="Sunlit Gloss"></button>
+                        <button type="button" class="picker-btn" data-theme="berry" style="flex: 1; min-width: 40px; background: #D96B94; border-color: #D96B94;" title="Berry Velvet"></button>
+                        <button type="button" class="picker-btn" data-theme="icederm" style="flex: 1; min-width: 40px; background: #2B78A3; border-color: #2B78A3;" title="Ice Derm"></button>
+                        <button type="button" class="picker-btn" data-theme="espresso" style="flex: 1; min-width: 40px; background: #6F4E37; border-color: #6F4E37;" title="Espresso"></button>
+                        <button type="button" class="picker-btn" data-theme="cyberglow" style="flex: 1; min-width: 40px; background: #8A5CF5; border-color: #8A5CF5;" title="Cyber Glow"></button>
+                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; min-width: 40px; background: #242A3B; border-color: #242A3B;" title="Midnight Calm"></button>
                     </div>
                 </div>
 
@@ -1352,16 +1377,17 @@
         const APP_VERSION = 'v0.2.0b';
 
         const THEME_COLORS = {
-            nude: '#F5EFE8',
-            mint: '#E6F2EE',
-            lavender: '#F0E8F5',
-            sage: '#E7EFE7',
+            sunlit: '#FFF5F0',
+            berry: '#1D161E',
+            icederm: '#F0F6FA',
+            espresso: '#F8F4EE',
+            cyberglow: '#F5F0FE',
             midnight: '#1A1F2C'
         };
 
         function applyTelegramThemeColors(theme) {
             if (window.Telegram?.WebApp) {
-                const color = THEME_COLORS[theme] || THEME_COLORS.nude;
+                const color = THEME_COLORS[theme] || THEME_COLORS.sunlit;
                 try {
                     if (window.Telegram.WebApp.setHeaderColor) window.Telegram.WebApp.setHeaderColor(color);
                     if (window.Telegram.WebApp.setBackgroundColor) window.Telegram.WebApp.setBackgroundColor(color);
@@ -2717,7 +2743,7 @@
                 installDate: installDateStr,
                 products: products,
                 productProgress: JSON.parse(safeStorage.getItem('cb_product_progress') || '{}'),
-                theme: safeStorage.getItem('cb_theme') || 'nude'
+                theme: safeStorage.getItem('cb_theme') || 'sunlit'
             };
         }
 
@@ -2926,7 +2952,11 @@
                 } catch (e) {}
             }
 
-            const currentLocalTheme = safeStorage.getItem('cb_theme') || 'nude';
+            const getDefaultTheme = () => {
+                return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'midnight' : 'sunlit';
+            };
+
+            const currentLocalTheme = safeStorage.getItem('cb_theme') || getDefaultTheme();
             applyTelegramThemeColors(currentLocalTheme);
 
             const cloudInstallDate = await tgCloud.getItem('cb_install_date');
