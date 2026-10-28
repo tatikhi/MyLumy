@@ -2727,22 +2727,9 @@
             }
         }
 
-        async function triggerImportJson() {
+        function triggerImportJson() {
             triggerHaptic(20);
-            if (navigator.clipboard && navigator.clipboard.readText) {
-                try {
-                    const text = await navigator.clipboard.readText();
-                    if (text && text.trim().startsWith('{') && text.trim().endsWith('}')) {
-                        const data = JSON.parse(text);
-                        if (data && Array.isArray(data.products)) {
-                            confirmAction('Перезаписать текущую коллекцию новыми данными из буфера обмена?', () => {
-                                applyImportData(data);
-                            });
-                            return;
-                        }
-                    }
-                } catch (e) {}
-            }
+            // Убрана проверка navigator.clipboard, чтобы не вызывать уведомление о вставке
             document.getElementById('jsonFileInput').click();
         }
 
