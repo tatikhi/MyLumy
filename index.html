@@ -8,6 +8,21 @@
     <meta http-equiv="Expires" content="0">
 
     <title>MyLumy</title>
+    
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113811190', 'ym');
+
+        ym(113811190, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/113811190" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
     <!-- Подключение Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -932,6 +947,7 @@
             padding: 0 6px;
             gap: 6px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
         }
 
         .popover-actions-menu.open {
@@ -942,6 +958,7 @@
             margin-bottom: 4px;
             border-color: var(--border-color);
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            pointer-events: auto;
         }
 
         .popover-btn {
@@ -2428,7 +2445,11 @@
             renderRoutine();
         }
 
-        function editProduct(id) {
+        function editProduct(e, id) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             showForm();
 
             const nameInput = document.getElementById('pName');
@@ -2476,7 +2497,11 @@
             });
         }
 
-        function deleteProduct(id) {
+        function deleteProduct(e, id) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             confirmAction('Удалить это средство из вашей коллекции?', () => {
                 triggerHaptic(30);
                 closeAutocomplete();
@@ -2490,7 +2515,10 @@
         }
 
         function toggleProductPopover(e, id) {
-            if (e) e.stopPropagation();
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             triggerHaptic(15);
             const targetId = Number(id);
             const popoverEl = document.getElementById(`popover-${targetId}`);
@@ -2604,8 +2632,8 @@
                             <div class="manage-chevron">${rightChevronSvg}</div>
                         </div>
                         <div class="popover-actions-menu" id="popover-${p.id}">
-                            <button type="button" class="popover-btn" onclick="event.stopPropagation(); editProduct(${p.id})">Редактировать</button>
-                            <button type="button" class="popover-btn danger" onclick="event.stopPropagation(); deleteProduct(${p.id})">Удалить</button>
+                            <button type="button" class="popover-btn" onclick="editProduct(event, ${p.id})">Редактировать</button>
+                            <button type="button" class="popover-btn danger" onclick="deleteProduct(event, ${p.id})">Удалить</button>
                         </div>
                     </div>
                 `).join('');
