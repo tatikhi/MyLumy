@@ -572,7 +572,11 @@
             opacity: 1;
         }
 
-        .cal-day-cell.archive-day,
+        .cal-day-cell.archive-day {
+            color: var(--text-secondary);
+            opacity: 0.65;
+        }
+
         .cal-day-cell.future-day {
             color: var(--text-secondary);
             opacity: 0.75;
@@ -1236,7 +1240,7 @@
             <div class="modal-body-scrollable">
                 <div class="form-section" style="margin-bottom: 12px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">MyLumy версия v0.1.8c</span>
+                        <span class="version-text uniform-brand-title">MyLumy версия v0.2.0b</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">Проверить обновления</button>
                     </div>
                 </div>
@@ -1314,7 +1318,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = 'v0.1.8c';
+        const APP_VERSION = 'v0.1.8d';
 
         // Универсальный модуль синхронизации с Telegram CloudStorage + LocalStorage
         const tgCloud = {
@@ -1734,10 +1738,10 @@
         function getAllowedStartDateObj() {
             const parts = installDateStr.split('-');
             const installObj = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
-            const ninetyDaysAgo = new Date();
-            ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-            ninetyDaysAgo.setHours(12, 0, 0, 0);
-            return (installObj > ninetyDaysAgo) ? installObj : ninetyDaysAgo;
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            thirtyDaysAgo.setHours(12, 0, 0, 0);
+            return (installObj > thirtyDaysAgo) ? installObj : thirtyDaysAgo;
         }
 
         function renderCurrentDateChip() {
@@ -2611,7 +2615,8 @@
             return {
                 version: APP_VERSION,
                 timestamp: Date.now(),
-                products: JSON.parse(safeStorage.getItem('cb_custom_products') || '[]'),
+                installDate: installDateStr,
+                products: products,
                 productProgress: JSON.parse(safeStorage.getItem('cb_product_progress') || '{}'),
                 theme: safeStorage.getItem('cb_theme') || 'nude'
             };
@@ -2623,6 +2628,12 @@
                 return false;
             }
             try {
+                if (data.installDate) {
+                    installDateStr = data.installDate;
+                    safeStorage.setItem('cb_install_date', installDateStr);
+                    tgCloud.setItem('cb_install_date', installDateStr);
+                }
+
                 const sanitizedProducts = data.products.map(p => ({
                     id: Number(p.id) || Date.now(),
                     name: String(p.name || ''),
@@ -2810,6 +2821,15 @@
                     window.Telegram.WebApp.ready();
                     window.Telegram.WebApp.expand();
                 } catch (e) {}
+            }
+
+            // Синхронизация даты установки из облака
+            const cloudInstallDate = await tgCloud.getItem('cb_install_date');
+            if (cloudInstallDate) {
+                installDateStr = cloudInstallDate;
+                safeStorage.setItem('cb_install_date', installDateStr);
+            } else {
+                await tgCloud.setItem('cb_install_date', installDateStr);
             }
 
             const cloudTheme = await tgCloud.getItem('cb_theme');
