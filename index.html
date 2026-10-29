@@ -2472,7 +2472,10 @@
 
             const existingItem = editId ? products.find(p => p.id === Number(editId)) : null;
             const addedDate = existingItem ? (existingItem.addedDate || existingItem.openDate || getLocalTodayStr()) : getLocalTodayStr();
-            const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : true;
+            
+            // Если создаем новое средство во вкладке "На паузе", сохраняем его сразу на паузу
+            const defaultInRoutine = !(isSuperCollectionEnabled && currentManageTab === 'onPause');
+            const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : defaultInRoutine;
 
             let days = [];
             if (freqType === 'custom') {
