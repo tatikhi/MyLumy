@@ -2699,9 +2699,6 @@
             if (e) { e.preventDefault(); e.stopPropagation(); }
             showForm();
 
-            const nameInput = document.getElementById('pName');
-            if (nameInput) nameInput.focus();
-
             triggerHaptic(20);
             closeAutocomplete();
             const item = products.find(p => p.id === Number(id));
@@ -2710,7 +2707,8 @@
             openDetailsAccordion();
 
             document.getElementById('editProductId').value = item.id;
-            nameInput.value = item.name;
+            const nameInput = document.getElementById('pName');
+            if (nameInput) nameInput.value = item.name;
 
             document.querySelectorAll('#typePicker .picker-btn').forEach(b => {
                 b.classList.toggle('active', b.dataset.type === item.type);
@@ -2839,9 +2837,6 @@
 
             resetForm();
             closeDetailsAccordion();
-
-            const nameInput = document.getElementById('pName');
-            if (nameInput) nameInput.focus();
 
             triggerHaptic(20);
             closeAutocomplete();
@@ -3210,6 +3205,7 @@
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     const activeModal = document.querySelector('.modal-overlay.active-modal');
                     if (activeModal) activeModal.classList.add('is-keyboard-open');
+                    setTimeout(() => { window.scrollTo(0, 0); }, 50);
                 }
             });
 
@@ -3217,6 +3213,7 @@
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     const activeModal = document.querySelector('.modal-overlay.active-modal');
                     if (activeModal) activeModal.classList.remove('is-keyboard-open');
+                    setTimeout(() => { window.scrollTo(0, 0); }, 50);
                 }
             });
 
