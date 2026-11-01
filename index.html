@@ -7,7 +7,6 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <!-- Мгновенная установка темы и размера шрифта ДО парсинга CSS -->
     <script>
         (function() {
             try {
@@ -27,7 +26,6 @@
 
     <title>MyLumy</title>
     
-    <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -40,10 +38,7 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/113811190" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-    <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <!-- Шрифт -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alice&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
@@ -53,7 +48,6 @@
         html { font-size: 16px; }
         html[data-font-size="large"] { font-size: 18px; }
 
-        /* Темы оформления */
         :root, [data-theme="sunlit"] {
             --bg-main: #FFF5F0; --surface: #FFFFFF; --text-primary: #331B14; --text-secondary: #704C42;
             --accent-main: #E87A5D; --accent-grad: #C95B3E; --accent-light: #FDE6DD; --border-color: #F7CBBF;
@@ -91,40 +85,19 @@
             touch-action: manipulation;
         }
 
-        /* 
-           ИСПРАВЛЕНИЕ 1: Отключаем тотальное выделение всего текста. 
-           Теперь экран не будет мигать при попытке скролла или случайном долгом тапе в TG.
-        */
         body {
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 14px 40px;
-            font-size: 1rem;
+            -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+            background-color: var(--bg-main); color: var(--text-primary);
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+            padding: 20px 14px 40px; font-size: 1rem;
         }
 
-        /* Разрешаем выделение только для инпутов */
         input, textarea, select {
-            -webkit-user-select: text !important;
-            user-select: text !important;
-            -webkit-touch-callout: default !important;
-            caret-color: var(--accent-main);
+            -webkit-user-select: text !important; user-select: text !important; -webkit-touch-callout: default !important;
+            caret-color: var(--accent-main); touch-action: manipulation;
         }
 
-        /* 
-           ИСПРАВЛЕНИЕ 4: Убираем `position: fixed` для `body`, оставляем только запрет скролла.
-           Это не позволит браузеру дергать шторку при попытке скролла к инпуту.
-        */
-        body.modal-open {
-            overflow: hidden;
-        }
-
+        body.modal-open { overflow: hidden; }
         body.theme-animated * { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
 
         .svg-icon {
@@ -133,27 +106,14 @@
             vertical-align: middle; flex-shrink: 0;
         }
 
-        .header-bar {
-            width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
-        }
-
-        .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
-            font-family: 'Alice', Georgia, serif; font-weight: 400; letter-spacing: 0.025em;
-        }
-
-        .uniform-brand-title {
-            font-size: clamp(1.25rem, 5.5vw, 1.45rem); text-transform: none; color: var(--text-primary); font-style: normal; line-height: 1.25;
-        }
-
-        .logo {
-            font-family: 'Alice', Georgia, serif; font-size: clamp(1.5rem, 6.5vw, 1.75rem); font-weight: 400;
-            letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-primary);
-        }
+        .header-bar { width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title { font-family: 'Alice', Georgia, serif; font-weight: 400; letter-spacing: 0.025em; }
+        .uniform-brand-title { font-size: clamp(1.25rem, 5.5vw, 1.45rem); text-transform: none; color: var(--text-primary); font-style: normal; line-height: 1.25; }
+        .logo { font-family: 'Alice', Georgia, serif; font-size: clamp(1.5rem, 6.5vw, 1.75rem); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-primary); }
 
         .btn-settings-round {
             width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-color);
-            color: var(--text-primary); display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: var(--shadow-soft); transition: all 0.2s ease; flex-shrink: 0;
+            color: var(--text-primary); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow-soft); transition: all 0.2s ease; flex-shrink: 0;
         }
         .btn-settings-round:active { background: var(--accent-light); border-color: var(--accent-main); transform: scale(0.95); }
 
@@ -169,13 +129,8 @@
         }
         .date-chip:active { background: var(--accent-light); border-color: var(--accent-main); }
 
-        .main-card {
-            background: var(--surface); border-radius: 16px; width: 100%; max-width: 480px; padding: 18px 16px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color);
-        }
-
-        .tod-switch {
-            position: relative; display: flex; background: var(--bg-main); border-radius: 14px; padding: 4px; margin-bottom: 18px; border: 1px solid var(--border-color);
-        }
+        .main-card { background: var(--surface); border-radius: 16px; width: 100%; max-width: 480px; padding: 18px 16px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); }
+        .tod-switch { position: relative; display: flex; background: var(--bg-main); border-radius: 14px; padding: 4px; margin-bottom: 18px; border: 1px solid var(--border-color); }
 
         .tod-slider-pill {
             position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: var(--surface);
@@ -204,26 +159,14 @@
             background: var(--accent-light); border: 1px solid var(--accent-main); padding: 2px 6px; border-radius: 6px; margin-left: 8px; display: inline-block; vertical-align: middle; line-height: 1.2;
         }
 
-        .routine-item {
-            background: var(--surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;
-        }
+        .routine-item { background: var(--surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
         .routine-item-main { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 8px; }
         .item-left { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
         .item-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; color: var(--accent-main); flex-shrink: 0; width: 24px; opacity: 0.9; }
         .item-details { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
 
-        /* 
-           ИСПРАВЛЕНИЕ 6: Многоточие убрано.
-           Добавлены переносы строк для длинных названий средств и тегов.
-        */
-        .item-name {
-            font-size: clamp(0.95rem, 4.2vw, 1.05rem); font-weight: 600; color: var(--text-primary);
-            white-space: normal; word-break: break-word; line-height: 1.3;
-        }
-        .item-tag {
-            font-size: 0.8125rem; color: var(--text-secondary); font-weight: 500;
-            white-space: normal; word-break: break-word; line-height: 1.25;
-        }
+        .item-name { font-size: clamp(0.95rem, 4.2vw, 1.05rem); font-weight: 600; color: var(--text-primary); white-space: normal; word-break: break-word; line-height: 1.3; }
+        .item-tag { font-size: 0.8125rem; color: var(--text-secondary); font-weight: 500; white-space: normal; word-break: break-word; line-height: 1.25; }
 
         .item-week-step {
             display: inline-flex; align-items: center; gap: 5px; font-size: 0.8125rem; font-weight: 600;
@@ -262,13 +205,8 @@
         input:checked + .toggle-slider { background-color: var(--accent-main); }
         input:checked + .toggle-slider:before { transform: translateX(20px); }
 
-        /* 
-           ИСПРАВЛЕНИЕ 3: Выезжающие мобильные шторки переведены на inset + height: 100%. 
-           Они больше не будут скакать из-за динамического `100dvh` при открытии клавиатуры. 
-        */
         .modal-overlay {
-            position: fixed; inset: 0; height: 100%;
-            background: rgba(0, 0, 0, 0.45); display: none; justify-content: center; align-items: flex-end; padding: 0;
+            position: fixed; inset: 0; height: 100%; background: rgba(0, 0, 0, 0.45); display: none; justify-content: center; align-items: flex-end; padding: 0;
             z-index: 1000; overflow: hidden; opacity: 0; transition: opacity 0.25s ease; touch-action: none;
         }
         .modal-overlay.active-modal { opacity: 1; }
@@ -288,28 +226,17 @@
 
         .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .cal-month-title { font-size: clamp(1.1875rem, 5.2vw, 1.35rem); font-weight: 400; }
-        .cal-nav-btn {
-            background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-primary);
-            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
+        .cal-nav-btn { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
         .cal-day-name { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); padding-bottom: 4px; }
-        .cal-day-cell {
-            aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; border-radius: 50%;
-            cursor: pointer; transition: all 0.2s ease; color: var(--text-primary);
-        }
+        .cal-day-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; border-radius: 50%; cursor: pointer; transition: all 0.2s ease; color: var(--text-primary); }
         .cal-day-cell.selected { background: var(--accent-main); color: #FFFFFF; font-weight: 600; opacity: 1; }
         .cal-day-cell.archive-day { color: var(--text-secondary); opacity: 0.65; }
         .cal-day-cell.future-day { color: var(--text-secondary); opacity: 0.75; }
         .cal-day-cell.disabled { opacity: 0.3 !important; color: var(--text-secondary) !important; text-decoration: line-through !important; pointer-events: none !important; }
 
-        .modal-body-scrollable {
-            flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-right: 2px; padding-left: 2px;
-        }
-        .modal-footer-pinned {
-            flex-shrink: 0; background: var(--surface); padding-top: 10px; padding-bottom: calc(2px + env(safe-area-inset-bottom));
-            margin-top: 6px; border-top: 1px solid var(--border-color); z-index: 10;
-        }
+        .modal-body-scrollable { flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-right: 2px; padding-left: 2px; }
+        .modal-footer-pinned { flex-shrink: 0; background: var(--surface); padding-top: 10px; padding-bottom: calc(2px + env(safe-area-inset-bottom)); margin-top: 6px; border-top: 1px solid var(--border-color); z-index: 10; }
         .modal-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0; min-height: 24px; }
         .modal-title { font-size: clamp(1.25rem, 5.5vw, 1.45rem); font-weight: 400; color: var(--text-primary); }
 
@@ -328,10 +255,6 @@
         .form-group label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
         .input-with-icon-wrapper { position: relative; display: flex; align-items: center; }
 
-        /* 
-           ИСПРАВЛЕНИЕ 2: Зафиксирован font-size 16px для инпутов, чтобы предотвратить
-           вынужденный зум браузеров iOS Safari при фокусе, который уводит интерфейс.
-        */
         .input-control {
             width: 100%; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface);
             color: var(--text-primary); font-size: 16px !important; font-weight: 500; outline: none;
@@ -423,7 +346,6 @@
         }
         .manage-item:active { background: var(--accent-light); border-color: var(--accent-main); }
         .manage-info { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
-        /* ИСПРАВЛЕНИЕ 6.1: Переносы для длинных имен в модалке */
         .manage-info span { white-space: normal; word-break: break-word; line-height: 1.3; font-weight: 600; }
         .manage-chevron { display: inline-flex; align-items: center; justify-content: center; color: var(--text-secondary); flex-shrink: 0; }
 
@@ -448,7 +370,6 @@
 </head>
 <body>
 
-    <!-- Шапка приложения -->
     <div class="header-bar">
         <div class="logo">MyLumy</div>
         <button type="button" class="btn-settings-round" id="btnOpenAppSettings" title="Мои настройки">
@@ -459,7 +380,6 @@
         </button>
     </div>
 
-    <!-- 1. Карточка "Мои ритуалы" -->
     <div class="streak-card" id="streakCard">
         <div class="streak-card-title uniform-brand-title">Мои ритуалы</div>
         <div class="date-chip" id="currentDateChip">
@@ -467,7 +387,6 @@
         </div>
     </div>
 
-    <!-- 2. Основная карточка с графиком и средствами -->
     <div class="main-card">
         <div class="tod-switch" id="todSwitch">
             <div class="tod-slider-pill" id="todPill"></div>
@@ -485,7 +404,6 @@
         </div>
     </div>
 
-    <!-- Кастомный Календарь -->
     <div class="modal-overlay" id="customCalendarModal">
         <div class="modal-card custom-calendar-modal">
             <div class="modal-drag-handle"></div>
@@ -505,7 +423,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно "Мои средства" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card" id="settingsModalCard">
             <div class="modal-drag-handle"></div>
@@ -539,7 +456,6 @@
                     <input type="hidden" id="editProductId" value="">
                     <input type="hidden" id="pOpenDate" value="">
 
-                    <!-- Поле названия средств -->
                     <div class="form-section" style="margin-bottom: 10px; margin-top: 0;">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="pName">Название средства</label>
@@ -553,7 +469,6 @@
                         </div>
                     </div>
 
-                    <!-- Скрываемый блок: «Параметры и график» -->
                     <div class="form-section">
                         <button type="button" class="accordion-toggle-btn" id="btnToggleDetailsAccordion">
                             <span style="display: flex; align-items: center; gap: 6px;">
@@ -650,7 +565,6 @@
                         </div>
                     </div>
 
-                    <!-- Кнопки формы -->
                     <div id="formFooterButtons" style="display: flex; flex-direction: column; gap: 6px; margin-top: 12px; margin-bottom: 10px;">
                         <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct">Сохранить средство</button>
                         <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
@@ -666,7 +580,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно действий над средством (Action Sheet) -->
     <div class="modal-overlay" id="productActionModal" style="z-index: 10500;">
         <div class="modal-card">
             <div class="modal-drag-handle"></div>
@@ -686,7 +599,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно "Настройки приложения" -->
     <div class="modal-overlay" id="appSettingsModal">
         <div class="modal-card">
             <div class="modal-drag-handle"></div>
@@ -697,7 +609,6 @@
             </div>
 
             <div class="modal-body-scrollable">
-                
                 <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Продвинутый режим</div>
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
@@ -712,7 +623,6 @@
                     </div>
                 </div>
 
-                <!-- Настройка размера шрифта -->
                 <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Размер шрифта</div>
                     <div class="picker-group" id="fontSizePicker">
@@ -775,7 +685,6 @@
                         <a href="https://tatikhi.github.io/MyLumy/politic.html" target="_blank" class="btn-secondary small-font uniform-brand-title" style="text-decoration: none; text-align: center; display: block; margin-top: 0;">Политика конфиденциальности</a>
                     </div>
                 </div>
-
             </div>
 
             <div class="modal-footer-pinned">
@@ -784,7 +693,6 @@
         </div>
     </div>
 
-    <!-- Стартовое окно -->
     <div class="modal-overlay" id="welcomeModal" style="z-index: 12000;">
         <div class="modal-card">
             <div class="modal-drag-handle"></div>
@@ -911,14 +819,70 @@
             if (proBadge) { proBadge.style.display = isSuperCollectionEnabled ? 'inline-block' : 'none'; }
         }
 
+        // Встроенный словарь наименований средств
         const localProductDictionary = [
             "Патчи для глаз", "Патчи гидрогелевые", "Пенка для умывания", "Гель для умывания", 
             "Гидрофильное масло", "Гидрофильный бальзам", "Мицеллярная вода", "Энзимная пудра", "Тонер увлажняющий", 
             "Тонер успокаивающий", "Тоник кислотный", "Эссенция с муцином", "Мист для лица", "Сыворотка с гиалуроновой кислотой", 
             "Сыворотка с ниацинамидом", "Сыворотка с витамином C", "Сыворотка с ретинолом", "Сыворотка с пептидами", 
-            "Крем для веках", "Крем вокруг глаз", "Увлажняющий крем", "Питательный крем", "Восстанавливающий крем", 
+            "Крем для глаз", "Крем для век", "Увлажняющий крем", "Питательный крем", "Восстанавливающий крем", 
             "Солнцезащитный крем SPF 50", "Ночная маска", "Тканевая маска", "Глиняная маска", "Бальзам для губ"
         ];
+
+        // Косметологический алгоритм распознавания типов ухода
+        function detectTypeByName(name) {
+            if (!name || typeof name !== 'string') return null;
+            const clean = name.toLowerCase().trim();
+            if (clean.length < 2) return null;
+
+            // 1. Уход за глазами (высокий приоритет, чтобы патчи или крем для век не попадали в маски/кремы)
+            if (clean.includes('патч') || clean.includes('глаз') || clean.includes('век') || clean.includes('eye')) {
+                return 'Уход за глазами';
+            }
+
+            // 2. SPF / Защита
+            if (clean.includes('spf') || clean.includes('спф') || clean.includes('солнц') || clean.includes('sunscreen') || clean.includes('санскрин')) {
+                return 'SPF / Защита';
+            }
+
+            // 3. Очищение
+            if (
+                clean.includes('мицелл') || clean.includes('гидрофильн') || clean.includes('умыван') || 
+                clean.includes('пенка') || clean.includes('гель') || clean.includes('энзим') || 
+                clean.includes('скраб') || clean.includes('гоммаж') || clean.includes('пудра') || 
+                clean.includes('cleanser') || clean.includes('wash') || clean.includes('глинян')
+            ) {
+                return 'Очищение';
+            }
+
+            // 4. Тонизирование
+            if (clean.includes('тонер') || clean.includes('тоник') || clean.includes('мист') || clean.includes('эссенц') || clean.includes('toner') || clean.includes('mist') || clean.includes('essence')) {
+                return 'Тонизирование';
+            }
+
+            // 5. Активы
+            if (
+                clean.includes('сыворотк') || clean.includes('serum') || clean.includes('ампул') || 
+                clean.includes('ретин') || clean.includes('retin') || clean.includes('адапален') || 
+                clean.includes('третиноин') || clean.includes('кислот') || clean.includes('acid') || 
+                clean.includes('aha') || clean.includes('bha') || clean.includes('pha') || 
+                clean.includes('ниацинамид') || clean.includes('витамин c') || clean.includes('витамин с')
+            ) {
+                return 'Активы';
+            }
+
+            // 6. Питание / Увлажнение (тканевые/ночные маски, бальзамы, кремы для лица)
+            if (
+                clean.includes('крем') || clean.includes('маск') || clean.includes('бальзам') || 
+                clean.includes('флюид') || clean.includes('эмульс') || clean.includes('лосьон') || 
+                clean.includes('cream') || clean.includes('mask') || clean.includes('lotion') || 
+                clean.includes('fluid') || clean.includes('увлажн') || clean.includes('питат')
+            ) {
+                return 'Питание / Увлажнение';
+            }
+
+            return null;
+        }
 
         const SMART_PRESETS = [
             {
@@ -1353,8 +1317,10 @@
 
             openDetailsAccordion();
             currentDetectedPreset = detectSmartPreset(val);
+            const autoDetectedType = detectTypeByName(val);
+
             const isFullMatch = isComplete || localProductDictionary.some(item => item.toLowerCase() === cleanQuery) || products.some(p => p.name.toLowerCase() === cleanQuery);
-            applyFormStateFromPreset(currentDetectedPreset, isFullMatch);
+            applyFormStateFromPreset(currentDetectedPreset, isFullMatch, autoDetectedType);
 
             const userProducts = products.map(p => p.name);
             const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
@@ -1374,8 +1340,17 @@
             }, 300);
         }
 
-        function applyFormStateFromPreset(preset, showBanner = false) {
+        function applyFormStateFromPreset(preset, showBanner = false, detectedType = null) {
             const banner = document.getElementById('smartPresetBanner'); const defaultDays = [1, 4];
+            
+            // 1. Установка автоматически определенного типа ухода
+            const targetType = detectedType || (preset ? preset.type : null);
+            if (targetType) {
+                document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.type === targetType));
+                if (targetType === 'Уход за глазами') applyPAO('6');
+            }
+
+            // 2. Установка рекомендаций из смарт-пресета (паузы, дни, PAO)
             if (preset) {
                 if (preset.reason && showBanner) {
                     const bulbSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
@@ -1383,7 +1358,6 @@
                     banner.style.display = 'block';
                 } else banner.style.display = 'none';
 
-                if (preset.type) { document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.type === preset.type)); }
                 if (preset.tods) { document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.toggle('active', preset.tods.includes(b.dataset.tod))); }
 
                 const targetFreq = preset.freqType || 'daily';
@@ -1399,12 +1373,14 @@
                 applyPAO(preset.pao || '12'); setPauseBefore(preset.pauseBefore !== undefined ? preset.pauseBefore : null); setPauseAfter(preset.pauseAfter !== undefined ? preset.pauseAfter : null);
 
             } else {
-                banner.style.display = 'none'; document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
+                banner.style.display = 'none';
+                if (!detectedType) document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.add('active'));
                 document.getElementById('pFreqType').value = 'daily'; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === 'daily'));
                 document.getElementById('daysGroup').style.display = 'none';
                 document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10))));
-                applyPAO('12'); setPauseBefore(null); setPauseAfter(null);
+                if (targetType !== 'Уход за глазами') applyPAO('12');
+                setPauseBefore(null); setPauseAfter(null);
             }
         }
 
@@ -1577,9 +1553,6 @@
             });
         }
 
-        /* 
-           ИСПРАВЛЕНИЕ 5: Свайп модального окна больше не мешает выделению текста в инпуте.
-        */
         function initModalGestures(modalEl) {
             const card = modalEl.querySelector('.modal-card'); if (!card) return;
             let startY = 0; let currentY = 0; let isDragging = false;
@@ -1587,7 +1560,6 @@
             const handleTouchStart = (e) => {
                 const target = e.target;
                 
-                // ИСКЛЮЧЕНИЕ: Если тап пришелся по полю ввода, не перехватываем жест
                 if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('input')) {
                     return;
                 }
@@ -1822,11 +1794,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadAppDataFromCloud();
-
-            /* Инициализация свайпов шторок */
             document.querySelectorAll('.modal-overlay').forEach(initModalGestures);
 
-            /* Быстрое открытие карточки в TG с первого тапа */
             const manageListEl = document.getElementById('manageList');
             if (manageListEl) {
                 const handleManageTouch = (e) => {
