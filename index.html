@@ -692,7 +692,7 @@
             transform: translateX(20px);
         }
 
-        /* Выезжающие мобильные шторки с гибким позиционированием клавиатуры */
+        /* Выезжающие мобильные шторки с зафиксированным позиционированием */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -719,8 +719,8 @@
             border-radius: 20px 20px 0 0;
             width: 100%;
             max-width: 480px;
-            max-height: 88vh;
-            max-height: 88dvh;
+            max-height: 85vh;
+            max-height: 85dvh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -733,17 +733,6 @@
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
             touch-action: pan-y;
-        }
-
-        /* Адаптивный режим при активной клавиатуре */
-        .modal-overlay.is-keyboard-open {
-            align-items: flex-end !important;
-        }
-
-        .modal-overlay.is-keyboard-open .modal-card {
-            max-height: 100% !important;
-            height: 100% !important;
-            border-radius: 16px 16px 0 0 !important;
         }
 
         .modal-drag-handle {
@@ -961,9 +950,10 @@
         }
 
         .autocomplete-item {
-            padding: 10px 12px; font-size: 0.9rem; color: var(--text-primary);
+            padding: 12px; font-size: 0.9rem; color: var(--text-primary);
             cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s ease;
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .autocomplete-item:last-child { border-bottom: none; }
@@ -991,7 +981,7 @@
             border-color: var(--accent-main); box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
 
-        /* Новый 3x2 Grid выбора тем оформления без свайпов */
+        /* 3x2 Grid выбора тем оформления */
         .theme-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1175,6 +1165,7 @@
             font-size: 0.9375rem; font-weight: 600; border: 1px solid var(--border-color); cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation; gap: 8px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .manage-item:active { background: var(--accent-light); border-color: var(--accent-main); }
@@ -1530,7 +1521,7 @@
                     </div>
                 </div>
 
-                <!-- Красивая 3x2 сетка выбора тем оформления -->
+                <!-- 3x2 сетка выбора тем оформления -->
                 <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Тема оформления</div>
                     <div class="theme-grid" id="themeRow">
@@ -2474,8 +2465,9 @@
                     selectAutocompleteItem(name);
                 };
 
+                // touchstart предотвращает сброс фокуса и потери первого клика в TG
+                itemDiv.addEventListener('touchstart', handleSelect, { passive: false });
                 itemDiv.addEventListener('pointerdown', handleSelect);
-                itemDiv.addEventListener('mousedown', handleSelect);
                 dropdown.appendChild(itemDiv);
             });
 
@@ -2769,7 +2761,7 @@
             });
         }
 
-        /* Управление свайпами и жестами шторок с блокировкой нативного свайпа Telegram */
+        /* Управление свайпами шторок */
         function initModalGestures(modalEl) {
             const card = modalEl.querySelector('.modal-card');
             if (!card) return;
@@ -2933,7 +2925,7 @@
                 }).filter(p => p.type === catName);
 
                 let catItemsHtml = catProducts.map(p => `
-                    <div class="manage-item" id="manage-item-${p.id}" onclick="openProductActionModal(${p.id})">
+                    <div class="manage-item" data-id="${p.id}">
                         <div class="manage-info">
                             ${calcExpiryDots(p.openDate, p.paoMonths)}
                             <span><b>${escapeHtml(p.name)}</b></span>
@@ -3157,7 +3149,6 @@
                     window.Telegram.WebApp.ready();
                     window.Telegram.WebApp.expand();
 
-                    // Отключаем нативный жест сворачивания приложения Telegram при свайпе вниз
                     if (typeof window.Telegram.WebApp.disableVerticalSwipes === 'function') {
                         window.Telegram.WebApp.disableVerticalSwipes();
                     }
@@ -3197,38 +3188,29 @@
             /* Инициализация свайпов шторок */
             document.querySelectorAll('.modal-overlay').forEach(initModalGestures);
 
-            /* Обработка клавиатуры и видимой области */
-            function handleViewportChange() {
-                if (!window.visualViewport) return;
-                const activeModal = document.querySelector('.modal-overlay.active-modal');
-                if (!activeModal) return;
-
-                const isKeyboardOpen = window.visualViewport.height < window.innerHeight - 100;
-                if (isKeyboardOpen) {
-                    activeModal.classList.add('is-keyboard-open');
-                } else {
-                    activeModal.classList.remove('is-keyboard-open');
-                }
+            /* Быстрое открытие карточки в TG с первого тапа */
+            const manageListEl = document.getElementById('manageList');
+            if (manageListEl) {
+                const handleManageTouch = (e) => {
+                    const manageItem = e.target.closest('.manage-item');
+                    if (manageItem) {
+                        const id = manageItem.getAttribute('data-id');
+                        if (id) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openProductActionModal(Number(id));
+                        }
+                    }
+                };
+                manageListEl.addEventListener('touchstart', handleManageTouch, { passive: false });
+                manageListEl.addEventListener('click', (e) => {
+                    const manageItem = e.target.closest('.manage-item');
+                    if (manageItem) {
+                        const id = manageItem.getAttribute('data-id');
+                        if (id) openProductActionModal(Number(id));
+                    }
+                });
             }
-
-            if (window.visualViewport) {
-                window.visualViewport.addEventListener('resize', handleViewportChange);
-                window.visualViewport.addEventListener('scroll', handleViewportChange);
-            }
-
-            document.addEventListener('focusin', (e) => {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                    const activeModal = document.querySelector('.modal-overlay.active-modal');
-                    if (activeModal) activeModal.classList.add('is-keyboard-open');
-                }
-            });
-
-            document.addEventListener('focusout', (e) => {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                    const activeModal = document.querySelector('.modal-overlay.active-modal');
-                    if (activeModal) activeModal.classList.remove('is-keyboard-open');
-                }
-            });
 
             /* Уведомление после обновления приложения */
             if (safeStorage.getItem('cb_app_updated') === 'true') {
