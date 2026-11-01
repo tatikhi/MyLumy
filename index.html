@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -43,1100 +43,420 @@
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- Шрифт: Alice + Plus Jakarta Sans -->
+    <!-- Шрифт -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alice&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <style>
-        :root {
-            --font-scale: 1;
-        }
+        html { font-size: 16px; }
+        html[data-font-size="large"] { font-size: 18px; }
 
-        html[data-font-size="large"] {
-            --font-scale: 1.12;
-        }
-
-        /* 1. Sunlit Gloss */
+        /* Темы оформления */
         :root, [data-theme="sunlit"] {
-            --bg-main: #FFF5F0;
-            --surface: #FFFFFF;
-            --text-primary: #331B14;
-            --text-secondary: #704C42;
-            --accent-main: #E87A5D;
-            --accent-grad: #C95B3E;
-            --accent-light: #FDE6DD;
-            --border-color: #F7CBBF;
-            --shadow-soft: 0 16px 40px rgba(232, 122, 93, 0.15);
-            --icon-inactive: #C7A69C;
-            --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(232, 122, 93, 0.6);
-            --scroll-track: rgba(232, 122, 93, 0.12);
+            --bg-main: #FFF5F0; --surface: #FFFFFF; --text-primary: #331B14; --text-secondary: #704C42;
+            --accent-main: #E87A5D; --accent-grad: #C95B3E; --accent-light: #FDE6DD; --border-color: #F7CBBF;
+            --shadow-soft: 0 2px 8px rgba(232, 122, 93, 0.08); --icon-inactive: #C7A69C; --item-bg: #FFFFFF;
         }
-
-        /* 2. Berry Velvet */
         [data-theme="berry"] {
-            --bg-main: #1D161E;
-            --surface: #2A202C;
-            --text-primary: #F7EBF0;
-            --text-secondary: #B39DA8;
-            --accent-main: #D96B94;
-            --accent-grad: #B84D75;
-            --accent-light: #3D2938;
-            --border-color: #4A3545;
-            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.4);
-            --icon-inactive: #6B5263;
-            --item-bg: rgba(42, 32, 44, 0.75);
-            --scroll-thumb: rgba(217, 107, 148, 0.6);
-            --scroll-track: rgba(217, 107, 148, 0.12);
+            --bg-main: #1D161E; --surface: #2A202C; --text-primary: #F7EBF0; --text-secondary: #B39DA8;
+            --accent-main: #D96B94; --accent-grad: #B84D75; --accent-light: #3D2938; --border-color: #4A3545;
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2); --icon-inactive: #6B5263; --item-bg: #2A202C;
         }
-
-        /* 3. Ice Derm */
         [data-theme="icederm"] {
-            --bg-main: #F0F6FA;
-            --surface: #FFFFFF;
-            --text-primary: #122836;
-            --text-secondary: #425F73;
-            --accent-main: #2B78A3;
-            --accent-grad: #1C5A7D;
-            --accent-light: #DCECF5;
-            --border-color: #B9D5E6;
-            --shadow-soft: 0 16px 40px rgba(43, 120, 163, 0.12);
-            --icon-inactive: #90AEC2;
-            --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(43, 120, 163, 0.6);
-            --scroll-track: rgba(43, 120, 163, 0.12);
+            --bg-main: #F0F6FA; --surface: #FFFFFF; --text-primary: #122836; --text-secondary: #425F73;
+            --accent-main: #2B78A3; --accent-grad: #1C5A7D; --accent-light: #DCECF5; --border-color: #B9D5E6;
+            --shadow-soft: 0 2px 8px rgba(43, 120, 163, 0.08); --icon-inactive: #90AEC2; --item-bg: #FFFFFF;
         }
-
-        /* 4. Espresso & Oat */
         [data-theme="espresso"] {
-            --bg-main: #F8F4EE;
-            --surface: #FFFFFF;
-            --text-primary: #2B211A;
-            --text-secondary: #5C4C40;
-            --accent-main: #6F4E37;
-            --accent-grad: #523825;
-            --accent-light: #ECE1D7;
-            --border-color: #D9C8B8;
-            --shadow-soft: 0 16px 40px rgba(111, 78, 55, 0.12);
-            --icon-inactive: #AFA093;
-            --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(111, 78, 55, 0.6);
-            --scroll-track: rgba(111, 78, 55, 0.12);
+            --bg-main: #F8F4EE; --surface: #FFFFFF; --text-primary: #2B211A; --text-secondary: #5C4C40;
+            --accent-main: #6F4E37; --accent-grad: #523825; --accent-light: #ECE1D7; --border-color: #D9C8B8;
+            --shadow-soft: 0 2px 8px rgba(111, 78, 55, 0.08); --icon-inactive: #AFA093; --item-bg: #FFFFFF;
         }
-
-        /* 5. Cyber Glow */
         [data-theme="cyberglow"] {
-            --bg-main: #F5F0FE;
-            --surface: #FFFFFF;
-            --text-primary: #1F1135;
-            --text-secondary: #523D70;
-            --accent-main: #8A5CF5;
-            --accent-grad: #6E3BD9;
-            --accent-light: #EBE1FF;
-            --border-color: #D3C2F8;
-            --shadow-soft: 0 16px 40px rgba(138, 92, 245, 0.15);
-            --icon-inactive: #A692CD;
-            --item-bg: rgba(255, 255, 255, 0.9);
-            --scroll-thumb: rgba(138, 92, 245, 0.6);
-            --scroll-track: rgba(138, 92, 245, 0.12);
+            --bg-main: #F5F0FE; --surface: #FFFFFF; --text-primary: #1F1135; --text-secondary: #523D70;
+            --accent-main: #8A5CF5; --accent-grad: #6E3BD9; --accent-light: #EBE1FF; --border-color: #D3C2F8;
+            --shadow-soft: 0 2px 8px rgba(138, 92, 245, 0.08); --icon-inactive: #A692CD; --item-bg: #FFFFFF;
         }
-
-        /* 6. Midnight Calm */
         [data-theme="midnight"] {
-            --bg-main: #0F141C;
-            --surface: #161D2B;
-            --text-primary: #F0F5FF;
-            --text-secondary: #8E9EB8;
-            --accent-main: #4E9EFF;
-            --accent-grad: #2B7AE6;
-            --accent-light: #1A2E4A;
-            --border-color: #23324A;
-            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.5);
-            --icon-inactive: #4B5E7D;
-            --item-bg: rgba(22, 29, 43, 0.85);
-            --scroll-thumb: rgba(78, 158, 255, 0.6);
-            --scroll-track: rgba(78, 158, 255, 0.12);
+            --bg-main: #0F141C; --surface: #161D2B; --text-primary: #F0F5FF; --text-secondary: #8E9EB8;
+            --accent-main: #4E9EFF; --accent-grad: #2B7AE6; --accent-light: #1A2E4A; --border-color: #23324A;
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.3); --icon-inactive: #4B5E7D; --item-bg: #161D2B;
         }
 
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            box-sizing: border-box; margin: 0; padding: 0;
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             touch-action: manipulation;
         }
 
-        /* Принудительно разрешаем выделение текста и контекстное меню для Telegram WebApp */
-        body, p, span, div, label, 
-        .item-name, .item-tag, .toast-notification, 
-        .version-text, #smartPresetText, .item-details {
-            -webkit-user-select: text !important;
-            user-select: text !important;
-            -webkit-touch-callout: default !important;
-        }
-
-        /* Блокируем выделение строго для интерактивных кнопок и переключателей */
-        button, input[type="button"], .picker-btn, .day-chip, 
-        .pao-chip, .toggle-switch, .tod-btn, .date-chip, 
-        .cal-day-cell, .svg-icon, .category-header-btn, .manage-item {
-            -webkit-user-select: none !important;
-            user-select: none !important;
-            -webkit-touch-callout: none !important;
-        }
-
-        body.theme-animated * {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        input, textarea, select {
-            caret-color: var(--accent-main);
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
+        /* 
+           ИСПРАВЛЕНИЕ 1: Отключаем тотальное выделение всего текста. 
+           Теперь экран не будет мигать при попытке скролла или случайном долгом тапе в TG.
+        */
         body {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
             background-color: var(--bg-main);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 22px 14px 40px;
-            font-size: calc(16px * var(--font-scale));
+            padding: 20px 14px 40px;
+            font-size: 1rem;
         }
 
-        body.modal-open { overflow: hidden; }
+        /* Разрешаем выделение только для инпутов */
+        input, textarea, select {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+            -webkit-touch-callout: default !important;
+            caret-color: var(--accent-main);
+        }
+
+        /* 
+           ИСПРАВЛЕНИЕ 4: Убираем `position: fixed` для `body`, оставляем только запрет скролла.
+           Это не позволит браузеру дергать шторку при попытке скролла к инпуту.
+        */
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        body.theme-animated * { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
 
         .svg-icon {
-            display: inline-block;
-            width: 19px;
-            height: 19px;
-            min-width: 19px;
-            min-height: 19px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            vertical-align: middle;
-            flex-shrink: 0;
+            display: inline-block; width: 19px; height: 19px; min-width: 19px; min-height: 19px;
+            stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            vertical-align: middle; flex-shrink: 0;
         }
 
         .header-bar {
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            margin-bottom: 18px;
+            width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
         }
 
         .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
-            font-family: 'Alice', Georgia, serif;
-            font-weight: 400;
-            letter-spacing: 0.025em;
+            font-family: 'Alice', Georgia, serif; font-weight: 400; letter-spacing: 0.025em;
         }
 
         .uniform-brand-title {
-            font-size: calc(clamp(20px, 5.5vw, 24px) * var(--font-scale));
-            text-transform: none;
-            color: var(--text-primary);
-            font-style: normal;
-            line-height: 1.25;
+            font-size: clamp(1.25rem, 5.5vw, 1.45rem); text-transform: none; color: var(--text-primary); font-style: normal; line-height: 1.25;
         }
 
         .logo {
-            font-family: 'Alice', Georgia, serif;
-            font-size: calc(clamp(25px, 6.5vw, 29px) * var(--font-scale));
-            font-weight: 400;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-primary);
+            font-family: 'Alice', Georgia, serif; font-size: clamp(1.5rem, 6.5vw, 1.75rem); font-weight: 400;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-primary);
         }
+
+        .btn-settings-round {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border-color);
+            color: var(--text-primary); display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: var(--shadow-soft); transition: all 0.2s ease; flex-shrink: 0;
+        }
+        .btn-settings-round:active { background: var(--accent-light); border-color: var(--accent-main); transform: scale(0.95); }
 
         .streak-card {
-            background: var(--surface);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 480px;
-            padding: 16px 18px;
-            margin-bottom: 18px;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid var(--border-color);
-            text-align: center;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .streak-card-title {
-            background: transparent;
-            border: none;
-            padding: 0;
-            box-shadow: none;
+            background: var(--surface); border-radius: 16px; width: 100%; max-width: 480px; padding: 16px; margin-bottom: 14px;
+            box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;
         }
 
         .date-chip {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--surface);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: 20px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: calc(clamp(15px, 4vw, 17px) * var(--font-scale));
-            font-weight: 600;
-            letter-spacing: 0.015em;
-            text-transform: none;
-            cursor: pointer;
-            position: relative;
-            width: 100%;
-            max-width: 320px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            transition: all 0.25s ease;
-            white-space: nowrap;
+            display: inline-flex; align-items: center; justify-content: center; background: var(--surface); color: var(--text-primary);
+            border: 1px solid var(--border-color); padding: 10px 18px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(0.9375rem, 4vw, 1.05rem); font-weight: 600; text-transform: none; cursor: pointer; width: 100%; max-width: 320px; transition: all 0.2s ease; white-space: nowrap;
         }
-
-        .date-chip:hover, .date-chip:active {
-            background: var(--accent-light);
-            border-color: var(--accent-main);
-            transform: translateY(-1px);
-        }
+        .date-chip:active { background: var(--accent-light); border-color: var(--accent-main); }
 
         .main-card {
-            background: var(--surface);
-            border-radius: 30px;
-            width: 100%;
-            max-width: 480px;
-            padding: 22px 18px;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid var(--border-color);
+            background: var(--surface); border-radius: 16px; width: 100%; max-width: 480px; padding: 18px 16px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color);
         }
 
         .tod-switch {
-            display: flex;
-            background: var(--bg-main);
-            border-radius: 18px;
-            padding: 5px;
-            margin-bottom: 22px;
-            border: 1px solid var(--border-color);
-            gap: 4px;
+            position: relative; display: flex; background: var(--bg-main); border-radius: 14px; padding: 4px; margin-bottom: 18px; border: 1px solid var(--border-color);
         }
+
+        .tod-slider-pill {
+            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: var(--surface);
+            border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); z-index: 1;
+        }
+        .tod-switch[data-tod="evening"] .tod-slider-pill { transform: translate3d(100%, 0, 0); }
 
         .tod-btn {
-            flex: 1;
-            padding: 11px 8px;
-            text-align: center;
-            border-radius: 14px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            border: none;
-            background: transparent;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            font-size: calc(clamp(18.5px, 4.8vw, 21.5px) * var(--font-scale));
+            position: relative; z-index: 2; flex: 1; padding: 10px 8px; text-align: center; border-radius: 10px; cursor: pointer;
+            color: var(--text-secondary); border: none; background: transparent; transition: color 0.25s ease;
+            display: flex; align-items: center; justify-content: center; font-size: clamp(1.1rem, 4.8vw, 1.3rem);
         }
+        .tod-btn.active { color: var(--text-primary); }
 
-        .tod-btn.uniform-brand-title { line-height: 1.2; }
-
-        .tod-btn.active {
-            background: var(--surface);
-            color: var(--text-primary);
-            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-        }
-
-        .routine-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-bottom: 22px;
-        }
-
-        .main-card-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-        }
+        .routine-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+        .main-card-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 
         .btn-main-action {
-            width: 100%;
-            padding: 15px 18px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            background: var(--surface);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            white-space: nowrap;
+            width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-color); background: var(--surface);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: clamp(1rem, 4.3vw, 1.125rem);
         }
-
-        .btn-main-action:hover, .btn-main-action:active {
-            background: var(--accent-light);
-            border-color: var(--accent-main);
-            transform: translateY(-1px);
-        }
+        .btn-main-action:active { background: var(--accent-light); border-color: var(--accent-main); }
 
         .pro-badge {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent-main);
-            background: var(--accent-light);
-            border: 1px solid var(--accent-main);
-            padding: 2px 7px;
-            border-radius: 8px;
-            margin-left: 8px;
-            letter-spacing: 0.05em;
-            display: inline-block;
-            vertical-align: middle;
-            line-height: 1.2;
-        }
-
-        .settings-card-wrapper {
-            background: var(--surface);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 480px;
-            padding: 18px;
-            margin-top: 18px;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .btn-settings-inner {
-            position: relative;
-            display: inline-block;
-            text-align: center;
-            color: inherit;
-        }
-
-        .settings-icon {
-            position: absolute;
-            right: calc(100% + 0.35em);
-            top: 50%;
-            transform: translateY(-50%);
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--accent-main);
+            background: var(--accent-light); border: 1px solid var(--accent-main); padding: 2px 6px; border-radius: 6px; margin-left: 8px; display: inline-block; vertical-align: middle; line-height: 1.2;
         }
 
         .routine-item {
-            background: var(--item-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 15px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.015);
-            backdrop-filter: blur(8px);
+            background: var(--surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;
         }
+        .routine-item-main { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 8px; }
+        .item-left { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+        .item-num { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9375rem; font-weight: 700; color: var(--accent-main); flex-shrink: 0; width: 24px; opacity: 0.9; }
+        .item-details { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
 
-        .routine-item-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            gap: 8px;
-        }
-
-        .item-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
-            flex: 1;
-        }
-
-        .item-num {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: calc(15.5px * var(--font-scale));
-            font-weight: 700;
-            color: var(--accent-main);
-            letter-spacing: 0.02em;
-            flex-shrink: 0;
-            width: 24px;
-            opacity: 0.9;
-        }
-
-        .item-details {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            min-width: 0;
-            flex: 1;
-        }
-
+        /* 
+           ИСПРАВЛЕНИЕ 6: Многоточие убрано.
+           Добавлены переносы строк для длинных названий средств и тегов.
+        */
         .item-name {
-            font-size: calc(clamp(15.5px, 4.2vw, 17.5px) * var(--font-scale));
-            font-weight: 600;
-            color: var(--text-primary);
-            letter-spacing: -0.1px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: clamp(0.95rem, 4.2vw, 1.05rem); font-weight: 600; color: var(--text-primary);
+            white-space: normal; word-break: break-word; line-height: 1.3;
         }
-
         .item-tag {
-            font-size: calc(13.5px * var(--font-scale));
-            color: var(--text-secondary);
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.8125rem; color: var(--text-secondary); font-weight: 500;
+            white-space: normal; word-break: break-word; line-height: 1.25;
         }
 
         .item-week-step {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: calc(13px * var(--font-scale));
-            font-weight: 600;
-            color: var(--accent-main);
-            background: var(--accent-light);
-            padding: 4px 9px;
-            border-radius: 9px;
-            width: fit-content;
-            margin-top: 3px;
-            white-space: nowrap;
+            display: inline-flex; align-items: center; gap: 5px; font-size: 0.8125rem; font-weight: 600;
+            color: var(--accent-main); background: var(--accent-light); padding: 3px 8px; border-radius: 6px; width: fit-content; margin-top: 3px;
         }
 
-        .pause-step-container {
-            display: flex;
-            justify-content: center;
-            margin: 5px 0;
-            width: 100%;
-        }
-
+        .pause-step-container { display: flex; justify-content: center; margin: 4px 0; width: 100%; }
         .btn-pause-timer {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            background: var(--surface);
-            border: 1.5px solid var(--accent-main);
-            color: var(--accent-main);
-            padding: 9px 18px;
-            border-radius: 22px;
-            font-size: calc(14px * var(--font-scale));
-            font-weight: 600;
-            cursor: pointer;
-            max-width: 100%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            transition: all 0.25s ease;
-            touch-action: manipulation;
-            white-space: nowrap;
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px; background: var(--surface);
+            border: 1.5px solid var(--accent-main); color: var(--accent-main); padding: 8px 16px; border-radius: 16px;
+            font-size: 0.875rem; font-weight: 600; cursor: pointer; max-width: 100%; transition: all 0.2s ease;
         }
-
-        .btn-pause-timer:hover:not(.running):not(.completed) {
-            background: var(--accent-light);
-            transform: translateY(-1px);
-        }
-
-        .btn-pause-timer.running {
-            background: var(--accent-main);
-            color: #FFFFFF;
-            border-color: var(--accent-main);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-            pointer-events: none;
-        }
-
+        .btn-pause-timer:active:not(.running):not(.completed) { background: var(--accent-light); }
+        .btn-pause-timer.running { background: var(--accent-main); color: #FFFFFF; border-color: var(--accent-main); pointer-events: none; }
         .btn-pause-timer.running .svg-icon { stroke: #FFFFFF; }
+        .btn-pause-timer.completed { background: var(--accent-light); color: var(--accent-main); border-color: var(--accent-main); pointer-events: none; }
 
-        .btn-pause-timer.completed {
-            background: var(--accent-light);
-            color: var(--accent-main);
-            border-color: var(--accent-main);
-            pointer-events: none;
-        }
-
-        .expiry-dots {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            flex-shrink: 0;
-            padding: 3px;
-            border-radius: 12px;
-            pointer-events: none;
-        }
-
-        .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-        }
-
+        .expiry-dots { display: flex; gap: 4px; align-items: center; flex-shrink: 0; padding: 3px; border-radius: 12px; pointer-events: none; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; }
         .dot-green { background-color: rgb(47, 139, 88); }
         .dot-orange { background-color: rgb(215, 135, 30); }
         .dot-red { background-color: rgb(205, 52, 52); }
         .dot-gray { background-color: var(--icon-inactive); }
 
-        .routine-filter-switch {
-            display: flex;
-            background: var(--bg-main);
-            border-radius: 16px;
-            padding: 4px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-color);
-            gap: 4px;
-        }
-
+        .routine-filter-switch { display: flex; background: var(--bg-main); border-radius: 12px; padding: 4px; margin-bottom: 12px; border: 1px solid var(--border-color); gap: 4px; }
         .filter-tab-btn {
-            flex: 1;
-            padding: 9px 6px;
-            text-align: center;
-            border-radius: 12px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            border: none;
-            background: transparent;
-            font-size: calc(14px * var(--font-scale));
-            font-weight: 600;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-            touch-action: manipulation;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            flex: 1; padding: 8px 6px; text-align: center; border-radius: 10px; cursor: pointer; color: var(--text-secondary);
+            border: none; background: transparent; font-size: 0.875rem; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
+        .filter-tab-btn.active { background: var(--surface); color: var(--text-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.03); }
 
-        .filter-tab-btn.active {
-            background: var(--surface);
-            color: var(--text-primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); transition: .2s ease; border-radius: 24px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: var(--surface); transition: .2s ease; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        input:checked + .toggle-slider { background-color: var(--accent-main); }
+        input:checked + .toggle-slider:before { transform: translateX(20px); }
 
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 26px;
-            flex-shrink: 0;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--border-color);
-            transition: .25s ease;
-            border-radius: 26px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: var(--surface);
-            transition: .25s ease;
-            border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--accent-main);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(22px);
-        }
-
-        #customCalendarModal { z-index: 1100 !important; }
-
-        .custom-calendar-modal {
-            max-width: 330px !important;
-            padding: 18px 14px !important;
-        }
-
-        .cal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-
-        .cal-month-title {
-            font-size: calc(clamp(20px, 5.2vw, 23px) * var(--font-scale));
-            font-weight: 400;
-        }
-
-        .cal-nav-btn {
-            background: var(--bg-main);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-
-        .cal-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            text-align: center;
-        }
-
-        .cal-day-name {
-            font-size: calc(12px * var(--font-scale));
-            font-weight: 600;
-            color: var(--text-secondary);
-            padding-bottom: 4px;
-        }
-
-        .cal-day-cell {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: calc(14px * var(--font-scale));
-            border-radius: 50%;
-            cursor: pointer;
-            touch-action: manipulation;
-            pointer-events: auto;
-            transition: all 0.2s ease;
-            color: var(--text-primary);
-        }
-
-        .cal-day-cell.selected {
-            background: var(--accent-main);
-            color: #FFFFFF;
-            font-weight: 600;
-            opacity: 1;
-        }
-
-        .cal-day-cell.archive-day { color: var(--text-secondary); opacity: 0.65; }
-        .cal-day-cell.future-day { color: var(--text-secondary); opacity: 0.75; }
-
-        .cal-day-cell.disabled {
-            opacity: 0.3 !important;
-            color: var(--text-secondary) !important;
-            text-decoration: line-through !important;
-            cursor: not-allowed !important;
-            pointer-events: none !important;
-            background: transparent !important;
-        }
-
+        /* 
+           ИСПРАВЛЕНИЕ 3: Выезжающие мобильные шторки переведены на inset + height: 100%. 
+           Они больше не будут скакать из-за динамического `100dvh` при открытии клавиатуры. 
+        */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0);
-            backdrop-filter: blur(0px);
-            display: none;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px 14px 30px;
-            z-index: 1000;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+            position: fixed; inset: 0; height: 100%;
+            background: rgba(0, 0, 0, 0.45); display: none; justify-content: center; align-items: flex-end; padding: 0;
+            z-index: 1000; overflow: hidden; opacity: 0; transition: opacity 0.25s ease; touch-action: none;
         }
-
-        .modal-overlay.active-modal {
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(8px);
-        }
+        .modal-overlay.active-modal { opacity: 1; }
 
         .modal-card {
-            background: var(--surface);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 460px;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 16px 16px 14px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-            border: 1px solid var(--border-color);
-            position: relative;
-            transform: translateY(20px) scale(0.97);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; max-height: 88vh;
+            display: flex; flex-direction: column; overflow: hidden; padding: 10px 16px 16px;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); border-bottom: none;
+            position: relative; transform: translate3d(0, 100%, 0); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; touch-action: pan-y;
         }
 
-        .modal-overlay.active-modal .modal-card {
-            transform: translateY(0) scale(1);
-            opacity: 1;
+        .modal-drag-handle { width: 100%; padding: 6px 0 12px; display: flex; justify-content: center; align-items: center; cursor: grab; flex-shrink: 0; }
+        .modal-drag-handle::before { content: ''; display: block; width: 38px; height: 5px; background: var(--border-color); border-radius: 3px; }
+        .modal-overlay.active-modal .modal-card { transform: translate3d(0, 0, 0); }
+        #customCalendarModal { z-index: 1100 !important; }
+        .custom-calendar-modal { padding: 10px 14px 16px !important; }
+
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .cal-month-title { font-size: clamp(1.1875rem, 5.2vw, 1.35rem); font-weight: 400; }
+        .cal-nav-btn {
+            background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-primary);
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .cal-day-name { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); padding-bottom: 4px; }
+        .cal-day-cell {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; border-radius: 50%;
+            cursor: pointer; transition: all 0.2s ease; color: var(--text-primary);
+        }
+        .cal-day-cell.selected { background: var(--accent-main); color: #FFFFFF; font-weight: 600; opacity: 1; }
+        .cal-day-cell.archive-day { color: var(--text-secondary); opacity: 0.65; }
+        .cal-day-cell.future-day { color: var(--text-secondary); opacity: 0.75; }
+        .cal-day-cell.disabled { opacity: 0.3 !important; color: var(--text-secondary) !important; text-decoration: line-through !important; pointer-events: none !important; }
 
         .modal-body-scrollable {
-            flex: 1;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-            padding-right: 2px;
-            padding-left: 2px;
+            flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-right: 2px; padding-left: 2px;
         }
-
         .modal-footer-pinned {
-            flex-shrink: 0;
-            background: var(--surface);
-            padding-top: 12px;
-            padding-bottom: calc(4px + env(safe-area-inset-bottom));
-            margin-top: 8px;
-            border-top: 1px solid var(--border-color);
-            z-index: 10;
+            flex-shrink: 0; background: var(--surface); padding-top: 10px; padding-bottom: calc(2px + env(safe-area-inset-bottom));
+            margin-top: 6px; border-top: 1px solid var(--border-color); z-index: 10;
         }
+        .modal-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0; min-height: 24px; }
+        .modal-title { font-size: clamp(1.25rem, 5.5vw, 1.45rem); font-weight: 400; color: var(--text-primary); }
 
-        .modal-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            flex-shrink: 0;
-            min-height: 24px;
-        }
-
-        .modal-title { font-size: calc(clamp(21px, 5.5vw, 25px) * var(--font-scale)); font-weight: 400; color: var(--text-primary); }
-
-        .form-section {
-            background: var(--bg-main);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 14px 14px;
-            margin-bottom: 12px;
-        }
-
-        .form-section-title {
-            font-size: calc(clamp(19px, 5vw, 22px) * var(--font-scale)); font-weight: 400; color: var(--accent-main);
-            margin-bottom: 10px; font-style: normal;
-        }
-
+        .form-section { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+        .form-section-title { font-size: clamp(1.1rem, 5vw, 1.25rem); font-weight: 400; color: var(--accent-main); margin-bottom: 8px; }
         .version-row { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
-        .version-text { font-size: calc(16.5px * var(--font-scale)); color: var(--text-secondary); font-weight: 400; text-align: center; width: 100%; }
+        .version-text { font-size: 1rem; color: var(--text-secondary); font-weight: 400; text-align: center; width: 100%; }
 
-        .btn-update-inline,
-        .btn-secondary.small-font {
-            background: var(--surface);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 13px; border-radius: 15px; width: 100%;
-            font-size: calc(clamp(15.5px, 4.2vw, 17.5px) * var(--font-scale)) !important;
-            font-weight: 400;
-            text-transform: none; cursor: pointer; transition: all 0.2s ease;
-            touch-action: manipulation;
+        .btn-update-inline, .btn-secondary.small-font {
+            background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px; border-radius: 12px; width: 100%;
+            font-size: clamp(0.95rem, 4.2vw, 1.05rem) !important; font-weight: 400; cursor: pointer; transition: all 0.2s ease;
         }
+        .btn-update-inline:active, .btn-secondary.small-font:active { background: var(--accent-light); border-color: var(--accent-main); }
 
-        .btn-update-inline:active,
-        .btn-secondary.small-font:active {
-            background: var(--accent-light);
-            border-color: var(--accent-main);
-        }
-
-        .form-group { margin-bottom: 12px; position: relative; }
-        .form-group:last-child { margin-bottom: 0; }
-        .form-group label {
-            display: block;
-            font-size: calc(14px * var(--font-scale));
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-
+        .form-group { margin-bottom: 10px; position: relative; }
+        .form-group label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
         .input-with-icon-wrapper { position: relative; display: flex; align-items: center; }
 
+        /* 
+           ИСПРАВЛЕНИЕ 2: Зафиксирован font-size 16px для инпутов, чтобы предотвратить
+           вынужденный зум браузеров iOS Safari при фокусе, который уводит интерфейс.
+        */
         .input-control {
-            width: 100%; padding: 12px 14px; border-radius: 14px;
-            border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: calc(15.5px * var(--font-scale)); font-weight: 500; outline: none;
-            caret-color: var(--accent-main);
+            width: 100%; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface);
+            color: var(--text-primary); font-size: 16px !important; font-weight: 500; outline: none;
         }
-
         .input-control-with-btn { padding-right: 44px; }
-
+        
         .btn-inline-scan {
-            position: absolute; right: 6px;
-            background: var(--accent-light); border: 1px solid var(--border-color);
-            color: var(--accent-main); border-radius: 10px; padding: 7px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
+            position: absolute; right: 6px; background: var(--accent-light); border: 1px solid var(--border-color);
+            color: var(--accent-main); border-radius: 8px; padding: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-
         .btn-inline-scan:active { background: var(--accent-main); color: #FFFFFF; }
 
         .autocomplete-dropdown {
-            position: absolute; top: 100%; left: 0; right: 0;
-            background: var(--surface); border: 1px solid var(--border-color);
-            border-radius: 14px; margin-top: 4px; max-height: 0; opacity: 0;
-            overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
-            display: none;
+            position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); border: 1px solid var(--border-color);
+            border-radius: 12px; margin-top: 4px; max-height: 0; opacity: 0; overflow-y: auto; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease; display: none;
         }
-
-        .autocomplete-dropdown.open {
-            display: block;
-            max-height: 170px;
-            opacity: 1;
-        }
-
+        .autocomplete-dropdown.open { display: block; max-height: 170px; opacity: 1; }
         .autocomplete-item {
-            padding: 11px 14px; font-size: calc(14.5px * var(--font-scale)); color: var(--text-primary);
-            cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s ease;
-            touch-action: manipulation;
+            padding: 12px; font-size: 0.95rem; color: var(--text-primary); cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s ease; -webkit-tap-highlight-color: transparent;
         }
-
         .autocomplete-item:last-child { border-bottom: none; }
-        .autocomplete-item:active, .autocomplete-item:hover { background: var(--accent-light); }
+        .autocomplete-item:active { background: var(--accent-light); }
 
         .picker-group { display: flex; gap: 5px; }
-
         .picker-btn {
-            flex: 1; padding: 8px 6px; border-radius: 11px;
-            border: 1px solid var(--border-color); background: var(--surface);
-            font-size: calc(12.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
-            color: var(--text-secondary); text-align: center; transition: all 0.2s;
-            touch-action: manipulation; min-width: 0;
-            white-space: normal !important;
-            word-break: break-word;
-            line-height: 1.25;
-            min-height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex: 1; padding: 8px 6px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--surface);
+            font-size: 0.78125rem; font-weight: 600; cursor: pointer; color: var(--text-secondary); text-align: center;
+            white-space: normal; word-break: break-word; line-height: 1.25; min-height: 40px; display: flex; align-items: center; justify-content: center;
         }
+        .picker-btn.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 
-        .picker-btn.active {
-            background: var(--accent-main); color: #FFF;
-            border-color: var(--accent-main); box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        #themeRow .picker-btn { border-radius: 11px; height: 38px; }
-        #themeRow .picker-btn.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main); }
+        .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 4px 0; }
+        .theme-card-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border-color); cursor: pointer; text-align: center; }
+        .theme-card-btn.active { border-color: var(--accent-main); background: var(--accent-light); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .theme-preview-box { width: 100%; height: 28px; border-radius: 8px; display: flex; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); }
+        .theme-preview-bg { flex: 2; }
+        .theme-preview-accent { flex: 1; }
+        .theme-card-title { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; }
 
         .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
-
         .days-picker { display: flex; gap: 4px; width: 100%; margin-top: 6px; }
-
-        .day-chip {
-            flex: 1; padding: 8px 0; border-radius: 9px;
-            border: 1px solid var(--border-color); background: var(--surface);
-            font-size: calc(13.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
-            color: var(--text-secondary); text-align: center; transition: all 0.2s;
-            touch-action: manipulation; min-width: 0;
-        }
-
+        .day-chip { flex: 1; padding: 8px 0; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface); font-size: 0.8125rem; font-weight: 600; cursor: pointer; color: var(--text-secondary); text-align: center; }
         .day-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
-        .pao-highlight-box {
-            background: var(--accent-light); border: 1px solid var(--accent-main);
-            border-radius: 16px; padding: 12px; margin-bottom: 10px;
-        }
-
-        .pao-title {
-            font-size: calc(14px * var(--font-scale)); font-weight: 600; color: var(--text-primary);
-            margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
-        }
-
-        .pao-picker { display: flex; gap: 5px; flex-wrap: nowrap; }
-
-        .pao-chip {
-            flex: 1; padding: 8px 5px; border-radius: 9px;
-            border: 1px solid var(--border-color); background: var(--surface);
-            font-size: calc(13.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
-            color: var(--text-secondary); text-align: center; transition: all 0.2s;
-            touch-action: manipulation; min-width: 0;
-        }
-
+        .pao-highlight-box { background: var(--accent-light); border: 1px solid var(--accent-main); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+        .pao-title { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .pao-picker { display: flex; gap: 5px; }
+        .pao-chip { flex: 1; padding: 7px 5px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--surface); font-size: 0.8125rem; font-weight: 600; cursor: pointer; color: var(--text-secondary); text-align: center; }
         .pao-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
         .btn-secondary {
-            width: 100%; padding: 13px; border-radius: 15px;
-            border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: calc(clamp(15.5px, 4.2vw, 17.5px) * var(--font-scale));
-            text-transform: none; cursor: pointer; margin-top: 6px;
-            transition: background-color 0.2s; touch-action: manipulation; white-space: nowrap;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--surface);
+            color: var(--text-primary); font-size: clamp(0.95rem, 4.2vw, 1.05rem); cursor: pointer; margin-top: 6px;
         }
-
         .btn-secondary:active { background: var(--bg-main); }
-
+        
         .btn-action {
-            width: 100%; padding: 15px 18px; border-radius: 18px;
-            border: 1px solid var(--accent-main); background: transparent;
-            color: var(--text-primary); font-size: calc(clamp(16px, 4.3vw, 18px) * var(--font-scale));
-            text-transform: none; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: all 0.25s ease;
-            touch-action: manipulation; white-space: nowrap;
+            width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--accent-main); background: transparent;
+            color: var(--text-primary); font-size: clamp(1rem, 4.3vw, 1.125rem); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.02);
         }
-
-        .btn-action:hover, .btn-action:active { background: var(--accent-light); border-color: var(--accent-main); transform: translateY(-1px); }
+        .btn-action:active { background: var(--accent-light); border-color: var(--accent-main); }
 
         .btn-add-toggle {
-            width: 100%; padding: 13px; border-radius: 16px;
-            border: 1px dashed var(--accent-main); background: var(--accent-light);
-            color: var(--accent-main); font-size: calc(clamp(16px, 4.3vw, 18px) * var(--font-scale));
-            text-transform: none; cursor: pointer;
-            margin-bottom: 8px; transition: opacity 0.2s; touch-action: manipulation; white-space: nowrap;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px dashed var(--accent-main); background: var(--accent-light);
+            color: var(--accent-main); font-size: clamp(0.95rem, 4.3vw, 1.05rem); cursor: pointer; margin-bottom: 8px;
         }
 
-        .product-manage-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; padding-right: 2px; padding-bottom: 12px; }
+        .product-manage-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; padding-bottom: 8px; }
         .category-group-block { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
-
         .category-header-btn {
-            width: 100%; padding: 13px 15px; border-radius: 15px;
-            background: var(--bg-main); border: 1px solid var(--border-color);
-            color: var(--text-primary); font-size: calc(clamp(16.5px, 4.4vw, 18.5px) * var(--font-scale));
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease;
-            touch-action: manipulation; gap: 8px;
+            width: 100%; padding: 12px 14px; border-radius: 12px; background: var(--bg-main); border: 1px solid var(--border-color);
+            color: var(--text-primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer;
         }
-
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
-        .category-title-text {
-            font-family: 'Alice', Georgia, serif;
-            font-size: calc(clamp(16px, 4.2vw, 19px) * var(--font-scale));
-            font-weight: 400;
-            text-transform: none;
-            flex: 1;
-            min-width: 0;
-            line-height: 1.25;
-            word-break: break-word;
-            text-align: left;
-        }
-        .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: calc(14px * var(--font-scale)); color: var(--text-secondary); font-weight: 500; }
-
-        .category-chevron {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
+        .category-title-text { font-family: 'Alice', Georgia, serif; font-size: clamp(0.95rem, 4.2vw, 1.1rem); flex: 1; text-align: left; }
+        .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
+        .category-chevron { display: inline-flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         .category-header-btn.open .category-chevron { transform: rotate(180deg); }
 
-        .category-items-container {
-            display: grid;
-            grid-template-rows: 0fr;
-            opacity: 0;
-            transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-        }
-
-        .category-items-container.open {
-            grid-template-rows: 1fr;
-            opacity: 1;
-        }
-
-        .category-items-inner {
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding-left: 0;
-            padding-top: 0;
-            padding-bottom: 0;
-            transition: padding 0.3s ease;
-        }
-
-        .category-items-container.open .category-items-inner {
-            padding-left: 4px;
-            padding-top: 4px;
-            padding-bottom: 6px;
-        }
+        .category-items-container { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.35s ease, opacity 0.3s ease; }
+        .category-items-container.open { grid-template-rows: 1fr; opacity: 1; }
+        .category-items-inner { overflow: hidden; display: flex; flex-direction: column; gap: 4px; transition: padding 0.3s ease; }
+        .category-items-container.open .category-items-inner { padding-left: 4px; padding-top: 4px; padding-bottom: 6px; }
 
         .manage-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 11px 13px; border-radius: 13px; background: var(--surface);
-            font-size: calc(15.5px * var(--font-scale)); font-weight: 600; border: 1px solid var(--border-color); cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            touch-action: manipulation; gap: 8px;
+            display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 10px;
+            background: var(--surface); font-size: 0.9375rem; border: 1px solid var(--border-color); cursor: pointer; gap: 8px;
         }
-
         .manage-item:active { background: var(--accent-light); border-color: var(--accent-main); }
         .manage-info { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
-        .manage-info span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .manage-chevron {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            flex-shrink: 0;
-        }
+        /* ИСПРАВЛЕНИЕ 6.1: Переносы для длинных имен в модалке */
+        .manage-info span { white-space: normal; word-break: break-word; line-height: 1.3; font-weight: 600; }
+        .manage-chevron { display: inline-flex; align-items: center; justify-content: center; color: var(--text-secondary); flex-shrink: 0; }
 
         .accordion-toggle-btn {
-            width: 100%;
-            padding: 13px 15px;
-            border-radius: 15px;
-            border: 1px solid var(--accent-main);
-            background: transparent;
-            color: var(--text-primary);
-            font-size: calc(15px * var(--font-scale));
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            text-transform: none;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            transition: all 0.25s ease;
-            touch-action: manipulation;
-            white-space: nowrap;
+            width: 100%; padding: 11px 13px; border-radius: 12px; border: 1px solid var(--accent-main); background: transparent;
+            color: var(--text-primary); font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
         }
-
-        .accordion-toggle-btn:hover, .accordion-toggle-btn:active {
-            background: var(--accent-light);
-            border-color: var(--accent-main);
-            transform: translateY(-1px);
-        }
-
-        .accordion-content {
-            display: none;
-            padding-top: 10px;
-        }
+        .accordion-toggle-btn:active { background: var(--accent-light); border-color: var(--accent-main); }
+        .accordion-content { display: none; padding-top: 10px; }
         .accordion-content.open { display: block; }
-
         #productFormContainer { display: none; }
         #productFormContainer.open { display: block; }
 
         .toast-notification {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.9); width: 88%; max-width: 340px;
-            background: var(--surface); border: 1px solid var(--accent-main);
-            color: var(--text-primary); padding: 15px 18px; border-radius: 20px;
-            font-size: calc(14.5px * var(--font-scale)); font-weight: 400; line-height: 1.35; text-transform: none;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35); opacity: 0; pointer-events: none;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            z-index: 10000; text-align: center; word-wrap: break-word;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 88%; max-width: 320px;
+            background: var(--surface); border: 1px solid var(--accent-main); color: var(--text-primary); padding: 14px 16px;
+            border-radius: 16px; font-size: 0.875rem; text-align: center; opacity: 0; pointer-events: none;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease; z-index: 10000; word-wrap: break-word;
         }
-
         .toast-notification.visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     </style>
 </head>
 <body>
 
+    <!-- Шапка приложения -->
     <div class="header-bar">
         <div class="logo">MyLumy</div>
+        <button type="button" class="btn-settings-round" id="btnOpenAppSettings" title="Мои настройки">
+            <svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
+            </svg>
+        </button>
     </div>
 
     <!-- 1. Карточка "Мои ритуалы" -->
@@ -1149,8 +469,9 @@
 
     <!-- 2. Основная карточка с графиком и средствами -->
     <div class="main-card">
-        <div class="tod-switch">
-            <button type="button" class="tod-btn uniform-brand-title" id="btnMorning">Утро</button>
+        <div class="tod-switch" id="todSwitch">
+            <div class="tod-slider-pill" id="todPill"></div>
+            <button type="button" class="tod-btn uniform-brand-title active" id="btnMorning">Утро</button>
             <button type="button" class="tod-btn uniform-brand-title" id="btnEvening">Вечер</button>
         </div>
 
@@ -1164,22 +485,10 @@
         </div>
     </div>
 
-    <!-- 3. Отдельная карточка "Мои настройки" -->
-    <div class="settings-card-wrapper">
-        <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
-            <span class="btn-settings-inner uniform-brand-title">
-                <svg class="svg-icon settings-icon" width="19" height="19" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
-                </svg>
-                Мои настройки
-            </span>
-        </button>
-    </div>
-
     <!-- Кастомный Календарь -->
     <div class="modal-overlay" id="customCalendarModal">
         <div class="modal-card custom-calendar-modal">
+            <div class="modal-drag-handle"></div>
             <div class="cal-header">
                 <button type="button" class="cal-nav-btn" id="calPrevMonth">
                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
@@ -1199,6 +508,7 @@
     <!-- Модальное окно "Мои средства" -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card" id="settingsModalCard">
+            <div class="modal-drag-handle"></div>
             <div class="modal-header-row" id="settingsModalHeader" style="display: none;">
                 <div class="modal-title uniform-brand-title" id="mainModalTitle"></div>
             </div>
@@ -1221,7 +531,7 @@
                 <button type="button" class="btn-add-toggle uniform-brand-title" id="btnAddToggle">+ Добавить средство</button>
 
                 <div id="scannerWrapper" style="display: none; margin-bottom: 12px;">
-                    <div id="barcodeReader" style="border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 6px;"></div>
+                    <div id="barcodeReader" style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 6px;"></div>
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelScanner" style="margin-top: 0;">Отмена сканирования</button>
                 </div>
 
@@ -1254,9 +564,9 @@
                         </button>
 
                         <div class="accordion-content" id="detailsAccordionContent">
-                            <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 14px; padding: 10px; margin-bottom: 10px; margin-top: 8px;">
-                                <div id="smartPresetText" style="font-size: 13.5px; color: var(--text-primary); margin-bottom: 6px; line-height: 1.35;"></div>
-                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 9px 12px; border-radius: 10px; font-size: 13.5px; cursor: pointer;">Применить рекомендуемые паузы</button>
+                            <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 12px; padding: 10px; margin-bottom: 10px; margin-top: 8px;">
+                                <div id="smartPresetText" style="font-size: 0.8125rem; margin-bottom: 6px; line-height: 1.35;"></div>
+                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 10px; border-radius: 8px; font-size: 0.8125rem; cursor: pointer;">Применить рекомендуемые паузы</button>
                             </div>
 
                             <div class="form-group" style="margin-top: 10px;">
@@ -1284,9 +594,9 @@
                                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
                                     <span>Срок после вскрытия (PAO)</span>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13.5px; margin-bottom: 6px; padding: 0 2px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8125rem; margin-bottom: 6px; padding: 0 2px;">
                                     <span style="color: var(--text-secondary); font-weight: 500;">Дата вскрытия: <b id="displayOpenDate" style="color: var(--text-primary);"></b></span>
-                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 13.5px;">Изменить</button>
+                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 0.8125rem;">Изменить</button>
                                 </div>
                                 <div class="pao-picker" id="paoPicker">
                                     <button type="button" class="pao-chip" data-months="3">3M</button>
@@ -1304,7 +614,7 @@
                                     <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
                                 </div>
                                 <div id="daysGroup" style="display: none; margin-top: 8px;">
-                                    <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
+                                    <label style="font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
                                     <div class="days-picker" id="daysPicker">
                                         <button type="button" class="day-chip" data-day="1">Пн</button>
                                         <button type="button" class="day-chip" data-day="2">Вт</button>
@@ -1317,9 +627,9 @@
                                 </div>
                             </div>
 
-                            <div style="background: var(--surface); padding: 11px; border-radius: 13px; border: 1px solid var(--border-color); margin-top: 10px;">
+                            <div style="background: var(--surface); padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); margin-top: 10px;">
                                 <div style="margin-bottom: 8px;">
-                                    <label style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза до нанесения</label>
+                                    <label style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза до нанесения</label>
                                     <div class="picker-group" id="pauseBeforePicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1328,7 +638,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза после нанесения</label>
+                                    <label style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза после нанесения</label>
                                     <div class="picker-group" id="pauseAfterPicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1341,7 +651,7 @@
                     </div>
 
                     <!-- Кнопки формы -->
-                    <div id="formFooterButtons" style="display: flex; flex-direction: column; gap: 6px; margin-top: 14px; margin-bottom: 12px;">
+                    <div id="formFooterButtons" style="display: flex; flex-direction: column; gap: 6px; margin-top: 12px; margin-bottom: 10px;">
                         <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct">Сохранить средство</button>
                         <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
                     </div>
@@ -1358,26 +668,28 @@
 
     <!-- Модальное окно действий над средством (Action Sheet) -->
     <div class="modal-overlay" id="productActionModal" style="z-index: 10500;">
-        <div class="modal-card" style="max-width: 380px; padding: 20px 18px;">
-            <div id="actionModalProductName" class="uniform-brand-title" style="font-size: 19px; color: var(--text-primary); text-align: center; margin-bottom: 16px; word-break: break-word; line-height: 1.3;"></div>
+        <div class="modal-card">
+            <div class="modal-drag-handle"></div>
+            <div id="actionModalProductName" class="uniform-brand-title" style="font-size: 1.15rem; color: var(--text-primary); text-align: center; margin-bottom: 14px; word-break: break-word; line-height: 1.3;"></div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button type="button" class="btn-action uniform-brand-title" id="btnActionTogglePause" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15.5px; padding: 13px;"></button>
-                <button type="button" class="btn-action uniform-brand-title" id="btnActionEdit" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15.5px; padding: 13px;">
+                <button type="button" class="btn-action uniform-brand-title" id="btnActionTogglePause" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; padding: 12px;"></button>
+                <button type="button" class="btn-action uniform-brand-title" id="btnActionEdit" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; padding: 12px;">
                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     Изменить настройки
                 </button>
-                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionDelete" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15.5px; padding: 13px; color: #C0392B; border-color: rgba(192, 57, 43, 0.3); background: rgba(192, 57, 43, 0.06); margin-top: 0;">
+                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionDelete" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; padding: 12px; color: #C0392B; border-color: rgba(192, 57, 43, 0.3); background: rgba(192, 57, 43, 0.06); margin-top: 0;">
                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" style="stroke: #C0392B;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     Удалить из коллекции
                 </button>
-                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionCancel" style="margin-top: 4px; padding: 12px;">Закрыть</button>
+                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionCancel" style="margin-top: 4px; padding: 11px;">Закрыть</button>
             </div>
         </div>
     </div>
 
     <!-- Модальное окно "Настройки приложения" -->
     <div class="modal-overlay" id="appSettingsModal">
-        <div class="modal-card" style="max-width: 400px; max-height: 85vh;">
+        <div class="modal-card">
+            <div class="modal-drag-handle"></div>
             <div class="modal-header-row" style="display: none;">
                 <div class="modal-title-wrapper">
                     <div class="modal-title uniform-brand-title"></div>
@@ -1386,12 +698,12 @@
 
             <div class="modal-body-scrollable">
                 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Продвинутый режим</div>
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                         <div>
-                            <div style="font-size: 15px; font-weight: 600; color: var(--text-primary);">Мои средства PRO</div>
-                            <div style="font-size: 12.5px; color: var(--text-secondary); margin-top: 2px;">расширенный список средств</div>
+                            <div style="font-size: 0.9375rem; font-weight: 600; color: var(--text-primary);">Мои средства PRO</div>
+                            <div style="font-size: 0.78125rem; color: var(--text-secondary); margin-top: 2px;">расширенный список средств</div>
                         </div>
                         <label class="toggle-switch">
                             <input type="checkbox" id="toggleSuperCollection">
@@ -1401,7 +713,7 @@
                 </div>
 
                 <!-- Настройка размера шрифта -->
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Размер шрифта</div>
                     <div class="picker-group" id="fontSizePicker">
                         <button type="button" class="picker-btn" data-size="normal">Стандартный</button>
@@ -1409,14 +721,14 @@
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="version-row">
                         <span class="version-text uniform-brand-title">MyLumy версия v0.2.0b</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">Проверить обновления</button>
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Перенос и бэкап</div>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnCopyShareLink">Скопировать ссылку переноса</button>
@@ -1426,19 +738,37 @@
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Тема оформления</div>
-                    <div style="display: flex; gap: 6px; width: 100%; flex-wrap: wrap;" id="themeRow">
-                        <button type="button" class="picker-btn" data-theme="sunlit" style="flex: 1; min-width: 40px; background: #E87A5D; border-color: #E87A5D;" title="Sunlit Gloss"></button>
-                        <button type="button" class="picker-btn" data-theme="berry" style="flex: 1; min-width: 40px; background: #D96B94; border-color: #D96B94;" title="Berry Velvet"></button>
-                        <button type="button" class="picker-btn" data-theme="icederm" style="flex: 1; min-width: 40px; background: #2B78A3; border-color: #2B78A3;" title="Ice Derm"></button>
-                        <button type="button" class="picker-btn" data-theme="espresso" style="flex: 1; min-width: 40px; background: #6F4E37; border-color: #6F4E37;" title="Espresso"></button>
-                        <button type="button" class="picker-btn" data-theme="cyberglow" style="flex: 1; min-width: 40px; background: #8A5CF5; border-color: #8A5CF5;" title="Cyber Glow"></button>
-                        <button type="button" class="picker-btn" data-theme="midnight" style="flex: 1; min-width: 40px; background: #4E9EFF; border-color: #4E9EFF;" title="Midnight Calm"></button>
+                    <div class="theme-grid" id="themeRow">
+                        <button type="button" class="theme-card-btn" data-theme="sunlit">
+                            <div class="theme-preview-box"><div class="theme-preview-bg" style="background: #FFF5F0;"></div><div class="theme-preview-accent" style="background: #E87A5D;"></div></div>
+                            <span class="theme-card-title">Sunlit</span>
+                        </button>
+                        <button type="button" class="theme-card-btn" data-theme="berry">
+                            <div class="theme-preview-box"><div class="theme-preview-bg" style="background: #1D161E;"></div><div class="theme-preview-accent" style="background: #D96B94;"></div></div>
+                            <span class="theme-card-title">Berry</span>
+                        </button>
+                        <button type="button" class="theme-card-btn" data-theme="icederm">
+                            <div class="theme-preview-box"><div class="theme-preview-bg" style="background: #F0F6FA;"></div><div class="theme-preview-accent" style="background: #2B78A3;"></div></div>
+                            <span class="theme-card-title">Ice Derm</span>
+                        </button>
+                        <button type="button" class="theme-card-btn" data-theme="espresso">
+                            <div class="theme-preview-box"><div class="theme-preview-bg" style="background: #F8F4EE;"></div><div class="theme-preview-accent" style="background: #6F4E37;"></div></div>
+                            <span class="theme-card-title">Espresso</span>
+                        </button>
+                        <button type="button" class="theme-card-btn" data-theme="cyberglow">
+                            <div class="theme-preview-box"><div class="theme-preview-bg" style="background: #F5F0FE;"></div><div class="theme-preview-accent" style="background: #8A5CF5;"></div></div>
+                            <span class="theme-card-title">Cyber Glow</span>
+                        </button>
+                        <button type="button" class="theme-card-btn" data-theme="midnight">
+                            <div class="theme-preview-box"><div class="theme-preview-bg" style="background: #0F141C;"></div><div class="theme-preview-accent" style="background: #4E9EFF;"></div></div>
+                            <span class="theme-card-title">Midnight</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Документы</div>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <a href="https://tatikhi.github.io/MyLumy/terms.html" target="_blank" class="btn-secondary small-font uniform-brand-title" style="text-decoration: none; text-align: center; display: block;">Условия использования</a>
@@ -1454,36 +784,27 @@
         </div>
     </div>
 
-    <!-- Стартовое окно (Приветствие и согласие) -->
+    <!-- Стартовое окно -->
     <div class="modal-overlay" id="welcomeModal" style="z-index: 12000;">
-        <div class="modal-card" style="max-width: 400px; padding: 24px 20px;">
-            <div class="brand-font" style="font-size: 28px; text-align: center; color: var(--accent-main); margin-bottom: 16px;">
-                Добро пожаловать в MyLumy
-            </div>
-
-            <div style="font-size: 15px; color: var(--text-primary); text-align: center; margin-bottom: 20px; line-height: 1.4;">
-                Ваш личный трекер для осознанного ухода за кожей.
-            </div>
-
-            <div style="background: rgba(192, 57, 43, 0.08); border: 1px solid rgba(192, 57, 43, 0.3); border-radius: 16px; padding: 14px; margin-bottom: 20px;">
-                <div style="font-size: 14px; font-weight: 700; color: #C0392B; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+        <div class="modal-card">
+            <div class="modal-drag-handle"></div>
+            <div class="brand-font" style="font-size: 1.65rem; text-align: center; color: var(--accent-main); margin-bottom: 14px;">Добро пожаловать в MyLumy</div>
+            <div style="font-size: 0.9375rem; color: var(--text-primary); text-align: center; margin-bottom: 16px; line-height: 1.4;">Ваш личный трекер для осознанного ухода за кожей.</div>
+            <div style="background: rgba(192, 57, 43, 0.08); border: 1px solid rgba(192, 57, 43, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+                <div style="font-size: 0.875rem; font-weight: 700; color: #C0392B; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" style="stroke: #C0392B;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     Важное предупреждение
                 </div>
-                <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                <div style="font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.4;">
                     MyLumy — это только инструмент-органайзер, а не медицинский сервис. Приложение не дает медицинских назначений. Перед использованием сильных активов обязательно консультируйтесь с врачом-дерматологом.
                 </div>
             </div>
-
-            <div style="font-size: 12.5px; color: var(--text-secondary); text-align: center; line-height: 1.4; margin-bottom: 20px;">
+            <div style="font-size: 0.78125rem; color: var(--text-secondary); text-align: center; line-height: 1.4; margin-bottom: 16px;">
                 Нажимая кнопку ниже, вы подтверждаете, что вам есть 18 лет, и принимаете<br>
                 <a href="https://tatikhi.github.io/MyLumy/terms.html" target="_blank" style="color: var(--accent-main); font-weight: 600;">Условия использования</a> и 
                 <a href="https://tatikhi.github.io/MyLumy/politic.html" target="_blank" style="color: var(--accent-main); font-weight: 600;">Политику конфиденциальности</a>.
             </div>
-
-            <button type="button" class="btn-action uniform-brand-title" id="btnAgreeAndStart" style="background: var(--accent-main); color: #fff; border-color: var(--accent-main);">
-                Начать использовать
-            </button>
+            <button type="button" class="btn-action uniform-brand-title" id="btnAgreeAndStart" style="background: var(--accent-main); color: #fff; border-color: var(--accent-main);">Начать использовать</button>
         </div>
     </div>
 
@@ -1494,12 +815,7 @@
         const OLD_THEMES = ['nude', 'mint', 'lavender', 'sage'];
 
         const THEME_COLORS = {
-            sunlit: '#FFF5F0',
-            berry: '#1D161E',
-            icederm: '#F0F6FA',
-            espresso: '#F8F4EE',
-            cyberglow: '#F5F0FE',
-            midnight: '#0F141C'
+            sunlit: '#FFF5F0', berry: '#1D161E', icederm: '#F0F6FA', espresso: '#F8F4EE', cyberglow: '#F5F0FE', midnight: '#0F141C'
         };
 
         function applyTelegramThemeColors(theme) {
@@ -1536,9 +852,7 @@
         };
 
         function triggerHaptic(pattern = 15) {
-            if (navigator.vibrate) {
-                try { navigator.vibrate(pattern); } catch (e) {}
-            }
+            if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
         }
 
         const safeStorage = {
@@ -1594,13 +908,11 @@
 
         function updateProBadgeUI() {
             const proBadge = document.getElementById('proBadge');
-            if (proBadge) {
-                proBadge.style.display = isSuperCollectionEnabled ? 'inline-block' : 'none';
-            }
+            if (proBadge) { proBadge.style.display = isSuperCollectionEnabled ? 'inline-block' : 'none'; }
         }
 
         const localProductDictionary = [
-            "Патчи для глаз", "Патчи гидрогелевые", "Патчи с кофеином", "Пенка для умывания", "Гель для умывания", 
+            "Патчи для глаз", "Патчи гидрогелевые", "Пенка для умывания", "Гель для умывания", 
             "Гидрофильное масло", "Гидрофильный бальзам", "Мицеллярная вода", "Энзимная пудра", "Тонер увлажняющий", 
             "Тонер успокаивающий", "Тоник кислотный", "Эссенция с муцином", "Мист для лица", "Сыворотка с гиалуроновой кислотой", 
             "Сыворотка с ниацинамидом", "Сыворотка с витамином C", "Сыворотка с ретинолом", "Сыворотка с пептидами", 
@@ -1610,94 +922,16 @@
 
         const SMART_PRESETS = [
             {
-                keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'sun fluid', 'sun stick', 'санскрин', 'защит'],
-                type: 'SPF / Защита', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 15,
-                reason: 'SPF-фильтрам требуется 5 минут после увлажняющего крема и 15 минут после нанесения для формирования непрерывной защитной пленки.'
+                keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'санскрин'], type: 'SPF / Защита', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 15,
+                reason: 'SPF-фильтрам требуется 5 минут после увлажняющего крема и 15 минут после нанесения.'
             },
             {
-                keywords: ['ретин', 'retin', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'тазаротен', 'дифферин'],
-                type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15,
-                reason: 'Ретиноиды фотосенсибильны, наносятся строго вечером на полностью сухую кожу (пауза 15 мин). Пауза 15 мин до закрытия кремом минимизирует раздражение.'
+                keywords: ['ретин', 'retin', 'адапален', 'третиноин'], type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15,
+                reason: 'Ретиноиды наносятся строго вечером на сухую кожу. Пауза 15 мин до и после минимизирует раздражение.'
             },
             {
-                keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'миндаль', 'молочн', 'пилинг'],
-                type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 5, pauseAfter: 15,
-                reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном кислотном pH кожи перед нанесением следующего ухода.'
-            },
-            {
-                keywords: ['бензоил', 'benzoyl', 'базирон', 'точечн', 'spot', 'циндол', 'прыщ', 'болтушка'],
-                type: 'Активы', pao: '6', tods: ['evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
-                reason: 'Точечные средства от акне высушивают воспаления и наносятся локально с выдержкой 10 минут.'
-            },
-            {
-                keywords: ['витамин c', 'витамин с', 'vitamin c', 'ascorbi', 'аскорбин'],
-                type: 'Активы', pao: '3', tods: ['morning'], freqType: 'daily', pauseBefore: 0, pauseAfter: 10,
-                reason: 'Витамин C — утренний антиоксидант. Кислые формы быстро окисляются (PAO 3M). Выдержка 10 минут.'
-            },
-            {
-                keywords: ['азелаин', 'azelaic', 'скинорен', 'азелик'],
-                type: 'Активы', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
-                reason: 'Азелаиновая кислота не вызывает фоточувствительности и подходит для ежедневного применения.'
-            },
-            {
-                keywords: ['гидрофильн', 'cleansing oil', 'cleansing balm', 'двухфазн', 'бальзам для снятия'],
-                type: 'Очищение', pao: '12', tods: ['evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
-                reason: 'Гидрофильное масло — 1-й этап очищения, эффективный строго вечером для растворения SPF и макияжа.'
-            },
-            {
-                keywords: ['энзим', 'enzyme'],
-                type: 'Очищение', pao: '12', tods: ['evening'], freqType: 'custom', days: [2, 5], pauseBefore: 0, pauseAfter: 0,
-                reason: 'Энзимная пудра мягко отшелушивает клетки. Применяется 2–3 раза в неделю вечером.'
-            },
-            {
-                keywords: ['ночн', 'sleeping'],
-                type: 'Питание / Увлажнение', pao: '12', tods: ['evening'], freqType: 'custom', days: [2, 5], pauseBefore: 5, pauseAfter: 0,
-                reason: 'Ночные маски работают во время сна. Применяются вечером 2–3 раза в неделю.'
-            },
-            {
-                keywords: ['патч', 'patch'],
-                type: 'Уход за глазами', pao: '3', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 15,
-                reason: 'Патчи универсальны: утром тонизируют и снимают отёчность, вечером интенсивно увлажняют.'
-            },
-            {
-                keywords: ['тканев', 'sheet mask', 'глинян', 'альгинат', 'очищающ маск', 'mask'],
-                type: 'Питание / Увлажнение', pao: '12', tods: ['morning', 'evening'], freqType: 'custom', days: [2, 5], pauseBefore: 0, pauseAfter: 0,
-                reason: 'Маски универсальны: экспресс-увлажнение перед макияжем или глубокое очищение вечером.'
-            },
-            {
-                keywords: ['бакучиол', 'bakuchiol'],
-                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 5,
-                reason: 'Растительный аналог ретинола без фотосенсибилизации. Безопасен утром и вечером.'
-            },
-            {
-                keywords: ['пептид', 'peptide', 'matrixyl', 'argireline', 'pdrn', 'полинуклеотид'],
-                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 5,
-                reason: 'Пептиды стимулируют синтез коллагена и укрепляют барьер. Подходят для применения утром и вечером.'
-            },
-            {
-                keywords: ['век', 'вокруг глаз', 'eye cream', 'eye serum'],
-                type: 'Уход за глазами', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
-                reason: 'Базовый ежедневный уход за чувствительной зоной вокруг глаз.'
-            },
-            {
-                keywords: ['гиалурон', 'hyaluron', 'пантенол', 'pantenol', 'алоэ', 'aloe', 'ниацинамид', 'niacinamide', 'центелл', 'cica', 'сыворотк', 'serum', 'ампул', 'бустер'],
-                type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
-                reason: 'Базовые увлажняющие и успокаивающие сыворотки подходят для ежедневного применения.'
-            },
-            {
-                keywords: ['увлажня', 'питательн', 'восстанавлива', 'крем', 'moisturizer', 'эмульсия', 'флюид', 'церамид', 'ceramide', 'ламелляр'],
-                type: 'Питание / Увлажнение', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
-                reason: 'Базовые кремы для восстановления гидролипидного барьера и закрытия активов.'
-            },
-            {
-                keywords: ['пенк', 'гель для умыв', 'умывалка', 'foam', 'очищающ', 'мицелляр'],
-                type: 'Очищение', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
-                reason: 'Базовое очищение на водной основе для утреннего и вечернего ухода.'
-            },
-            {
-                keywords: ['тонер', 'тоник', 'эссенци', 'toner', 'лосьон', 'мист', 'софтнер'],
-                type: 'Тонизирование', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 0, pauseAfter: 0,
-                reason: 'Базовое тонизирование для восстановления естественного pH кожи после воды.'
+                keywords: ['кислот', 'acid', 'aha', 'bha', 'гликол', 'салицил'], type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 5, pauseAfter: 15,
+                reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном pH кожи.'
             }
         ];
 
@@ -1709,16 +943,10 @@
 
         class RoutineTimerEngine {
             constructor() {
-                this.endTime = null;
-                this.timerId = null;
-                this.wakeLock = null;
-                this.onTick = null;
-                this.onComplete = null;
-                this.audioCtx = null;
+                this.endTime = null; this.timerId = null; this.wakeLock = null; this.onTick = null; this.onComplete = null; this.audioCtx = null;
                 document.addEventListener('visibilitychange', () => this.sync());
                 window.addEventListener('focus', () => this.sync());
             }
-
             warmupAudio() {
                 try {
                     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1727,59 +955,33 @@
                     if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
                 } catch (e) {}
             }
-
             async start(durationMinutes, onTick, onComplete) {
-                this.warmupAudio();
-                this.stop();
-                this.onTick = onTick;
-                this.onComplete = onComplete;
+                this.warmupAudio(); this.stop(); this.onTick = onTick; this.onComplete = onComplete;
                 this.endTime = Date.now() + (durationMinutes * 60 * 1000);
                 await this.requestWakeLock();
-                this.timerId = setInterval(() => this.tick(), 500);
-                this.tick();
+                this.timerId = setInterval(() => this.tick(), 500); this.tick();
             }
-
             tick() {
                 if (!this.endTime) return;
                 const remainingMs = Math.max(0, this.endTime - Date.now());
                 const remainingSeconds = Math.ceil(remainingMs / 1000);
                 if (this.onTick) {
-                    const mins = Math.floor(remainingSeconds / 60);
-                    const secs = remainingSeconds % 60;
+                    const mins = Math.floor(remainingSeconds / 60); const secs = remainingSeconds % 60;
                     this.onTick(`${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`, remainingSeconds);
                 }
                 if (remainingMs <= 0) this.finish();
             }
-
             sync() { if (this.endTime) this.tick(); }
-
             finish() {
-                this.stop();
-                this.playChimeSound();
-                triggerHaptic([200, 100, 200, 100, 300]);
+                this.stop(); this.playChimeSound(); triggerHaptic([200, 100, 200, 100, 300]);
                 if (this.onComplete) this.onComplete();
             }
-
             stop() {
                 if (this.timerId) clearInterval(this.timerId);
-                this.timerId = null;
-                this.endTime = null;
-                this.releaseWakeLock();
+                this.timerId = null; this.endTime = null; this.releaseWakeLock();
             }
-
-            async requestWakeLock() {
-                if ('wakeLock' in navigator) {
-                    try { this.wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
-                }
-            }
-
-            releaseWakeLock() {
-                if (this.wakeLock) {
-                    this.wakeLock.release().catch(() => {});
-                    this.wakeLock = null;
-                }
-            }
-
+            async requestWakeLock() { if ('wakeLock' in navigator) { try { this.wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {} } }
+            releaseWakeLock() { if (this.wakeLock) { this.wakeLock.release().catch(() => {}); this.wakeLock = null; } }
             playChimeSound() {
                 try {
                     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1788,17 +990,12 @@
                     if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
                     const ctx = this.audioCtx;
                     const playNote = (freq, time, duration) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, time);
-                        gain.gain.setValueAtTime(0.2, time);
-                        gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-                        osc.connect(gain); gain.connect(ctx.destination);
-                        osc.start(time); osc.stop(time + duration);
+                        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                        osc.type = 'sine'; osc.frequency.setValueAtTime(freq, time);
+                        gain.gain.setValueAtTime(0.2, time); gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+                        osc.connect(gain); gain.connect(ctx.destination); osc.start(time); osc.stop(time + duration);
                     };
-                    playNote(523.25, ctx.currentTime, 0.8);
-                    playNote(659.25, ctx.currentTime + 0.15, 1.2);
+                    playNote(523.25, ctx.currentTime, 0.8); playNote(659.25, ctx.currentTime + 0.15, 1.2);
                 } catch (e) {}
             }
         }
@@ -1883,12 +1080,8 @@
         }
 
         function getAllowedStartDateObj() {
-            const parts = installDateStr.split('-');
-            const installObj = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            thirtyDaysAgo.setHours(12, 0, 0, 0);
-            return (installObj > thirtyDaysAgo) ? installObj : thirtyDaysAgo;
+            const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30); thirtyDaysAgo.setHours(12, 0, 0, 0);
+            return thirtyDaysAgo;
         }
 
         function renderCurrentDateChip() {
@@ -1904,80 +1097,54 @@
         }
 
         function openCustomCalendar(mode = 'routine') {
-            triggerHaptic(20);
-            calendarTargetMode = mode;
+            triggerHaptic(20); calendarTargetMode = mode;
             if (calendarTargetMode === 'pao') {
                 const currentOpenDate = document.getElementById('pOpenDate').value || getLocalTodayStr();
-                const parts = currentOpenDate.split('-');
-                calCurrentViewDate = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
-            } else {
-                calCurrentViewDate = getRoutineDateObj();
-            }
-            renderCustomCalendar();
-            openModalElement(document.getElementById('customCalendarModal'));
+                const parts = currentOpenDate.split('-'); calCurrentViewDate = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
+            } else { calCurrentViewDate = getRoutineDateObj(); }
+            renderCustomCalendar(); openModalElement(document.getElementById('customCalendarModal'));
         }
 
         function closeCustomCalendar() {
-            triggerHaptic(10);
-            closeModalElement(document.getElementById('customCalendarModal'));
+            triggerHaptic(10); closeModalElement(document.getElementById('customCalendarModal'));
         }
 
         function renderCustomCalendar() {
-            const year = calCurrentViewDate.getFullYear();
-            const month = calCurrentViewDate.getMonth();
+            const year = calCurrentViewDate.getFullYear(); const month = calCurrentViewDate.getMonth();
             const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
             document.getElementById('calMonthTitle').innerText = `${monthNames[month]} ${year}`;
 
-            const grid = document.getElementById('calGrid');
-            grid.innerHTML = '';
-
+            const grid = document.getElementById('calGrid'); grid.innerHTML = '';
             const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
             dayNames.forEach(dn => grid.innerHTML += `<div class="cal-day-name">${dn}</div>`);
 
             const firstDay = new Date(year, month, 1);
-            let startDay = firstDay.getDay() - 1;
-            if (startDay === -1) startDay = 6;
-
+            let startDay = firstDay.getDay() - 1; if (startDay === -1) startDay = 6;
             for (let i = 0; i < startDay; i++) grid.innerHTML += `<div></div>`;
 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const todayStr = getLocalTodayStr();
-            const allowedMinStr = getLocalTodayStr(getAllowedStartDateObj());
-
-            let activeSelectedStr = (calendarTargetMode === 'pao')
-                ? (document.getElementById('pOpenDate').value || todayStr)
-                : (safeStorage.getItem('cb_selected_date') || todayStr);
+            const todayStr = getLocalTodayStr(); const allowedMinStr = getLocalTodayStr(getAllowedStartDateObj());
+            let activeSelectedStr = (calendarTargetMode === 'pao') ? (document.getElementById('pOpenDate').value || todayStr) : (safeStorage.getItem('cb_selected_date') || todayStr);
 
             for (let d = 1; d <= daysInMonth; d++) {
-                const curDateObj = new Date(year, month, d, 12, 0, 0);
-                const curStr = getLocalTodayStr(curDateObj);
+                const curDateObj = new Date(year, month, d, 12, 0, 0); const curStr = getLocalTodayStr(curDateObj);
                 const isSelected = (curStr === activeSelectedStr);
                 const isDisabled = (calendarTargetMode === 'routine' && curStr < allowedMinStr) || (calendarTargetMode === 'pao' && curStr > todayStr);
 
                 let cellClass = 'cal-day-cell';
-                if (isSelected) cellClass += ' selected';
-                else if (isDisabled) cellClass += ' disabled';
-                else if (curStr < todayStr) cellClass += ' archive-day';
-                else if (curStr > todayStr) cellClass += ' future-day';
+                if (isSelected) cellClass += ' selected'; else if (isDisabled) cellClass += ' disabled';
+                else if (curStr < todayStr) cellClass += ' archive-day'; else if (curStr > todayStr) cellClass += ' future-day';
 
-                const cell = document.createElement('div');
-                cell.className = cellClass;
-                cell.innerText = d;
-
+                const cell = document.createElement('div'); cell.className = cellClass; cell.innerText = d;
                 if (!isDisabled) {
                     cell.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        triggerHaptic(25);
+                        e.preventDefault(); triggerHaptic(25);
                         if (calendarTargetMode === 'pao') {
-                            document.getElementById('pOpenDate').value = curStr;
-                            updateOpenDateDisplay();
-                            closeCustomCalendar();
-                            showToast("Дата вскрытия сохранена");
+                            document.getElementById('pOpenDate').value = curStr; updateOpenDateDisplay(); closeCustomCalendar(); showToast("Дата вскрытия сохранена");
                         } else {
                             if (curStr === getLocalTodayStr()) safeStorage.removeItem('cb_selected_date');
                             else safeStorage.setItem('cb_selected_date', curStr);
-                            switchTOD(currentTOD);
-                            closeCustomCalendar();
+                            switchTOD(currentTOD); closeCustomCalendar();
                         }
                     });
                 }
@@ -1986,60 +1153,42 @@
         }
 
         function switchTOD(tod) {
-            triggerHaptic(20);
-            currentTOD = tod;
+            triggerHaptic(20); currentTOD = tod;
+            const switchEl = document.getElementById('todSwitch');
+            if (switchEl) switchEl.setAttribute('data-tod', tod);
             document.getElementById('btnMorning').classList.toggle('active', tod === 'morning');
             document.getElementById('btnEvening').classList.toggle('active', tod === 'evening');
             renderRoutine();
         }
 
         function getActiveProductsForCurrentView() {
-            const routineDate = getRoutineDateObj();
-            const targetDayOfWeek = routineDate.getDay();
-
+            const routineDate = getRoutineDateObj(); const targetDayOfWeek = routineDate.getDay();
             let activeProducts = products.filter(p => {
                 if (p.inRoutine === false) return false; 
-                const tads = Array.isArray(p.tods) ? p.tods : [];
-                const matchTOD = tads.includes(currentTOD);
+                const tads = Array.isArray(p.tods) ? p.tods : []; const matchTOD = tads.includes(currentTOD);
                 let matchDay = true;
-                if (p.freqType === 'custom') {
-                    matchDay = Array.isArray(p.days) && p.days.includes(targetDayOfWeek);
-                }
+                if (p.freqType === 'custom') { matchDay = Array.isArray(p.days) && p.days.includes(targetDayOfWeek); }
                 return matchTOD && matchDay;
             });
-
-            activeProducts.sort((a, b) => getSortWeight(a) - getSortWeight(b));
-            return activeProducts;
+            activeProducts.sort((a, b) => getSortWeight(a) - getSortWeight(b)); return activeProducts;
         }
 
         function isTimerAllowedForCurrentView() {
             const selectedDateStr = safeStorage.getItem('cb_selected_date');
-            const todayStr = getLocalTodayStr();
-            return (!selectedDateStr || selectedDateStr === todayStr) && (currentTOD === getSystemTOD());
+            const todayStr = getLocalTodayStr(); return (!selectedDateStr || selectedDateStr === todayStr) && (currentTOD === getSystemTOD());
         }
 
         function getMondayOfWeek(d) {
-            const date = new Date(d);
-            const day = date.getDay();
-            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(date.setDate(diff));
+            const date = new Date(d); const day = date.getDay(); const diff = date.getDate() - day + (day === 0 ? -6 : 1); return new Date(date.setDate(diff));
         }
 
         function calcActiveWeekNumber(addedDateStr, routineDateObj) {
             if (!addedDateStr) return 1;
-            const parts = addedDateStr.split('-');
-            if (parts.length !== 3) return 1;
+            const parts = addedDateStr.split('-'); if (parts.length !== 3) return 1;
             const startObj = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12, 0, 0);
-
-            const startMon = getMondayOfWeek(startObj);
-            startMon.setHours(0, 0, 0, 0);
-
-            const routineMon = getMondayOfWeek(routineDateObj);
-            routineMon.setHours(0, 0, 0, 0);
-
-            const diffTime = routineMon - startMon;
-            const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
-            return Math.max(1, diffWeeks + 1);
+            const startMon = getMondayOfWeek(startObj); startMon.setHours(0, 0, 0, 0);
+            const routineMon = getMondayOfWeek(routineDateObj); routineMon.setHours(0, 0, 0, 0);
+            const diffTime = routineMon - startMon; const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)); return Math.max(1, diffWeeks + 1);
         }
 
         function renderRoutine() {
@@ -2049,7 +1198,7 @@
 
             if (activeProducts.length === 0) {
                 const arrowDownSvg = `<svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" style="margin: 6px auto 0; display: block; color: var(--accent-main);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-                container.innerHTML = `<div style="text-align: center; padding: 6px 0 2px; color: var(--text-secondary); font-size: 15px; font-weight: 500; line-height: 1.35;">Здесь пока пусто.<br>Добавьте ваше первое средство<br>через кнопку «Мои средства».${arrowDownSvg}</div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 12px 0 6px; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; line-height: 1.35;">Список пуст.<br>Нажмите «Мои средства», чтобы добавить уход.${arrowDownSvg}</div>`;
                 return;
             }
 
@@ -2057,29 +1206,24 @@
             const routineDateObj = getRoutineDateObj();
             const isTimerActive = isTimerAllowedForCurrentView();
 
-            /* Предупреждение косметолога при опасном сочетании активов */
             if (currentTOD === 'evening') {
                 const hasRetinoids = activeProducts.some(p => {
-                    const n = (p.name || '').toLowerCase();
-                    return n.includes('ретин') || n.includes('retin') || n.includes('адапален') || n.includes('третиноин');
+                    const n = (p.name || '').toLowerCase(); return n.includes('ретин') || n.includes('retin') || n.includes('адапален') || n.includes('третиноин');
                 });
                 const hasAcids = activeProducts.some(p => {
-                    const n = (p.name || '').toLowerCase();
-                    return n.includes('кислот') || n.includes('acid') || n.includes('aha') || n.includes('bha') || n.includes('гликол') || n.includes('салицил');
+                    const n = (p.name || '').toLowerCase(); return n.includes('кислот') || n.includes('acid') || n.includes('aha') || n.includes('bha') || n.includes('гликол') || n.includes('салицил');
                 });
                 if (hasRetinoids && hasAcids) {
                     htmlBuffer.push(`
-                        <div style="background: rgba(230, 126, 34, 0.12); border: 1px solid #E67E22; border-radius: 16px; padding: 12px; margin-bottom: 12px; font-size: 13px; color: var(--text-primary); line-height: 1.4;">
-                            <b style="color: #D35400;">⚠️ Совет косметолога:</b> В уходе одновременно ретиноиды и кислоты. Сочетание мощных активов в один вечер может вызвать раздражение или ожог кожи. Рекомендуется разделить их по дням!
+                        <div style="background: rgba(230, 126, 34, 0.12); border: 1px solid #E67E22; border-radius: 12px; padding: 12px; margin-bottom: 12px; font-size: 0.8125rem; color: var(--text-primary); line-height: 1.4;">
+                            <b style="color: #D35400;">Важно:</b> ретиноиды и кислоты лучше разделить по дням, чтобы избежать раздражения.
                         </div>
                     `);
                 }
             }
 
-            /* Проверка паузы ДО перед самым первым средством */
             if (activeProducts.length > 0) {
-                const firstItem = activeProducts[0];
-                const firstPauseBefore = Number(firstItem.pauseBefore) || 0;
+                const firstItem = activeProducts[0]; const firstPauseBefore = Number(firstItem.pauseBefore) || 0;
                 if (firstPauseBefore > 0) {
                     const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 14"></polyline></svg>`;
                     htmlBuffer.push(`
@@ -2123,7 +1267,6 @@
                 if (index < activeProducts.length - 1) {
                     const nextItem = activeProducts[index + 1];
                     const pauseMins = Math.max(Number(item.pauseAfter) || 0, Number(nextItem.pauseBefore) || 0);
-
                     if (pauseMins > 0) {
                         const clockSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 14"></polyline></svg>`;
                         htmlBuffer.push(`
@@ -2143,17 +1286,11 @@
 
         function startTimerForStep(btnEl, mins) {
             if (btnEl.classList.contains('running') || btnEl.classList.contains('completed')) return;
-            triggerHaptic(30);
-            btnEl.classList.add('running');
-
+            triggerHaptic(30); btnEl.classList.add('running');
             const clockSvgWhite = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24" style="stroke: #FFFFFF;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
-
-            activeRoutineTimer.start(
-                mins,
-                (formatted) => { btnEl.innerHTML = `${clockSvgWhite} <span>${formatted}</span>`; },
+            activeRoutineTimer.start(mins, (formatted) => { btnEl.innerHTML = `${clockSvgWhite} <span>${formatted}</span>`; },
                 () => {
-                    btnEl.classList.remove('running');
-                    btnEl.classList.add('completed');
+                    btnEl.classList.remove('running'); btnEl.classList.add('completed');
                     const checkSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     btnEl.innerHTML = `${checkSvg} <span>Выдержка окончена</span>`;
                     showToast("Выдержка завершена! Можно наносить следующее средство.");
@@ -2163,18 +1300,13 @@
 
         function calcExpiryDots(openDateStr, paoMonths) {
             if (!paoMonths) return `<div class="expiry-dots"><div class="dot dot-gray"></div><div class="dot dot-gray"></div><div class="dot dot-gray"></div></div>`;
-
             let openDate;
             if (openDateStr && typeof openDateStr === 'string' && openDateStr.includes('-')) {
-                const parts = openDateStr.split('-');
-                openDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12, 0, 0);
-            } else {
-                openDate = new Date();
-            }
+                const parts = openDateStr.split('-'); openDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 12, 0, 0);
+            } else { openDate = new Date(); }
 
             const expDate = addMonthsSafely(openDate, paoMonths);
-            const remainingDuration = expDate - new Date();
-            const totalDuration = expDate - openDate;
+            const remainingDuration = expDate - new Date(); const totalDuration = expDate - openDate;
 
             if (remainingDuration <= 0) return '<div class="expiry-dots"><div class="dot dot-red"></div></div>';
             const ratio = remainingDuration / totalDuration;
@@ -2184,70 +1316,48 @@
         }
 
         function openDetailsAccordion() {
-            const content = document.getElementById('detailsAccordionContent');
-            const arrow = document.getElementById('detailsAccordionArrow');
-            if (content && !content.classList.contains('open')) {
-                content.classList.add('open');
-                if (arrow) arrow.style.transform = 'rotate(180deg)';
-            }
+            const content = document.getElementById('detailsAccordionContent'); const arrow = document.getElementById('detailsAccordionArrow');
+            if (content && !content.classList.contains('open')) { content.classList.add('open'); if (arrow) arrow.style.transform = 'rotate(180deg)'; }
         }
 
         function closeDetailsAccordion() {
-            const content = document.getElementById('detailsAccordionContent');
-            const arrow = document.getElementById('detailsAccordionArrow');
-            if (content && content.classList.contains('open')) {
-                content.classList.remove('open');
-                if (arrow) arrow.style.transform = 'rotate(0deg)';
-            }
+            const content = document.getElementById('detailsAccordionContent'); const arrow = document.getElementById('detailsAccordionArrow');
+            if (content && content.classList.contains('open')) { content.classList.remove('open'); if (arrow) arrow.style.transform = 'rotate(0deg)'; }
         }
 
         function toggleDetailsAccordion() {
             triggerHaptic(15);
             const content = document.getElementById('detailsAccordionContent');
-            if (content && content.classList.contains('open')) closeDetailsAccordion();
-            else openDetailsAccordion();
+            if (content && content.classList.contains('open')) closeDetailsAccordion(); else openDetailsAccordion();
         }
 
         function closeAutocomplete() {
             clearTimeout(autocompleteDebounceTimer);
             const dropdown = document.getElementById('autocompleteDropdown');
-            if (dropdown) {
-                dropdown.classList.remove('open');
-                dropdown.innerHTML = '';
-                dropdown.style.display = 'none';
-            }
+            if (dropdown) { dropdown.classList.remove('open'); dropdown.innerHTML = ''; dropdown.style.display = 'none'; }
         }
 
         function selectAutocompleteItem(val) {
             triggerHaptic(15);
             const input = document.getElementById('pName');
-            if (input) {
-                input.value = val;
-                handleNameInput(val, true);
-            }
-            openDetailsAccordion();
-            closeAutocomplete();
+            if (input) { input.value = val; handleNameInput(val, true); }
+            if (document.activeElement) document.activeElement.blur();
+            openDetailsAccordion(); closeAutocomplete();
         }
 
         function handleNameInput(val, isComplete = false) {
             const cleanQuery = val.trim().toLowerCase();
-
             if (cleanQuery.length < 2) {
-                closeAutocomplete();
-                applyFormStateFromPreset(null, false);
-                closeDetailsAccordion();
-                return;
+                closeAutocomplete(); applyFormStateFromPreset(null, false); closeDetailsAccordion(); return;
             }
 
             openDetailsAccordion();
             currentDetectedPreset = detectSmartPreset(val);
-
             const isFullMatch = isComplete || localProductDictionary.some(item => item.toLowerCase() === cleanQuery) || products.some(p => p.name.toLowerCase() === cleanQuery);
             applyFormStateFromPreset(currentDetectedPreset, isFullMatch);
 
             const userProducts = products.map(p => p.name);
             const combinedLocal = Array.from(new Set([...userProducts, ...localProductDictionary]));
-
             let matchedLocal = combinedLocal.filter(item => item.toLowerCase().includes(cleanQuery)).slice(0, 6);
             renderAutocompleteResults(matchedLocal, []);
 
@@ -2265,9 +1375,7 @@
         }
 
         function applyFormStateFromPreset(preset, showBanner = false) {
-            const banner = document.getElementById('smartPresetBanner');
-            const defaultDays = [1, 4];
-
+            const banner = document.getElementById('smartPresetBanner'); const defaultDays = [1, 4];
             if (preset) {
                 if (preset.reason && showBanner) {
                     const bulbSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
@@ -2275,12 +1383,8 @@
                     banner.style.display = 'block';
                 } else banner.style.display = 'none';
 
-                if (preset.type) {
-                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.type === preset.type));
-                }
-                if (preset.tods) {
-                    document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.toggle('active', preset.tods.includes(b.dataset.tod)));
-                }
+                if (preset.type) { document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.type === preset.type)); }
+                if (preset.tods) { document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.toggle('active', preset.tods.includes(b.dataset.tod))); }
 
                 const targetFreq = preset.freqType || 'daily';
                 document.getElementById('pFreqType').value = targetFreq;
@@ -2289,451 +1393,296 @@
 
                 if (targetFreq === 'custom') {
                     const presetDays = preset.days || defaultDays;
-                    document.querySelectorAll('.day-chip').forEach(chip => {
-                        chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10)));
-                    });
+                    document.querySelectorAll('.day-chip').forEach(chip => { chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10))); });
                 }
 
-                applyPAO(preset.pao || '12');
-                setPauseBefore(preset.pauseBefore !== undefined ? preset.pauseBefore : null);
-                setPauseAfter(preset.pauseAfter !== undefined ? preset.pauseAfter : null);
+                applyPAO(preset.pao || '12'); setPauseBefore(preset.pauseBefore !== undefined ? preset.pauseBefore : null); setPauseAfter(preset.pauseAfter !== undefined ? preset.pauseAfter : null);
 
             } else {
-                banner.style.display = 'none';
-                document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
+                banner.style.display = 'none'; document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.add('active'));
-                document.getElementById('pFreqType').value = 'daily';
-                document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === 'daily'));
+                document.getElementById('pFreqType').value = 'daily'; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === 'daily'));
                 document.getElementById('daysGroup').style.display = 'none';
                 document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10))));
-                applyPAO('12');
-                setPauseBefore(null);
-                setPauseAfter(null);
+                applyPAO('12'); setPauseBefore(null); setPauseAfter(null);
             }
         }
 
-        /* Безопасное формирование списка автокомплита через DOM */
         function renderAutocompleteResults(localItems, onlineItems) {
-            const dropdown = document.getElementById('autocompleteDropdown');
-            if (!dropdown) return;
+            const dropdown = document.getElementById('autocompleteDropdown'); if (!dropdown) return;
             const combined = Array.from(new Set([...localItems, ...onlineItems]));
-
-            if (combined.length === 0) {
-                closeAutocomplete();
-                return;
-            }
+            if (combined.length === 0) { closeAutocomplete(); return; }
 
             dropdown.innerHTML = '';
             combined.forEach(name => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'autocomplete-item';
-                itemDiv.textContent = name;
-                itemDiv.addEventListener('click', () => selectAutocompleteItem(name));
+                const itemDiv = document.createElement('div'); itemDiv.className = 'autocomplete-item'; itemDiv.textContent = name;
+                const handleSelect = (e) => {
+                    e.preventDefault(); e.stopPropagation();
+                    if (document.activeElement) document.activeElement.blur();
+                    selectAutocompleteItem(name);
+                };
+                itemDiv.addEventListener('touchstart', handleSelect, { passive: false });
+                itemDiv.addEventListener('pointerdown', handleSelect);
                 dropdown.appendChild(itemDiv);
             });
-
-            dropdown.style.display = 'block';
-            dropdown.classList.add('open');
+            dropdown.style.display = 'block'; dropdown.classList.add('open');
         }
 
         document.getElementById('btnApplyPreset').addEventListener('click', (e) => {
-            e.preventDefault();
-            triggerHaptic(20);
+            e.preventDefault(); triggerHaptic(20);
             if (!currentDetectedPreset) return;
-
-            openDetailsAccordion();
-            setPauseBefore(currentDetectedPreset.pauseBefore !== undefined ? currentDetectedPreset.pauseBefore : null);
-            setPauseAfter(currentDetectedPreset.pauseAfter !== undefined ? currentDetectedPreset.pauseAfter : null);
-
-            const targetFreq = currentDetectedPreset.freqType || 'daily';
-            document.getElementById('pFreqType').value = targetFreq;
+            openDetailsAccordion(); setPauseBefore(currentDetectedPreset.pauseBefore !== undefined ? currentDetectedPreset.pauseBefore : null); setPauseAfter(currentDetectedPreset.pauseAfter !== undefined ? currentDetectedPreset.pauseAfter : null);
+            const targetFreq = currentDetectedPreset.freqType || 'daily'; document.getElementById('pFreqType').value = targetFreq;
             document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === targetFreq));
             document.getElementById('daysGroup').style.display = (targetFreq === 'custom') ? 'block' : 'none';
-
             if (targetFreq === 'custom') {
                 const presetDays = currentDetectedPreset.days || [1, 4];
                 document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10))));
             }
-
             document.getElementById('smartPresetBanner').style.display = 'none';
         });
 
         async function startBarcodeScanner() {
             triggerHaptic(20);
-            if (isScannerBusy) return;
-            if (typeof Html5Qrcode === 'undefined') return showToast("Сканер недоступен");
-
-            isScannerBusy = true;
-            document.getElementById('scannerWrapper').style.display = 'block';
-
+            if (isScannerBusy) return; if (typeof Html5Qrcode === 'undefined') return showToast("Сканер недоступен");
+            isScannerBusy = true; document.getElementById('scannerWrapper').style.display = 'block';
             if (!html5QrCodeScanner) html5QrCodeScanner = new Html5Qrcode("barcodeReader");
-
             try {
-                await html5QrCodeScanner.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: { width: 230, height: 140 } },
+                await html5QrCodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 230, height: 140 } },
                     async (decodedText) => {
                         stopBarcodeScanner();
                         if (barcodeCache[decodedText]) {
                             document.getElementById('pName').value = barcodeCache[decodedText].name;
-                            handleNameInput(barcodeCache[decodedText].name, true);
-                            openDetailsAccordion();
-                            return;
+                            handleNameInput(barcodeCache[decodedText].name, true); openDetailsAccordion(); return;
                         }
-
                         try {
-                            const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${encodeURIComponent(decodedText)}.json`);
-                            const data = await res.json();
+                            const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${encodeURIComponent(decodedText)}.json`); const data = await res.json();
                             if (data && data.status === 1 && data.product) {
                                 const rawName = data.product.product_name || data.product.brands || '';
                                 if (rawName.length > 2) {
-                                    document.getElementById('pName').value = rawName;
-                                    handleNameInput(rawName, true);
-                                    openDetailsAccordion();
+                                    document.getElementById('pName').value = rawName; handleNameInput(rawName, true); openDetailsAccordion();
                                     barcodeCache[decodedText] = { name: rawName, type: 'Очищение' };
-                                    safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache));
-                                    return;
+                                    safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache)); return;
                                 }
                             }
                         } catch (err) {}
-
                         showToast("Штрихкод не найден в базе.");
-                    },
-                    () => {}
+                    }, () => {}
                 );
-            } catch (err) {
-                showToast("Не удалось запустить камеру.");
-                stopBarcodeScanner();
-            } finally {
-                isScannerBusy = false;
-            }
+            } catch (err) { showToast("Не удалось запустить камеру."); stopBarcodeScanner(); } finally { isScannerBusy = false; }
         }
 
         async function stopBarcodeScanner() {
-            triggerHaptic(15);
-            if (html5QrCodeScanner) {
-                try { await html5QrCodeScanner.stop(); } catch (e) {}
-            }
-            document.getElementById('scannerWrapper').style.display = 'none';
-            isScannerBusy = false;
+            triggerHaptic(15); if (html5QrCodeScanner) { try { await html5QrCodeScanner.stop(); } catch (e) {} }
+            document.getElementById('scannerWrapper').style.display = 'none'; isScannerBusy = false;
         }
 
         function applyPAO(months) {
-            triggerHaptic(15);
-            selectedPAOMonths = months;
-            document.querySelectorAll('#paoPicker .pao-chip').forEach(c => {
-                c.classList.toggle('active', c.dataset.months == selectedPAOMonths);
-            });
+            triggerHaptic(15); selectedPAOMonths = months;
+            document.querySelectorAll('#paoPicker .pao-chip').forEach(c => { c.classList.toggle('active', c.dataset.months == selectedPAOMonths); });
         }
 
         function setPauseBefore(mins) {
             selectedPauseBeforeVal = mins;
-            document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', selectedPauseBeforeVal !== null && Number(b.dataset.mins) === Number(selectedPauseBeforeVal));
-            });
+            document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(b => { b.classList.toggle('active', selectedPauseBeforeVal !== null && Number(b.dataset.mins) === Number(selectedPauseBeforeVal)); });
         }
-
         function setPauseAfter(mins) {
             selectedPauseAfterVal = mins;
-            document.querySelectorAll('#pauseAfterPicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', selectedPauseAfterVal !== null && Number(b.dataset.mins) === Number(selectedPauseAfterVal));
-            });
+            document.querySelectorAll('#pauseAfterPicker .picker-btn').forEach(b => { b.classList.toggle('active', selectedPauseAfterVal !== null && Number(b.dataset.mins) === Number(selectedPauseAfterVal)); });
         }
+        function togglePauseBefore(mins) { triggerHaptic(15); setPauseBefore(selectedPauseBeforeVal === mins ? null : mins); }
+        function togglePauseAfter(mins) { triggerHaptic(15); setPauseAfter(selectedPauseAfterVal === mins ? null : mins); }
 
-        function togglePauseBefore(mins) {
-            triggerHaptic(15);
-            setPauseBefore(selectedPauseBeforeVal === mins ? null : mins);
-        }
-
-        function togglePauseAfter(mins) {
-            triggerHaptic(15);
-            setPauseAfter(selectedPauseAfterVal === mins ? null : mins);
-        }
-
-        async function saveProductsSync() {
-            await tgCloud.setItem('cb_custom_products', products);
-        }
+        async function saveProductsSync() { await tgCloud.setItem('cb_custom_products', products); }
 
         function saveProduct() {
             triggerHaptic(30);
             const name = document.getElementById('pName').value.trim();
-            const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
-            const type = activeTypeBtn ? activeTypeBtn.dataset.type : null;
-            let tods = [];
-            document.querySelectorAll('#todPicker .picker-btn.active').forEach(b => tods.push(b.dataset.tod));
+            const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active'); const type = activeTypeBtn ? activeTypeBtn.dataset.type : null;
+            let tods = []; document.querySelectorAll('#todPicker .picker-btn.active').forEach(b => tods.push(b.dataset.tod));
 
-            if (!name) return showToast('Введите название');
-            if (!type) return showToast('Выберите тип средства');
-            if (tods.length === 0) return showToast('Выберите время суток');
+            if (!name) return showToast('Введите название'); if (!type) return showToast('Выберите тип средства'); if (tods.length === 0) return showToast('Выберите время суток');
 
-            const freqType = document.getElementById('pFreqType').value;
-            const openDate = document.getElementById('pOpenDate').value || getLocalTodayStr();
-            const editId = document.getElementById('editProductId').value;
-
+            const freqType = document.getElementById('pFreqType').value; const openDate = document.getElementById('pOpenDate').value || getLocalTodayStr(); const editId = document.getElementById('editProductId').value;
             const existingItem = editId ? products.find(p => p.id === Number(editId)) : null;
             const addedDate = existingItem ? (existingItem.addedDate || existingItem.openDate || getLocalTodayStr()) : getLocalTodayStr();
-            const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : true;
+            const defaultInRoutine = !(isSuperCollectionEnabled && currentManageTab === 'onPause'); const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : defaultInRoutine;
 
             let days = [];
-            if (freqType === 'custom') {
-                document.querySelectorAll('.day-chip.active').forEach(chip => {
-                    days.push(parseInt(chip.dataset.day, 10));
-                });
-            }
+            if (freqType === 'custom') { document.querySelectorAll('.day-chip.active').forEach(chip => { days.push(parseInt(chip.dataset.day, 10)); }); }
 
             const productData = {
-                id: editId ? Number(editId) : Date.now(),
-                name, type, tods, freqType, days,
-                pauseBefore: selectedPauseBeforeVal,
-                pauseAfter: selectedPauseAfterVal,
-                openDate,
-                addedDate,
-                paoMonths: selectedPAOMonths,
-                inRoutine: inRoutineStatus
+                id: editId ? Number(editId) : Date.now(), name, type, tods, freqType, days,
+                pauseBefore: selectedPauseBeforeVal, pauseAfter: selectedPauseAfterVal, openDate, addedDate, paoMonths: selectedPAOMonths, inRoutine: inRoutineStatus
             };
 
-            if (editId) {
-                const idx = products.findIndex(p => p.id === Number(editId));
-                if (idx !== -1) products[idx] = productData;
-            } else {
-                products.push(productData);
-            }
-
-            saveProductsSync();
-            renderManageList();
-            hideForm();
-            renderRoutine();
+            if (editId) { const idx = products.findIndex(p => p.id === Number(editId)); if (idx !== -1) products[idx] = productData; } else { products.push(productData); }
+            saveProductsSync(); renderManageList(); hideForm(); renderRoutine();
         }
 
         function openProductActionModal(id) {
-            triggerHaptic(20);
-            activeSelectedProductId = Number(id);
-            const item = products.find(p => p.id === activeSelectedProductId);
-            if (!item) return;
-
+            triggerHaptic(20); activeSelectedProductId = Number(id); const item = products.find(p => p.id === activeSelectedProductId); if (!item) return;
             document.getElementById('actionModalProductName').innerText = item.name;
-
-            const toggleBtn = document.getElementById('btnActionTogglePause');
-            const isIn = (item.inRoutine !== false);
-
+            const toggleBtn = document.getElementById('btnActionTogglePause'); const isIn = (item.inRoutine !== false);
             const pauseSvg = `<svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
             const playSvg = `<svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
-
-            if (isIn) {
-                toggleBtn.innerHTML = `${pauseSvg} Поставить на паузу`;
-            } else {
-                toggleBtn.innerHTML = `${playSvg} Включить в уход`;
-            }
-
+            if (isIn) toggleBtn.innerHTML = `${pauseSvg} Поставить на паузу`; else toggleBtn.innerHTML = `${playSvg} Включить в уход`;
             openModalElement(document.getElementById('productActionModal'));
         }
 
-        function closeProductActionModal() {
-            closeModalElement(document.getElementById('productActionModal'));
-            activeSelectedProductId = null;
-        }
+        function closeProductActionModal() { closeModalElement(document.getElementById('productActionModal')); activeSelectedProductId = null; }
 
         function toggleProductRoutineAction() {
             if (!activeSelectedProductId) return;
             const item = products.find(p => p.id === activeSelectedProductId);
             if (item) {
-                const newState = !(item.inRoutine !== false);
-                item.inRoutine = newState;
-                saveProductsSync();
-                renderManageList();
-                renderRoutine();
-                closeProductActionModal();
+                const newState = !(item.inRoutine !== false); item.inRoutine = newState;
+                saveProductsSync(); renderManageList(); renderRoutine(); closeProductActionModal();
                 showToast(newState ? 'Средство включено в уход' : 'Средство поставлено на паузу');
             }
         }
 
-        function editProductAction() {
-            if (!activeSelectedProductId) return;
-            const targetId = activeSelectedProductId;
-            closeProductActionModal();
-            editProduct(null, targetId);
-        }
-
-        function deleteProductAction() {
-            if (!activeSelectedProductId) return;
-            const targetId = activeSelectedProductId;
-            closeProductActionModal();
-            deleteProduct(null, targetId);
-        }
+        function editProductAction() { if (!activeSelectedProductId) return; const targetId = activeSelectedProductId; closeProductActionModal(); editProduct(null, targetId); }
+        function deleteProductAction() { if (!activeSelectedProductId) return; const targetId = activeSelectedProductId; closeProductActionModal(); deleteProduct(null, targetId); }
 
         function editProduct(e, id) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
-            showForm();
-
-            const nameInput = document.getElementById('pName');
-            if (nameInput) nameInput.focus();
-
-            triggerHaptic(20);
-            closeAutocomplete();
-            const item = products.find(p => p.id === Number(id));
-            if (!item) return;
-
+            showForm(); triggerHaptic(20); closeAutocomplete();
+            const item = products.find(p => p.id === Number(id)); if (!item) return;
             openDetailsAccordion();
 
             document.getElementById('editProductId').value = item.id;
-            nameInput.value = item.name;
-
-            document.querySelectorAll('#typePicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.type === item.type);
-            });
-
-            const itemTods = item.tods || [];
-            document.querySelectorAll('#todPicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', itemTods.includes(b.dataset.tod));
-            });
-
-            const freq = item.freqType || 'daily';
-            document.getElementById('pFreqType').value = freq;
-            document.querySelectorAll('#freqPicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.freq === freq);
-            });
+            const nameInput = document.getElementById('pName'); if (nameInput) nameInput.value = item.name;
+            document.querySelectorAll('#typePicker .picker-btn').forEach(b => { b.classList.toggle('active', b.dataset.type === item.type); });
+            const itemTods = item.tods || []; document.querySelectorAll('#todPicker .picker-btn').forEach(b => { b.classList.toggle('active', itemTods.includes(b.dataset.tod)); });
+            const freq = item.freqType || 'daily'; document.getElementById('pFreqType').value = freq;
+            document.querySelectorAll('#freqPicker .picker-btn').forEach(b => { b.classList.toggle('active', b.dataset.freq === freq); });
             document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
 
             setPauseBefore(item.pauseBefore !== null && item.pauseBefore !== undefined ? item.pauseBefore : null);
             setPauseAfter(item.pauseAfter !== null && item.pauseAfter !== undefined ? item.pauseAfter : null);
 
-            document.getElementById('pOpenDate').value = item.openDate || getLocalTodayStr();
-            updateOpenDateDisplay();
-
-            if (item.paoMonths) applyPAO(item.paoMonths);
-            else applyPAO('12');
-
+            document.getElementById('pOpenDate').value = item.openDate || getLocalTodayStr(); updateOpenDateDisplay();
+            if (item.paoMonths) applyPAO(item.paoMonths); else applyPAO('12');
             document.querySelectorAll('.day-chip').forEach(chip => {
-                const day = parseInt(chip.dataset.day, 10);
-                chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day));
+                const day = parseInt(chip.dataset.day, 10); chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day));
             });
         }
 
         function deleteProduct(e, id) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
             confirmAction('Удалить это средство из вашей коллекции?', () => {
-                triggerHaptic(30);
-                closeAutocomplete();
-                products = products.filter(p => p.id !== Number(id));
-                saveProductsSync();
-                renderManageList();
-                renderRoutine();
-                showToast('Средство удалено');
+                triggerHaptic(30); closeAutocomplete(); products = products.filter(p => p.id !== Number(id));
+                saveProductsSync(); renderManageList(); renderRoutine(); showToast('Средство удалено');
             });
         }
 
+        /* 
+           ИСПРАВЛЕНИЕ 5: Свайп модального окна больше не мешает выделению текста в инпуте.
+        */
+        function initModalGestures(modalEl) {
+            const card = modalEl.querySelector('.modal-card'); if (!card) return;
+            let startY = 0; let currentY = 0; let isDragging = false;
+
+            const handleTouchStart = (e) => {
+                const target = e.target;
+                
+                // ИСКЛЮЧЕНИЕ: Если тап пришелся по полю ввода, не перехватываем жест
+                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('input')) {
+                    return;
+                }
+
+                const isHandle = target.closest('.modal-drag-handle');
+                const isScrollBody = target.closest('.modal-body-scrollable');
+
+                if (isScrollBody && isScrollBody.scrollTop > 0) return;
+                if (isHandle || (isScrollBody && isScrollBody.scrollTop === 0)) {
+                    startY = e.touches[0].clientY; isDragging = true; card.style.transition = 'none';
+                }
+            };
+            const handleTouchMove = (e) => {
+                if (!isDragging) return;
+                currentY = e.touches[0].clientY - startY;
+                if (currentY > 0) {
+                    if (e.cancelable) e.preventDefault(); e.stopPropagation();
+                    card.style.transform = `translate3d(0, ${currentY}px, 0)`;
+                }
+            };
+            const handleTouchEnd = () => {
+                if (!isDragging) return; isDragging = false;
+                card.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                if (currentY > 100) { closeModalElement(modalEl); } else { card.style.transform = 'translate3d(0, 0, 0)'; }
+                startY = 0; currentY = 0;
+            };
+
+            card.addEventListener('touchstart', handleTouchStart, { passive: true });
+            card.addEventListener('touchmove', handleTouchMove, { passive: false });
+            card.addEventListener('touchend', handleTouchEnd);
+        }
+
         function openModalElement(modalEl) {
-            modalEl.style.display = 'flex';
-            document.body.classList.add('modal-open');
+            modalEl.style.display = 'flex'; document.body.classList.add('modal-open');
+            const card = modalEl.querySelector('.modal-card'); if (card) card.style.transform = '';
             requestAnimationFrame(() => modalEl.classList.add('active-modal'));
         }
 
         function closeModalElement(modalEl, onClosed) {
-            triggerHaptic(15);
-            closeAutocomplete();
-            modalEl.classList.remove('active-modal');
+            triggerHaptic(15); closeAutocomplete(); modalEl.classList.remove('active-modal');
             setTimeout(() => {
-                modalEl.style.display = 'none';
-                document.body.classList.remove('modal-open');
-                if (onClosed) onClosed();
+                modalEl.style.display = 'none'; document.body.classList.remove('modal-open');
+                const card = modalEl.querySelector('.modal-card'); if (card) card.style.transform = ''; if (onClosed) onClosed();
             }, 300);
         }
 
         function showForm() {
-            document.getElementById('manageFilterSwitch').style.display = 'none';
-            document.getElementById('manageList').style.display = 'none';
-            document.getElementById('btnAddToggle').style.display = 'none';
-            document.getElementById('settingsModalHeader').style.display = 'none';
-            document.getElementById('productFormContainer').classList.add('open');
-            document.getElementById('pinnedModalFooter').style.display = 'none';
-
-            resetForm();
-            closeDetailsAccordion();
-
-            const nameInput = document.getElementById('pName');
-            if (nameInput) nameInput.focus();
-
-            triggerHaptic(20);
-            closeAutocomplete();
-            stopBarcodeScanner();
+            document.getElementById('manageFilterSwitch').style.display = 'none'; document.getElementById('manageList').style.display = 'none';
+            document.getElementById('btnAddToggle').style.display = 'none'; document.getElementById('settingsModalHeader').style.display = 'none';
+            document.getElementById('productFormContainer').classList.add('open'); document.getElementById('pinnedModalFooter').style.display = 'none';
+            resetForm(); closeDetailsAccordion(); triggerHaptic(20); closeAutocomplete(); stopBarcodeScanner();
         }
 
         function hideForm() {
-            triggerHaptic(15);
-            closeAutocomplete();
-            document.getElementById('productFormContainer').classList.remove('open');
+            triggerHaptic(15); closeAutocomplete(); document.getElementById('productFormContainer').classList.remove('open');
             document.getElementById('settingsModalHeader').style.display = 'none';
-            
-            if (isSuperCollectionEnabled) {
-                document.getElementById('manageFilterSwitch').style.display = 'flex';
-            } else {
-                document.getElementById('manageFilterSwitch').style.display = 'none';
-            }
-
-            document.getElementById('manageList').style.display = 'flex';
-            document.getElementById('btnAddToggle').style.display = 'block';
-            document.getElementById('pinnedModalFooter').style.display = 'block';
-            resetForm();
-            closeDetailsAccordion();
+            if (isSuperCollectionEnabled) { document.getElementById('manageFilterSwitch').style.display = 'flex'; } else { document.getElementById('manageFilterSwitch').style.display = 'none'; }
+            document.getElementById('manageList').style.display = 'flex'; document.getElementById('btnAddToggle').style.display = 'block'; document.getElementById('pinnedModalFooter').style.display = 'block';
+            resetForm(); closeDetailsAccordion();
         }
 
         function resetForm() {
-            closeAutocomplete();
-            selectedPauseBeforeVal = null;
-            selectedPauseAfterVal = null;
-            document.getElementById('editProductId').value = '';
-            document.getElementById('pName').value = '';
+            closeAutocomplete(); selectedPauseBeforeVal = null; selectedPauseAfterVal = null;
+            document.getElementById('editProductId').value = ''; document.getElementById('pName').value = '';
             document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.add('active'));
             document.querySelectorAll('#pauseBeforePicker .picker-btn, #pauseAfterPicker .picker-btn').forEach(c => c.classList.remove('active'));
-            document.getElementById('pFreqType').value = 'daily';
-            document.getElementById('daysGroup').style.display = 'none';
-
-            const defaultDays = [1, 4];
-            document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10))));
-
-            document.getElementById('pOpenDate').value = getLocalTodayStr();
-            updateOpenDateDisplay();
-            applyPAO('12');
-            document.getElementById('smartPresetBanner').style.display = 'none';
+            document.getElementById('pFreqType').value = 'daily'; document.getElementById('daysGroup').style.display = 'none';
+            const defaultDays = [1, 4]; document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10))));
+            document.getElementById('pOpenDate').value = getLocalTodayStr(); updateOpenDateDisplay(); applyPAO('12'); document.getElementById('smartPresetBanner').style.display = 'none';
         }
 
         function renderManageList() {
+            const formContainer = document.getElementById('productFormContainer'); const isFormOpen = formContainer && formContainer.classList.contains('open');
             const filterSwitch = document.getElementById('manageFilterSwitch');
-            if (isSuperCollectionEnabled) {
-                filterSwitch.style.display = 'flex';
-            } else {
-                filterSwitch.style.display = 'none';
-                currentManageTab = 'inRoutine';
-            }
+            if (isSuperCollectionEnabled && !isFormOpen) { filterSwitch.style.display = 'flex'; } else { filterSwitch.style.display = 'none'; if (!isFormOpen) currentManageTab = 'inRoutine'; }
 
-            const inRoutineCount = products.filter(p => p.inRoutine !== false).length;
-            const onPauseCount = products.filter(p => p.inRoutine === false).length;
+            const inRoutineCount = products.filter(p => p.inRoutine !== false).length; const onPauseCount = products.filter(p => p.inRoutine === false).length;
+            const cntInEl = document.getElementById('cntInRoutine'); const cntPauseEl = document.getElementById('cntOnPause');
+            if (cntInEl) cntInEl.innerText = inRoutineCount; if (cntPauseEl) cntPauseEl.innerText = onPauseCount;
 
-            const cntInEl = document.getElementById('cntInRoutine');
-            const cntPauseEl = document.getElementById('cntOnPause');
-            if (cntInEl) cntInEl.innerText = inRoutineCount;
-            if (cntPauseEl) cntPauseEl.innerText = onPauseCount;
-
-            const container = document.getElementById('manageList');
-            const htmlBuffer = [];
+            const container = document.getElementById('manageList'); const htmlBuffer = [];
             const chevronSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
             const rightChevronSvg = `<svg class="svg-icon" width="13" height="13" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
 
             const isPauseTab = (currentManageTab === 'onPause');
-
             CATEGORIES.forEach((catName, catIndex) => {
                 const isOpen = openCategoryIndexes.has(catIndex);
-                const catProducts = products.filter(p => {
-                    const isIn = (p.inRoutine !== false);
-                    return isPauseTab ? !isIn : isIn;
-                }).filter(p => p.type === catName);
+                const catProducts = products.filter(p => { const isIn = (p.inRoutine !== false); return isPauseTab ? !isIn : isIn; }).filter(p => p.type === catName);
 
                 let catItemsHtml = catProducts.map(p => `
-                    <div class="manage-item" id="manage-item-${p.id}" onclick="openProductActionModal(${p.id})">
+                    <div class="manage-item" data-id="${p.id}">
                         <div class="manage-info">
                             ${calcExpiryDots(p.openDate, p.paoMonths)}
-                            <span><b>${escapeHtml(p.name)}</b></span>
+                            <span>${escapeHtml(p.name)}</span>
                         </div>
                         <div class="manage-chevron">${rightChevronSvg}</div>
                     </div>
@@ -2747,145 +1696,75 @@
                         </button>
                         <div class="category-items-container ${isOpen ? 'open' : ''}" id="cat-container-${catIndex}">
                             <div class="category-items-inner">
-                                ${catItemsHtml || '<div style="font-size: 13.5px; color: var(--text-secondary); padding: 6px 10px;">Нет средств</div>'}
+                                ${catItemsHtml || '<div style="font-size: 0.8125rem; color: var(--text-secondary); padding: 6px 10px;">Нет средств</div>'}
                             </div>
                         </div>
                     </div>
                 `);
             });
-
             container.innerHTML = htmlBuffer.join('');
         }
 
         function toggleCategoryAccordion(catIndex) {
             triggerHaptic(15);
-            const headerBtn = document.getElementById(`cat-header-${catIndex}`);
-            const container = document.getElementById(`cat-container-${catIndex}`);
+            const headerBtn = document.getElementById(`cat-header-${catIndex}`); const container = document.getElementById(`cat-container-${catIndex}`);
             if (!container || !headerBtn) return;
-
             const isOpen = container.classList.contains('open');
-            if (isOpen) {
-                container.classList.remove('open');
-                headerBtn.classList.remove('open');
-                openCategoryIndexes.delete(catIndex);
-            } else {
-                container.classList.add('open');
-                headerBtn.classList.add('open');
-                openCategoryIndexes.add(catIndex);
-            }
+            if (isOpen) { container.classList.remove('open'); headerBtn.classList.remove('open'); openCategoryIndexes.delete(catIndex); } 
+            else { container.classList.add('open'); headerBtn.classList.add('open'); openCategoryIndexes.add(catIndex); }
         }
 
         function getBackupData() {
             return {
-                version: APP_VERSION,
-                timestamp: Date.now(),
-                installDate: installDateStr,
-                products: products,
-                superCollection: isSuperCollectionEnabled,
-                theme: safeStorage.getItem('cb_theme') || 'sunlit',
-                fontSize: safeStorage.getItem('cb_font_size') || 'normal'
+                version: APP_VERSION, timestamp: Date.now(), installDate: installDateStr, products: products,
+                superCollection: isSuperCollectionEnabled, theme: safeStorage.getItem('cb_theme') || 'sunlit', fontSize: safeStorage.getItem('cb_font_size') || 'normal'
             };
         }
 
         function applyImportData(data) {
-            if (!data || typeof data !== 'object' || !Array.isArray(data.products)) {
-                showToast('Ошибка: неверный формат архива');
-                return false;
-            }
+            if (!data || typeof data !== 'object' || !Array.isArray(data.products)) { showToast('Ошибка: неверный формат архива'); return false; }
             try {
-                if (data.installDate) {
-                    installDateStr = data.installDate;
-                    safeStorage.setItem('cb_install_date', installDateStr);
-                    tgCloud.setItem('cb_install_date', installDateStr);
-                }
-
+                if (data.installDate) { installDateStr = data.installDate; safeStorage.setItem('cb_install_date', installDateStr); tgCloud.setItem('cb_install_date', installDateStr); }
                 if (typeof data.superCollection === 'boolean') {
-                    isSuperCollectionEnabled = data.superCollection;
-                    safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled));
-                    tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled));
-                    document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled;
-                    updateProBadgeUI();
+                    isSuperCollectionEnabled = data.superCollection; safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled)); tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled));
+                    document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled; updateProBadgeUI();
                 }
-
                 products = data.products.map(p => ({
-                    id: Number(p.id) || Date.now(),
-                    name: String(p.name || ''),
-                    type: String(p.type || 'Очищение'),
-                    tods: Array.isArray(p.tods) ? p.tods : ['morning'],
-                    freqType: String(p.freqType || 'daily'),
-                    days: Array.isArray(p.days) ? p.days : [],
+                    id: Number(p.id) || Date.now(), name: String(p.name || ''), type: String(p.type || 'Очищение'), tods: Array.isArray(p.tods) ? p.tods : ['morning'],
+                    freqType: String(p.freqType || 'daily'), days: Array.isArray(p.days) ? p.days : [],
                     pauseBefore: p.pauseBefore !== null && p.pauseBefore !== undefined ? Number(p.pauseBefore) : null,
                     pauseAfter: p.pauseAfter !== null && p.pauseAfter !== undefined ? Number(p.pauseAfter) : null,
-                    openDate: String(p.openDate || getLocalTodayStr()),
-                    addedDate: String(p.addedDate || p.openDate || getLocalTodayStr()),
-                    paoMonths: p.paoMonths ? String(p.paoMonths) : '12',
-                    inRoutine: p.inRoutine !== false
+                    openDate: String(p.openDate || getLocalTodayStr()), addedDate: String(p.addedDate || p.openDate || getLocalTodayStr()),
+                    paoMonths: p.paoMonths ? String(p.paoMonths) : '12', inRoutine: p.inRoutine !== false
                 }));
-
                 saveProductsSync();
-
-                if (data.theme) {
-                    const validTheme = OLD_THEMES.includes(data.theme) ? 'sunlit' : data.theme;
-                    setTheme(validTheme);
-                }
-
-                if (data.fontSize) {
-                    setFontSize(data.fontSize);
-                }
-
-                renderManageList();
-                switchTOD(currentTOD);
-                showToast('Данные успешно загружены!');
-                return true;
-            } catch (err) {
-                showToast('Ошибка применения архива');
-                return false;
-            }
+                if (data.theme) { const validTheme = OLD_THEMES.includes(data.theme) ? 'sunlit' : data.theme; setTheme(validTheme); }
+                if (data.fontSize) setFontSize(data.fontSize);
+                renderManageList(); switchTOD(currentTOD); showToast('Данные успешно загружены!'); return true;
+            } catch (err) { showToast('Ошибка применения архива'); return false; }
         }
 
         async function exportJsonFile() {
-            triggerHaptic(20);
-            const data = getBackupData();
-            const jsonString = JSON.stringify(data, null, 2);
-            const filename = `mylumy_backup_${getLocalTodayStr()}.json`;
-            const file = new File([jsonString], filename, { type: 'application/json' });
-
+            triggerHaptic(20); const data = getBackupData(); const jsonString = JSON.stringify(data, null, 2);
+            const filename = `mylumy_backup_${getLocalTodayStr()}.json`; const file = new File([jsonString], filename, { type: 'application/json' });
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({ title: 'Архив MyLumy', text: 'Резервная копия данных MyLumy', files: [file] });
-                    showToast('Архив экспортирован!');
-                    return;
-                } catch (err) { if (err.name === 'AbortError') return; }
+                try { await navigator.share({ title: 'Архив MyLumy', text: 'Резервная копия данных MyLumy', files: [file] }); showToast('Архив экспортирован!'); return; } catch (err) { if (err.name === 'AbortError') return; }
             }
-
             try {
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                const blob = new Blob([jsonString], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a');
+                a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 1000);
                 showToast('Файл скачан!');
             } catch (e) { showToast('Ошибка при скачивании файла'); }
         }
 
-        function triggerImportJson() {
-            triggerHaptic(20);
-            document.getElementById('jsonFileInput').click();
-        }
+        function triggerImportJson() { triggerHaptic(20); document.getElementById('jsonFileInput').click(); }
 
         function importJsonFile(file) {
-            triggerHaptic(20);
-            if (!file) return;
+            triggerHaptic(20); if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    confirmAction('Перезаписать текущую коллекцию средств новыми данными из архива?', () => applyImportData(data));
-                } catch (err) { showToast('Ошибка чтения файла.'); }
+                try { const data = JSON.parse(e.target.result); confirmAction('Перезаписать текущую коллекцию средств новыми данными из архива?', () => applyImportData(data)); } 
+                catch (err) { showToast('Ошибка чтения файла.'); }
             };
             reader.readAsText(file);
         }
@@ -2893,91 +1772,50 @@
         function copyShareLink() {
             triggerHaptic(20);
             try {
-                const data = getBackupData();
-                const encoded = toBase64(JSON.stringify(data));
-                const fullUrl = `${window.location.origin}${window.location.pathname}#import=${encoded}`;
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(fullUrl).then(() => showToast('Ссылка скопирована!'));
-                }
+                const data = getBackupData(); const encoded = toBase64(JSON.stringify(data)); const fullUrl = `${window.location.origin}${window.location.pathname}#import=${encoded}`;
+                if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(fullUrl).then(() => showToast('Ссылка скопирована!')); }
             } catch(e) { showToast('Ошибка создания ссылки'); }
         }
 
         function forceAppUpdate() {
-            triggerHaptic(25);
-            showToast('Поиск обновлений...');
-            setTimeout(() => {
-                window.location.href = `${window.location.origin}${window.location.pathname}?v_force=${Date.now()}${window.location.hash}`;
-            }, 300);
+            triggerHaptic(25); safeStorage.setItem('cb_app_updated', 'true'); showToast('Поиск обновлений...');
+            setTimeout(() => { window.location.href = `${window.location.origin}${window.location.pathname}?v_force=${Date.now()}${window.location.hash}`; }, 300);
         }
 
         function showToast(msg) {
-            const toast = document.getElementById('toastNotification');
-            toast.innerText = msg;
-            toast.classList.add('visible');
+            const toast = document.getElementById('toastNotification'); toast.innerText = msg; toast.classList.add('visible');
             setTimeout(() => toast.classList.remove('visible'), 3000);
         }
 
         async function setTheme(theme, isInitial = false) {
-            if (!isInitial) {
-                triggerHaptic(15);
-                document.body.classList.add('theme-animated');
-            }
-
+            if (!isInitial) { triggerHaptic(15); document.body.classList.add('theme-animated'); }
             const validTheme = OLD_THEMES.includes(theme) ? 'sunlit' : theme;
-            document.documentElement.setAttribute('data-theme', validTheme);
-            document.body.setAttribute('data-theme', validTheme);
-            safeStorage.setItem('cb_theme', validTheme);
-
+            document.documentElement.setAttribute('data-theme', validTheme); document.body.setAttribute('data-theme', validTheme); safeStorage.setItem('cb_theme', validTheme);
             applyTelegramThemeColors(validTheme);
-
-            document.querySelectorAll('#themeRow [data-theme]').forEach(b => {
-                b.classList.toggle('active', b.dataset.theme === validTheme);
-            });
+            document.querySelectorAll('#themeRow .theme-card-btn').forEach(b => { b.classList.toggle('active', b.dataset.theme === validTheme); });
             await tgCloud.setItem('cb_theme', validTheme);
         }
 
         function setFontSize(size) {
-            triggerHaptic(15);
-            const fontVal = size === 'large' ? 'large' : 'normal';
-            document.documentElement.setAttribute('data-font-size', fontVal);
-            safeStorage.setItem('cb_font_size', fontVal);
-
-            document.querySelectorAll('#fontSizePicker .picker-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.size === fontVal);
-            });
+            triggerHaptic(15); const fontVal = size === 'large' ? 'large' : 'normal';
+            document.documentElement.setAttribute('data-font-size', fontVal); safeStorage.setItem('cb_font_size', fontVal);
+            document.querySelectorAll('#fontSizePicker .picker-btn').forEach(b => { b.classList.toggle('active', b.dataset.size === fontVal); });
         }
 
         async function loadAppDataFromCloud() {
             if (window.Telegram?.WebApp) {
-                try {
-                    window.Telegram.WebApp.ready();
-                    window.Telegram.WebApp.expand();
-                } catch (e) {}
+                try { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); if (typeof window.Telegram.WebApp.disableVerticalSwipes === 'function') { window.Telegram.WebApp.disableVerticalSwipes(); } } catch (e) {}
             }
-
             const cloudSuperVal = await tgCloud.getItem('cb_super_collection');
-            if (cloudSuperVal !== null && cloudSuperVal !== undefined) {
-                isSuperCollectionEnabled = (cloudSuperVal === 'true');
-                safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled));
-            }
-            document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled;
-            updateProBadgeUI();
-
+            if (cloudSuperVal !== null && cloudSuperVal !== undefined) { isSuperCollectionEnabled = (cloudSuperVal === 'true'); safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled)); }
+            document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled; updateProBadgeUI();
             const cloudInstallDate = await tgCloud.getItem('cb_install_date');
-            if (cloudInstallDate) {
-                installDateStr = cloudInstallDate;
-                safeStorage.setItem('cb_install_date', installDateStr);
-            }
-
+            if (cloudInstallDate) { installDateStr = cloudInstallDate; safeStorage.setItem('cb_install_date', installDateStr); }
             const cloudProductsJson = await tgCloud.getItem('cb_custom_products');
             if (cloudProductsJson) {
                 try {
                     const parsed = typeof cloudProductsJson === 'string' ? JSON.parse(cloudProductsJson) : cloudProductsJson;
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        products = parsed;
-                        renderManageList();
-                        renderRoutine();
-                    }
+                    if (Array.isArray(parsed) && parsed.length > 0) { products = parsed; renderManageList(); renderRoutine(); }
                 } catch (e) {}
             }
         }
@@ -2985,199 +1823,81 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadAppDataFromCloud();
 
-            /* Автоматический импорт при переходе по ссылке */
+            /* Инициализация свайпов шторок */
+            document.querySelectorAll('.modal-overlay').forEach(initModalGestures);
+
+            /* Быстрое открытие карточки в TG с первого тапа */
+            const manageListEl = document.getElementById('manageList');
+            if (manageListEl) {
+                const handleManageTouch = (e) => {
+                    const manageItem = e.target.closest('.manage-item');
+                    if (manageItem) {
+                        const id = manageItem.getAttribute('data-id'); if (id) { e.preventDefault(); e.stopPropagation(); openProductActionModal(Number(id)); }
+                    }
+                };
+                manageListEl.addEventListener('touchstart', handleManageTouch, { passive: false });
+                manageListEl.addEventListener('click', (e) => { const manageItem = e.target.closest('.manage-item'); if (manageItem) { const id = manageItem.getAttribute('data-id'); if (id) openProductActionModal(Number(id)); } });
+            }
+
+            if (safeStorage.getItem('cb_app_updated') === 'true') { safeStorage.removeItem('cb_app_updated'); showToast(`Приложение успешно обновлено до версии ${APP_VERSION}`); }
+
             if (window.location.hash && window.location.hash.startsWith('#import=')) {
-                try {
-                    const encoded = window.location.hash.replace('#import=', '');
-                    const jsonStr = fromBase64(encoded);
-                    const data = JSON.parse(jsonStr);
-                    confirmAction('Загрузить коллекцию средств из полученной ссылки?', () => {
-                        applyImportData(data);
-                        history.replaceState(null, "", window.location.pathname);
-                    });
-                } catch (e) {
-                    showToast('Ошибка чтения ссылки переноса');
-                }
+                try { const encoded = window.location.hash.replace('#import=', ''); const jsonStr = fromBase64(encoded); const data = JSON.parse(jsonStr); confirmAction('Загрузить коллекцию средств из полученной ссылки?', () => { applyImportData(data); history.replaceState(null, "", window.location.pathname); }); } catch (e) { showToast('Ошибка чтения ссылки переноса'); }
             }
 
             const toggleSuperEl = document.getElementById('toggleSuperCollection');
-            toggleSuperEl.checked = isSuperCollectionEnabled;
-            updateProBadgeUI();
-
+            toggleSuperEl.checked = isSuperCollectionEnabled; updateProBadgeUI();
             toggleSuperEl.addEventListener('change', (e) => {
-                triggerHaptic(20);
-                isSuperCollectionEnabled = e.target.checked;
-                safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled));
-                tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled));
-                updateProBadgeUI();
-                renderManageList();
-                showToast(isSuperCollectionEnabled ? 'Режим PRO включен' : 'Режим PRO отключен');
+                triggerHaptic(20); isSuperCollectionEnabled = e.target.checked; safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled)); tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled));
+                updateProBadgeUI(); renderManageList(); showToast(isSuperCollectionEnabled ? 'Режим PRO включен' : 'Режим PRO отключен');
             });
 
-            /* Инициализация шрифта */
-            const savedFontSize = safeStorage.getItem('cb_font_size') || 'normal';
-            setFontSize(savedFontSize);
+            const savedFontSize = safeStorage.getItem('cb_font_size') || 'normal'; setFontSize(savedFontSize);
+            setTheme(safeStorage.getItem('cb_theme') || 'sunlit', true);
+            document.getElementById('fontSizePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) setFontSize(btn.dataset.size); });
 
-            document.getElementById('fontSizePicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) setFontSize(btn.dataset.size);
-            });
-
-            document.getElementById('btnActionTogglePause').addEventListener('click', toggleProductRoutineAction);
-            document.getElementById('btnActionEdit').addEventListener('click', editProductAction);
-            document.getElementById('btnActionDelete').addEventListener('click', deleteProductAction);
-            document.getElementById('btnActionCancel').addEventListener('click', closeProductActionModal);
+            document.getElementById('btnActionTogglePause').addEventListener('click', toggleProductRoutineAction); document.getElementById('btnActionEdit').addEventListener('click', editProductAction);
+            document.getElementById('btnActionDelete').addEventListener('click', deleteProductAction); document.getElementById('btnActionCancel').addEventListener('click', closeProductActionModal);
 
             const hasAgreedToTerms = safeStorage.getItem('cb_terms_agreed');
-            if (!hasAgreedToTerms) {
-                const welcomeModal = document.getElementById('welcomeModal');
-                welcomeModal.addEventListener('click', (e) => e.stopPropagation()); 
-                openModalElement(welcomeModal);
-            }
-            document.getElementById('btnAgreeAndStart').addEventListener('click', () => {
-                triggerHaptic(30);
-                safeStorage.setItem('cb_terms_agreed', 'true');
-                closeModalElement(document.getElementById('welcomeModal'));
-            });
+            if (!hasAgreedToTerms) { const welcomeModal = document.getElementById('welcomeModal'); welcomeModal.addEventListener('click', (e) => e.stopPropagation()); openModalElement(welcomeModal); }
+            document.getElementById('btnAgreeAndStart').addEventListener('click', () => { triggerHaptic(30); safeStorage.setItem('cb_terms_agreed', 'true'); closeModalElement(document.getElementById('welcomeModal')); });
 
-            document.getElementById('currentDateChip').addEventListener('click', () => openCustomCalendar('routine'));
-            document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
-            document.getElementById('calPrevMonth').addEventListener('click', () => {
-                triggerHaptic(10);
-                calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() - 1);
-                renderCustomCalendar();
-            });
-            document.getElementById('calNextMonth').addEventListener('click', () => {
-                triggerHaptic(10);
-                calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() + 1);
-                renderCustomCalendar();
-            });
+            document.getElementById('currentDateChip').addEventListener('click', () => openCustomCalendar('routine')); document.getElementById('btnCloseCal').addEventListener('click', closeCustomCalendar);
+            document.getElementById('calPrevMonth').addEventListener('click', () => { triggerHaptic(10); calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() - 1); renderCustomCalendar(); });
+            document.getElementById('calNextMonth').addEventListener('click', () => { triggerHaptic(10); calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() + 1); renderCustomCalendar(); });
 
             document.getElementById('pName').addEventListener('input', (e) => handleNameInput(e.target.value, false));
-            document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner);
-            document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
-
+            document.getElementById('btnScanBarcode').addEventListener('click', startBarcodeScanner); document.getElementById('btnCancelScanner').addEventListener('click', stopBarcodeScanner);
             document.getElementById('btnToggleDetailsAccordion').addEventListener('click', toggleDetailsAccordion);
 
-            document.getElementById('paoPicker').addEventListener('click', (e) => {
-                const chip = e.target.closest('.pao-chip');
-                if (chip) applyPAO(chip.dataset.months);
-            });
+            document.getElementById('paoPicker').addEventListener('click', (e) => { const chip = e.target.closest('.pao-chip'); if (chip) applyPAO(chip.dataset.months); });
+            document.getElementById('btnToggleOpenDate').addEventListener('click', (e) => { e.preventDefault(); openCustomCalendar('pao'); });
+            document.getElementById('typePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); if (btn.dataset.type === 'Уход за глазами') applyPAO('6'); } });
+            document.getElementById('todPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); btn.classList.toggle('active'); } });
+            document.getElementById('freqPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); const freq = btn.dataset.freq; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('pFreqType').value = freq; document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none'; } });
+            document.getElementById('daysPicker').addEventListener('click', (e) => { const chip = e.target.closest('.day-chip'); if (chip) { triggerHaptic(15); chip.classList.toggle('active'); } });
+            document.getElementById('pauseBeforePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) togglePauseBefore(Number(btn.dataset.mins)); });
+            document.getElementById('pauseAfterPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) togglePauseAfter(Number(btn.dataset.mins)); });
 
-            document.getElementById('btnToggleOpenDate').addEventListener('click', (e) => {
-                e.preventDefault();
-                openCustomCalendar('pao');
-            });
-
-            document.getElementById('typePicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) {
-                    triggerHaptic(15);
-                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    if (btn.dataset.type === 'Уход за глазами') applyPAO('6');
-                }
-            });
-
-            document.getElementById('todPicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) {
-                    triggerHaptic(15);
-                    btn.classList.toggle('active');
-                }
-            });
-
-            document.getElementById('freqPicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) {
-                    triggerHaptic(15);
-                    const freq = btn.dataset.freq;
-                    document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.getElementById('pFreqType').value = freq;
-                    document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none';
-                }
-            });
-
-            document.getElementById('daysPicker').addEventListener('click', (e) => {
-                const chip = e.target.closest('.day-chip');
-                if (chip) {
-                    triggerHaptic(15);
-                    chip.classList.toggle('active');
-                }
-            });
-
-            document.getElementById('pauseBeforePicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) togglePauseBefore(Number(btn.dataset.mins));
-            });
-
-            document.getElementById('pauseAfterPicker').addEventListener('click', (e) => {
-                const btn = e.target.closest('.picker-btn');
-                if (btn) togglePauseAfter(Number(btn.dataset.mins));
-            });
-
-            document.getElementById('btnOpenSettings').addEventListener('click', () => {
-                triggerHaptic(20);
-                renderManageList();
-                openModalElement(document.getElementById('settingsModal'));
-            });
+            document.getElementById('btnOpenSettings').addEventListener('click', () => { triggerHaptic(20); renderManageList(); openModalElement(document.getElementById('settingsModal')); });
             document.getElementById('btnCloseSettings').addEventListener('click', () => closeModalElement(document.getElementById('settingsModal')));
-
-            document.getElementById('btnOpenAppSettings').addEventListener('click', () => {
-                triggerHaptic(20);
-                openModalElement(document.getElementById('appSettingsModal'));
-            });
+            document.getElementById('btnOpenAppSettings').addEventListener('click', () => { triggerHaptic(20); openModalElement(document.getElementById('appSettingsModal')); });
             document.getElementById('btnCloseAppSettings').addEventListener('click', () => closeModalElement(document.getElementById('appSettingsModal')));
 
-            document.getElementById('tabInRoutine').addEventListener('click', () => {
-                triggerHaptic(15);
-                currentManageTab = 'inRoutine';
-                document.getElementById('tabInRoutine').classList.add('active');
-                document.getElementById('tabOnPause').classList.remove('active');
-                renderManageList();
-            });
+            document.getElementById('tabInRoutine').addEventListener('click', () => { triggerHaptic(15); currentManageTab = 'inRoutine'; document.getElementById('tabInRoutine').classList.add('active'); document.getElementById('tabOnPause').classList.remove('active'); renderManageList(); });
+            document.getElementById('tabOnPause').addEventListener('click', () => { triggerHaptic(15); currentManageTab = 'onPause'; document.getElementById('tabOnPause').classList.add('active'); document.getElementById('tabInRoutine').classList.remove('active'); renderManageList(); });
+            document.getElementById('btnAddToggle').addEventListener('click', showForm); document.getElementById('btnCancelProduct').addEventListener('click', hideForm); document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
 
-            document.getElementById('tabOnPause').addEventListener('click', () => {
-                triggerHaptic(15);
-                currentManageTab = 'onPause';
-                document.getElementById('tabOnPause').classList.add('active');
-                document.getElementById('tabInRoutine').classList.remove('active');
-                renderManageList();
-            });
+            document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate); document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
+            document.getElementById('btnExportJson').addEventListener('click', exportJsonFile); document.getElementById('btnImportJson').addEventListener('click', triggerImportJson);
+            document.getElementById('jsonFileInput').addEventListener('change', (e) => { if (e.target.files && e.target.files[0]) importJsonFile(e.target.files[0]); });
 
-            document.getElementById('btnAddToggle').addEventListener('click', showForm);
-            document.getElementById('btnCancelProduct').addEventListener('click', hideForm);
-            document.getElementById('btnSaveProduct').addEventListener('click', saveProduct);
+            document.getElementById('themeRow').addEventListener('click', (e) => { const b = e.target.closest('.theme-card-btn'); if (b) setTheme(b.dataset.theme); });
+            document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning')); document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
 
-            document.getElementById('btnForceUpdate').addEventListener('click', forceAppUpdate);
-            document.getElementById('btnCopyShareLink').addEventListener('click', copyShareLink);
-            document.getElementById('btnExportJson').addEventListener('click', exportJsonFile);
-            document.getElementById('btnImportJson').addEventListener('click', triggerImportJson);
-            document.getElementById('jsonFileInput').addEventListener('change', (e) => {
-                if (e.target.files && e.target.files[0]) importJsonFile(e.target.files[0]);
-            });
-
-            document.getElementById('themeRow').addEventListener('click', (e) => {
-                const b = e.target.closest('[data-theme]');
-                if (b) setTheme(b.dataset.theme);
-            });
-
-            document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning'));
-            document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
-
-            document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) {
-                        closeAutocomplete();
-                        closeModalElement(overlay);
-                    }
-                });
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.form-group')) closeAutocomplete();
-            });
+            document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) { closeAutocomplete(); closeModalElement(overlay); } }); });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.form-group')) closeAutocomplete(); });
 
             switchTOD(currentTOD);
         });
