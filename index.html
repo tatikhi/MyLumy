@@ -226,11 +226,12 @@
             flex-shrink: 0;
         }
 
+        /* Шапка с группировкой логотипа и круглой кнопки настроек */
         .header-bar {
             width: 100%;
             max-width: 480px;
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
         }
@@ -256,6 +257,30 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--text-primary);
+        }
+
+        /* Круглая кнопка настроек в шапке */
+        .btn-settings-round {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            flex-shrink: 0;
+        }
+
+        .btn-settings-round:active {
+            background: var(--accent-light);
+            border-color: var(--accent-main);
+            transform: scale(0.95);
         }
 
         /* Обновленные сдержанные карточки */
@@ -321,17 +346,38 @@
             border: 1px solid var(--border-color);
         }
 
+        /* Нативный Segmented Control Утро / Вечер */
         .tod-switch {
+            position: relative;
             display: flex;
             background: var(--bg-main);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 4px;
             margin-bottom: 18px;
             border: 1px solid var(--border-color);
-            gap: 4px;
+        }
+
+        .tod-slider-pill {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            background: var(--surface);
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tod-switch[data-tod="evening"] .tod-slider-pill {
+            transform: translateX(100%);
         }
 
         .tod-btn {
+            position: relative;
+            z-index: 2;
             flex: 1;
             padding: 10px 8px;
             text-align: center;
@@ -340,7 +386,7 @@
             color: var(--text-secondary);
             border: none;
             background: transparent;
-            transition: all 0.2s ease;
+            transition: color 0.25s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -351,9 +397,9 @@
         .tod-btn.uniform-brand-title { line-height: 1.2; }
 
         .tod-btn.active {
-            background: var(--surface);
             color: var(--text-primary);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            background: transparent;
+            box-shadow: none;
         }
 
         .routine-list {
@@ -405,34 +451,6 @@
             display: inline-block;
             vertical-align: middle;
             line-height: 1.2;
-        }
-
-        .settings-card-wrapper {
-            background: var(--surface);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 480px;
-            padding: 16px;
-            margin-top: 14px;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .btn-settings-inner {
-            position: relative;
-            display: inline-block;
-            text-align: center;
-            color: inherit;
-        }
-
-        .settings-icon {
-            position: absolute;
-            right: calc(100% + 0.35em);
-            top: 50%;
-            transform: translateY(-50%);
         }
 
         /* Карточка элемента ухода без размытия и с чистой геометрией */
@@ -664,14 +682,16 @@
             transform: translateX(20px);
         }
 
-        /* Выезжающие мобильные шторки (Bottom Sheets) */
+        /* Выезжающие мобильные шторки (Bottom Sheets) с адаптацией к клавиатуре */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
+            height: 100%;
+            height: 100dvh;
             background: rgba(0, 0, 0, 0.4);
             display: none;
             justify-content: center;
-            align-items: flex-end; /* Шторка выезжает снизу */
+            align-items: flex-end;
             padding: 0;
             z-index: 1000;
             overflow: hidden;
@@ -685,10 +705,11 @@
 
         .modal-card {
             background: var(--surface);
-            border-radius: 20px 20px 0 0; /* Закругление верхних углов */
+            border-radius: 20px 20px 0 0;
             width: 100%;
             max-width: 480px;
             max-height: 85vh;
+            max-height: 85dvh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -1142,8 +1163,15 @@
 </head>
 <body>
 
+    <!-- Шапка приложения с круглой кнопкой "Мои настройки" справа -->
     <div class="header-bar">
         <div class="logo">MyLumy</div>
+        <button type="button" class="btn-settings-round" id="btnOpenAppSettings" title="Мои настройки">
+            <svg class="svg-icon" width="20" height="20" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
+            </svg>
+        </button>
     </div>
 
     <!-- 1. Карточка "Мои ритуалы" -->
@@ -1156,8 +1184,10 @@
 
     <!-- 2. Основная карточка с графиком и средствами -->
     <div class="main-card">
-        <div class="tod-switch">
-            <button type="button" class="tod-btn uniform-brand-title" id="btnMorning">Утро</button>
+        <!-- Нативный переключатель (Segmented Control) с белым бегунком -->
+        <div class="tod-switch" id="todSwitch">
+            <div class="tod-slider-pill" id="todPill"></div>
+            <button type="button" class="tod-btn uniform-brand-title active" id="btnMorning">Утро</button>
             <button type="button" class="tod-btn uniform-brand-title" id="btnEvening">Вечер</button>
         </div>
 
@@ -1169,19 +1199,6 @@
                 Мои средства <span class="pro-badge" id="proBadge" style="display: none;">PRO</span>
             </button>
         </div>
-    </div>
-
-    <!-- 3. Отдельная карточка "Мои настройки" -->
-    <div class="settings-card-wrapper">
-        <button type="button" class="btn-main-action uniform-brand-title" id="btnOpenAppSettings">
-            <span class="btn-settings-inner uniform-brand-title">
-                <svg class="svg-icon settings-icon" width="19" height="19" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
-                </svg>
-                Мои настройки
-            </span>
-        </button>
     </div>
 
     <!-- Кастомный Календарь -->
@@ -1615,6 +1632,7 @@
             "Солнцезащитный крем SPF 50", "Ночная маска", "Тканевая маска", "Глиняная маска", "Бальзам для губ"
         ];
 
+        /* Обновленные пресеты с откорректированной формулировкой ретинола */
         const SMART_PRESETS = [
             {
                 keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'sun fluid', 'sun stick', 'санскрин', 'защит'],
@@ -1624,7 +1642,7 @@
             {
                 keywords: ['ретин', 'retin', 'адапален', 'adapalene', 'третиноин', 'tretinoin', 'тазаротен', 'дифферин'],
                 type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15,
-                reason: 'Ретиноиды фотосенсибильны, наносятся строго вечером на полностью сухую кожу (пауза 15 мин). Пауза 15 мин до закрытия кремом минимизирует раздражение.'
+                reason: 'Ретиноиды наносятся строго вечером на полностью сухую кожу (пауза 15 мин). Пауза 15 мин до закрытия кремом минимизирует раздражение.'
             },
             {
                 keywords: ['кислот', 'acid', 'aha', 'bha', 'pha', 'гликол', 'салицил', 'миндаль', 'молочн', 'пилинг'],
@@ -1990,9 +2008,12 @@
             }
         }
 
+        /* Переключение Утро/Вечер с анимацией плашки (Segmented Control) */
         function switchTOD(tod) {
             triggerHaptic(20);
             currentTOD = tod;
+            const switchEl = document.getElementById('todSwitch');
+            if (switchEl) switchEl.setAttribute('data-tod', tod);
             document.getElementById('btnMorning').classList.toggle('active', tod === 'morning');
             document.getElementById('btnEvening').classList.toggle('active', tod === 'evening');
             renderRoutine();
@@ -2062,7 +2083,6 @@
             const routineDateObj = getRoutineDateObj();
             const isTimerActive = isTimerAllowedForCurrentView();
 
-            /* Лаконичное предупреждение косметолога */
             if (currentTOD === 'evening') {
                 const hasRetinoids = activeProducts.some(p => {
                     const n = (p.name || '').toLowerCase();
@@ -2081,7 +2101,6 @@
                 }
             }
 
-            /* Проверка паузы ДО перед самым первым средством */
             if (activeProducts.length > 0) {
                 const firstItem = activeProducts[0];
                 const firstPauseBefore = Number(firstItem.pauseBefore) || 0;
@@ -2317,7 +2336,6 @@
             }
         }
 
-        /* Безопасное формирование списка автокомплита через DOM */
         function renderAutocompleteResults(localItems, onlineItems) {
             const dropdown = document.getElementById('autocompleteDropdown');
             if (!dropdown) return;
@@ -2478,7 +2496,6 @@
             const existingItem = editId ? products.find(p => p.id === Number(editId)) : null;
             const addedDate = existingItem ? (existingItem.addedDate || existingItem.openDate || getLocalTodayStr()) : getLocalTodayStr();
             
-            // Если создаем новое средство во вкладке "На паузе", сохраняем его сразу на паузу
             const defaultInRoutine = !(isSuperCollectionEnabled && currentManageTab === 'onPause');
             const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : defaultInRoutine;
 
@@ -2910,8 +2927,10 @@
             } catch(e) { showToast('Ошибка создания ссылки'); }
         }
 
+        /* Принудительное обновление с запоминанием состояния */
         function forceAppUpdate() {
             triggerHaptic(25);
+            safeStorage.setItem('cb_app_updated', 'true');
             showToast('Поиск обновлений...');
             setTimeout(() => {
                 window.location.href = `${window.location.origin}${window.location.pathname}?v_force=${Date.now()}${window.location.hash}`;
@@ -2992,6 +3011,28 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadAppDataFromCloud();
+
+            /* Фиксация положения шторок при вызове виртуальной клавиатуры */
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', () => {
+                    const activeModal = document.querySelector('.modal-overlay.active-modal');
+                    if (activeModal) {
+                        activeModal.style.height = `${window.visualViewport.height}px`;
+                    }
+                });
+                window.visualViewport.addEventListener('scroll', () => {
+                    const activeModal = document.querySelector('.modal-overlay.active-modal');
+                    if (activeModal) {
+                        activeModal.style.top = `${window.visualViewport.offsetTop}px`;
+                    }
+                });
+            }
+
+            /* Уведомление после обновления приложения */
+            if (safeStorage.getItem('cb_app_updated') === 'true') {
+                safeStorage.removeItem('cb_app_updated');
+                showToast(`Приложение успешно обновлено до версии ${APP_VERSION}`);
+            }
 
             /* Автоматический импорт при переходе по ссылке */
             if (window.location.hash && window.location.hash.startsWith('#import=')) {
