@@ -209,7 +209,14 @@
             font-size: 1rem;
         }
 
-        body.modal-open { overflow: hidden; }
+        body.modal-open {
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
         .svg-icon {
             display: inline-block;
@@ -2460,7 +2467,15 @@
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'autocomplete-item';
                 itemDiv.textContent = name;
-                itemDiv.addEventListener('click', () => selectAutocompleteItem(name));
+                
+                const handleSelect = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    selectAutocompleteItem(name);
+                };
+
+                itemDiv.addEventListener('pointerdown', handleSelect);
+                itemDiv.addEventListener('mousedown', handleSelect);
                 dropdown.appendChild(itemDiv);
             });
 
@@ -3205,7 +3220,6 @@
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     const activeModal = document.querySelector('.modal-overlay.active-modal');
                     if (activeModal) activeModal.classList.add('is-keyboard-open');
-                    setTimeout(() => { window.scrollTo(0, 0); }, 50);
                 }
             });
 
@@ -3213,7 +3227,6 @@
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                     const activeModal = document.querySelector('.modal-overlay.active-modal');
                     if (activeModal) activeModal.classList.remove('is-keyboard-open');
-                    setTimeout(() => { window.scrollTo(0, 0); }, 50);
                 }
             });
 
