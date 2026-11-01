@@ -692,7 +692,7 @@
             transform: translateX(20px);
         }
 
-        /* Выезжающие мобильные шторки с зафиксированным позиционированием */
+        /* Выезжающие мобильные шторки */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -2356,6 +2356,12 @@
                 input.value = val;
                 handleNameInput(val, true);
             }
+
+            /* 1. Сбрасываем фокус с поля ввода для скрытия клавиатуры */
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+
             openDetailsAccordion();
             closeAutocomplete();
         }
@@ -2462,10 +2468,14 @@
                 const handleSelect = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    /* Сбрасываем фокус прямо в момент касания */
+                    if (document.activeElement) {
+                        document.activeElement.blur();
+                    }
                     selectAutocompleteItem(name);
                 };
 
-                // touchstart предотвращает сброс фокуса и потери первого клика в TG
+                /* Обработка касания с prevention для мгновенного отклика без потери клика */
                 itemDiv.addEventListener('touchstart', handleSelect, { passive: false });
                 itemDiv.addEventListener('pointerdown', handleSelect);
                 dropdown.appendChild(itemDiv);
