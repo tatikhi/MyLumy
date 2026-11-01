@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -97,7 +97,7 @@
             caret-color: var(--accent-main); touch-action: manipulation;
         }
 
-        body.modal-open { overflow: hidden; }
+        body.modal-open { overflow: hidden; position: fixed; width: 100%; height: 100%; }
         body.theme-animated * { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
 
         .svg-icon {
@@ -206,13 +206,13 @@
         input:checked + .toggle-slider:before { transform: translateX(20px); }
 
         .modal-overlay {
-            position: fixed; inset: 0; height: 100%; background: rgba(0, 0, 0, 0.45); display: none; justify-content: center; align-items: flex-end; padding: 0;
+            position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.45); display: none; justify-content: center; align-items: flex-end; padding: 0;
             z-index: 1000; overflow: hidden; opacity: 0; transition: opacity 0.25s ease; touch-action: none;
         }
         .modal-overlay.active-modal { opacity: 1; }
 
         .modal-card {
-            background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; max-height: 88vh;
+            background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; max-height: 85vh;
             display: flex; flex-direction: column; overflow: hidden; padding: 10px 16px 16px;
             box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); border-bottom: none;
             position: relative; transform: translate3d(0, 100%, 0); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; touch-action: pan-y;
@@ -269,10 +269,9 @@
 
         .autocomplete-dropdown {
             position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); border: 1px solid var(--border-color);
-            border-radius: 12px; margin-top: 4px; max-height: 0; opacity: 0; overflow-y: auto; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease; display: none;
+            border-radius: 12px; margin-top: 4px; max-height: 160px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.08); display: none;
         }
-        .autocomplete-dropdown.open { display: block; max-height: 170px; opacity: 1; }
+        .autocomplete-dropdown.open { display: block; }
         .autocomplete-item {
             padding: 12px; font-size: 0.95rem; color: var(--text-primary); cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s ease; -webkit-tap-highlight-color: transparent;
         }
@@ -819,7 +818,6 @@
             if (proBadge) { proBadge.style.display = isSuperCollectionEnabled ? 'inline-block' : 'none'; }
         }
 
-        // Встроенный словарь наименований средств
         const localProductDictionary = [
             "Патчи для глаз", "Патчи гидрогелевые", "Пенка для умывания", "Гель для умывания", 
             "Гидрофильное масло", "Гидрофильный бальзам", "Мицеллярная вода", "Энзимная пудра", "Тонер увлажняющий", 
@@ -829,57 +827,17 @@
             "Солнцезащитный крем SPF 50", "Ночная маска", "Тканевая маска", "Глиняная маска", "Бальзам для губ"
         ];
 
-        // Косметологический алгоритм распознавания типов ухода
         function detectTypeByName(name) {
             if (!name || typeof name !== 'string') return null;
             const clean = name.toLowerCase().trim();
             if (clean.length < 2) return null;
 
-            // 1. Уход за глазами (высокий приоритет, чтобы патчи или крем для век не попадали в маски/кремы)
-            if (clean.includes('патч') || clean.includes('глаз') || clean.includes('век') || clean.includes('eye')) {
-                return 'Уход за глазами';
-            }
-
-            // 2. SPF / Защита
-            if (clean.includes('spf') || clean.includes('спф') || clean.includes('солнц') || clean.includes('sunscreen') || clean.includes('санскрин')) {
-                return 'SPF / Защита';
-            }
-
-            // 3. Очищение
-            if (
-                clean.includes('мицелл') || clean.includes('гидрофильн') || clean.includes('умыван') || 
-                clean.includes('пенка') || clean.includes('гель') || clean.includes('энзим') || 
-                clean.includes('скраб') || clean.includes('гоммаж') || clean.includes('пудра') || 
-                clean.includes('cleanser') || clean.includes('wash') || clean.includes('глинян')
-            ) {
-                return 'Очищение';
-            }
-
-            // 4. Тонизирование
-            if (clean.includes('тонер') || clean.includes('тоник') || clean.includes('мист') || clean.includes('эссенц') || clean.includes('toner') || clean.includes('mist') || clean.includes('essence')) {
-                return 'Тонизирование';
-            }
-
-            // 5. Активы
-            if (
-                clean.includes('сыворотк') || clean.includes('serum') || clean.includes('ампул') || 
-                clean.includes('ретин') || clean.includes('retin') || clean.includes('адапален') || 
-                clean.includes('третиноин') || clean.includes('кислот') || clean.includes('acid') || 
-                clean.includes('aha') || clean.includes('bha') || clean.includes('pha') || 
-                clean.includes('ниацинамид') || clean.includes('витамин c') || clean.includes('витамин с')
-            ) {
-                return 'Активы';
-            }
-
-            // 6. Питание / Увлажнение (тканевые/ночные маски, бальзамы, кремы для лица)
-            if (
-                clean.includes('крем') || clean.includes('маск') || clean.includes('бальзам') || 
-                clean.includes('флюид') || clean.includes('эмульс') || clean.includes('лосьон') || 
-                clean.includes('cream') || clean.includes('mask') || clean.includes('lotion') || 
-                clean.includes('fluid') || clean.includes('увлажн') || clean.includes('питат')
-            ) {
-                return 'Питание / Увлажнение';
-            }
+            if (clean.includes('патч') || clean.includes('глаз') || clean.includes('век') || clean.includes('eye')) return 'Уход за глазами';
+            if (clean.includes('spf') || clean.includes('спф') || clean.includes('солнц') || clean.includes('sunscreen') || clean.includes('санскрин')) return 'SPF / Защита';
+            if (clean.includes('мицелл') || clean.includes('гидрофильн') || clean.includes('умыван') || clean.includes('пенка') || clean.includes('гель') || clean.includes('энзим') || clean.includes('скраб') || clean.includes('гоммаж') || clean.includes('пудра') || clean.includes('cleanser') || clean.includes('wash') || clean.includes('глинян')) return 'Очищение';
+            if (clean.includes('тонер') || clean.includes('тоник') || clean.includes('мист') || clean.includes('эссенц') || clean.includes('toner') || clean.includes('mist') || clean.includes('essence')) return 'Тонизирование';
+            if (clean.includes('сыворотк') || clean.includes('serum') || clean.includes('ампул') || clean.includes('ретин') || clean.includes('retin') || clean.includes('адапален') || clean.includes('третиноин') || clean.includes('кислот') || clean.includes('acid') || clean.includes('aha') || clean.includes('bha') || clean.includes('pha') || clean.includes('ниацинамид') || clean.includes('витамин c') || clean.includes('витамин с') || clean.includes('пептид')) return 'Активы';
+            if (clean.includes('крем') || clean.includes('маск') || clean.includes('бальзам') || clean.includes('флюид') || clean.includes('эмульс') || clean.includes('лосьон') || clean.includes('cream') || clean.includes('mask') || clean.includes('lotion') || clean.includes('fluid') || clean.includes('увлажн') || clean.includes('питат')) return 'Питание / Увлажнение';
 
             return null;
         }
@@ -887,15 +845,27 @@
         const SMART_PRESETS = [
             {
                 keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'санскрин'], type: 'SPF / Защита', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 15,
-                reason: 'SPF-фильтрам требуется 5 минут после увлажняющего крема и 15 минут после нанесения.'
+                reason: 'SPF-фильтрам требуется 5 минут после увлажняющего крема и 15 минут выдержки после нанесения до выхода на солнце.'
             },
             {
                 keywords: ['ретин', 'retin', 'адапален', 'третиноин'], type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15,
-                reason: 'Ретиноиды наносятся строго вечером на сухую кожу. Пауза 15 мин до и после минимизирует раздражение.'
+                reason: 'Ретиноиды наносятся строго вечером на полностью сухую кожу. Выдержка 15 минут до и после минимизирует раздражение.'
             },
             {
                 keywords: ['кислот', 'acid', 'aha', 'bha', 'гликол', 'салицил'], type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 5, pauseAfter: 15,
                 reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном pH кожи.'
+            },
+            {
+                keywords: ['витамин c', 'витамин с', 'vitamin c'], type: 'Активы', pao: '3', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
+                reason: 'Витамин C наносится утром под SPF. Пауза 10 минут перед кремом повышает его эффективность.'
+            },
+            {
+                keywords: ['ниацинамид', 'niacinamide'], type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 5,
+                reason: 'Ниацинамид универсален, укрепляет защитный барьер кожи и совместим с большинством компонентов.'
+            },
+            {
+                keywords: ['пептид', 'peptide'], type: 'Активы', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10,
+                reason: 'Пептиды любят выдержку перед плотными кремами для глубокого проникновения в эпидермис.'
             }
         ];
 
@@ -1298,7 +1268,7 @@
         function closeAutocomplete() {
             clearTimeout(autocompleteDebounceTimer);
             const dropdown = document.getElementById('autocompleteDropdown');
-            if (dropdown) { dropdown.classList.remove('open'); dropdown.innerHTML = ''; dropdown.style.display = 'none'; }
+            if (dropdown) { dropdown.classList.remove('open'); dropdown.innerHTML = ''; }
         }
 
         function selectAutocompleteItem(val) {
@@ -1343,14 +1313,12 @@
         function applyFormStateFromPreset(preset, showBanner = false, detectedType = null) {
             const banner = document.getElementById('smartPresetBanner'); const defaultDays = [1, 4];
             
-            // 1. Установка автоматически определенного типа ухода
             const targetType = detectedType || (preset ? preset.type : null);
             if (targetType) {
                 document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.type === targetType));
                 if (targetType === 'Уход за глазами') applyPAO('6');
             }
 
-            // 2. Установка рекомендаций из смарт-пресета (паузы, дни, PAO)
             if (preset) {
                 if (preset.reason && showBanner) {
                     const bulbSvg = `<svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" style="margin-right: 4px;"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1.55.59 2.8 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>`;
@@ -1401,7 +1369,7 @@
                 itemDiv.addEventListener('pointerdown', handleSelect);
                 dropdown.appendChild(itemDiv);
             });
-            dropdown.style.display = 'block'; dropdown.classList.add('open');
+            dropdown.classList.add('open');
         }
 
         document.getElementById('btnApplyPreset').addEventListener('click', (e) => {
@@ -1559,11 +1527,7 @@
 
             const handleTouchStart = (e) => {
                 const target = e.target;
-                
-                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('input')) {
-                    return;
-                }
-
+                if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('input')) return;
                 const isHandle = target.closest('.modal-drag-handle');
                 const isScrollBody = target.closest('.modal-body-scrollable');
 
