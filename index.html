@@ -51,12 +51,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <style>
-        :root {
-            --font-scale: 1;
+        /* Оптимизация типографики через rem на корневом элементе */
+        html {
+            font-size: 16px;
         }
 
         html[data-font-size="large"] {
-            --font-scale: 1.12;
+            font-size: 18px;
         }
 
         /* 1. Sunlit Gloss */
@@ -69,9 +70,9 @@
             --accent-grad: #C95B3E;
             --accent-light: #FDE6DD;
             --border-color: #F7CBBF;
-            --shadow-soft: 0 16px 40px rgba(232, 122, 93, 0.15);
+            --shadow-soft: 0 2px 8px rgba(232, 122, 93, 0.08);
             --icon-inactive: #C7A69C;
-            --item-bg: rgba(255, 255, 255, 0.9);
+            --item-bg: #FFFFFF;
             --scroll-thumb: rgba(232, 122, 93, 0.6);
             --scroll-track: rgba(232, 122, 93, 0.12);
         }
@@ -86,9 +87,9 @@
             --accent-grad: #B84D75;
             --accent-light: #3D2938;
             --border-color: #4A3545;
-            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.4);
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2);
             --icon-inactive: #6B5263;
-            --item-bg: rgba(42, 32, 44, 0.75);
+            --item-bg: #2A202C;
             --scroll-thumb: rgba(217, 107, 148, 0.6);
             --scroll-track: rgba(217, 107, 148, 0.12);
         }
@@ -103,9 +104,9 @@
             --accent-grad: #1C5A7D;
             --accent-light: #DCECF5;
             --border-color: #B9D5E6;
-            --shadow-soft: 0 16px 40px rgba(43, 120, 163, 0.12);
+            --shadow-soft: 0 2px 8px rgba(43, 120, 163, 0.08);
             --icon-inactive: #90AEC2;
-            --item-bg: rgba(255, 255, 255, 0.9);
+            --item-bg: #FFFFFF;
             --scroll-thumb: rgba(43, 120, 163, 0.6);
             --scroll-track: rgba(43, 120, 163, 0.12);
         }
@@ -120,9 +121,9 @@
             --accent-grad: #523825;
             --accent-light: #ECE1D7;
             --border-color: #D9C8B8;
-            --shadow-soft: 0 16px 40px rgba(111, 78, 55, 0.12);
+            --shadow-soft: 0 2px 8px rgba(111, 78, 55, 0.08);
             --icon-inactive: #AFA093;
-            --item-bg: rgba(255, 255, 255, 0.9);
+            --item-bg: #FFFFFF;
             --scroll-thumb: rgba(111, 78, 55, 0.6);
             --scroll-track: rgba(111, 78, 55, 0.12);
         }
@@ -137,9 +138,9 @@
             --accent-grad: #6E3BD9;
             --accent-light: #EBE1FF;
             --border-color: #D3C2F8;
-            --shadow-soft: 0 16px 40px rgba(138, 92, 245, 0.15);
+            --shadow-soft: 0 2px 8px rgba(138, 92, 245, 0.08);
             --icon-inactive: #A692CD;
-            --item-bg: rgba(255, 255, 255, 0.9);
+            --item-bg: #FFFFFF;
             --scroll-thumb: rgba(138, 92, 245, 0.6);
             --scroll-track: rgba(138, 92, 245, 0.12);
         }
@@ -154,9 +155,9 @@
             --accent-grad: #2B7AE6;
             --accent-light: #1A2E4A;
             --border-color: #23324A;
-            --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.5);
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.3);
             --icon-inactive: #4B5E7D;
-            --item-bg: rgba(22, 29, 43, 0.85);
+            --item-bg: #161D2B;
             --scroll-thumb: rgba(78, 158, 255, 0.6);
             --scroll-track: rgba(78, 158, 255, 0.12);
         }
@@ -169,7 +170,7 @@
             touch-action: manipulation;
         }
 
-        /* Принудительно разрешаем выделение текста и контекстное меню для Telegram WebApp */
+        /* Выделение текста в Telegram WebApp */
         body, p, span, div, label, 
         .item-name, .item-tag, .toast-notification, 
         .version-text, #smartPresetText, .item-details {
@@ -178,7 +179,7 @@
             -webkit-touch-callout: default !important;
         }
 
-        /* Блокируем выделение строго для интерактивных кнопок и переключателей */
+        /* Запрет выделения для интерактивных элементов */
         button, input[type="button"], .picker-btn, .day-chip, 
         .pao-chip, .toggle-switch, .tod-btn, .date-chip, 
         .cal-day-cell, .svg-icon, .category-header-btn, .manage-item {
@@ -204,8 +205,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 22px 14px 40px;
-            font-size: calc(16px * var(--font-scale));
+            padding: 20px 14px 40px;
+            font-size: 1rem;
         }
 
         body.modal-open { overflow: hidden; }
@@ -231,7 +232,7 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title {
@@ -241,7 +242,7 @@
         }
 
         .uniform-brand-title {
-            font-size: calc(clamp(20px, 5.5vw, 24px) * var(--font-scale));
+            font-size: clamp(1.25rem, 5.5vw, 1.45rem);
             text-transform: none;
             color: var(--text-primary);
             font-style: normal;
@@ -250,20 +251,21 @@
 
         .logo {
             font-family: 'Alice', Georgia, serif;
-            font-size: calc(clamp(25px, 6.5vw, 29px) * var(--font-scale));
+            font-size: clamp(1.5rem, 6.5vw, 1.75rem);
             font-weight: 400;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--text-primary);
         }
 
+        /* Обновленные сдержанные карточки */
         .streak-card {
             background: var(--surface);
-            border-radius: 24px;
+            border-radius: 16px;
             width: 100%;
             max-width: 480px;
-            padding: 16px 18px;
-            margin-bottom: 18px;
+            padding: 16px;
+            margin-bottom: 14px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
             text-align: center;
@@ -288,10 +290,10 @@
             background: var(--surface);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: 20px;
+            padding: 10px 18px;
+            border-radius: 12px;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: calc(clamp(15px, 4vw, 17px) * var(--font-scale));
+            font-size: clamp(0.9375rem, 4vw, 1.05rem);
             font-weight: 600;
             letter-spacing: 0.015em;
             text-transform: none;
@@ -299,23 +301,22 @@
             position: relative;
             width: 100%;
             max-width: 320px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            transition: all 0.25s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
             white-space: nowrap;
         }
 
         .date-chip:hover, .date-chip:active {
             background: var(--accent-light);
             border-color: var(--accent-main);
-            transform: translateY(-1px);
         }
 
         .main-card {
             background: var(--surface);
-            border-radius: 30px;
+            border-radius: 16px;
             width: 100%;
             max-width: 480px;
-            padding: 22px 18px;
+            padding: 18px 16px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
         }
@@ -323,28 +324,28 @@
         .tod-switch {
             display: flex;
             background: var(--bg-main);
-            border-radius: 18px;
-            padding: 5px;
-            margin-bottom: 22px;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 18px;
             border: 1px solid var(--border-color);
             gap: 4px;
         }
 
         .tod-btn {
             flex: 1;
-            padding: 11px 8px;
+            padding: 10px 8px;
             text-align: center;
-            border-radius: 14px;
+            border-radius: 10px;
             cursor: pointer;
             color: var(--text-secondary);
             border: none;
             background: transparent;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             white-space: nowrap;
-            font-size: calc(clamp(18.5px, 4.8vw, 21.5px) * var(--font-scale));
+            font-size: clamp(1.1rem, 4.8vw, 1.3rem);
         }
 
         .tod-btn.uniform-brand-title { line-height: 1.2; }
@@ -352,14 +353,14 @@
         .tod-btn.active {
             background: var(--surface);
             color: var(--text-primary);
-            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
 
         .routine-list {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            margin-bottom: 22px;
+            gap: 12px;
+            margin-bottom: 18px;
         }
 
         .main-card-actions {
@@ -371,35 +372,34 @@
 
         .btn-main-action {
             width: 100%;
-            padding: 15px 18px;
-            border-radius: 20px;
+            padding: 14px 16px;
+            border-radius: 14px;
             border: 1px solid var(--border-color);
             background: var(--surface);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             white-space: nowrap;
-            font-size: calc(clamp(16px, 4.3vw, 18px) * var(--font-scale));
+            font-size: clamp(1rem, 4.3vw, 1.125rem);
         }
 
         .btn-main-action:hover, .btn-main-action:active {
             background: var(--accent-light);
             border-color: var(--accent-main);
-            transform: translateY(-1px);
         }
 
         .pro-badge {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: calc(12px * var(--font-scale));
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--accent-main);
             background: var(--accent-light);
             border: 1px solid var(--accent-main);
-            padding: 2px 7px;
-            border-radius: 8px;
+            padding: 2px 6px;
+            border-radius: 6px;
             margin-left: 8px;
             letter-spacing: 0.05em;
             display: inline-block;
@@ -409,11 +409,11 @@
 
         .settings-card-wrapper {
             background: var(--surface);
-            border-radius: 24px;
+            border-radius: 16px;
             width: 100%;
             max-width: 480px;
-            padding: 18px;
-            margin-top: 18px;
+            padding: 16px;
+            margin-top: 14px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-color);
             display: flex;
@@ -435,16 +435,16 @@
             transform: translateY(-50%);
         }
 
+        /* Карточка элемента ухода без размытия и с чистой геометрией */
         .routine-item {
-            background: var(--item-bg);
+            background: var(--surface);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 15px 16px;
+            border-radius: 12px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.015);
-            backdrop-filter: blur(8px);
+            box-shadow: none;
         }
 
         .routine-item-main {
@@ -465,7 +465,7 @@
 
         .item-num {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: calc(15.5px * var(--font-scale));
+            font-size: 0.9375rem;
             font-weight: 700;
             color: var(--accent-main);
             letter-spacing: 0.02em;
@@ -483,7 +483,7 @@
         }
 
         .item-name {
-            font-size: calc(clamp(15.5px, 4.2vw, 17.5px) * var(--font-scale));
+            font-size: clamp(0.95rem, 4.2vw, 1.05rem);
             font-weight: 600;
             color: var(--text-primary);
             letter-spacing: -0.1px;
@@ -493,7 +493,7 @@
         }
 
         .item-tag {
-            font-size: calc(13.5px * var(--font-scale));
+            font-size: 0.8125rem;
             color: var(--text-secondary);
             font-weight: 500;
             white-space: nowrap;
@@ -505,12 +505,12 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: calc(13px * var(--font-scale));
+            font-size: 0.8125rem;
             font-weight: 600;
             color: var(--accent-main);
             background: var(--accent-light);
-            padding: 4px 9px;
-            border-radius: 9px;
+            padding: 3px 8px;
+            border-radius: 6px;
             width: fit-content;
             margin-top: 3px;
             white-space: nowrap;
@@ -519,7 +519,7 @@
         .pause-step-container {
             display: flex;
             justify-content: center;
-            margin: 5px 0;
+            margin: 4px 0;
             width: 100%;
         }
 
@@ -531,28 +531,26 @@
             background: var(--surface);
             border: 1.5px solid var(--accent-main);
             color: var(--accent-main);
-            padding: 9px 18px;
-            border-radius: 22px;
-            font-size: calc(14px * var(--font-scale));
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
             max-width: 100%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            transition: all 0.25s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
             touch-action: manipulation;
             white-space: nowrap;
         }
 
         .btn-pause-timer:hover:not(.running):not(.completed) {
             background: var(--accent-light);
-            transform: translateY(-1px);
         }
 
         .btn-pause-timer.running {
             background: var(--accent-main);
             color: #FFFFFF;
             border-color: var(--accent-main);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
             pointer-events: none;
         }
 
@@ -589,7 +587,7 @@
         .routine-filter-switch {
             display: flex;
             background: var(--bg-main);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 4px;
             margin-bottom: 12px;
             border: 1px solid var(--border-color);
@@ -598,16 +596,16 @@
 
         .filter-tab-btn {
             flex: 1;
-            padding: 9px 6px;
+            padding: 8px 6px;
             text-align: center;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             color: var(--text-secondary);
             border: none;
             background: transparent;
-            font-size: calc(14px * var(--font-scale));
+            font-size: 0.875rem;
             font-weight: 600;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             white-space: nowrap;
             touch-action: manipulation;
             display: flex;
@@ -619,14 +617,14 @@
         .filter-tab-btn.active {
             background: var(--surface);
             color: var(--text-primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
         }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 48px;
-            height: 26px;
+            width: 44px;
+            height: 24px;
             flex-shrink: 0;
         }
 
@@ -641,21 +639,21 @@
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: var(--border-color);
-            transition: .25s ease;
-            border-radius: 26px;
+            transition: .2s ease;
+            border-radius: 24px;
         }
 
         .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
+            height: 18px;
+            width: 18px;
             left: 3px;
             bottom: 3px;
             background-color: var(--surface);
-            transition: .25s ease;
+            transition: .2s ease;
             border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
         }
 
         input:checked + .toggle-slider {
@@ -663,25 +661,77 @@
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(22px);
+            transform: translateX(20px);
+        }
+
+        /* Выезжающие мобильные шторки (Bottom Sheets) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            justify-content: center;
+            align-items: flex-end; /* Шторка выезжает снизу */
+            padding: 0;
+            z-index: 1000;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active-modal {
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: var(--surface);
+            border-radius: 20px 20px 0 0; /* Закругление верхних углов */
+            width: 100%;
+            max-width: 480px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 10px 16px 16px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            position: relative;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Индикатор-ручка шторки */
+        .modal-card::before {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            margin: 0 auto 10px;
+            flex-shrink: 0;
+        }
+
+        .modal-overlay.active-modal .modal-card {
+            transform: translateY(0);
         }
 
         #customCalendarModal { z-index: 1100 !important; }
 
         .custom-calendar-modal {
-            max-width: 330px !important;
-            padding: 18px 14px !important;
+            padding: 10px 14px 16px !important;
         }
 
         .cal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .cal-month-title {
-            font-size: calc(clamp(20px, 5.2vw, 23px) * var(--font-scale));
+            font-size: clamp(1.1875rem, 5.2vw, 1.35rem);
             font-weight: 400;
         }
 
@@ -707,7 +757,7 @@
         }
 
         .cal-day-name {
-            font-size: calc(12px * var(--font-scale));
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-secondary);
             padding-bottom: 4px;
@@ -718,7 +768,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: calc(14px * var(--font-scale));
+            font-size: 0.875rem;
             border-radius: 50%;
             cursor: pointer;
             touch-action: manipulation;
@@ -746,49 +796,6 @@
             background: transparent !important;
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0);
-            backdrop-filter: blur(0px);
-            display: none;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px 14px 30px;
-            z-index: 1000;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            transition: background 0.3s ease, backdrop-filter 0.3s ease;
-        }
-
-        .modal-overlay.active-modal {
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(8px);
-        }
-
-        .modal-card {
-            background: var(--surface);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 460px;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            padding: 16px 16px 14px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-            border: 1px solid var(--border-color);
-            position: relative;
-            transform: translateY(20px) scale(0.97);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-        }
-
-        .modal-overlay.active-modal .modal-card {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-
         .modal-body-scrollable {
             flex: 1;
             overflow-y: auto;
@@ -801,9 +808,9 @@
         .modal-footer-pinned {
             flex-shrink: 0;
             background: var(--surface);
-            padding-top: 12px;
-            padding-bottom: calc(4px + env(safe-area-inset-bottom));
-            margin-top: 8px;
+            padding-top: 10px;
+            padding-bottom: calc(2px + env(safe-area-inset-bottom));
+            margin-top: 6px;
             border-top: 1px solid var(--border-color);
             z-index: 10;
         }
@@ -817,31 +824,31 @@
             min-height: 24px;
         }
 
-        .modal-title { font-size: calc(clamp(21px, 5.5vw, 25px) * var(--font-scale)); font-weight: 400; color: var(--text-primary); }
+        .modal-title { font-size: clamp(1.25rem, 5.5vw, 1.45rem); font-weight: 400; color: var(--text-primary); }
 
         .form-section {
             background: var(--bg-main);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 14px 14px;
-            margin-bottom: 12px;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
         }
 
         .form-section-title {
-            font-size: calc(clamp(19px, 5vw, 22px) * var(--font-scale)); font-weight: 400; color: var(--accent-main);
-            margin-bottom: 10px; font-style: normal;
+            font-size: clamp(1.1rem, 5vw, 1.25rem); font-weight: 400; color: var(--accent-main);
+            margin-bottom: 8px; font-style: normal;
         }
 
         .version-row { display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; }
-        .version-text { font-size: calc(16.5px * var(--font-scale)); color: var(--text-secondary); font-weight: 400; text-align: center; width: 100%; }
+        .version-text { font-size: 1rem; color: var(--text-secondary); font-weight: 400; text-align: center; width: 100%; }
 
         .btn-update-inline,
         .btn-secondary.small-font {
             background: var(--surface);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 13px; border-radius: 15px; width: 100%;
-            font-size: calc(clamp(15.5px, 4.2vw, 17.5px) * var(--font-scale)) !important;
+            padding: 12px; border-radius: 12px; width: 100%;
+            font-size: clamp(0.95rem, 4.2vw, 1.05rem) !important;
             font-weight: 400;
             text-transform: none; cursor: pointer; transition: all 0.2s ease;
             touch-action: manipulation;
@@ -853,11 +860,11 @@
             border-color: var(--accent-main);
         }
 
-        .form-group { margin-bottom: 12px; position: relative; }
+        .form-group { margin-bottom: 10px; position: relative; }
         .form-group:last-child { margin-bottom: 0; }
         .form-group label {
             display: block;
-            font-size: calc(14px * var(--font-scale));
+            font-size: 0.875rem;
             font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 6px;
@@ -866,9 +873,9 @@
         .input-with-icon-wrapper { position: relative; display: flex; align-items: center; }
 
         .input-control {
-            width: 100%; padding: 12px 14px; border-radius: 14px;
+            width: 100%; padding: 11px 12px; border-radius: 12px;
             border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: calc(15.5px * var(--font-scale)); font-weight: 500; outline: none;
+            color: var(--text-primary); font-size: 0.95rem; font-weight: 500; outline: none;
             caret-color: var(--accent-main);
         }
 
@@ -877,7 +884,7 @@
         .btn-inline-scan {
             position: absolute; right: 6px;
             background: var(--accent-light); border: 1px solid var(--border-color);
-            color: var(--accent-main); border-radius: 10px; padding: 7px;
+            color: var(--accent-main); border-radius: 8px; padding: 6px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s ease;
             touch-action: manipulation;
@@ -888,8 +895,8 @@
         .autocomplete-dropdown {
             position: absolute; top: 100%; left: 0; right: 0;
             background: var(--surface); border: 1px solid var(--border-color);
-            border-radius: 14px; margin-top: 4px; max-height: 0; opacity: 0;
-            overflow-y: auto; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-radius: 12px; margin-top: 4px; max-height: 0; opacity: 0;
+            overflow-y: auto; z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
             display: none;
         }
@@ -901,7 +908,7 @@
         }
 
         .autocomplete-item {
-            padding: 11px 14px; font-size: calc(14.5px * var(--font-scale)); color: var(--text-primary);
+            padding: 10px 12px; font-size: 0.9rem; color: var(--text-primary);
             cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s ease;
             touch-action: manipulation;
         }
@@ -912,15 +919,15 @@
         .picker-group { display: flex; gap: 5px; }
 
         .picker-btn {
-            flex: 1; padding: 8px 6px; border-radius: 11px;
+            flex: 1; padding: 8px 6px; border-radius: 10px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: calc(12.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
+            font-size: 0.78125rem; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
             touch-action: manipulation; min-width: 0;
             white-space: normal !important;
             word-break: break-word;
             line-height: 1.25;
-            min-height: 42px;
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -928,20 +935,20 @@
 
         .picker-btn.active {
             background: var(--accent-main); color: #FFF;
-            border-color: var(--accent-main); box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-color: var(--accent-main); box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
 
-        #themeRow .picker-btn { border-radius: 11px; height: 38px; }
-        #themeRow .picker-btn.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-main); }
+        #themeRow .picker-btn { border-radius: 10px; height: 36px; }
+        #themeRow .picker-btn.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--accent-main); }
 
         .type-picker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
 
         .days-picker { display: flex; gap: 4px; width: 100%; margin-top: 6px; }
 
         .day-chip {
-            flex: 1; padding: 8px 0; border-radius: 9px;
+            flex: 1; padding: 8px 0; border-radius: 8px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: calc(13.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
+            font-size: 0.8125rem; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
             touch-action: manipulation; min-width: 0;
         }
@@ -950,20 +957,20 @@
 
         .pao-highlight-box {
             background: var(--accent-light); border: 1px solid var(--accent-main);
-            border-radius: 16px; padding: 12px; margin-bottom: 10px;
+            border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
         }
 
         .pao-title {
-            font-size: calc(14px * var(--font-scale)); font-weight: 600; color: var(--text-primary);
+            font-size: 0.875rem; font-weight: 600; color: var(--text-primary);
             margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
         }
 
         .pao-picker { display: flex; gap: 5px; flex-wrap: nowrap; }
 
         .pao-chip {
-            flex: 1; padding: 8px 5px; border-radius: 9px;
+            flex: 1; padding: 7px 5px; border-radius: 8px;
             border: 1px solid var(--border-color); background: var(--surface);
-            font-size: calc(13.5px * var(--font-scale)); font-weight: 600; cursor: pointer;
+            font-size: 0.8125rem; font-weight: 600; cursor: pointer;
             color: var(--text-secondary); text-align: center; transition: all 0.2s;
             touch-action: manipulation; min-width: 0;
         }
@@ -971,9 +978,9 @@
         .pao-chip.active { background: var(--accent-main); color: #FFF; border-color: var(--accent-main); }
 
         .btn-secondary {
-            width: 100%; padding: 13px; border-radius: 15px;
+            width: 100%; padding: 12px; border-radius: 12px;
             border: 1px solid var(--border-color); background: var(--surface);
-            color: var(--text-primary); font-size: calc(clamp(15.5px, 4.2vw, 17.5px) * var(--font-scale));
+            color: var(--text-primary); font-size: clamp(0.95rem, 4.2vw, 1.05rem);
             text-transform: none; cursor: pointer; margin-top: 6px;
             transition: background-color 0.2s; touch-action: manipulation; white-space: nowrap;
         }
@@ -981,31 +988,31 @@
         .btn-secondary:active { background: var(--bg-main); }
 
         .btn-action {
-            width: 100%; padding: 15px 18px; border-radius: 18px;
+            width: 100%; padding: 14px 16px; border-radius: 14px;
             border: 1px solid var(--accent-main); background: transparent;
-            color: var(--text-primary); font-size: calc(clamp(16px, 4.3vw, 18px) * var(--font-scale));
+            color: var(--text-primary); font-size: clamp(1rem, 4.3vw, 1.125rem);
             text-transform: none; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02); transition: all 0.25s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02); transition: all 0.2s ease;
             touch-action: manipulation; white-space: nowrap;
         }
 
-        .btn-action:hover, .btn-action:active { background: var(--accent-light); border-color: var(--accent-main); transform: translateY(-1px); }
+        .btn-action:hover, .btn-action:active { background: var(--accent-light); border-color: var(--accent-main); }
 
         .btn-add-toggle {
-            width: 100%; padding: 13px; border-radius: 16px;
+            width: 100%; padding: 12px; border-radius: 12px;
             border: 1px dashed var(--accent-main); background: var(--accent-light);
-            color: var(--accent-main); font-size: calc(clamp(16px, 4.3vw, 18px) * var(--font-scale));
+            color: var(--accent-main); font-size: clamp(0.95rem, 4.3vw, 1.05rem);
             text-transform: none; cursor: pointer;
             margin-bottom: 8px; transition: opacity 0.2s; touch-action: manipulation; white-space: nowrap;
         }
 
-        .product-manage-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; padding-right: 2px; padding-bottom: 12px; }
+        .product-manage-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; padding-right: 2px; padding-bottom: 8px; }
         .category-group-block { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
 
         .category-header-btn {
-            width: 100%; padding: 13px 15px; border-radius: 15px;
+            width: 100%; padding: 12px 14px; border-radius: 12px;
             background: var(--bg-main); border: 1px solid var(--border-color);
-            color: var(--text-primary); font-size: calc(clamp(16.5px, 4.4vw, 18.5px) * var(--font-scale));
+            color: var(--text-primary); font-size: clamp(1rem, 4.4vw, 1.1rem);
             display: flex; justify-content: space-between; align-items: center;
             cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation; gap: 8px;
@@ -1014,7 +1021,7 @@
         .category-header-btn:active, .category-header-btn.open { background: var(--accent-light); border-color: var(--accent-main); }
         .category-title-text {
             font-family: 'Alice', Georgia, serif;
-            font-size: calc(clamp(16px, 4.2vw, 19px) * var(--font-scale));
+            font-size: clamp(0.95rem, 4.2vw, 1.1rem);
             font-weight: 400;
             text-transform: none;
             flex: 1;
@@ -1023,7 +1030,7 @@
             word-break: break-word;
             text-align: left;
         }
-        .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: calc(14px * var(--font-scale)); color: var(--text-secondary); font-weight: 500; }
+        .category-count-badge { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; color: var(--text-secondary); font-weight: 500; }
 
         .category-chevron {
             display: inline-flex;
@@ -1066,8 +1073,8 @@
 
         .manage-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 11px 13px; border-radius: 13px; background: var(--surface);
-            font-size: calc(15.5px * var(--font-scale)); font-weight: 600; border: 1px solid var(--border-color); cursor: pointer;
+            padding: 10px 12px; border-radius: 10px; background: var(--surface);
+            font-size: 0.9375rem; font-weight: 600; border: 1px solid var(--border-color); cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
             touch-action: manipulation; gap: 8px;
         }
@@ -1086,12 +1093,12 @@
 
         .accordion-toggle-btn {
             width: 100%;
-            padding: 13px 15px;
-            border-radius: 15px;
+            padding: 11px 13px;
+            border-radius: 12px;
             border: 1px solid var(--accent-main);
             background: transparent;
             color: var(--text-primary);
-            font-size: calc(15px * var(--font-scale));
+            font-size: 0.9rem;
             font-weight: 600;
             letter-spacing: 0.02em;
             text-transform: none;
@@ -1099,8 +1106,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            transition: all 0.25s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
             touch-action: manipulation;
             white-space: nowrap;
         }
@@ -1108,7 +1115,6 @@
         .accordion-toggle-btn:hover, .accordion-toggle-btn:active {
             background: var(--accent-light);
             border-color: var(--accent-main);
-            transform: translateY(-1px);
         }
 
         .accordion-content {
@@ -1122,12 +1128,12 @@
 
         .toast-notification {
             position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.9); width: 88%; max-width: 340px;
+            transform: translate(-50%, -50%) scale(0.9); width: 88%; max-width: 320px;
             background: var(--surface); border: 1px solid var(--accent-main);
-            color: var(--text-primary); padding: 15px 18px; border-radius: 20px;
-            font-size: calc(14.5px * var(--font-scale)); font-weight: 400; line-height: 1.35; text-transform: none;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35); opacity: 0; pointer-events: none;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            color: var(--text-primary); padding: 14px 16px; border-radius: 16px;
+            font-size: 0.875rem; font-weight: 400; line-height: 1.35; text-transform: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); opacity: 0; pointer-events: none;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
             z-index: 10000; text-align: center; word-wrap: break-word;
         }
 
@@ -1222,7 +1228,7 @@
                 <button type="button" class="btn-add-toggle uniform-brand-title" id="btnAddToggle">+ Добавить средство</button>
 
                 <div id="scannerWrapper" style="display: none; margin-bottom: 12px;">
-                    <div id="barcodeReader" style="border-radius: 14px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 6px;"></div>
+                    <div id="barcodeReader" style="border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 6px;"></div>
                     <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelScanner" style="margin-top: 0;">Отмена сканирования</button>
                 </div>
 
@@ -1255,9 +1261,9 @@
                         </button>
 
                         <div class="accordion-content" id="detailsAccordionContent">
-                            <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 14px; padding: 10px; margin-bottom: 10px; margin-top: 8px;">
-                                <div id="smartPresetText" style="font-size: calc(13.5px * var(--font-scale)); color: var(--text-primary); margin-bottom: 6px; line-height: 1.35;"></div>
-                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 9px 12px; border-radius: 10px; font-size: calc(13.5px * var(--font-scale)); cursor: pointer;">Применить рекомендуемые паузы</button>
+                            <div id="smartPresetBanner" style="display: none; background: var(--accent-light); border: 1px dashed var(--accent-main); border-radius: 12px; padding: 10px; margin-bottom: 10px; margin-top: 8px;">
+                                <div id="smartPresetText" style="font-size: 0.8125rem; color: var(--text-primary); margin-bottom: 6px; line-height: 1.35;"></div>
+                                <button type="button" id="btnApplyPreset" class="uniform-brand-title" style="width: 100%; background: var(--surface); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 10px; border-radius: 8px; font-size: 0.8125rem; cursor: pointer;">Применить рекомендуемые паузы</button>
                             </div>
 
                             <div class="form-group" style="margin-top: 10px;">
@@ -1285,9 +1291,9 @@
                                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path></svg>
                                     <span>Срок после вскрытия (PAO)</span>
                                 </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: calc(13.5px * var(--font-scale)); margin-bottom: 6px; padding: 0 2px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8125rem; margin-bottom: 6px; padding: 0 2px;">
                                     <span style="color: var(--text-secondary); font-weight: 500;">Дата вскрытия: <b id="displayOpenDate" style="color: var(--text-primary);"></b></span>
-                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: calc(13.5px * var(--font-scale));">Изменить</button>
+                                    <button type="button" id="btnToggleOpenDate" style="background: transparent; border: none; color: var(--accent-main); font-weight: 600; cursor: pointer; text-decoration: underline; font-size: 0.8125rem;">Изменить</button>
                                 </div>
                                 <div class="pao-picker" id="paoPicker">
                                     <button type="button" class="pao-chip" data-months="3">3M</button>
@@ -1305,7 +1311,7 @@
                                     <button type="button" class="picker-btn" data-freq="custom">По дням недели</button>
                                 </div>
                                 <div id="daysGroup" style="display: none; margin-top: 8px;">
-                                    <label style="font-size: calc(13px * var(--font-scale)); font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
+                                    <label style="font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Выберите дни недели:</label>
                                     <div class="days-picker" id="daysPicker">
                                         <button type="button" class="day-chip" data-day="1">Пн</button>
                                         <button type="button" class="day-chip" data-day="2">Вт</button>
@@ -1318,9 +1324,9 @@
                                 </div>
                             </div>
 
-                            <div style="background: var(--surface); padding: 11px; border-radius: 13px; border: 1px solid var(--border-color); margin-top: 10px;">
+                            <div style="background: var(--surface); padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); margin-top: 10px;">
                                 <div style="margin-bottom: 8px;">
-                                    <label style="font-size: calc(14px * var(--font-scale)); font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза до нанесения</label>
+                                    <label style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза до нанесения</label>
                                     <div class="picker-group" id="pauseBeforePicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1329,7 +1335,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size: calc(14px * var(--font-scale)); font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза после нанесения</label>
+                                    <label style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: block;">Пауза после нанесения</label>
                                     <div class="picker-group" id="pauseAfterPicker">
                                         <button type="button" class="picker-btn" data-mins="5">5 мин</button>
                                         <button type="button" class="picker-btn" data-mins="10">10 мин</button>
@@ -1342,7 +1348,7 @@
                     </div>
 
                     <!-- Кнопки формы -->
-                    <div id="formFooterButtons" style="display: flex; flex-direction: column; gap: 6px; margin-top: 14px; margin-bottom: 12px;">
+                    <div id="formFooterButtons" style="display: flex; flex-direction: column; gap: 6px; margin-top: 12px; margin-bottom: 10px;">
                         <button type="button" class="btn-action uniform-brand-title" id="btnSaveProduct">Сохранить средство</button>
                         <button type="button" class="btn-secondary uniform-brand-title" id="btnCancelProduct" style="margin-top: 0;">Отмена</button>
                     </div>
@@ -1359,26 +1365,26 @@
 
     <!-- Модальное окно действий над средством (Action Sheet) -->
     <div class="modal-overlay" id="productActionModal" style="z-index: 10500;">
-        <div class="modal-card" style="max-width: 380px; padding: 20px 18px;">
-            <div id="actionModalProductName" class="uniform-brand-title" style="font-size: calc(19px * var(--font-scale)); color: var(--text-primary); text-align: center; margin-bottom: 16px; word-break: break-word; line-height: 1.3;"></div>
+        <div class="modal-card">
+            <div id="actionModalProductName" class="uniform-brand-title" style="font-size: 1.15rem; color: var(--text-primary); text-align: center; margin-bottom: 14px; word-break: break-word; line-height: 1.3;"></div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button type="button" class="btn-action uniform-brand-title" id="btnActionTogglePause" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: calc(15.5px * var(--font-scale)); padding: 13px;"></button>
-                <button type="button" class="btn-action uniform-brand-title" id="btnActionEdit" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: calc(15.5px * var(--font-scale)); padding: 13px;">
+                <button type="button" class="btn-action uniform-brand-title" id="btnActionTogglePause" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; padding: 12px;"></button>
+                <button type="button" class="btn-action uniform-brand-title" id="btnActionEdit" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; padding: 12px;">
                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     Изменить настройки
                 </button>
-                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionDelete" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: calc(15.5px * var(--font-scale)); padding: 13px; color: #C0392B; border-color: rgba(192, 57, 43, 0.3); background: rgba(192, 57, 43, 0.06); margin-top: 0;">
+                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionDelete" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; padding: 12px; color: #C0392B; border-color: rgba(192, 57, 43, 0.3); background: rgba(192, 57, 43, 0.06); margin-top: 0;">
                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" style="stroke: #C0392B;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     Удалить из коллекции
                 </button>
-                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionCancel" style="margin-top: 4px; padding: 12px;">Закрыть</button>
+                <button type="button" class="btn-secondary uniform-brand-title" id="btnActionCancel" style="margin-top: 4px; padding: 11px;">Закрыть</button>
             </div>
         </div>
     </div>
 
     <!-- Модальное окно "Настройки приложения" -->
     <div class="modal-overlay" id="appSettingsModal">
-        <div class="modal-card" style="max-width: 400px; max-height: 85vh;">
+        <div class="modal-card">
             <div class="modal-header-row" style="display: none;">
                 <div class="modal-title-wrapper">
                     <div class="modal-title uniform-brand-title"></div>
@@ -1387,12 +1393,12 @@
 
             <div class="modal-body-scrollable">
                 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Продвинутый режим</div>
                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                         <div>
-                            <div style="font-size: calc(15px * var(--font-scale)); font-weight: 600; color: var(--text-primary);">Мои средства PRO</div>
-                            <div style="font-size: calc(12.5px * var(--font-scale)); color: var(--text-secondary); margin-top: 2px;">расширенный список средств</div>
+                            <div style="font-size: 0.9375rem; font-weight: 600; color: var(--text-primary);">Мои средства PRO</div>
+                            <div style="font-size: 0.78125rem; color: var(--text-secondary); margin-top: 2px;">расширенный список средств</div>
                         </div>
                         <label class="toggle-switch">
                             <input type="checkbox" id="toggleSuperCollection">
@@ -1402,7 +1408,7 @@
                 </div>
 
                 <!-- Настройка размера шрифта -->
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Размер шрифта</div>
                     <div class="picker-group" id="fontSizePicker">
                         <button type="button" class="picker-btn" data-size="normal">Стандартный</button>
@@ -1410,14 +1416,14 @@
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="version-row">
                         <span class="version-text uniform-brand-title">MyLumy версия v0.2.0b</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">Проверить обновления</button>
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Перенос и бэкап</div>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <button type="button" class="btn-secondary small-font uniform-brand-title" id="btnCopyShareLink">Скопировать ссылку переноса</button>
@@ -1427,7 +1433,7 @@
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Тема оформления</div>
                     <div style="display: flex; gap: 6px; width: 100%; flex-wrap: wrap;" id="themeRow">
                         <button type="button" class="picker-btn" data-theme="sunlit" style="flex: 1; min-width: 40px; background: #E87A5D; border-color: #E87A5D;" title="Sunlit Gloss"></button>
@@ -1439,7 +1445,7 @@
                     </div>
                 </div>
 
-                <div class="form-section" style="margin-bottom: 12px;">
+                <div class="form-section" style="margin-bottom: 10px;">
                     <div class="form-section-title uniform-brand-title" style="color: var(--accent-main);">Документы</div>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
                         <a href="https://tatikhi.github.io/MyLumy/terms.html" target="_blank" class="btn-secondary small-font uniform-brand-title" style="text-decoration: none; text-align: center; display: block;">Условия использования</a>
@@ -1457,26 +1463,26 @@
 
     <!-- Стартовое окно (Приветствие и согласие) -->
     <div class="modal-overlay" id="welcomeModal" style="z-index: 12000;">
-        <div class="modal-card" style="max-width: 400px; padding: 24px 20px;">
-            <div class="brand-font" style="font-size: calc(28px * var(--font-scale)); text-align: center; color: var(--accent-main); margin-bottom: 16px;">
+        <div class="modal-card">
+            <div class="brand-font" style="font-size: 1.65rem; text-align: center; color: var(--accent-main); margin-bottom: 14px;">
                 Добро пожаловать в MyLumy
             </div>
 
-            <div style="font-size: calc(15px * var(--font-scale)); color: var(--text-primary); text-align: center; margin-bottom: 20px; line-height: 1.4;">
+            <div style="font-size: 0.9375rem; color: var(--text-primary); text-align: center; margin-bottom: 16px; line-height: 1.4;">
                 Ваш личный трекер для осознанного ухода за кожей.
             </div>
 
-            <div style="background: rgba(192, 57, 43, 0.08); border: 1px solid rgba(192, 57, 43, 0.3); border-radius: 16px; padding: 14px; margin-bottom: 20px;">
-                <div style="font-size: calc(14px * var(--font-scale)); font-weight: 700; color: #C0392B; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <div style="background: rgba(192, 57, 43, 0.08); border: 1px solid rgba(192, 57, 43, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+                <div style="font-size: 0.875rem; font-weight: 700; color: #C0392B; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                     <svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" style="stroke: #C0392B;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     Важное предупреждение
                 </div>
-                <div style="font-size: calc(13px * var(--font-scale)); color: var(--text-secondary); line-height: 1.4;">
+                <div style="font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.4;">
                     MyLumy — это только инструмент-органайзер, а не медицинский сервис. Приложение не дает медицинских назначений. Перед использованием сильных активов обязательно консультируйтесь с врачом-дерматологом.
                 </div>
             </div>
 
-            <div style="font-size: calc(12.5px * var(--font-scale)); color: var(--text-secondary); text-align: center; line-height: 1.4; margin-bottom: 20px;">
+            <div style="font-size: 0.78125rem; color: var(--text-secondary); text-align: center; line-height: 1.4; margin-bottom: 16px;">
                 Нажимая кнопку ниже, вы подтверждаете, что вам есть 18 лет, и принимаете<br>
                 <a href="https://tatikhi.github.io/MyLumy/terms.html" target="_blank" style="color: var(--accent-main); font-weight: 600;">Условия использования</a> и 
                 <a href="https://tatikhi.github.io/MyLumy/politic.html" target="_blank" style="color: var(--accent-main); font-weight: 600;">Политику конфиденциальности</a>.
@@ -1884,12 +1890,10 @@
         }
 
         function getAllowedStartDateObj() {
-            const parts = installDateStr.split('-');
-            const installObj = new Date(parts[0], parts[1] - 1, parts[2], 12, 0, 0);
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
             thirtyDaysAgo.setHours(12, 0, 0, 0);
-            return (installObj > thirtyDaysAgo) ? installObj : thirtyDaysAgo;
+            return thirtyDaysAgo;
         }
 
         function renderCurrentDateChip() {
@@ -2050,7 +2054,7 @@
 
             if (activeProducts.length === 0) {
                 const arrowDownSvg = `<svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" style="margin: 6px auto 0; display: block; color: var(--accent-main);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-                container.innerHTML = `<div style="text-align: center; padding: 6px 0 2px; color: var(--text-secondary); font-size: calc(15px * var(--font-scale)); font-weight: 500; line-height: 1.35;">Здесь пока пусто.<br>Добавьте ваше первое средство<br>через кнопку «Мои средства».${arrowDownSvg}</div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 12px 0 6px; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; line-height: 1.35;">Список пуст.<br>Нажмите «Мои средства», чтобы добавить уход.${arrowDownSvg}</div>`;
                 return;
             }
 
@@ -2058,7 +2062,7 @@
             const routineDateObj = getRoutineDateObj();
             const isTimerActive = isTimerAllowedForCurrentView();
 
-            /* Предупреждение косметолога при опасном сочетании активов */
+            /* Лаконичное предупреждение косметолога */
             if (currentTOD === 'evening') {
                 const hasRetinoids = activeProducts.some(p => {
                     const n = (p.name || '').toLowerCase();
@@ -2070,8 +2074,8 @@
                 });
                 if (hasRetinoids && hasAcids) {
                     htmlBuffer.push(`
-                        <div style="background: rgba(230, 126, 34, 0.12); border: 1px solid #E67E22; border-radius: 16px; padding: 12px; margin-bottom: 12px; font-size: calc(13px * var(--font-scale)); color: var(--text-primary); line-height: 1.4;">
-                            <b style="color: #D35400;">⚠️ Совет косметолога:</b> В уходе одновременно ретиноиды и кислоты. Сочетание мощных активов в один вечер может вызвать раздражение или ожог кожи. Рекомендуется разделить их по дням!
+                        <div style="background: rgba(230, 126, 34, 0.12); border: 1px solid #E67E22; border-radius: 12px; padding: 12px; margin-bottom: 12px; font-size: 0.8125rem; color: var(--text-primary); line-height: 1.4;">
+                            <b style="color: #D35400;">Важно:</b> ретиноиды и кислоты лучше разделить по дням, чтобы избежать раздражения.
                         </div>
                     `);
                 }
@@ -2751,7 +2755,7 @@
                         </button>
                         <div class="category-items-container ${isOpen ? 'open' : ''}" id="cat-container-${catIndex}">
                             <div class="category-items-inner">
-                                ${catItemsHtml || '<div style="font-size: calc(13.5px * var(--font-scale)); color: var(--text-secondary); padding: 6px 10px;">Нет средств</div>'}
+                                ${catItemsHtml || '<div style="font-size: 0.8125rem; color: var(--text-secondary); padding: 6px 10px;">Нет средств</div>'}
                             </div>
                         </div>
                     </div>
