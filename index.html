@@ -97,7 +97,15 @@
             caret-color: var(--accent-main); touch-action: manipulation;
         }
 
-        body.modal-open { overflow: hidden; position: fixed; width: 100%; height: 100%; }
+        body.modal-open { 
+            overflow: hidden; 
+            position: fixed; 
+            top: 0; left: 0; right: 0; bottom: 0; 
+            width: 100%; 
+            /* Используем нативную переменную Telegram для правильной высоты без клавиатуры */
+            height: var(--tg-viewport-height, 100vh); 
+        }
+        
         body.theme-animated * { transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
 
         .svg-icon {
@@ -206,13 +214,15 @@
         input:checked + .toggle-slider:before { transform: translateX(20px); }
 
         .modal-overlay {
-            position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.45); display: none; justify-content: center; align-items: flex-end; padding: 0;
+            position: fixed; inset: 0; width: 100%; height: var(--tg-viewport-height, 100vh); background: rgba(0, 0, 0, 0.45); 
+            display: none; justify-content: center; align-items: flex-end; padding: 0;
             z-index: 1000; overflow: hidden; opacity: 0; transition: opacity 0.25s ease; touch-action: none;
         }
         .modal-overlay.active-modal { opacity: 1; }
 
         .modal-card {
-            background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; max-height: 85vh;
+            background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; 
+            max-height: calc(var(--tg-viewport-height, 100vh) - 20px);
             display: flex; flex-direction: column; overflow: hidden; padding: 10px 16px 16px;
             box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); border-bottom: none;
             position: relative; transform: translate3d(0, 100%, 0); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; touch-action: pan-y;
@@ -632,7 +642,7 @@
 
                 <div class="form-section" style="margin-bottom: 10px;">
                     <div class="version-row">
-                        <span class="version-text uniform-brand-title">MyLumy версия v0.2.0b</span>
+                        <span class="version-text uniform-brand-title">MyLumy версия v0.2.1b</span>
                         <button type="button" class="btn-update-inline uniform-brand-title" id="btnForceUpdate">Проверить обновления</button>
                     </div>
                 </div>
@@ -718,7 +728,7 @@
     <div class="toast-notification uniform-brand-title" id="toastNotification"></div>
 
     <script>
-        const APP_VERSION = 'v0.2.0b';
+        const APP_VERSION = 'v0.2.1b';
         const OLD_THEMES = ['nude', 'mint', 'lavender', 'sage'];
 
         const THEME_COLORS = {
@@ -1723,13 +1733,15 @@
             setTimeout(() => toast.classList.remove('visible'), 3000);
         }
 
-        async function setTheme(theme, isInitial = false) {
+        async function setTheme(theme, isInitial = false, saveToCloud = true) {
             if (!isInitial) { triggerHaptic(15); document.body.classList.add('theme-animated'); }
             const validTheme = OLD_THEMES.includes(theme) ? 'sunlit' : theme;
             document.documentElement.setAttribute('data-theme', validTheme); document.body.setAttribute('data-theme', validTheme); safeStorage.setItem('cb_theme', validTheme);
             applyTelegramThemeColors(validTheme);
             document.querySelectorAll('#themeRow .theme-card-btn').forEach(b => { b.classList.toggle('active', b.dataset.theme === validTheme); });
-            await tgCloud.setItem('cb_theme', validTheme);
+            if (saveToCloud) {
+                await tgCloud.setItem('cb_theme', validTheme);
+            }
         }
 
         function setFontSize(size) {
@@ -1742,6 +1754,12 @@
             if (window.Telegram?.WebApp) {
                 try { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); if (typeof window.Telegram.WebApp.disableVerticalSwipes === 'function') { window.Telegram.WebApp.disableVerticalSwipes(); } } catch (e) {}
             }
+            
+            const cloudTheme = await tgCloud.getItem('cb_theme');
+            if (cloudTheme && cloudTheme !== safeStorage.getItem('cb_theme')) { 
+                setTheme(cloudTheme, true, false); 
+            }
+
             const cloudSuperVal = await tgCloud.getItem('cb_super_collection');
             if (cloudSuperVal !== null && cloudSuperVal !== undefined) { isSuperCollectionEnabled = (cloudSuperVal === 'true'); safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled)); }
             document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled; updateProBadgeUI();
@@ -1786,7 +1804,8 @@
             });
 
             const savedFontSize = safeStorage.getItem('cb_font_size') || 'normal'; setFontSize(savedFontSize);
-            setTheme(safeStorage.getItem('cb_theme') || 'sunlit', true);
+            setTheme(safeStorage.getItem('cb_theme') || 'sunlit', true, false);
+            
             document.getElementById('fontSizePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) setFontSize(btn.dataset.size); });
 
             document.getElementById('btnActionTogglePause').addEventListener('click', toggleProductRoutineAction); document.getElementById('btnActionEdit').addEventListener('click', editProductAction);
@@ -1826,7 +1845,7 @@
             document.getElementById('btnExportJson').addEventListener('click', exportJsonFile); document.getElementById('btnImportJson').addEventListener('click', triggerImportJson);
             document.getElementById('jsonFileInput').addEventListener('change', (e) => { if (e.target.files && e.target.files[0]) importJsonFile(e.target.files[0]); });
 
-            document.getElementById('themeRow').addEventListener('click', (e) => { const b = e.target.closest('.theme-card-btn'); if (b) setTheme(b.dataset.theme); });
+            document.getElementById('themeRow').addEventListener('click', (e) => { const b = e.target.closest('.theme-card-btn'); if (b) setTheme(b.dataset.theme, false, true); });
             document.getElementById('btnMorning').addEventListener('click', () => switchTOD('morning')); document.getElementById('btnEvening').addEventListener('click', () => switchTOD('evening'));
 
             document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) { closeAutocomplete(); closeModalElement(overlay); } }); });
