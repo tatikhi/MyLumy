@@ -134,7 +134,6 @@
 
         .main-card { background: var(--surface); border-radius: 16px; width: 100%; max-width: 480px; padding: 18px 16px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-color); }
         
-        /* Универсальный Segmented Control */
         .segmented-switch { position: relative; display: flex; background: var(--bg-main); border-radius: 14px; padding: 4px; margin-bottom: 16px; border: 1px solid var(--border-color); }
         .segmented-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: var(--surface); border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); z-index: 1; }
         .segmented-switch[data-state="right"] .segmented-pill { transform: translate3d(100%, 0, 0); }
@@ -204,7 +203,9 @@
         .modal-card {
             background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; 
             max-height: calc(var(--tg-viewport-height, 100vh) - 20px);
-            display: flex; flex-direction: column; overflow: hidden; padding: 0 16px 16px;
+            display: flex; flex-direction: column; overflow: hidden; 
+            /* Фикс впритык снизу: увеличиваем отступ с учетом безопасной зоны телефона (safe-area-inset-bottom) */
+            padding: 0 16px calc(24px + env(safe-area-inset-bottom, 16px));
             box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); border-bottom: none;
             position: relative; transform: translate3d(0, 100%, 0); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; touch-action: pan-y;
         }
@@ -213,7 +214,6 @@
         .modal-drag-handle::before { content: ''; display: block; width: 38px; height: 5px; background: var(--border-color); border-radius: 3px; }
         .modal-overlay.active-modal .modal-card { transform: translate3d(0, 0, 0); }
         
-        /* Нативная шапка модальных окон (Header Navbar) */
         .modal-header-nav { display: flex; justify-content: space-between; align-items: center; padding: 0 0 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; min-height: 24px; }
         .modal-nav-btn { background: transparent; border: none; padding: 0; font-size: 1.05rem; color: var(--accent-main); cursor: pointer; min-width: 70px; display: flex; align-items: center; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.2s; }
         .modal-nav-btn:active { opacity: 0.6; }
@@ -235,7 +235,6 @@
 
         .modal-body-scrollable { flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 2px 2px calc(20px + env(safe-area-inset-bottom)); }
 
-        /* Списки в настройках (Inset Grouped Lists) */
         .inset-list-group { margin-bottom: 20px; width: 100%; }
         .inset-list-title { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; padding-left: 14px; letter-spacing: 0.05em; font-family: 'Plus Jakarta Sans', sans-serif; }
         .inset-list { background: var(--surface); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; }
@@ -277,8 +276,10 @@
         .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
         .theme-card-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 6px; border-radius: 12px; background: var(--bg-main); border: 1px solid var(--border-color); cursor: pointer; text-align: center; }
         .theme-card-btn.active { border-color: var(--accent-main); background: var(--accent-light); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .theme-preview-box { width: 100%; height: 28px; border-radius: 8px; display: flex; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); }
-        .theme-preview-bg { flex: 2; }
+        
+        /* Улучшенная рамка и контраст для превью тем внутри кнопок */
+        .theme-preview-box { width: 100%; height: 28px; border-radius: 8px; display: flex; overflow: hidden; border: 1.5px solid rgba(128, 128, 128, 0.35); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+        .theme-preview-bg { flex: 2; border-right: 1px solid rgba(128, 128, 128, 0.2); }
         .theme-preview-accent { flex: 1; }
         .theme-card-title { font-size: 0.75rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif;}
 
@@ -324,8 +325,7 @@
         #productFormContainer { display: none; }
         #productFormContainer.open { display: block; }
 
-        /* Нативная шторка (Action Sheet) */
-        .action-sheet-modal .modal-card { background: transparent; border: none; box-shadow: none; padding: 0 12px 16px; margin-bottom: env(safe-area-inset-bottom); gap: 8px; }
+        .action-sheet-modal .modal-card { background: transparent; border: none; box-shadow: none; padding: 0 12px calc(16px + env(safe-area-inset-bottom, 16px)); margin-bottom: env(safe-area-inset-bottom); gap: 8px; }
         .action-sheet-group { background: var(--surface); border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; }
         .action-sheet-btn { background: transparent; border: none; border-bottom: 1px solid var(--border-color); padding: 16px; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-family: 'Alice', Georgia, serif; }
         .action-sheet-btn:last-child { border-bottom: none; }
@@ -391,7 +391,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно средств -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-card" id="settingsModalCard">
             <div class="modal-drag-handle"></div>
@@ -540,7 +539,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно шторки (Action Sheet) -->
     <div class="modal-overlay action-sheet-modal" id="productActionModal" style="z-index: 10500;">
         <div class="modal-card">
             <div class="action-sheet-group" style="margin-bottom: 8px;">
@@ -563,7 +561,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно настроек (Нативные списки) -->
     <div class="modal-overlay" id="appSettingsModal">
         <div class="modal-card">
             <div class="modal-drag-handle"></div>
@@ -1210,25 +1207,19 @@
         function showForm() {
             document.getElementById('manageFilterSwitch').style.display = 'none'; document.getElementById('manageList').style.display = 'none'; document.getElementById('btnAddToggle').style.display = 'none';
             document.getElementById('productFormContainer').classList.add('open');
-            
-            // Настройка шапки (Header Nav) для формы
             document.getElementById('manageNavTitle').innerText = document.getElementById('editProductId').value ? 'Редактирование' : 'Новое средство';
             document.getElementById('btnNavCancelForm').style.display = 'flex';
             document.getElementById('btnNavSaveForm').style.display = 'flex';
             document.getElementById('btnNavCloseSettings').style.display = 'none';
-            
             resetForm(); closeDetailsAccordion(); triggerHaptic(20); closeAutocomplete(); stopBarcodeScanner();
         }
 
         function hideForm() {
             triggerHaptic(15); closeAutocomplete(); document.getElementById('productFormContainer').classList.remove('open');
-            
-            // Настройка шапки (Header Nav) обратно для списка
             document.getElementById('manageNavTitle').innerText = 'Мои средства';
             document.getElementById('btnNavCancelForm').style.display = 'none';
             document.getElementById('btnNavSaveForm').style.display = 'none';
             document.getElementById('btnNavCloseSettings').style.display = 'flex';
-            
             if (isSuperCollectionEnabled) { document.getElementById('manageFilterSwitch').style.display = 'flex'; } else { document.getElementById('manageFilterSwitch').style.display = 'none'; }
             document.getElementById('manageList').style.display = 'flex'; document.getElementById('btnAddToggle').style.display = 'block';
             resetForm(); closeDetailsAccordion();
@@ -1366,8 +1357,6 @@
             document.getElementById('btnAgreeAndStart').addEventListener('click', () => { triggerHaptic(30); safeStorage.setItem('cb_terms_agreed', 'true'); closeModalElement(document.getElementById('welcomeModal')); });
 
             document.getElementById('currentDateChip').addEventListener('click', () => openCustomCalendar('routine')); 
-            
-            // Навбар Календаря
             document.getElementById('btnCloseCalNav').addEventListener('click', closeCustomCalendar);
             
             document.getElementById('calPrevMonth').addEventListener('click', () => { triggerHaptic(10); calCurrentViewDate.setMonth(calCurrentViewDate.getMonth() - 1); renderCustomCalendar(); });
@@ -1387,8 +1376,6 @@
             document.getElementById('pauseAfterPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) togglePauseAfter(Number(btn.dataset.mins)); });
 
             document.getElementById('btnOpenSettings').addEventListener('click', () => { triggerHaptic(20); renderManageList(); openModalElement(document.getElementById('settingsModal')); });
-            
-            // Навбар формы
             document.getElementById('btnNavSaveForm').addEventListener('click', saveProduct);
             document.getElementById('btnNavCancelForm').addEventListener('click', hideForm);
             document.getElementById('btnNavCloseSettings').addEventListener('click', () => closeModalElement(document.getElementById('settingsModal')));
