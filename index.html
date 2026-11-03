@@ -111,7 +111,6 @@
 
         .header-bar { width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         
-        /* Выравнивание размеров шрифтов: Ритуалы и Средства теперь одного размера */
         .brand-font, .uniform-brand-title, .form-section-title, .modal-title, .cal-month-title { font-family: 'Alice', Georgia, serif; font-weight: 400; letter-spacing: 0.025em; }
         .uniform-brand-title { font-size: clamp(1.15rem, 5vw, 1.3rem); text-transform: none; color: var(--text-primary); font-style: normal; line-height: 1.25; }
         
@@ -149,7 +148,7 @@
         .btn-main-action {
             width: 100%; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-color); background: var(--surface);
             display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; 
-            font-size: clamp(1.15rem, 5vw, 1.3rem); /* Выравнено с title */
+            font-size: clamp(1.15rem, 5vw, 1.3rem);
         }
         .btn-main-action:active { background: var(--accent-light); border-color: var(--accent-main); }
 
@@ -217,15 +216,12 @@
         .modal-drag-handle::before { content: ''; display: block; width: 38px; height: 5px; background: var(--border-color); border-radius: 3px; }
         .modal-overlay.active-modal .modal-card { transform: translate3d(0, 0, 0); }
         
-        /* Исправление центрирования заголовков в модальных окнах */
         .modal-header-nav { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 0 0 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; min-height: 24px; }
         .modal-nav-btn { position: relative; z-index: 2; background: transparent; border: none; padding: 0; font-size: 1.05rem; color: var(--accent-main); cursor: pointer; min-width: 70px; display: flex; align-items: center; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.2s; }
         .modal-nav-btn:active { opacity: 0.6; }
         .modal-nav-btn.left { justify-content: flex-start; font-weight: 500; }
         .modal-nav-btn.right { justify-content: flex-end; font-weight: 600; margin-left: auto; }
-
         
-        /* Абсолютное позиционирование для идеального центра */
         .modal-nav-title { position: absolute; left: 50%; transform: translateX(-50%); width: 60%; text-align: center; font-size: 1.2rem; font-weight: 600; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); pointer-events: none; }
 
         #customCalendarModal { z-index: 1100 !important; }
@@ -719,6 +715,31 @@
                         });
                     } else resolve(safeStorage.getItem(key) || null);
                 });
+            },
+            getItems(keys) {
+                return new Promise((resolve) => {
+                    if (this.isAvailable() && Array.isArray(keys) && keys.length > 0) {
+                        window.Telegram.WebApp.CloudStorage.getItems(keys, (err, values) => {
+                            if (!err && values) resolve(values); else resolve({});
+                        });
+                    } else resolve({});
+                });
+            },
+            removeItem(key) {
+                return new Promise((resolve) => {
+                    safeStorage.removeItem(key);
+                    if (this.isAvailable()) {
+                        window.Telegram.WebApp.CloudStorage.removeItem(key, (err, success) => resolve(success));
+                    } else resolve(true);
+                });
+            },
+            removeItems(keys) {
+                return new Promise((resolve) => {
+                    if (Array.isArray(keys)) keys.forEach(k => safeStorage.removeItem(k));
+                    if (this.isAvailable() && Array.isArray(keys) && keys.length > 0) {
+                        window.Telegram.WebApp.CloudStorage.removeItems(keys, (err, success) => resolve(success));
+                    } else resolve(true);
+                });
             }
         };
 
@@ -1125,7 +1146,33 @@
         function togglePauseBefore(mins) { triggerHaptic(15); setPauseBefore(selectedPauseBeforeVal === mins ? null : mins); }
         function togglePauseAfter(mins) { triggerHaptic(15); setPauseAfter(selectedPauseAfterVal === mins ? null : mins); }
 
-        async function saveProductsSync() { await tgCloud.setItem('cb_custom_products', products); }
+        /* ОБНОВЛЕННОЕ СОХРАНЕНИЕ: ВАРИАНТ 1 (РАЗДЕЛЬНЫЕ КЛЮЧИ С ИНДЕКСОМ) */
+        async function saveProductsSync() { 
+            safeStorage.setItem('cb_custom_products', JSON.stringify(products));
+            if (!tgCloud.isAvailable()) return;
+
+            try {
+                const rawOldIds = await tgCloud.getItem('cb_product_ids');
+                let oldIds = [];
+                if (rawOldIds) { try { oldIds = JSON.parse(rawOldIds); } catch(e) {} }
+
+                const currentIds = products.map(p => p.id);
+                const deletedIds = oldIds.filter(id => !currentIds.includes(id));
+
+                if (deletedIds.length > 0) {
+                    const deletedKeys = deletedIds.map(id => `cb_p_${id}`);
+                    await tgCloud.removeItems(deletedKeys);
+                }
+
+                for (const p of products) {
+                    await tgCloud.setItem(`cb_p_${p.id}`, p);
+                }
+
+                await tgCloud.setItem('cb_product_ids', currentIds);
+            } catch (e) {
+                console.error('Cloud storage save error:', e);
+            }
+        }
 
         function saveProduct() {
             triggerHaptic(30); const name = document.getElementById('pName').value.trim(); const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active'); const type = activeTypeBtn ? activeTypeBtn.dataset.type : null;
@@ -1326,13 +1373,72 @@
 
         function setFontSize(size) { triggerHaptic(15); const fontVal = size === 'large' ? 'large' : 'normal'; document.documentElement.setAttribute('data-font-size', fontVal); safeStorage.setItem('cb_font_size', fontVal); document.querySelectorAll('#fontSizePicker .picker-btn').forEach(b => { b.classList.toggle('active', b.dataset.size === fontVal); }); }
 
+        /* ОБНОВЛЕННАЯ ЗАГРУЗКА ИЗ ОБЛАКА С АВТО-МИГРАЦИЕЙ */
         async function loadAppDataFromCloud() {
             if (window.Telegram?.WebApp) { try { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); if (typeof window.Telegram.WebApp.disableVerticalSwipes === 'function') { window.Telegram.WebApp.disableVerticalSwipes(); } } catch (e) {} }
             const cloudTheme = await tgCloud.getItem('cb_theme'); if (cloudTheme && cloudTheme !== safeStorage.getItem('cb_theme')) { setTheme(cloudTheme, true, false); }
             const cloudSuperVal = await tgCloud.getItem('cb_super_collection'); if (cloudSuperVal !== null && cloudSuperVal !== undefined) { isSuperCollectionEnabled = (cloudSuperVal === 'true'); safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled)); } document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled; updateProBadgeUI();
             const cloudInstallDate = await tgCloud.getItem('cb_install_date'); if (cloudInstallDate) { installDateStr = cloudInstallDate; safeStorage.setItem('cb_install_date', installDateStr); }
-            const cloudProductsJson = await tgCloud.getItem('cb_custom_products');
-            if (cloudProductsJson) { try { const parsed = typeof cloudProductsJson === 'string' ? JSON.parse(cloudProductsJson) : cloudProductsJson; if (Array.isArray(parsed) && parsed.length > 0) { products = parsed; renderManageList(); renderRoutine(); } } catch (e) {} }
+            
+            if (tgCloud.isAvailable()) {
+                try {
+                    const rawProductIds = await tgCloud.getItem('cb_product_ids');
+                    
+                    if (rawProductIds) {
+                        let pIds = [];
+                        try { pIds = JSON.parse(rawProductIds); } catch(e) {}
+
+                        if (Array.isArray(pIds) && pIds.length > 0) {
+                            const keys = pIds.map(id => `cb_p_${id}`);
+                            const itemsMap = await tgCloud.getItems(keys);
+                            
+                            const loadedProducts = [];
+                            pIds.forEach(id => {
+                                const key = `cb_p_${id}`;
+                                if (itemsMap[key]) {
+                                    try {
+                                        const pObj = typeof itemsMap[key] === 'string' ? JSON.parse(itemsMap[key]) : itemsMap[key];
+                                        if (pObj && pObj.id) loadedProducts.push(pObj);
+                                    } catch(e) {}
+                                }
+                            });
+
+                            if (loadedProducts.length > 0) {
+                                products = loadedProducts;
+                                safeStorage.setItem('cb_custom_products', JSON.stringify(products));
+                                renderManageList(); renderRoutine();
+                                return;
+                            }
+                        }
+                    } else {
+                        /* Миграция старого массива cb_custom_products в новый формат */
+                        const cloudProductsJson = await tgCloud.getItem('cb_custom_products');
+                        if (cloudProductsJson) {
+                            try {
+                                const parsed = typeof cloudProductsJson === 'string' ? JSON.parse(cloudProductsJson) : cloudProductsJson;
+                                if (Array.isArray(parsed) && parsed.length > 0) {
+                                    products = parsed;
+                                    await saveProductsSync();
+                                    await tgCloud.removeItem('cb_custom_products');
+                                    renderManageList(); renderRoutine();
+                                    return;
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                } catch (e) {
+                    console.error('Cloud load failed, using local storage fallback:', e);
+                }
+            }
+
+            /* Локальный фолбэк из localStorage */
+            const localData = safeStorage.getItem('cb_custom_products');
+            if (localData) {
+                try {
+                    const parsed = JSON.parse(localData);
+                    if (Array.isArray(parsed)) { products = parsed; renderManageList(); renderRoutine(); }
+                } catch(e) {}
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
