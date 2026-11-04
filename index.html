@@ -511,6 +511,20 @@
                                         <button type="button" class="day-chip" data-day="0">Вс</button>
                                     </div>
                                 </div>
+
+                                <!-- Вариант А: Переключатель Схемы привыкания -->
+                                <div id="adaptationSchemeGroup" style="display: none; margin-top: 10px; padding: 10px 12px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border-color);">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="flex: 1; padding-right: 8px;">
+                                            <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);">Схема привыкания</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.25;">Напоминать о расширении графика через 2 недели</div>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="toggleAdaptationScheme">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
                             <div style="background: var(--surface); padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); margin-top: 10px;">
@@ -810,8 +824,8 @@
 
         const SMART_PRESETS = [
             { keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'санскрин'], type: 'SPF / Защита', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 15, reason: 'SPF-фильтрам требуется 5 минут после увлажняющего крема и 15 минут выдержки после нанесения до выхода на солнце.' },
-            { keywords: ['ретин', 'retin', 'адапален', 'третиноин'], type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15, reason: 'Ретиноиды наносятся строго вечером на полностью сухую кожу. Выдержка 15 минут до и после минимизирует раздражение.' },
-            { keywords: ['кислот', 'acid', 'aha', 'bha', 'гликол', 'салицил'], type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 5, pauseAfter: 15, reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном pH кожи.' },
+            { keywords: ['ретин', 'retin', 'адапален', 'третиноин'], type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], adaptationScheme: true, pauseBefore: 15, pauseAfter: 15, reason: 'Ретиноиды наносятся строго вечером на полностью сухую кожу. Выдержка 15 минут до и после минимизирует раздражение.' },
+            { keywords: ['кислот', 'acid', 'aha', 'bha', 'гликол', 'салицил'], type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], adaptationScheme: true, pauseBefore: 5, pauseAfter: 15, reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном pH кожи.' },
             { keywords: ['витамин c', 'витамин с', 'vitamin c'], type: 'Активы', pao: '3', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10, reason: 'Витамин C наносится утром под SPF. Пауза 10 минут перед кремом повышает его эффективность.' },
             { keywords: ['ниацинамид', 'niacinamide'], type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 5, reason: 'Ниацинамид универсален, укрепляет защитный барьер кожи и совместим с большинством компонентов.' },
             { keywords: ['пептид', 'peptide'], type: 'Активы', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10, reason: 'Пептиды любят выдержку перед плотными кремами для глубокого проникновения в эпидермис.' }
@@ -987,15 +1001,78 @@
             const routineMon = getMondayOfWeek(routineDateObj); routineMon.setHours(0, 0, 0, 0); const diffTime = routineMon - startMon; const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)); return Math.max(1, diffWeeks + 1);
         }
 
+        /* АЛГОРИТМ УМНОГО ВЫБОРА СЛЕДУЮЩЕГО ДНЯ ДЛЯ АКТИВОВ */
+        function findNextAdaptationDay(existingDays) {
+            const allDays = [1, 2, 3, 4, 5, 6, 0];
+            const missing = allDays.filter(d => !existingDays.includes(d));
+            if (missing.length === 0) return null;
+            let bestDay = missing[0]; let maxMinDist = -1;
+            missing.forEach(m => {
+                let minDist = 7;
+                existingDays.forEach(e => {
+                    let dist = Math.abs(m - e); if (dist > 3) dist = 7 - dist;
+                    if (dist < minDist) minDist = dist;
+                });
+                if (minDist > maxMinDist) { maxMinDist = minDist; bestDay = m; }
+            });
+            return bestDay;
+        }
+
+        function upgradeAdaptationDays(productId) {
+            triggerHaptic(25); const p = products.find(prod => prod.id === productId); if (!p) return;
+            const curDays = Array.isArray(p.days) ? p.days : [];
+            const nextDay = findNextAdaptationDay(curDays);
+            if (nextDay !== null) {
+                p.days = [...curDays, nextDay].sort((a,b) => a - b);
+                if (p.days.length >= 7) p.freqType = 'daily';
+                p.adaptationDismissedWeek = calcActiveWeekNumber(p.addedDate || p.openDate || getLocalTodayStr(), getRoutineDateObj());
+                saveProductsSync(); renderRoutine();
+                const dayNamesRu = {1:'Понедельник', 2:'Вторник', 3:'Среду', 4:'Четверг', 5:'Пятницу', 6:'Субботу', 0:'Воскресенье'};
+                showToast(`Добавлен ${dayNamesRu[nextDay]} в график применения!`);
+            }
+        }
+
+        function dismissAdaptationPrompt(productId, currentWeek) {
+            triggerHaptic(15); const p = products.find(prod => prod.id === productId); if (!p) return;
+            p.adaptationDismissedWeek = currentWeek; saveProductsSync(); renderRoutine(); showToast('Текущий график ухода сохранен');
+        }
+
         function renderRoutine() {
             renderCurrentDateChip(); const container = document.getElementById('routineContainer'); const activeProducts = getActiveProductsForCurrentView();
+            const routineDateObj = getRoutineDateObj(); const isTimerActive = isTimerAllowedForCurrentView();
+            const htmlBuffer = [];
+
+            /* ВАРИАНТ А: ПРОВЕРКА И ОТОБРАЖЕНИЕ БАННЕРОВ ПОСТЕПЕННОГО ВВОДА */
+            const activeCustomProducts = products.filter(p => p.inRoutine !== false && p.adaptationScheme === true && p.freqType === 'custom');
+            activeCustomProducts.forEach(p => {
+                const startDate = p.addedDate || p.openDate || getLocalTodayStr();
+                const currentWeekNum = calcActiveWeekNumber(startDate, routineDateObj);
+                const dismissedWeek = p.adaptationDismissedWeek || 0;
+                const curDays = Array.isArray(p.days) ? p.days : [];
+                if (currentWeekNum >= 3 && dismissedWeek < currentWeekNum && curDays.length < 7) {
+                    const trendSvg = `<svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" style="stroke: var(--accent-main);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>`;
+                    htmlBuffer.push(`
+                        <div style="background: var(--accent-light); border: 1px solid var(--accent-main); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+                            <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                                ${trendSvg} Схема привыкания: ${escapeHtml(p.name)}
+                            </div>
+                            <div style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.35;">
+                                Вы используете актив уже ${currentWeekNum - 1} нед. (${curDays.length} дн/нед). Кожа привыкла, нет раздражения?
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" onclick="upgradeAdaptationDays(${p.id})" class="uniform-brand-title" style="flex: 1; padding: 8px; background: var(--accent-main); color: #fff; border: none; border-radius: 8px; font-size: 0.8125rem; cursor: pointer;">Добавить +1 день</button>
+                                <button type="button" onclick="dismissAdaptationPrompt(${p.id}, ${currentWeekNum})" style="padding: 8px 12px; background: var(--surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.8125rem; cursor: pointer;">Оставить так</button>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
 
             if (activeProducts.length === 0) {
                 const arrowDownSvg = `<svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" style="margin: 6px auto 0; display: block; color: var(--accent-main);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-                container.innerHTML = `<div style="text-align: center; padding: 12px 0 6px; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; line-height: 1.35;">Список пуст.<br>Нажмите «Мои средства», чтобы добавить уход.${arrowDownSvg}</div>`; return;
+                container.innerHTML = htmlBuffer.join('') + `<div style="text-align: center; padding: 12px 0 6px; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; line-height: 1.35;">Список пуст.<br>Нажмите «Мои средства», чтобы добавить уход.${arrowDownSvg}</div>`; 
+                return;
             }
-
-            const htmlBuffer = []; const routineDateObj = getRoutineDateObj(); const isTimerActive = isTimerAllowedForCurrentView();
 
             if (currentTOD === 'evening') {
                 const hasRetinoids = activeProducts.some(p => { const n = (p.name || '').toLowerCase(); return n.includes('ретин') || n.includes('retin') || n.includes('адапален') || n.includes('третиноин'); });
@@ -1060,6 +1137,17 @@
         function closeAutocomplete() { clearTimeout(autocompleteDebounceTimer); const dropdown = document.getElementById('autocompleteDropdown'); if (dropdown) { dropdown.classList.remove('open'); dropdown.innerHTML = ''; } }
         function selectAutocompleteItem(val) { triggerHaptic(15); const input = document.getElementById('pName'); if (input) { input.value = val; handleNameInput(val, true); } if (document.activeElement) document.activeElement.blur(); openDetailsAccordion(); closeAutocomplete(); }
 
+        function updateAdaptationSchemeVisibility() {
+            const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
+            const selectedType = activeTypeBtn ? activeTypeBtn.dataset.type : null;
+            const freqType = document.getElementById('pFreqType').value;
+            const group = document.getElementById('adaptationSchemeGroup');
+            if (group) {
+                if (freqType === 'custom' || selectedType === 'Активы') group.style.display = 'block';
+                else group.style.display = 'none';
+            }
+        }
+
         function handleNameInput(val, isComplete = false) {
             const cleanQuery = val.trim().toLowerCase();
             if (cleanQuery.length < 2) { closeAutocomplete(); applyFormStateFromPreset(null, false); closeDetailsAccordion(); return; }
@@ -1091,12 +1179,15 @@
                 const targetFreq = preset.freqType || 'daily'; document.getElementById('pFreqType').value = targetFreq;
                 document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === targetFreq)); document.getElementById('daysGroup').style.display = (targetFreq === 'custom') ? 'block' : 'none';
                 if (targetFreq === 'custom') { const presetDays = preset.days || defaultDays; document.querySelectorAll('.day-chip').forEach(chip => { chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10))); }); }
+                if (preset.adaptationScheme) { document.getElementById('toggleAdaptationScheme').checked = true; }
                 applyPAO(preset.pao || '12'); setPauseBefore(preset.pauseBefore !== undefined ? preset.pauseBefore : null); setPauseAfter(preset.pauseAfter !== undefined ? preset.pauseAfter : null);
             } else {
                 banner.style.display = 'none'; if (!detectedType) document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.add('active')); document.getElementById('pFreqType').value = 'daily'; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === 'daily')); document.getElementById('daysGroup').style.display = 'none';
                 document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10)))); if (targetType !== 'Уход за глазами') applyPAO('12'); setPauseBefore(null); setPauseAfter(null);
+                document.getElementById('toggleAdaptationScheme').checked = false;
             }
+            updateAdaptationSchemeVisibility();
         }
 
         function renderAutocompleteResults(localItems, onlineItems) {
@@ -1116,6 +1207,8 @@
             openDetailsAccordion(); setPauseBefore(currentDetectedPreset.pauseBefore !== undefined ? currentDetectedPreset.pauseBefore : null); setPauseAfter(currentDetectedPreset.pauseAfter !== undefined ? currentDetectedPreset.pauseAfter : null);
             const targetFreq = currentDetectedPreset.freqType || 'daily'; document.getElementById('pFreqType').value = targetFreq; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === targetFreq)); document.getElementById('daysGroup').style.display = (targetFreq === 'custom') ? 'block' : 'none';
             if (targetFreq === 'custom') { const presetDays = currentDetectedPreset.days || [1, 4]; document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10)))); }
+            if (currentDetectedPreset.adaptationScheme) { document.getElementById('toggleAdaptationScheme').checked = true; }
+            updateAdaptationSchemeVisibility();
             document.getElementById('smartPresetBanner').style.display = 'none';
         });
 
@@ -1146,7 +1239,6 @@
         function togglePauseBefore(mins) { triggerHaptic(15); setPauseBefore(selectedPauseBeforeVal === mins ? null : mins); }
         function togglePauseAfter(mins) { triggerHaptic(15); setPauseAfter(selectedPauseAfterVal === mins ? null : mins); }
 
-        /* ОБНОВЛЕННОЕ СОХРАНЕНИЕ: ВАРИАНТ 1 (РАЗДЕЛЬНЫЕ КЛЮЧИ С ИНДЕКСОМ) */
         async function saveProductsSync() { 
             safeStorage.setItem('cb_custom_products', JSON.stringify(products));
             if (!tgCloud.isAvailable()) return;
@@ -1183,8 +1275,11 @@
             const existingItem = editId ? products.find(p => p.id === Number(editId)) : null; const addedDate = existingItem ? (existingItem.addedDate || existingItem.openDate || getLocalTodayStr()) : getLocalTodayStr();
             const defaultInRoutine = !(isSuperCollectionEnabled && currentManageTab === 'onPause'); const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : defaultInRoutine;
             let days = []; if (freqType === 'custom') { document.querySelectorAll('.day-chip.active').forEach(chip => { days.push(parseInt(chip.dataset.day, 10)); }); }
+            
+            const adaptationScheme = document.getElementById('toggleAdaptationScheme').checked;
+            const adaptationDismissedWeek = existingItem ? (existingItem.adaptationDismissedWeek || 0) : 0;
 
-            const productData = { id: editId ? Number(editId) : Date.now(), name, type, tods, freqType, days, pauseBefore: selectedPauseBeforeVal, pauseAfter: selectedPauseAfterVal, openDate, addedDate, paoMonths: selectedPAOMonths, inRoutine: inRoutineStatus };
+            const productData = { id: editId ? Number(editId) : Date.now(), name, type, tods, freqType, days, adaptationScheme, adaptationDismissedWeek, pauseBefore: selectedPauseBeforeVal, pauseAfter: selectedPauseAfterVal, openDate, addedDate, paoMonths: selectedPAOMonths, inRoutine: inRoutineStatus };
             if (editId) { const idx = products.findIndex(p => p.id === Number(editId)); if (idx !== -1) products[idx] = productData; } else { products.push(productData); }
             saveProductsSync(); renderManageList(); hideForm(); renderRoutine();
         }
@@ -1217,6 +1312,8 @@
             document.getElementById('pOpenDate').value = item.openDate || getLocalTodayStr(); updateOpenDateDisplay();
             if (item.paoMonths) applyPAO(item.paoMonths); else applyPAO('12');
             document.querySelectorAll('.day-chip').forEach(chip => { const day = parseInt(chip.dataset.day, 10); chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day)); });
+            document.getElementById('toggleAdaptationScheme').checked = !!item.adaptationScheme;
+            updateAdaptationSchemeVisibility();
         }
 
         function deleteProduct(e, id) {
@@ -1285,6 +1382,8 @@
             document.getElementById('pFreqType').value = 'daily'; document.getElementById('daysGroup').style.display = 'none';
             const defaultDays = [1, 4]; document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10))));
             document.getElementById('pOpenDate').value = getLocalTodayStr(); updateOpenDateDisplay(); applyPAO('12'); document.getElementById('smartPresetBanner').style.display = 'none';
+            document.getElementById('toggleAdaptationScheme').checked = false;
+            updateAdaptationSchemeVisibility();
         }
 
         function renderManageList() {
@@ -1337,6 +1436,7 @@
                 if (typeof data.superCollection === 'boolean') { isSuperCollectionEnabled = data.superCollection; safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled)); tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled)); document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled; updateProBadgeUI(); }
                 products = data.products.map(p => ({
                     id: Number(p.id) || Date.now(), name: String(p.name || ''), type: String(p.type || 'Очищение'), tods: Array.isArray(p.tods) ? p.tods : ['morning'], freqType: String(p.freqType || 'daily'), days: Array.isArray(p.days) ? p.days : [],
+                    adaptationScheme: !!p.adaptationScheme, adaptationDismissedWeek: Number(p.adaptationDismissedWeek) || 0,
                     pauseBefore: p.pauseBefore !== null && p.pauseBefore !== undefined ? Number(p.pauseBefore) : null, pauseAfter: p.pauseAfter !== null && p.pauseAfter !== undefined ? Number(p.pauseAfter) : null,
                     openDate: String(p.openDate || getLocalTodayStr()), addedDate: String(p.addedDate || p.openDate || getLocalTodayStr()), paoMonths: p.paoMonths ? String(p.paoMonths) : '12', inRoutine: p.inRoutine !== false
                 }));
@@ -1373,7 +1473,6 @@
 
         function setFontSize(size) { triggerHaptic(15); const fontVal = size === 'large' ? 'large' : 'normal'; document.documentElement.setAttribute('data-font-size', fontVal); safeStorage.setItem('cb_font_size', fontVal); document.querySelectorAll('#fontSizePicker .picker-btn').forEach(b => { b.classList.toggle('active', b.dataset.size === fontVal); }); }
 
-        /* ОБНОВЛЕННАЯ ЗАГРУЗКА ИЗ ОБЛАКА С АВТО-МИГРАЦИЕЙ */
         async function loadAppDataFromCloud() {
             if (window.Telegram?.WebApp) { try { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); if (typeof window.Telegram.WebApp.disableVerticalSwipes === 'function') { window.Telegram.WebApp.disableVerticalSwipes(); } } catch (e) {} }
             const cloudTheme = await tgCloud.getItem('cb_theme'); if (cloudTheme && cloudTheme !== safeStorage.getItem('cb_theme')) { setTheme(cloudTheme, true, false); }
@@ -1383,15 +1482,12 @@
             if (tgCloud.isAvailable()) {
                 try {
                     const rawProductIds = await tgCloud.getItem('cb_product_ids');
-                    
                     if (rawProductIds) {
                         let pIds = [];
                         try { pIds = JSON.parse(rawProductIds); } catch(e) {}
-
                         if (Array.isArray(pIds) && pIds.length > 0) {
                             const keys = pIds.map(id => `cb_p_${id}`);
                             const itemsMap = await tgCloud.getItems(keys);
-                            
                             const loadedProducts = [];
                             pIds.forEach(id => {
                                 const key = `cb_p_${id}`;
@@ -1402,7 +1498,6 @@
                                     } catch(e) {}
                                 }
                             });
-
                             if (loadedProducts.length > 0) {
                                 products = loadedProducts;
                                 safeStorage.setItem('cb_custom_products', JSON.stringify(products));
@@ -1411,7 +1506,6 @@
                             }
                         }
                     } else {
-                        /* Миграция старого массива cb_custom_products в новый формат */
                         const cloudProductsJson = await tgCloud.getItem('cb_custom_products');
                         if (cloudProductsJson) {
                             try {
@@ -1431,7 +1525,6 @@
                 }
             }
 
-            /* Локальный фолбэк из localStorage */
             const localData = safeStorage.getItem('cb_custom_products');
             if (localData) {
                 try {
@@ -1479,9 +1572,29 @@
 
             document.getElementById('paoPicker').addEventListener('click', (e) => { const chip = e.target.closest('.pao-chip'); if (chip) applyPAO(chip.dataset.months); });
             document.getElementById('btnToggleOpenDate').addEventListener('click', (e) => { e.preventDefault(); openCustomCalendar('pao'); });
-            document.getElementById('typePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); if (btn.dataset.type === 'Уход за глазами') applyPAO('6'); } });
+            document.getElementById('typePicker').addEventListener('click', (e) => { 
+                const btn = e.target.closest('.picker-btn'); 
+                if (btn) { 
+                    triggerHaptic(15); 
+                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active')); 
+                    btn.classList.add('active'); 
+                    if (btn.dataset.type === 'Уход за глазами') applyPAO('6'); 
+                    updateAdaptationSchemeVisibility();
+                } 
+            });
             document.getElementById('todPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); btn.classList.toggle('active'); } });
-            document.getElementById('freqPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); const freq = btn.dataset.freq; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('pFreqType').value = freq; document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none'; } });
+            document.getElementById('freqPicker').addEventListener('click', (e) => { 
+                const btn = e.target.closest('.picker-btn'); 
+                if (btn) { 
+                    triggerHaptic(15); 
+                    const freq = btn.dataset.freq; 
+                    document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active')); 
+                    btn.classList.add('active'); 
+                    document.getElementById('pFreqType').value = freq; 
+                    document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none'; 
+                    updateAdaptationSchemeVisibility();
+                } 
+            });
             document.getElementById('daysPicker').addEventListener('click', (e) => { const chip = e.target.closest('.day-chip'); if (chip) { triggerHaptic(15); chip.classList.toggle('active'); } });
             document.getElementById('pauseBeforePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) togglePauseBefore(Number(btn.dataset.mins)); });
             document.getElementById('pauseAfterPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) togglePauseAfter(Number(btn.dataset.mins)); });
