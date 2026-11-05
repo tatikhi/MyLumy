@@ -27,13 +27,25 @@
     <title>MyLumy</title>
     
     <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113811190', 'ym');
-        ym(113811190, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+        (function() {
+            var safeUrl = new URL(location.href);
+            safeUrl.searchParams.delete('tgWebAppData');
+            var cleanUrl = safeUrl.href;
+
+            (function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113811190', 'ym');
+            
+            ym(113811190, 'init', {
+                ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", 
+                referrer: document.referrer, 
+                url: cleanUrl,
+                accurateTrackBounce:true, trackLinks:true
+            });
+        })();
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/113811190" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
@@ -41,7 +53,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alice&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
     <style>
         html { font-size: 16px; }
@@ -511,20 +522,6 @@
                                         <button type="button" class="day-chip" data-day="0">Вс</button>
                                     </div>
                                 </div>
-
-                                <!-- Вариант А: Переключатель Схемы привыкания -->
-                                <div id="adaptationSchemeGroup" style="display: none; margin-top: 10px; padding: 10px 12px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border-color);">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <div style="flex: 1; padding-right: 8px;">
-                                            <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);">Схема привыкания</div>
-                                            <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.25;">Напоминать о расширении графика через 2 недели</div>
-                                        </div>
-                                        <label class="toggle-switch">
-                                            <input type="checkbox" id="toggleAdaptationScheme">
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                </div>
                             </div>
 
                             <div style="background: var(--surface); padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); margin-top: 10px;">
@@ -702,6 +699,20 @@
 
         const THEME_COLORS = { sunlit: '#FFF5F0', berry: '#1D161E', icederm: '#F0F6FA', espresso: '#F8F4EE', cyberglow: '#F5F0FE', midnight: '#0F141C' };
 
+        // Служебная функция для таймаута Fetch
+        async function fetchWithTimeout(url, options = {}, timeout = 5000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (err) {
+                clearTimeout(id);
+                throw err;
+            }
+        }
+
         function applyTelegramThemeColors(theme) {
             if (window.Telegram?.WebApp) {
                 const color = THEME_COLORS[theme] || THEME_COLORS.sunlit;
@@ -824,8 +835,8 @@
 
         const SMART_PRESETS = [
             { keywords: ['spf', 'спф', 'солнц', 'sunscreen', 'санскрин'], type: 'SPF / Защита', pao: '6', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 15, reason: 'SPF-фильтрам требуется 5 минут после увлажняющего крема и 15 минут выдержки после нанесения до выхода на солнце.' },
-            { keywords: ['ретин', 'retin', 'адапален', 'третиноин'], type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], adaptationScheme: true, pauseBefore: 15, pauseAfter: 15, reason: 'Ретиноиды наносятся строго вечером на полностью сухую кожу. Выдержка 15 минут до и после минимизирует раздражение.' },
-            { keywords: ['кислот', 'acid', 'aha', 'bha', 'гликол', 'салицил'], type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], adaptationScheme: true, pauseBefore: 5, pauseAfter: 15, reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном pH кожи.' },
+            { keywords: ['ретин', 'retin', 'адапален', 'третиноин'], type: 'Активы', pao: '6', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 15, pauseAfter: 15, reason: 'Ретиноиды наносятся строго вечером на полностью сухую кожу. Выдержка 15 минут до и после минимизирует раздражение.' },
+            { keywords: ['кислот', 'acid', 'aha', 'bha', 'гликол', 'салицил'], type: 'Активы', pao: '12', tods: ['evening'], freqType: 'custom', days: [1, 4], pauseBefore: 5, pauseAfter: 15, reason: 'Кислотам требуется выдержка 15 минут для полноценной работы при естественном pH кожи.' },
             { keywords: ['витамин c', 'витамин с', 'vitamin c'], type: 'Активы', pao: '3', tods: ['morning'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10, reason: 'Витамин C наносится утром под SPF. Пауза 10 минут перед кремом повышает его эффективность.' },
             { keywords: ['ниацинамид', 'niacinamide'], type: 'Активы', pao: '12', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 5, reason: 'Ниацинамид универсален, укрепляет защитный барьер кожи и совместим с большинством компонентов.' },
             { keywords: ['пептид', 'peptide'], type: 'Активы', pao: '6', tods: ['morning', 'evening'], freqType: 'daily', pauseBefore: 5, pauseAfter: 10, reason: 'Пептиды любят выдержку перед плотными кремами для глубокого проникновения в эпидермис.' }
@@ -840,40 +851,71 @@
         class RoutineTimerEngine {
             constructor() {
                 this.endTime = null; this.timerId = null; this.wakeLock = null; this.onTick = null; this.onComplete = null; this.audioCtx = null;
-                document.addEventListener('visibilitychange', () => this.sync()); window.addEventListener('focus', () => this.sync());
+                document.addEventListener('visibilitychange', () => this.sync()); 
+                window.addEventListener('focus', () => this.sync());
             }
             warmupAudio() {
-                try { const AudioCtx = window.AudioContext || window.webkitAudioContext; if (!AudioCtx) return; if (!this.audioCtx) this.audioCtx = new AudioCtx(); if (this.audioCtx.state === 'suspended') this.audioCtx.resume(); } catch (e) {}
+                try { 
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext; 
+                    if (!AudioCtx) return; 
+                    if (!this.audioCtx) this.audioCtx = new AudioCtx(); 
+                    if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+                    
+                    const osc = this.audioCtx.createOscillator();
+                    const gain = this.audioCtx.createGain();
+                    gain.gain.value = 0; 
+                    osc.connect(gain); gain.connect(this.audioCtx.destination);
+                    osc.start(this.audioCtx.currentTime); osc.stop(this.audioCtx.currentTime + 0.01);
+                } catch (e) { console.error('Audio warmup error:', e); }
             }
             async start(durationMinutes, onTick, onComplete) {
-                this.warmupAudio(); this.stop(); this.onTick = onTick; this.onComplete = onComplete;
+                this.warmupAudio(); 
+                this.stop(); 
+                this.onTick = onTick; 
+                this.onComplete = onComplete;
                 this.endTime = Date.now() + (durationMinutes * 60 * 1000);
                 await this.requestWakeLock();
                 this.timerId = setInterval(() => this.tick(), 500); this.tick();
             }
             tick() {
                 if (!this.endTime) return;
-                const remainingMs = Math.max(0, this.endTime - Date.now()); const remainingSeconds = Math.ceil(remainingMs / 1000);
-                if (this.onTick) { const mins = Math.floor(remainingSeconds / 60); const secs = remainingSeconds % 60; this.onTick(`${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`, remainingSeconds); }
+                const remainingMs = Math.max(0, this.endTime - Date.now()); 
+                const remainingSeconds = Math.ceil(remainingMs / 1000);
+                if (this.onTick) { 
+                    const mins = Math.floor(remainingSeconds / 60); 
+                    const secs = remainingSeconds % 60; 
+                    this.onTick(`${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`, remainingSeconds); 
+                }
                 if (remainingMs <= 0) this.finish();
             }
             sync() { if (this.endTime) this.tick(); }
             finish() { this.stop(); this.playChimeSound(); triggerHaptic([200, 100, 200, 100, 300]); if (this.onComplete) this.onComplete(); }
-            stop() { if (this.timerId) clearInterval(this.timerId); this.timerId = null; this.endTime = null; this.releaseWakeLock(); }
-            async requestWakeLock() { if ('wakeLock' in navigator) { try { this.wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {} } }
-            releaseWakeLock() { if (this.wakeLock) { this.wakeLock.release().catch(() => {}); this.wakeLock = null; } }
+            stop() { 
+                if (this.timerId) clearInterval(this.timerId); 
+                this.timerId = null; this.endTime = null; 
+                this.releaseWakeLock(); 
+            }
+            async requestWakeLock() { 
+                if ('wakeLock' in navigator) { 
+                    try { this.wakeLock = await navigator.wakeLock.request('screen'); } catch (err) { console.error('WakeLock error:', err); } 
+                } 
+            }
+            releaseWakeLock() { 
+                if (this.wakeLock) { this.wakeLock.release().catch(() => {}); this.wakeLock = null; } 
+            }
             playChimeSound() {
                 try {
-                    const AudioCtx = window.AudioContext || window.webkitAudioContext; if (!AudioCtx) return;
-                    if (!this.audioCtx) this.audioCtx = new AudioCtx(); if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
-                    const ctx = this.audioCtx; const playNote = (freq, time, duration) => {
+                    if (!this.audioCtx) return;
+                    if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+                    const ctx = this.audioCtx; 
+                    const playNote = (freq, time, duration) => {
                         const osc = ctx.createOscillator(); const gain = ctx.createGain();
                         osc.type = 'sine'; osc.frequency.setValueAtTime(freq, time);
                         gain.gain.setValueAtTime(0.2, time); gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
                         osc.connect(gain); gain.connect(ctx.destination); osc.start(time); osc.stop(time + duration);
                     };
                     playNote(523.25, ctx.currentTime, 0.8); playNote(659.25, ctx.currentTime + 0.15, 1.2);
-                } catch (e) {}
+                } catch (e) { console.error('Audio play error:', e); }
             }
         }
 
@@ -883,6 +925,7 @@
         let barcodeCache = JSON.parse(safeStorage.getItem('cb_barcode_cache') || '{}');
         let isSuperCollectionEnabled = safeStorage.getItem('cb_super_collection') === 'true';
         let openCategoryIndexes = new Set();
+        let isSavingToCloud = false; 
 
         function getSystemTOD() { const h = new Date().getHours(); return (h >= 3 && h < 18) ? 'morning' : 'evening'; }
 
@@ -893,7 +936,6 @@
         let selectedPauseBeforeVal = null;
         let selectedPauseAfterVal = null;
         let currentDetectedPreset = null;
-        let html5QrCodeScanner = null;
         let isScannerBusy = false;
         let autocompleteDebounceTimer = null;
         let calCurrentViewDate = new Date();
@@ -1001,78 +1043,16 @@
             const routineMon = getMondayOfWeek(routineDateObj); routineMon.setHours(0, 0, 0, 0); const diffTime = routineMon - startMon; const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7)); return Math.max(1, diffWeeks + 1);
         }
 
-        /* АЛГОРИТМ УМНОГО ВЫБОРА СЛЕДУЮЩЕГО ДНЯ ДЛЯ АКТИВОВ */
-        function findNextAdaptationDay(existingDays) {
-            const allDays = [1, 2, 3, 4, 5, 6, 0];
-            const missing = allDays.filter(d => !existingDays.includes(d));
-            if (missing.length === 0) return null;
-            let bestDay = missing[0]; let maxMinDist = -1;
-            missing.forEach(m => {
-                let minDist = 7;
-                existingDays.forEach(e => {
-                    let dist = Math.abs(m - e); if (dist > 3) dist = 7 - dist;
-                    if (dist < minDist) minDist = dist;
-                });
-                if (minDist > maxMinDist) { maxMinDist = minDist; bestDay = m; }
-            });
-            return bestDay;
-        }
-
-        function upgradeAdaptationDays(productId) {
-            triggerHaptic(25); const p = products.find(prod => prod.id === productId); if (!p) return;
-            const curDays = Array.isArray(p.days) ? p.days : [];
-            const nextDay = findNextAdaptationDay(curDays);
-            if (nextDay !== null) {
-                p.days = [...curDays, nextDay].sort((a,b) => a - b);
-                if (p.days.length >= 7) p.freqType = 'daily';
-                p.adaptationDismissedWeek = calcActiveWeekNumber(p.addedDate || p.openDate || getLocalTodayStr(), getRoutineDateObj());
-                saveProductsSync(); renderRoutine();
-                const dayNamesRu = {1:'Понедельник', 2:'Вторник', 3:'Среду', 4:'Четверг', 5:'Пятницу', 6:'Субботу', 0:'Воскресенье'};
-                showToast(`Добавлен ${dayNamesRu[nextDay]} в график применения!`);
-            }
-        }
-
-        function dismissAdaptationPrompt(productId, currentWeek) {
-            triggerHaptic(15); const p = products.find(prod => prod.id === productId); if (!p) return;
-            p.adaptationDismissedWeek = currentWeek; saveProductsSync(); renderRoutine(); showToast('Текущий график ухода сохранен');
-        }
-
         function renderRoutine() {
+            activeRoutineTimer.stop(); 
             renderCurrentDateChip(); const container = document.getElementById('routineContainer'); const activeProducts = getActiveProductsForCurrentView();
-            const routineDateObj = getRoutineDateObj(); const isTimerActive = isTimerAllowedForCurrentView();
-            const htmlBuffer = [];
-
-            /* ВАРИАНТ А: ПРОВЕРКА И ОТОБРАЖЕНИЕ БАННЕРОВ ПОСТЕПЕННОГО ВВОДА */
-            const activeCustomProducts = products.filter(p => p.inRoutine !== false && p.adaptationScheme === true && p.freqType === 'custom');
-            activeCustomProducts.forEach(p => {
-                const startDate = p.addedDate || p.openDate || getLocalTodayStr();
-                const currentWeekNum = calcActiveWeekNumber(startDate, routineDateObj);
-                const dismissedWeek = p.adaptationDismissedWeek || 0;
-                const curDays = Array.isArray(p.days) ? p.days : [];
-                if (currentWeekNum >= 3 && dismissedWeek < currentWeekNum && curDays.length < 7) {
-                    const trendSvg = `<svg class="svg-icon" width="16" height="16" viewBox="0 0 24 24" style="stroke: var(--accent-main);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>`;
-                    htmlBuffer.push(`
-                        <div style="background: var(--accent-light); border: 1px solid var(--accent-main); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
-                            <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                                ${trendSvg} Схема привыкания: ${escapeHtml(p.name)}
-                            </div>
-                            <div style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.35;">
-                                Вы используете актив уже ${currentWeekNum - 1} нед. (${curDays.length} дн/нед). Кожа привыкла, нет раздражения?
-                            </div>
-                            <div style="display: flex; gap: 8px;">
-                                <button type="button" onclick="upgradeAdaptationDays(${p.id})" class="uniform-brand-title" style="flex: 1; padding: 8px; background: var(--accent-main); color: #fff; border: none; border-radius: 8px; font-size: 0.8125rem; cursor: pointer;">Добавить +1 день</button>
-                                <button type="button" onclick="dismissAdaptationPrompt(${p.id}, ${currentWeekNum})" style="padding: 8px 12px; background: var(--surface); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.8125rem; cursor: pointer;">Оставить так</button>
-                            </div>
-                        </div>
-                    `);
-                }
-            });
 
             if (activeProducts.length === 0) {
                 const arrowDownSvg = `<svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" style="margin: 6px auto 0; display: block; color: var(--accent-main);"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-                container.innerHTML = htmlBuffer.join('') + `<div style="text-align: center; padding: 12px 0 6px; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; line-height: 1.35;">Список пуст.<br>Нажмите «Мои средства», чтобы добавить уход.${arrowDownSvg}</div>`; 
-                return;
+                container.innerHTML = `<div style="text-align: center; padding: 12px 0 6px; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 500; line-height: 1.35;">Список пуст.<br>Нажмите «Мои средства», чтобы добавить уход.${arrowDownSvg}</div>`; return;
             }
+
+            const htmlBuffer = []; const routineDateObj = getRoutineDateObj(); const isTimerActive = isTimerAllowedForCurrentView();
 
             if (currentTOD === 'evening') {
                 const hasRetinoids = activeProducts.some(p => { const n = (p.name || '').toLowerCase(); return n.includes('ретин') || n.includes('retin') || n.includes('адапален') || n.includes('третиноин'); });
@@ -1137,17 +1117,6 @@
         function closeAutocomplete() { clearTimeout(autocompleteDebounceTimer); const dropdown = document.getElementById('autocompleteDropdown'); if (dropdown) { dropdown.classList.remove('open'); dropdown.innerHTML = ''; } }
         function selectAutocompleteItem(val) { triggerHaptic(15); const input = document.getElementById('pName'); if (input) { input.value = val; handleNameInput(val, true); } if (document.activeElement) document.activeElement.blur(); openDetailsAccordion(); closeAutocomplete(); }
 
-        function updateAdaptationSchemeVisibility() {
-            const activeTypeBtn = document.querySelector('#typePicker .picker-btn.active');
-            const selectedType = activeTypeBtn ? activeTypeBtn.dataset.type : null;
-            const freqType = document.getElementById('pFreqType').value;
-            const group = document.getElementById('adaptationSchemeGroup');
-            if (group) {
-                if (freqType === 'custom' || selectedType === 'Активы') group.style.display = 'block';
-                else group.style.display = 'none';
-            }
-        }
-
         function handleNameInput(val, isComplete = false) {
             const cleanQuery = val.trim().toLowerCase();
             if (cleanQuery.length < 2) { closeAutocomplete(); applyFormStateFromPreset(null, false); closeDetailsAccordion(); return; }
@@ -1159,7 +1128,7 @@
             clearTimeout(autocompleteDebounceTimer);
             autocompleteDebounceTimer = setTimeout(async () => {
                 try {
-                    const res = await fetch(`https://world.openbeautyfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(val)}&search_simple=1&action=process&json=1&page_size=5`);
+                    const res = await fetchWithTimeout(`https://world.openbeautyfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(val)}&search_simple=1&action=process&json=1&page_size=5`);
                     const data = await res.json();
                     if (data && data.products && Array.isArray(data.products)) { const onlineNames = data.products.map(p => p.product_name || p.brands || '').filter(name => name.length > 2); renderAutocompleteResults(matchedLocal, Array.from(new Set(onlineNames)).slice(0, 4)); }
                 } catch (e) {}
@@ -1179,15 +1148,12 @@
                 const targetFreq = preset.freqType || 'daily'; document.getElementById('pFreqType').value = targetFreq;
                 document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === targetFreq)); document.getElementById('daysGroup').style.display = (targetFreq === 'custom') ? 'block' : 'none';
                 if (targetFreq === 'custom') { const presetDays = preset.days || defaultDays; document.querySelectorAll('.day-chip').forEach(chip => { chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10))); }); }
-                if (preset.adaptationScheme) { document.getElementById('toggleAdaptationScheme').checked = true; }
                 applyPAO(preset.pao || '12'); setPauseBefore(preset.pauseBefore !== undefined ? preset.pauseBefore : null); setPauseAfter(preset.pauseAfter !== undefined ? preset.pauseAfter : null);
             } else {
                 banner.style.display = 'none'; if (!detectedType) document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('#todPicker .picker-btn').forEach(b => b.classList.add('active')); document.getElementById('pFreqType').value = 'daily'; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === 'daily')); document.getElementById('daysGroup').style.display = 'none';
                 document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10)))); if (targetType !== 'Уход за глазами') applyPAO('12'); setPauseBefore(null); setPauseAfter(null);
-                document.getElementById('toggleAdaptationScheme').checked = false;
             }
-            updateAdaptationSchemeVisibility();
         }
 
         function renderAutocompleteResults(localItems, onlineItems) {
@@ -1207,31 +1173,73 @@
             openDetailsAccordion(); setPauseBefore(currentDetectedPreset.pauseBefore !== undefined ? currentDetectedPreset.pauseBefore : null); setPauseAfter(currentDetectedPreset.pauseAfter !== undefined ? currentDetectedPreset.pauseAfter : null);
             const targetFreq = currentDetectedPreset.freqType || 'daily'; document.getElementById('pFreqType').value = targetFreq; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.toggle('active', b.dataset.freq === targetFreq)); document.getElementById('daysGroup').style.display = (targetFreq === 'custom') ? 'block' : 'none';
             if (targetFreq === 'custom') { const presetDays = currentDetectedPreset.days || [1, 4]; document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', presetDays.includes(parseInt(chip.dataset.day, 10)))); }
-            if (currentDetectedPreset.adaptationScheme) { document.getElementById('toggleAdaptationScheme').checked = true; }
-            updateAdaptationSchemeVisibility();
             document.getElementById('smartPresetBanner').style.display = 'none';
         });
 
         async function startBarcodeScanner() {
-            triggerHaptic(20); if (isScannerBusy) return; if (typeof Html5Qrcode === 'undefined') return showToast("Сканер недоступен");
-            isScannerBusy = true; document.getElementById('scannerWrapper').style.display = 'block';
-            if (!html5QrCodeScanner) html5QrCodeScanner = new Html5Qrcode("barcodeReader");
-            try {
-                await html5QrCodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 230, height: 140 } }, async (decodedText) => {
-                    stopBarcodeScanner();
-                    if (barcodeCache[decodedText]) { document.getElementById('pName').value = barcodeCache[decodedText].name; handleNameInput(barcodeCache[decodedText].name, true); openDetailsAccordion(); return; }
-                    try {
-                        const res = await fetch(`https://world.openbeautyfacts.org/api/v2/product/${encodeURIComponent(decodedText)}.json`); const data = await res.json();
-                        if (data && data.status === 1 && data.product) {
-                            const rawName = data.product.product_name || data.product.brands || '';
-                            if (rawName.length > 2) { document.getElementById('pName').value = rawName; handleNameInput(rawName, true); openDetailsAccordion(); barcodeCache[decodedText] = { name: rawName, type: 'Очищение' }; safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache)); return; }
-                        }
-                    } catch (err) {} showToast("Штрихкод не найден в базе.");
-                }, () => {});
-            } catch (err) { showToast("Не удалось запустить камеру."); stopBarcodeScanner(); } finally { isScannerBusy = false; }
+            triggerHaptic(20); 
+            if (isScannerBusy) return;
+            
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.showScanQrPopup) {
+                window.Telegram.WebApp.showScanQrPopup({ text: "Отсканируйте штрихкод средства" }, async (decodedText) => {
+                    if (decodedText) {
+                        window.Telegram.WebApp.closeScanQrPopup();
+                        processScannedBarcode(decodedText);
+                    }
+                    return true; 
+                });
+                return;
+            }
+            
+            showToast("Сканер штрихкодов доступен только внутри Telegram.");
         }
 
-        async function stopBarcodeScanner() { triggerHaptic(15); if (html5QrCodeScanner) { try { await html5QrCodeScanner.stop(); } catch (e) {} } document.getElementById('scannerWrapper').style.display = 'none'; isScannerBusy = false; }
+        async function stopBarcodeScanner() {
+            triggerHaptic(15);
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.closeScanQrPopup) {
+                window.Telegram.WebApp.closeScanQrPopup();
+            }
+            document.getElementById('scannerWrapper').style.display = 'none'; 
+            isScannerBusy = false;
+        }
+
+        async function processScannedBarcode(decodedText) {
+            if (barcodeCache[decodedText]) { 
+                document.getElementById('pName').value = barcodeCache[decodedText].name; 
+                handleNameInput(barcodeCache[decodedText].name, true); 
+                openDetailsAccordion(); 
+                return; 
+            }
+            
+            showToast("Ищем средство...");
+            try {
+                const res = await fetchWithTimeout(`https://world.openbeautyfacts.org/api/v2/product/${encodeURIComponent(decodedText)}.json`, {}, 5000); 
+                const data = await res.json();
+                
+                if (data && data.status === 1 && data.product) {
+                    let rawName = data.product.product_name || data.product.brands || '';
+                    rawName = escapeHtml(rawName); 
+                    
+                    if (rawName.length > 2) { 
+                        document.getElementById('pName').value = rawName; 
+                        handleNameInput(rawName, true); 
+                        openDetailsAccordion(); 
+                        
+                        barcodeCache[decodedText] = { name: rawName, type: 'Очищение' }; 
+                        const cacheKeys = Object.keys(barcodeCache);
+                        if (cacheKeys.length > 50) { delete barcodeCache[cacheKeys[0]]; }
+                        safeStorage.setItem('cb_barcode_cache', JSON.stringify(barcodeCache)); 
+                        
+                        showToast("Средство найдено!");
+                        return; 
+                    }
+                }
+                showToast("Штрихкод не найден в базе.");
+            } catch (err) { 
+                console.error("Barcode fetch error:", err);
+                showToast("Ошибка сети при поиске штрихкода."); 
+            }
+        }
 
         function applyPAO(months) { triggerHaptic(15); selectedPAOMonths = months; document.querySelectorAll('#paoPicker .pao-chip').forEach(c => { c.classList.toggle('active', c.dataset.months == selectedPAOMonths); }); }
         function setPauseBefore(mins) { selectedPauseBeforeVal = mins; document.querySelectorAll('#pauseBeforePicker .picker-btn').forEach(b => { b.classList.toggle('active', selectedPauseBeforeVal !== null && Number(b.dataset.mins) === Number(selectedPauseBeforeVal)); }); }
@@ -1242,11 +1250,13 @@
         async function saveProductsSync() { 
             safeStorage.setItem('cb_custom_products', JSON.stringify(products));
             if (!tgCloud.isAvailable()) return;
+            if (isSavingToCloud) return; 
 
+            isSavingToCloud = true;
             try {
                 const rawOldIds = await tgCloud.getItem('cb_product_ids');
                 let oldIds = [];
-                if (rawOldIds) { try { oldIds = JSON.parse(rawOldIds); } catch(e) {} }
+                if (rawOldIds) { try { oldIds = JSON.parse(rawOldIds); } catch(e) { console.error('Parse old IDs error:', e); } }
 
                 const currentIds = products.map(p => p.id);
                 const deletedIds = oldIds.filter(id => !currentIds.includes(id));
@@ -1263,6 +1273,8 @@
                 await tgCloud.setItem('cb_product_ids', currentIds);
             } catch (e) {
                 console.error('Cloud storage save error:', e);
+            } finally {
+                isSavingToCloud = false;
             }
         }
 
@@ -1275,11 +1287,8 @@
             const existingItem = editId ? products.find(p => p.id === Number(editId)) : null; const addedDate = existingItem ? (existingItem.addedDate || existingItem.openDate || getLocalTodayStr()) : getLocalTodayStr();
             const defaultInRoutine = !(isSuperCollectionEnabled && currentManageTab === 'onPause'); const inRoutineStatus = existingItem ? (existingItem.inRoutine !== false) : defaultInRoutine;
             let days = []; if (freqType === 'custom') { document.querySelectorAll('.day-chip.active').forEach(chip => { days.push(parseInt(chip.dataset.day, 10)); }); }
-            
-            const adaptationScheme = document.getElementById('toggleAdaptationScheme').checked;
-            const adaptationDismissedWeek = existingItem ? (existingItem.adaptationDismissedWeek || 0) : 0;
 
-            const productData = { id: editId ? Number(editId) : Date.now(), name, type, tods, freqType, days, adaptationScheme, adaptationDismissedWeek, pauseBefore: selectedPauseBeforeVal, pauseAfter: selectedPauseAfterVal, openDate, addedDate, paoMonths: selectedPAOMonths, inRoutine: inRoutineStatus };
+            const productData = { id: editId ? Number(editId) : Date.now(), name, type, tods, freqType, days, pauseBefore: selectedPauseBeforeVal, pauseAfter: selectedPauseAfterVal, openDate, addedDate, paoMonths: selectedPAOMonths, inRoutine: inRoutineStatus };
             if (editId) { const idx = products.findIndex(p => p.id === Number(editId)); if (idx !== -1) products[idx] = productData; } else { products.push(productData); }
             saveProductsSync(); renderManageList(); hideForm(); renderRoutine();
         }
@@ -1312,8 +1321,6 @@
             document.getElementById('pOpenDate').value = item.openDate || getLocalTodayStr(); updateOpenDateDisplay();
             if (item.paoMonths) applyPAO(item.paoMonths); else applyPAO('12');
             document.querySelectorAll('.day-chip').forEach(chip => { const day = parseInt(chip.dataset.day, 10); chip.classList.toggle('active', Array.isArray(item.days) && item.days.includes(day)); });
-            document.getElementById('toggleAdaptationScheme').checked = !!item.adaptationScheme;
-            updateAdaptationSchemeVisibility();
         }
 
         function deleteProduct(e, id) {
@@ -1382,8 +1389,6 @@
             document.getElementById('pFreqType').value = 'daily'; document.getElementById('daysGroup').style.display = 'none';
             const defaultDays = [1, 4]; document.querySelectorAll('.day-chip').forEach(chip => chip.classList.toggle('active', defaultDays.includes(parseInt(chip.dataset.day, 10))));
             document.getElementById('pOpenDate').value = getLocalTodayStr(); updateOpenDateDisplay(); applyPAO('12'); document.getElementById('smartPresetBanner').style.display = 'none';
-            document.getElementById('toggleAdaptationScheme').checked = false;
-            updateAdaptationSchemeVisibility();
         }
 
         function renderManageList() {
@@ -1434,17 +1439,31 @@
             try {
                 if (data.installDate) { installDateStr = data.installDate; safeStorage.setItem('cb_install_date', installDateStr); tgCloud.setItem('cb_install_date', installDateStr); }
                 if (typeof data.superCollection === 'boolean') { isSuperCollectionEnabled = data.superCollection; safeStorage.setItem('cb_super_collection', String(isSuperCollectionEnabled)); tgCloud.setItem('cb_super_collection', String(isSuperCollectionEnabled)); document.getElementById('toggleSuperCollection').checked = isSuperCollectionEnabled; updateProBadgeUI(); }
-                products = data.products.map(p => ({
-                    id: Number(p.id) || Date.now(), name: String(p.name || ''), type: String(p.type || 'Очищение'), tods: Array.isArray(p.tods) ? p.tods : ['morning'], freqType: String(p.freqType || 'daily'), days: Array.isArray(p.days) ? p.days : [],
-                    adaptationScheme: !!p.adaptationScheme, adaptationDismissedWeek: Number(p.adaptationDismissedWeek) || 0,
-                    pauseBefore: p.pauseBefore !== null && p.pauseBefore !== undefined ? Number(p.pauseBefore) : null, pauseAfter: p.pauseAfter !== null && p.pauseAfter !== undefined ? Number(p.pauseAfter) : null,
-                    openDate: String(p.openDate || getLocalTodayStr()), addedDate: String(p.addedDate || p.openDate || getLocalTodayStr()), paoMonths: p.paoMonths ? String(p.paoMonths) : '12', inRoutine: p.inRoutine !== false
+                
+                let timeBase = Date.now(); 
+                products = data.products.map((p, index) => ({
+                    id: Number(p.id) || (timeBase + index), 
+                    name: escapeHtml(String(p.name || '')), 
+                    type: String(p.type || 'Очищение'), 
+                    tods: Array.isArray(p.tods) ? p.tods : ['morning'], 
+                    freqType: String(p.freqType || 'daily'), 
+                    days: Array.isArray(p.days) ? p.days : [],
+                    pauseBefore: p.pauseBefore !== null && p.pauseBefore !== undefined ? Number(p.pauseBefore) : null, 
+                    pauseAfter: p.pauseAfter !== null && p.pauseAfter !== undefined ? Number(p.pauseAfter) : null,
+                    openDate: String(p.openDate || getLocalTodayStr()), 
+                    addedDate: String(p.addedDate || p.openDate || getLocalTodayStr()), 
+                    paoMonths: p.paoMonths ? String(p.paoMonths) : '12', 
+                    inRoutine: p.inRoutine !== false
                 }));
                 saveProductsSync();
                 if (data.theme) { const validTheme = OLD_THEMES.includes(data.theme) ? 'sunlit' : data.theme; setTheme(validTheme); }
                 if (data.fontSize) setFontSize(data.fontSize);
                 renderManageList(); switchTOD(currentTOD); showToast('Данные успешно загружены!'); return true;
-            } catch (err) { showToast('Ошибка применения архива'); return false; }
+            } catch (err) { 
+                console.error('Import error:', err);
+                showToast('Ошибка применения архива'); 
+                return false; 
+            }
         }
 
         async function exportJsonFile() {
@@ -1458,8 +1477,25 @@
 
         function copyShareLink() {
             triggerHaptic(20);
-            try { const data = getBackupData(); const encoded = toBase64(JSON.stringify(data)); const fullUrl = `${window.location.origin}${window.location.pathname}#import=${encoded}`; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(fullUrl).then(() => showToast('Ссылка скопирована!')); } } catch(e) { showToast('Ошибка создания ссылки'); }
+            try { 
+                const shareData = { products: products };
+                const encoded = toBase64(JSON.stringify(shareData)); 
+                const fullUrl = `${window.location.origin}${window.location.pathname}#import=${encoded}`; 
+                
+                if (fullUrl.length > 2000) {
+                    showToast('У вас слишком много средств. Пожалуйста, используйте "Скачать архив".');
+                    return;
+                }
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) { 
+                    navigator.clipboard.writeText(fullUrl).then(() => showToast('Ссылка скопирована!')); 
+                } 
+            } catch(e) { 
+                console.error('Share link error:', e);
+                showToast('Ошибка создания ссылки'); 
+            }
         }
+
         function forceAppUpdate() { triggerHaptic(25); safeStorage.setItem('cb_app_updated', 'true'); showToast('Поиск обновлений...'); setTimeout(() => { window.location.href = `${window.location.origin}${window.location.pathname}?v_force=${Date.now()}${window.location.hash}`; }, 300); }
 
         function showToast(msg) { const toast = document.getElementById('toastNotification'); toast.innerText = msg; toast.classList.add('visible'); setTimeout(() => toast.classList.remove('visible'), 3000); }
@@ -1482,12 +1518,15 @@
             if (tgCloud.isAvailable()) {
                 try {
                     const rawProductIds = await tgCloud.getItem('cb_product_ids');
+                    
                     if (rawProductIds) {
                         let pIds = [];
                         try { pIds = JSON.parse(rawProductIds); } catch(e) {}
+
                         if (Array.isArray(pIds) && pIds.length > 0) {
                             const keys = pIds.map(id => `cb_p_${id}`);
                             const itemsMap = await tgCloud.getItems(keys);
+                            
                             const loadedProducts = [];
                             pIds.forEach(id => {
                                 const key = `cb_p_${id}`;
@@ -1498,6 +1537,7 @@
                                     } catch(e) {}
                                 }
                             });
+
                             if (loadedProducts.length > 0) {
                                 products = loadedProducts;
                                 safeStorage.setItem('cb_custom_products', JSON.stringify(products));
@@ -1572,29 +1612,9 @@
 
             document.getElementById('paoPicker').addEventListener('click', (e) => { const chip = e.target.closest('.pao-chip'); if (chip) applyPAO(chip.dataset.months); });
             document.getElementById('btnToggleOpenDate').addEventListener('click', (e) => { e.preventDefault(); openCustomCalendar('pao'); });
-            document.getElementById('typePicker').addEventListener('click', (e) => { 
-                const btn = e.target.closest('.picker-btn'); 
-                if (btn) { 
-                    triggerHaptic(15); 
-                    document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active')); 
-                    btn.classList.add('active'); 
-                    if (btn.dataset.type === 'Уход за глазами') applyPAO('6'); 
-                    updateAdaptationSchemeVisibility();
-                } 
-            });
+            document.getElementById('typePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); document.querySelectorAll('#typePicker .picker-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); if (btn.dataset.type === 'Уход за глазами') applyPAO('6'); } });
             document.getElementById('todPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); btn.classList.toggle('active'); } });
-            document.getElementById('freqPicker').addEventListener('click', (e) => { 
-                const btn = e.target.closest('.picker-btn'); 
-                if (btn) { 
-                    triggerHaptic(15); 
-                    const freq = btn.dataset.freq; 
-                    document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active')); 
-                    btn.classList.add('active'); 
-                    document.getElementById('pFreqType').value = freq; 
-                    document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none'; 
-                    updateAdaptationSchemeVisibility();
-                } 
-            });
+            document.getElementById('freqPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) { triggerHaptic(15); const freq = btn.dataset.freq; document.querySelectorAll('#freqPicker .picker-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('pFreqType').value = freq; document.getElementById('daysGroup').style.display = (freq === 'custom') ? 'block' : 'none'; } });
             document.getElementById('daysPicker').addEventListener('click', (e) => { const chip = e.target.closest('.day-chip'); if (chip) { triggerHaptic(15); chip.classList.toggle('active'); } });
             document.getElementById('pauseBeforePicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) togglePauseBefore(Number(btn.dataset.mins)); });
             document.getElementById('pauseAfterPicker').addEventListener('click', (e) => { const btn = e.target.closest('.picker-btn'); if (btn) togglePauseAfter(Number(btn.dataset.mins)); });
